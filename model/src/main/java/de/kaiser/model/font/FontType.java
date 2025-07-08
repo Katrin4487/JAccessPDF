@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public record FontType(
         @JsonProperty("path") String path,
-        @JsonProperty("style") String fontStyle,
-        @JsonProperty("weight") String fontWeight
+        @JsonProperty("font-style") FontStyleValue fontStyle,
+        @JsonProperty("font-weight") String fontWeight
 ) {
 
 }

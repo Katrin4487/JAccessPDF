@@ -19,13 +19,6 @@
  * Represents a single font type. It links a physical font file
  * (e.g., "OpenSans-Bold.ttf") with a specific {@code font-weight} and {@code font-style}.
  * </li>
- * <li>
- * <b>{@link de.kaiser.model.font.FontStyle}</b>:
- * A named, reusable style (e.g., "headline-font" or "default-text").
- * It combines a reference to an {@code EFontFamily} with a font size and a default type.
- * These named styles are what is used by the
- * {@link de.kaiser.model.style.ElementStyleProperties} to assign a font to elements.
- * </li>
  * </ol>
  *
  * @since 1.0
