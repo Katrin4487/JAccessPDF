@@ -19,6 +19,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
     private String lineHeight; // e.g., "1.5"
 
     // --- Getters and Setters ---
+
     public String getTextAlign() { return textAlign; }
     public void setTextAlign(String textAlign) { this.textAlign = textAlign; }
     public String getTextIndent() { return textIndent; }
