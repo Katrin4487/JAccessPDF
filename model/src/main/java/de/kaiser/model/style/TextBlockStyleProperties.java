@@ -8,7 +8,7 @@ import java.util.Optional;
  * Abstract base class for all block-level text elements.
  * It contains common properties like font, color, and margins.
  */
-public class TextBlockStyleProperties extends ElementStyleProperties {
+public class TextBlockStyleProperties extends ElementBlockStyleProperties {
 
     @JsonProperty("font-style-name")
     private String fontStyleName;
@@ -22,7 +22,7 @@ public class TextBlockStyleProperties extends ElementStyleProperties {
     @JsonProperty("text-align")
     private String textAlign; //start, center, end, justify
 
-    TextBlockStyleProperties(){
+    TextBlockStyleProperties() {
         super();
         //prevent init from outside
     }
@@ -85,9 +85,9 @@ public class TextBlockStyleProperties extends ElementStyleProperties {
      *
      * @param target The object to apply the properties to.
      */
-    protected void applyPropertiesTo(ElementStyleProperties target) {
+    protected void applyPropertiesTo(ElementBlockStyleProperties target) {
         super.applyPropertiesTo(target);
-        if(target instanceof TextBlockStyleProperties textBase) {
+        if (target instanceof TextBlockStyleProperties textBase) {
             textBase.setFontStyleName(this.fontStyleName);
             textBase.setTextColor(this.textColor);
             textBase.setLineHeight(this.lineHeight);
@@ -102,12 +102,11 @@ public class TextBlockStyleProperties extends ElementStyleProperties {
      * @return a copy of the subclass object
      */
     @Override
-    public ElementStyleProperties copy(){
-       TextBlockStyleProperties newInstance = new TextBlockStyleProperties();
-       this.applyPropertiesTo(newInstance);
-       return newInstance;
+    public ElementBlockStyleProperties copy() {
+        TextBlockStyleProperties newInstance = new TextBlockStyleProperties();
+        this.applyPropertiesTo(newInstance);
+        return newInstance;
     }
-
 
 
 }

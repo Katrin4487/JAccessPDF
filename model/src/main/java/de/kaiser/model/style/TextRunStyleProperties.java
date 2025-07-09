@@ -13,39 +13,41 @@ public class TextRunStyleProperties extends TextBlockStyleProperties {
     @JsonProperty("text-decoration")
     private String textDecoration; // e.g., "underline" or "line-through"
 
+    @JsonProperty("baseline-shift")
+    private String baselineShift; //super
+
     // --- Getters and Setters ---
 
     public String getTextDecoration() { return textDecoration; }
     public void setTextDecoration(String textDecoration) { this.textDecoration = textDecoration; }
 
-    /**
-     * Merges properties from a base style into this one.
-     * @param base The base style to inherit from.
-     */
+    public String getBaselineShift() {
+        return baselineShift;
+    }
+
+    public void setBaselineShift(String baselineShift) {
+        this.baselineShift = baselineShift;
+    }
+
     @Override
     public void mergeWith(ElementStyleProperties base) {
-        // First, let the parent class merge all common properties.
+
         super.mergeWith(base);
 
-        // Then, merge the properties specific to this class.
         if (base instanceof TextRunStyleProperties baseRun) {
             if (this.textDecoration == null) {
                 this.textDecoration = baseRun.getTextDecoration();
+                this.baselineShift = baseRun.getBaselineShift();
             }
         }
     }
 
-    /**
-     * Creates a deep copy of this style properties object.
-     * @return A new instance of ETextRunStyleProperties with the same values.
-     */
     @Override
     public TextRunStyleProperties copy() {
         TextRunStyleProperties newInstance = new TextRunStyleProperties();
-
         applyPropertiesTo(newInstance);
-
         newInstance.setTextDecoration(this.textDecoration);
+        newInstance.setBaselineShift(this.baselineShift);
         return newInstance;
     }
 }

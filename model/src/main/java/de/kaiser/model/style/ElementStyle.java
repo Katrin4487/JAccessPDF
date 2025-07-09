@@ -11,8 +11,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  */
 public record ElementStyle(
         @JsonProperty("name") String name,
-        @JsonProperty("target-element") StyleTargetTypes targetElement,
-        @JsonProperty("properties") ElementStyleProperties properties
+        @JsonProperty("target-element") String targetElement,
+        @JsonProperty("properties") ElementBlockStyleProperties properties
 ) {
 
     @Override
@@ -26,7 +26,7 @@ public record ElementStyle(
             @JsonSubTypes.Type(value = SectionStyleProperties.class, name = StyleTargetTypes.SECTION),
             @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = StyleTargetTypes.TEXT_RUN)
     })
-    public ElementStyleProperties properties() {
+    public ElementBlockStyleProperties properties() {
         return properties;
     }
 }

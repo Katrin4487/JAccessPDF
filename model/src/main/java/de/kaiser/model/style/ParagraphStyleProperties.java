@@ -115,7 +115,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
     }
 
     @Override
-    protected void applyPropertiesTo(ElementStyleProperties target) {
+    protected void applyPropertiesTo(ElementBlockStyleProperties target) {
         super.applyPropertiesTo(target);
         if (target instanceof ParagraphStyleProperties paragraphTarget) {
             paragraphTarget.textIndent = this.textIndent;
