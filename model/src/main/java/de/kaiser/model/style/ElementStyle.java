@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  */
 public record ElementStyle(
         @JsonProperty("name") String name,
-        @JsonProperty("target-element") String targetElement,
+        @JsonProperty("target-element") StyleTargetTypes targetElement,
         @JsonProperty("properties") ElementStyleProperties properties
 ) {
 

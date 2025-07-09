@@ -2,63 +2,112 @@ package de.kaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Optional;
+
 /**
  * Abstract base class for all block-level text elements.
  * It contains common properties like font, color, and margins.
  */
-public abstract class TextBlockStyleProperties extends ElementStyleProperties {
+public class TextBlockStyleProperties extends ElementStyleProperties {
 
     @JsonProperty("font-style-name")
     private String fontStyleName;
 
     @JsonProperty("text-color")
-    private String textColor;
+    private String textColor; //color in FOP!
 
-    @JsonProperty("margin-bottom")
-    private String marginBottom;
+    @JsonProperty("line-height")
+    private String lineHeight;
 
-    // --- Getters and Setters ---
-    public String getFontStyleName() { return fontStyleName; }
-    public void setFontStyleName(String fontStyleName) { this.fontStyleName = fontStyleName; }
-    public String getTextColor() { return textColor; }
-    public void setTextColor(String textColor) { this.textColor = textColor; }
-    public String getMarginBottom() { return marginBottom; }
-    public void setMarginBottom(String marginBottom) { this.marginBottom = marginBottom; }
+    @JsonProperty("text-align")
+    private String textAlign; //start, center, end, justify
+
+    TextBlockStyleProperties(){
+        super();
+        //prevent init from outside
+    }
+
+    public String getFontStyleName() {
+        return fontStyleName;
+    }
+
+    public void setFontStyleName(String fontStyleName) {
+        this.fontStyleName = fontStyleName;
+    }
+
+    public String getTextColor() {
+        return textColor;
+    }
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
+
+    public String getLineHeight() {
+        return lineHeight;
+    }
+
+    public void setLineHeight(String lineHeight) {
+        this.lineHeight = lineHeight;
+    }
+
+    public String getTextAlign() {
+        return textAlign;
+    }
+
+    public void setTextAlign(String textAlign) {
+        this.textAlign = textAlign;
+    }
 
     /**
      * Merges properties from a base style into this one.
      * Only properties that are null in this object will be set from the base.
+     *
      * @param base The base style to inherit from.
      */
     @Override
     public void mergeWith(ElementStyleProperties base) {
-        if (!(base instanceof TextBlockStyleProperties textBase)) return;
-        if (this.fontStyleName == null) {
-            this.fontStyleName = textBase.getFontStyleName();
+        super.mergeWith(base);
+        if (!(base instanceof TextBlockStyleProperties textBase)) {
+            return;
         }
-        if (this.textColor == null) {
-            this.textColor = textBase.getTextColor();
-        }
-        if (this.marginBottom == null) {
-            this.marginBottom = textBase.getMarginBottom();
-        }
+
+        this.fontStyleName = Optional.ofNullable(this.fontStyleName).orElse(textBase.getFontStyleName());
+        this.textColor = Optional.ofNullable(this.textColor).orElse(textBase.getTextColor());
+        this.lineHeight = Optional.ofNullable(this.lineHeight).orElse(textBase.getLineHeight());
+        this.textAlign = Optional.ofNullable(this.textAlign).orElse(textBase.getTextAlign());
+
     }
 
     /**
      * Helper method to apply all properties from this object to another.
      * Used by the copy() method in concrete subclasses.
+     *
      * @param target The object to apply the properties to.
      */
-    protected void applyPropertiesTo(TextBlockStyleProperties target) {
-        target.setFontStyleName(this.fontStyleName);
-        target.setTextColor(this.textColor);
-        target.setMarginBottom(this.marginBottom);
+    protected void applyPropertiesTo(ElementStyleProperties target) {
+        super.applyPropertiesTo(target);
+        if(target instanceof TextBlockStyleProperties textBase) {
+            textBase.setFontStyleName(this.fontStyleName);
+            textBase.setTextColor(this.textColor);
+            textBase.setLineHeight(this.lineHeight);
+            textBase.setTextAlign(this.textAlign);
+
+        }
     }
 
     /**
      * Should be implemented from the subclasses
+     *
      * @return a copy of the subclass object
      */
     @Override
-    public abstract TextBlockStyleProperties copy();
+    public ElementStyleProperties copy(){
+       TextBlockStyleProperties newInstance = new TextBlockStyleProperties();
+       this.applyPropertiesTo(newInstance);
+       return newInstance;
+    }
+
+
+
 }
