@@ -64,6 +64,9 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
     @JsonProperty("page-break-before")
     private boolean pageBreakBefore; //break-before="page"
 
+    @JsonProperty("background-color")
+    private String backgroundColor;
+
 
     /**
      * Merges the properties from a base style into this style.
@@ -90,6 +93,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
         this.borderTop = Optional.ofNullable(this.borderTop).orElse(base.getBorderTop());
         this.borderBottom = Optional.ofNullable(this.borderBottom).orElse(base.getBorderBottom());
         this.keepWithNext = Optional.ofNullable(this.keepWithNext).orElse(base.keepWithNext);
+        this.backgroundColor = Optional.ofNullable(this.backgroundColor).orElse(base.backgroundColor);
     }
 
 
@@ -222,6 +226,14 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
     public void setPageBreakBefore(boolean pageBreakBefore) {
         this.pageBreakBefore = pageBreakBefore;
     }
+
+    public String getBackgroundColor() {
+         return backgroundColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+         this.backgroundColor = backgroundColor;
+    }
     //  --- Other methods ---
     /**
      * Helper method to apply all properties from this object to another.
@@ -246,6 +258,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
         target.setBorderTop(borderTop);
         target.setKeepWithNext(keepWithNext);
         target.setPageBreakBefore(pageBreakBefore);
+        target.setBackgroundColor(backgroundColor);
 
     }
 
