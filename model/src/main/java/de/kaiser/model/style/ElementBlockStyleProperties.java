@@ -1,6 +1,8 @@
 package de.kaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -11,6 +13,7 @@ import java.util.Optional;
  */
 public class ElementBlockStyleProperties extends ElementStyleProperties {
 
+    private static final Logger log = LoggerFactory.getLogger(ElementBlockStyleProperties.class);
 
     ElementBlockStyleProperties(){
         // prevent initializing
@@ -77,7 +80,11 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      */
      @Override
     public void mergeWith(ElementStyleProperties elemBase){
-        if(!(elemBase instanceof ElementBlockStyleProperties base)) return;
+        if(!(elemBase instanceof ElementBlockStyleProperties base)) {
+            log.warn("Attempted to merge with an incompatible style type: {}. Merge will be skipped.",
+                    elemBase==null ? "null" :elemBase.getClass().getName());
+            return;
+        }
         this.spaceAfter = Optional.ofNullable(this.spaceAfter).orElse(base.spaceAfter);
         this.spaceBefore = Optional.ofNullable(this.spaceBefore).orElse(base.spaceBefore);
         this.startIndent = Optional.ofNullable(this.startIndent).orElse(base.startIndent);

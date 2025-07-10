@@ -1,10 +1,19 @@
 package de.kaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
+/**
+ * A class representing style properties for inline elements.
+ * Extends ElementStyleProperties.
+ * This class provides properties specific to inline elements like background color.
+ */
 public class InlineElementStyleProperties extends ElementStyleProperties {
+
+    private static final Logger log = LoggerFactory.getLogger(InlineElementStyleProperties.class);
 
     @JsonProperty("background-color")
     private String backgroundColor;
@@ -30,6 +39,9 @@ public class InlineElementStyleProperties extends ElementStyleProperties {
 
         if(elemBase instanceof ElementBlockStyleProperties blockBase){
             this.backgroundColor = Optional.ofNullable(this.backgroundColor).orElse(blockBase.getBackgroundColor());
+        }else{
+            log.warn("Attempted to merge with an incompatible style type: {}. Merge will be skipped.",
+                    elemBase==null ? "null" :elemBase.getClass().getName());
         }
     }
 

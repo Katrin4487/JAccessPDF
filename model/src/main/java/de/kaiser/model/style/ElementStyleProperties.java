@@ -1,5 +1,9 @@
 package de.kaiser.model.style;
 
+/**
+ * An abstract class representing style properties for an element.
+ * Base class for all StyleProperties.
+ */
 public abstract class ElementStyleProperties {
 
 
