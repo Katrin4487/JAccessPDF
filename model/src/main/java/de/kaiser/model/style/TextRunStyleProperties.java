@@ -8,12 +8,13 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * It primarily references a font-style and can add text-specific decorations.
  */
 @JsonTypeName(StyleTargetTypes.TEXT_RUN)
-public class TextRunStyleProperties extends InlineElementStyleProperties{
+public class TextRunStyleProperties extends InlineTextElementStyleProperties{
 
     @JsonProperty("baseline-shift")
     private String baselineShift; //super
 
     // --- Getters and Setters ---
+
 
     public String getBaselineShift() {
         return baselineShift;
