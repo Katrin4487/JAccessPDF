@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Testet die Serialisierung und Deserialisierung des {@link ElementStyle} Records.
- * Der Fokus liegt auf der korrekten Handhabung der polymorphen {@link ElementBlockStyleProperties}.
- */
+
 class ElementStyleTest {
 
     private ObjectMapper objectMapper;
