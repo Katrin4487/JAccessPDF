@@ -19,7 +19,8 @@
  * <b>Element Styles:</b>
  * <ul>
  * <li>{@link de.kaiser.model.style.ElementStyle}: The central class that associates a name (e.g., "important-paragraph") with a set of properties.</li>
- * <li>{@link de.kaiser.model.style.ElementBlockStyleProperties}: An abstract base class for all property sets. Each concrete element (e.g., Paragraph, Table) has its own subclass to define specific attributes.</li>
+ * <li>{@link de.kaiser.model.style.ElementBlockStyleProperties}: An quasi-abstract base class for all property sets regarding a block element. Each concrete element (e.g., Paragraph, Table) has its own subclass to define specific attributes.</li>
+ * <li>{@link de.kaiser.model.style.InlineElementStyleProperties}: An quasi-abstract base class for all property sets regarding an inline element. Each concrete element (e.g., Text-Run, Footnote) has its own subclass to define specific attributes.</li>
  * </ul>
  * </li>
  * <li>
