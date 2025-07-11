@@ -16,13 +16,12 @@ import org.slf4j.LoggerFactory;
  * This class implements the {@link InlineElement} interface.
  */
 @JsonTypeName("text-run")
-public class TextRun implements InlineElement {
+public class TextRun extends AbstractInlineElement {
 
     private static final Logger log = LoggerFactory.getLogger(TextRun.class);
 
     private final String text;
-    private final String styleClass;
-    private final String variant;
+
 
     @JsonIgnore
     private TextRunStyleProperties resolvedStyle;
@@ -33,9 +32,16 @@ public class TextRun implements InlineElement {
             @JsonProperty("style-class") String styleClass,
             @JsonProperty("variant") String variant
     ) {
+        super(styleClass, variant);
         this.text = text;
-        this.styleClass = styleClass;
-        this.variant = variant;
+    }
+
+    public TextRun(String text){
+        this(text, null, null);
+    }
+
+    public TextRun(String text,String variant){
+        this(text, variant, null);
     }
 
     @Override
@@ -43,14 +49,6 @@ public class TextRun implements InlineElement {
         return InlineElementTypes.TEXT_RUN;
     }
 
-    @Override
-    public String getStyleClass() {
-        return styleClass;
-    }
-
-    public String getVariant() {
-        return variant;
-    }
 
     public TextRunStyleProperties getResolvedStyle() {
         return resolvedStyle;
@@ -72,20 +70,16 @@ public class TextRun implements InlineElement {
         TextBlockStyleProperties parentStyle = context.getParentBlockStyle();
         TextRunStyleProperties specificRunStyle = null;
 
-        // Find the specific style if a styleClass is provided.
         if (styleClass != null && !styleClass.isEmpty()) {
             ElementStyle specificElementStyle = context.getStyleMap().get(styleClass);
             if (specificElementStyle != null && specificElementStyle.properties() instanceof TextRunStyleProperties) {
                 specificRunStyle = (TextRunStyleProperties) specificElementStyle.properties();
             } else {
-                log.warn("Style class '{}' for text run '{}' not found or has incorrect property type. Falling back to parent block style.",
-                        this.styleClass, this.text);
+                log.warn("Style class '{}' not found or has incorrect type.", this.styleClass);
             }
         }
 
-        assert specificRunStyle != null;
+
         this.resolvedStyle = TextRunStyleProperties.createResolved(parentStyle, specificRunStyle);
     }
-
-
 }

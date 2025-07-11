@@ -23,6 +23,17 @@ public abstract class AbstractElement implements Element {
     public AbstractElement() {
     }
 
+    /**
+     * Creates a new instance of AbstractElement with the specified style class and variant.
+     *
+     * @param styleClass The style class to apply to the element.
+     * @param variant The semantic variant of the element.
+     */
+    public AbstractElement(String styleClass, String variant) {
+        this.styleClass = styleClass;
+        this.variant = variant;
+    }
+
     @Override
     public abstract String getType();
 
