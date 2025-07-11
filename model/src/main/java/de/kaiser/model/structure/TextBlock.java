@@ -78,7 +78,7 @@ public abstract class TextBlock extends AbstractElement {
 
     @Override
     public void resolveStyles(StyleResolverContext context) {
-        TextBlockStyleProperties baseStyle = context.getParentBlockStyle();
+        TextBlockStyleProperties baseStyle = context.parentBlockStyle();
         if (baseStyle == null) {
             // If no parent, start with a fresh default style.
             baseStyle = new ParagraphStyleProperties();
@@ -89,7 +89,7 @@ public abstract class TextBlock extends AbstractElement {
 
         // If a specific style class is defined, find it and merge it.
         if (this.styleClass != null) {
-            ElementStyle specificElementStyle = context.getStyleMap().get(this.styleClass);
+            ElementStyle specificElementStyle = context.styleMap().get(this.styleClass);
             if (specificElementStyle != null && specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
                 // The specific style's properties are merged into our final style.
                 finalStyle.mergeWith(specificStyle);

@@ -37,7 +37,7 @@ class TextBlockTest {
         TextBlockStyleProperties specificStyle = new TextBlockStyleProperties();
         specificElementStyle = new ElementStyle("specific", StyleTargetTypes.PARAGRAPH, specificStyle);
 
-        when(mockContext.getStyleMap()).thenReturn(mockStyleMap);
+        when(mockContext.styleMap()).thenReturn(mockStyleMap);
         when(mockContext.createChildContext(any())).thenReturn(mockContext);
     }
 
@@ -45,7 +45,7 @@ class TextBlockTest {
     @DisplayName("should merge specific style into parent style")
     void shouldMergeSpecificAndParentStyles() {
         var paragraph = new Paragraph("specific-style");
-        when(mockContext.getParentBlockStyle()).thenReturn(parentStyle);
+        when(mockContext.parentBlockStyle()).thenReturn(parentStyle);
         when(mockStyleMap.get("specific-style")).thenReturn(specificElementStyle);
 
         paragraph.resolveStyles(mockContext);
@@ -57,7 +57,7 @@ class TextBlockTest {
     @DisplayName("should use parent style if no specific style exists")
     void shouldUseParentStyleWhenNoSpecificStyle() {
         var paragraph = new Paragraph("non-existent-style");
-        when(mockContext.getParentBlockStyle()).thenReturn(parentStyle);
+        when(mockContext.parentBlockStyle()).thenReturn(parentStyle);
         when(mockStyleMap.get(anyString())).thenReturn(null);
 
         paragraph.resolveStyles(mockContext);
@@ -69,7 +69,7 @@ class TextBlockTest {
     @DisplayName("should create new default style if no styles exist")
     void shouldCreateDefaultStyleWhenNoStylesExist() {
         var paragraph = new Paragraph("any-style");
-        when(mockContext.getParentBlockStyle()).thenReturn(null);
+        when(mockContext.parentBlockStyle()).thenReturn(null);
         when(mockStyleMap.get(anyString())).thenReturn(null);
 
         paragraph.resolveStyles(mockContext);
@@ -84,7 +84,7 @@ class TextBlockTest {
     void shouldDelegateToInlineElements() {
         // Assuming Paragraph has a constructor that takes a list of inline elements
         var paragraph = new Paragraph("any-style", List.of(mockInlineElement));
-        when(mockContext.getParentBlockStyle()).thenReturn(null);
+        when(mockContext.parentBlockStyle()).thenReturn(null);
 
         paragraph.resolveStyles(mockContext);
 

@@ -2,38 +2,31 @@ package de.kaiser.model.style;
 
 import java.util.Map;
 
-public class StyleResolverContext {
+/**
+ * A context object that holds the state during the recursive style resolution process.
+ * It is immutable; a new context is created for each level of the element tree.
+ *
+ * @param parentBlockStyle Holds the style of the direct parent element. Can be null for top-level elements.
+ */
+public record StyleResolverContext(Map<String, ElementStyle> styleMap, TextBlockStyleProperties parentBlockStyle) {
 
-    private final Map<String, ElementStyle> styleMap;
-    private final TextBlockStyleProperties defaultBlockStyle;
-    private final TextBlockStyleProperties parentBlockStyle;
-
-    // --- Constructor ---
-
-    public StyleResolverContext(Map<String, ElementStyle> styleMap, TextBlockStyleProperties defaultBlockStyle) {
-        this(styleMap, defaultBlockStyle, defaultBlockStyle); // parent style is default
-    }
-
-    private StyleResolverContext(Map<String, ElementStyle> styleMap, TextBlockStyleProperties defaultBlockStyle, TextBlockStyleProperties parentBlockStyle) {
-        this.styleMap = styleMap;
-        this.defaultBlockStyle = defaultBlockStyle;
-        this.parentBlockStyle = parentBlockStyle;
+    /**
+     * The main constructor for creating a style context.
+     *
+     * @param styleMap         The map of all available named styles.
+     * @param parentBlockStyle The resolved style of the parent element.
+     */
+    public StyleResolverContext {
     }
 
     /**
-     * Creates a new context for the child element. The parent style will set on it
+     * Creates a new context for child elements.
+     * This new context carries over the global style map but sets a new parent style.
+     *
+     * @param newParentBlockStyle The resolved style of the new parent element.
+     * @return A new StyleResolverContext instance.
      */
     public StyleResolverContext createChildContext(TextBlockStyleProperties newParentBlockStyle) {
-        return new StyleResolverContext(this.styleMap, this.defaultBlockStyle, newParentBlockStyle);
-    }
-
-    // --- Getter ---
-
-    public Map<String, ElementStyle> getStyleMap() {
-        return styleMap;
-    }
-
-    public TextBlockStyleProperties getParentBlockStyle() {
-        return parentBlockStyle;
+        return new StyleResolverContext(this.styleMap, newParentBlockStyle);
     }
 }

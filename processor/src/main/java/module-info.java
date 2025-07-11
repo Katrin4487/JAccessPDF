@@ -1,0 +1,6 @@
+module de.kaiserprocessor {
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.datatype.jsr310;
+    requires de.kaiser.model;
+    requires org.slf4j;
+}

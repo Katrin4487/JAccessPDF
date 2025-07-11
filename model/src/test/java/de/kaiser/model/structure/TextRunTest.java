@@ -29,8 +29,8 @@ public class TextRunTest {
     @BeforeEach
     void setUp() {
         // Mock-Verhalten für den Kontext einrichten
-        when(mockContext.getParentBlockStyle()).thenReturn(mockParentStyle);
-        when(mockContext.getStyleMap()).thenReturn(mockStyleMap);
+        when(mockContext.parentBlockStyle()).thenReturn(mockParentStyle);
+        when(mockContext.styleMap()).thenReturn(mockStyleMap);
     }
 
     @Test
