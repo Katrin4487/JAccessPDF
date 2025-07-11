@@ -16,6 +16,10 @@ public class Paragraph extends TextBlock {
         super(styleClass,inlineElements, variant);
     }
 
+    public Paragraph(String styleClass, List<InlineElement> inlineElements) {
+        super(styleClass,inlineElements);
+    }
+
 
     public Paragraph(String styleClass, String variant) {
         super(styleClass, variant);

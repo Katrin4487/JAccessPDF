@@ -59,13 +59,17 @@ public abstract class TextBlock implements Element {
         this(styleClass,null,variant);
     }
 
+    public TextBlock(String styleClass, List<InlineElement> inlineElements) {
+        this(styleClass,inlineElements,null);
+    }
+
     /**
      * Constructs a TextBlock with the provided style class.
      *
      * @param styleClass The CSS style class to apply to the text block
      */
     public TextBlock(String styleClass) {
-        this(styleClass,null);
+        this(styleClass,null,null);
     }
 
     // ... Getters for final fields ...

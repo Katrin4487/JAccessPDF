@@ -22,7 +22,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
     @JsonProperty("text-align")
     private String textAlign; //start, center, end, justify
 
-    TextBlockStyleProperties() {
+    public TextBlockStyleProperties() {
         super();
         //prevent init from outside
     }
