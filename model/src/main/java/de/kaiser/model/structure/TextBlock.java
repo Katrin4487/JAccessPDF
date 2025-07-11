@@ -15,17 +15,12 @@ import java.util.List;
  * Abstract class representing a block of text elements.
  * Inherits from Element interface. Implements methods to resolve styles and manage inline elements.
  */
-public abstract class TextBlock implements Element {
+public abstract class TextBlock extends AbstractElement {
 
     private static final Logger log = LoggerFactory.getLogger(TextBlock.class);
 
     @JsonProperty("inline-elements")
     protected final List<InlineElement> inlineElements;
-
-    @JsonProperty("style-class")
-    protected final String styleClass;
-
-    protected final String variant;
 
     @JsonIgnore
     protected TextBlockStyleProperties resolvedStyle;
@@ -78,12 +73,6 @@ public abstract class TextBlock implements Element {
     }
     public List<InlineElement> getInlineElements() {
         return inlineElements;
-    }
-    public String getVariant() {
-        return variant;
-    }
-    public String getStyleClass() {
-        return styleClass;
     }
 
 

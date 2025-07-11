@@ -3,7 +3,7 @@ package de.kaiser.model.structure;
 import de.kaiser.model.style.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test; // <-- Use JUnit 5's Test annotation
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -11,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Map;
 
-// Use JUnit 5's Assertions
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,7 +35,6 @@ class TextBlockTest {
     void setUp() {
         parentStyle = new TextBlockStyleProperties();
         TextBlockStyleProperties specificStyle = new TextBlockStyleProperties();
-        // Assuming your ElementStyle constructor looks like this from a previous conversation
         specificElementStyle = new ElementStyle("specific", StyleTargetTypes.PARAGRAPH, specificStyle);
 
         when(mockContext.getStyleMap()).thenReturn(mockStyleMap);

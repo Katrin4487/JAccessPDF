@@ -23,6 +23,39 @@ public class TextRunStyleProperties extends InlineTextElementStyleProperties{
         this.baselineShift = baselineShift;
     }
 
+    /**
+     * Factory method to create a new, resolved style by combining a parent
+     * style with an optional, more specific style.
+     *
+     * @param parentStyle The style inherited from the parent block (can be null).
+     * @param specificStyle The specific style for this text run (can be null).
+     * @return A new, fully resolved TextRunStyleProperties object.
+     */
+    public static TextRunStyleProperties createResolved(TextBlockStyleProperties parentStyle, TextRunStyleProperties specificStyle) {
+        TextRunStyleProperties newResolvedStyle = new TextRunStyleProperties();
+
+        // Resolve text color: specific style wins over parent style.
+        if (specificStyle != null && specificStyle.getTextColor() != null) {
+            newResolvedStyle.setTextColor(specificStyle.getTextColor());
+        } else if (parentStyle != null && parentStyle.getTextColor() != null) {
+            newResolvedStyle.setTextColor(parentStyle.getTextColor());
+        }
+
+        // Resolve font style name: specific style wins over parent style.
+        if (specificStyle != null && specificStyle.getFontStyleName() != null) {
+            newResolvedStyle.setFontStyleName(specificStyle.getFontStyleName());
+        } else if (parentStyle != null && parentStyle.getFontStyleName() != null) {
+            newResolvedStyle.setFontStyleName(parentStyle.getFontStyleName());
+        }
+
+        // Resolve text-decoration (only exists in specific style)
+        if (specificStyle != null && specificStyle.getTextDecoration() != null) {
+            newResolvedStyle.setTextDecoration(specificStyle.getTextDecoration());
+        }
+
+        return newResolvedStyle;
+    }
+
     @Override
     public void mergeWith(ElementStyleProperties base) {
         super.mergeWith(base);

@@ -8,23 +8,30 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-
 /**
- * Class representing a headline element that extends ETextBlock.
+ * Represents a headline element, which is a specific type of TextBlock.
+ * It inherits common properties like styleClass and variant from AbstractElement.
  */
 @JsonTypeName(ElementTypes.HEADLINE)
-public class Headline extends TextBlock {
+public final class Headline extends TextBlock {
 
     private static final Logger log = LoggerFactory.getLogger(Headline.class);
-
     private static final int DEFAULT_LEVEL = 1;
 
     /**
-     * Represents the level of a headline element.
-     * Allowed is 1-6 corresponding to h1-h6 in html.
+     * The hierarchy level of the headline, corresponding to h1-h6 in HTML.
      */
     private final int level;
 
+    /**
+     * The primary constructor used by Jackson for deserialization from JSON.
+     * It initializes all properties, including those from the parent classes.
+     *
+     * @param styleClass The CSS-like class for styling.
+     * @param inlineElements The list of inline elements (e.g., TextRun) forming the content.
+     * @param variant A semantic variant of the element (e.g., "warning").
+     * @param level The headline level (1-6).
+     */
     @JsonCreator
     public Headline(
             @JsonProperty("style-class") String styleClass,
@@ -32,6 +39,7 @@ public class Headline extends TextBlock {
             @JsonProperty("variant") String variant,
             @JsonProperty("level") Integer level
     ) {
+
         super(styleClass, inlineElements, variant);
 
         if (level == null) {
@@ -40,18 +48,6 @@ public class Headline extends TextBlock {
         } else {
             this.level = level;
         }
-    }
-
-
-
-    public Headline(String styleClass, String variant,int level) {
-        super(styleClass, variant);
-        this.level = level;
-    }
-
-    public Headline(String styleClass,int level) {
-        super(styleClass);
-        this.level = level;
     }
 
     @Override
@@ -63,4 +59,3 @@ public class Headline extends TextBlock {
         return level;
     }
 }
-

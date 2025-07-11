@@ -47,4 +47,33 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
             textTarget.textColor = this.textColor;
         }
     }
+
+    // --- Getter & Setter ---
+
+
+    public String getFontStyleName() {
+        return fontStyleName;
+    }
+
+
+    public String getTextDecoration() {
+        return textDecoration;
+    }
+
+
+    public String getTextColor() {
+        return textColor;
+    }
+
+    public void setFontStyleName(String fontStyleName) {
+        this.fontStyleName = fontStyleName;
+    }
+
+    public void setTextDecoration(String textDecoration) {
+        this.textDecoration = textDecoration;
+    }
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
 }
