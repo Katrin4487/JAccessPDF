@@ -1,12 +1,12 @@
 package de.kaiser.generator;
 
+import de.kaiser.generator.element.*;
 import de.kaiser.model.structure.*;
+import de.kaiser.model.style.ElementStyle;
 import de.kaiser.model.style.PageMasterStyle;
 import de.kaiser.model.style.StyleSheet;
 import de.kaiser.model.style.TextBlockStyleProperties;
 import de.kaiser.model.style.TextStyle;
-import de.kaiser.model.style.ElementStyle;
-import element.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Generates an XSL-FO XML structure from a Document object.
+ * This class is stateless and orchestrates the generation process by delegating
+ * to specialized sub-generators.
+ */
 public class XslFoGenerator {
+
     private static final Logger log = LoggerFactory.getLogger(XslFoGenerator.class);
     private final Map<Class<? extends Element>, ElementFoGenerator> blockGeneratorRegistry = new HashMap<>();
     private final Map<Class<? extends InlineElement>, InlineElementFoGenerator> inlineGeneratorRegistry = new HashMap<>();
@@ -24,6 +30,10 @@ public class XslFoGenerator {
         // Register Block-Level Generators
         this.blockGeneratorRegistry.put(Paragraph.class, new ParagraphFoGenerator(this));
         this.blockGeneratorRegistry.put(Headline.class, new HeadlineFoGenerator(this));
+        // this.blockGeneratorRegistry.put(List.class, new ListFoGenerator(this));
+        // this.blockGeneratorRegistry.put(Table.class, new TableFoGenerator(this));
+        // this.blockGeneratorRegistry.put(Section.class, new SectionFoGenerator(this));
+        // this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
 
         // Register Inline-Level Generators
         this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());
@@ -34,8 +44,7 @@ public class XslFoGenerator {
 
     /**
      * Main method to start the XSL-FO generation process.
-     *
-     * @param document   The fully processed EDocument object with resolved styles.
+     * @param document The fully processed Document object with resolved styles.
      * @param styleSheet The StyleSheet with all layout and style definitions.
      * @return A string containing the complete XSL-FO document.
      */
@@ -46,8 +55,6 @@ public class XslFoGenerator {
 
         StringBuilder foBuilder = new StringBuilder();
         List<Headline> headlines = new ArrayList<>();
-
-        // Find the default font family to set on the root element as a global fallback.
         String defaultFontFamily = findDefaultFontFamily(styleSheet);
 
         generateRootStart(foBuilder, document, defaultFontFamily);
@@ -60,7 +67,7 @@ public class XslFoGenerator {
         return foBuilder.toString();
     }
 
-// --- Public Helpers for Sub-Generators ---
+    // --- Public Helpers for Sub-Generators ---
 
     public void generateBlockElement(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
         if (element == null) return;
@@ -72,6 +79,14 @@ public class XslFoGenerator {
         }
     }
 
+    /**
+     * Generates XSL-FO output for a list of block elements using a specified style sheet and StringBuilder.
+     *
+     * @param elements The list of block elements to generate XSL-FO for. Must not be null.
+     * @param styleSheet The StyleSheet with all layout and style definitions. Must not be null.
+     * @param builder The StringBuilder where the generated XSL-FO output will be appended.
+     * @param headlines The list of headline elements to be included in the generation process.
+     */
     public void generateBlockElements(List<Element> elements, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
         if (elements == null) return;
         for (Element element : elements) {
@@ -79,6 +94,13 @@ public class XslFoGenerator {
         }
     }
 
+    /**
+     * Generates XSL-FO output for the provided inline element using a specified style sheet and StringBuilder.
+     *
+     * @param element The InlineElement object to be processed. Must not be null.
+     * @param styleSheet The StyleSheet object containing font and style information. Must not be null.
+     * @param builder The StringBuilder where the generated XSL-FO output will be appended.
+     */
     public void generateInlineElement(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
         if (element == null) return;
         InlineElementFoGenerator generator = inlineGeneratorRegistry.get(element.getClass());
@@ -89,7 +111,7 @@ public class XslFoGenerator {
         }
     }
 
-// --- Private Generation Steps ---
+    // --- Private Generation Steps ---
 
     private void generatePageSequences(StringBuilder foBuilder, Document document, StyleSheet styleSheet, List<Headline> headlines) {
         final String placeholder = "<§§BOOKMARK_TREE§§>";
@@ -134,10 +156,9 @@ public class XslFoGenerator {
 
         foBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
                 .append("<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\"")
-                .append(" xmlns:fox=\"http://xmlgraphics.apache.org/fop/extensions\"") // NEU: FOX Namespace
+                .append(" xmlns:fox=\"http://xmlgraphics.apache.org/fop/extensions\"")
                 .append(" xml:lang=\"").append(escapeXml(lang)).append("\"");
 
-        // Add the default font family to the root element as a global fallback.
         if (defaultFontFamily != null && !defaultFontFamily.isEmpty()) {
             foBuilder.append(" font-family=\"").append(escapeXml(defaultFontFamily)).append("\"");
         }
@@ -218,14 +239,8 @@ public class XslFoGenerator {
         foBuilder.append("</fo:root>\n");
     }
 
-    /**
-     * Helper method to find the default font family from the stylesheet.
-     *
-     * @param styleSheet The stylesheet to search in.
-     * @return The name of the default font family, or null if not found.
-     */
     private String findDefaultFontFamily(StyleSheet styleSheet) {
-        if (styleSheet == null || styleSheet.textStyles() == null) {
+        if (styleSheet == null || styleSheet.elementStyles() == null) {
             return null;
         }
         return styleSheet.elementStyles().stream()
@@ -234,7 +249,7 @@ public class XslFoGenerator {
                 .map(ElementStyle::properties)
                 .filter(p -> p instanceof TextBlockStyleProperties)
                 .map(p -> ((TextBlockStyleProperties) p).getFontStyleName())
-                .flatMap(styleSheet::findFontStyleByName)
+                .flatMap(styleSheet::findFontStyleByName) // Assuming findFontStyleByName was renamed to findTextStyleByName
                 .map(TextStyle::fontFamilyName)
                 .orElse(null);
     }
