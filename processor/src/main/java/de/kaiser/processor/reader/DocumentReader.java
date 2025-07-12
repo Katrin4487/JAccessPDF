@@ -1,6 +1,5 @@
 package de.kaiser.processor.reader;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.kaiser.model.structure.Document;
@@ -31,16 +30,16 @@ public class DocumentReader {
      *
      * @param inputStream the input stream containing the JSON data to read
      * @return the deserialized Document object representing the JSON structure
-     * @throws JsonParseException if there is an issue reading or parsing the JSON data
+     * @throws JsonReadException if there is an issue reading or parsing the JSON data
      */
-    public Document readJson(InputStream inputStream) throws JsonParseException {
+    public Document readJson(InputStream inputStream) throws JsonReadException {
         try {
             log.debug("Reading font document from stream...");
             return objectMapper.readValue(inputStream, Document.class);
 
         } catch (IOException io) {
             log.error("Not able to read structure json, {}", io.getMessage());
-            throw new JsonParseException("Not able to read structure-json:"+io);
+            throw new JsonReadException("Not able to read structure-json:",io);
         }
     }
 }

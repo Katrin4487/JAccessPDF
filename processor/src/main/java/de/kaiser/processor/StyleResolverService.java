@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * The StyleResolverService is the logical heart of processing.
  * It orchestrates the recursive style resolution for all elements in a document.
  */
-public class StyleResolverService {
+public final class StyleResolverService {
 
     private static final Logger log = LoggerFactory.getLogger(StyleResolverService.class);
 
@@ -27,7 +27,7 @@ public class StyleResolverService {
      * @param document   The document to resolve styles for.
      * @param styleSheet The style sheet containing element styles for resolution.
      */
-    public void resolve(Document document, StyleSheet styleSheet) {
+    public static void resolve(Document document, StyleSheet styleSheet) {
         if (document == null || styleSheet == null || styleSheet.elementStyles() == null) {
             log.warn("Document or StyleSheet is null or empty, aborting style resolution.");
             return;
@@ -59,7 +59,7 @@ public class StyleResolverService {
      * @param area    The page area containing elements to process.
      * @param context The current style resolver context.
      */
-    private void setResolvedStylesForElements(ContentArea area, StyleResolverContext context) {
+    private static void setResolvedStylesForElements(ContentArea area, StyleResolverContext context) {
         if (area != null && area.elements() != null) {
             area.elements().forEach(element -> element.resolveStyles(context));
         }

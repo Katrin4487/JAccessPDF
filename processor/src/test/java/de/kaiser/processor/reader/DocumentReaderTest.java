@@ -1,6 +1,5 @@
 package de.kaiser.processor.reader;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import de.kaiser.model.structure.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +25,7 @@ class DocumentReaderTest {
 
     @Test
     @DisplayName("should read valid JSON and return a populated Document object")
-    void shouldReadValidJsonAndReturnDocument() throws JsonParseException {
+    void shouldReadValidJsonAndReturnDocument() throws JsonReadException {
         // ARRANGE: Ein gültiger JSON-String, der eine einfache Dokumentstruktur darstellt.
         String validJson = """
                 {
@@ -55,11 +54,9 @@ class DocumentReaderTest {
                   "metadata": {
                     "title": "Test Document"
                 }
-                """; // '}' fehlt am Ende
+                """;
         InputStream inputStream = new ByteArrayInputStream(malformedJson.getBytes(StandardCharsets.UTF_8));
 
-        assertThrows(JsonParseException.class, () -> {
-            documentReader.readJson(inputStream);
-        }, "A DocumentReadException should be thrown for malformed JSON.");
+        assertThrows(JsonReadException.class, () -> documentReader.readJson(inputStream), "A DocumentReadException should be thrown for malformed JSON.");
     }
 }
