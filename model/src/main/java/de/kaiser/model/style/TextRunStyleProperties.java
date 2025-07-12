@@ -44,8 +44,8 @@ public class TextRunStyleProperties extends InlineTextElementStyleProperties{
         // Resolve font style name: specific style wins over parent style.
         if (specificStyle != null && specificStyle.getFontStyleName() != null) {
             newResolvedStyle.setFontStyleName(specificStyle.getFontStyleName());
-        } else if (parentStyle != null && parentStyle.getFontStyleName() != null) {
-            newResolvedStyle.setFontStyleName(parentStyle.getFontStyleName());
+        } else if (parentStyle != null && parentStyle.getTextStyleName() != null) {
+            newResolvedStyle.setFontStyleName(parentStyle.getTextStyleName());
         }
 
         // Resolve text-decoration (only exists in specific style)

@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "title": "My Document Title",
+    "author": "Katrin Kaiser",
+    "language": "de-DE"
+  },
+  "page-sequences": [
+    {
+      "style-class": "main-content",
+      "body": {
+        "elements": [
+          {
+            "type": "paragraph",
+            "style-class": "standard-paragraph",
+            "inline-elements": [
+              {
+                "type": "text-run",
+                "text": "This is a sentence with a "
+              },
+              {
+                "type": "hyperlink",
+                "href": "https://example.com",
+                "text": "link"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "page-master-styles": [
+    {
+      "name": "main-content",
+      "page-height": "29.7cm",
+      "page-width": "21cm",
+      "margin": "2cm"
+    }
+    ],
+  "text-styles": [
+      {
+        "name": "headline",
+        "font-size": "18pt",
+        "font-family-name": "Open Sans",
+        "font-weight": "400",
+        "font-style": "normal"
+      },
+      {
+        "name": "normal-text",
+        "font-size": "11pt",
+        "font-family-name": "Open Sans",
+        "font-weight": "400",
+        "font-style": "normal"
+      },
+      {
+        "name": "emphasis",
+        "font-size": "11pt",
+        "font-family-name": "Open Sans",
+        "font-weight": "400",
+        "font-style": "italic"
+      }
+  ],
+  "element-styles": [
+    {
+      "name": "h1-style",
+      "target-element": "headline",
+      "properties": {
+        "text-style-name": "headline",
+        "space-before": "12pt",
+        "space-after": "6pt"
+      }
+    },
+    {
+      "name": "standard-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-align": "justify",
+        "line-height": "1.5"
+      }
+    }
+  ]
+}

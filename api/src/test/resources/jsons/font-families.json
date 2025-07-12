@@ -1,0 +1,12 @@
+{
+  "font-families": [
+    {
+      "font-family": "Open Sans",
+      "types": [
+        { "path": "fonts/OpenSans-Regular.ttf", "font-weight": "400", "font-style": "normal" },
+        { "path": "fonts/OpenSans-Bold.ttf", "font-weight": "700", "font-style": "normal" },
+        { "path": "fonts/OpenSans-Italic.ttf", "font-weight": "400", "font-style": "italic" }
+      ]
+    }
+  ]
+}

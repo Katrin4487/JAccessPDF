@@ -248,7 +248,7 @@ public class XslFoGenerator {
                 .findFirst()
                 .map(ElementStyle::properties)
                 .filter(p -> p instanceof TextBlockStyleProperties)
-                .map(p -> ((TextBlockStyleProperties) p).getFontStyleName())
+                .map(p -> ((TextBlockStyleProperties) p).getTextStyleName())
                 .flatMap(styleSheet::findFontStyleByName) // Assuming findFontStyleByName was renamed to findTextStyleByName
                 .map(TextStyle::fontFamilyName)
                 .orElse(null);

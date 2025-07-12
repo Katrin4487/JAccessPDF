@@ -1,5 +1,6 @@
 package de.kaiser.model.structure;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 
@@ -12,7 +13,11 @@ public class Paragraph extends TextBlock {
 
 
 
-    public Paragraph(String styleClass, List<InlineElement> inlineElements, String variant) {
+    public Paragraph(
+            @JsonProperty("style-class") String styleClass,
+            @JsonProperty("inline-elements") List<InlineElement> inlineElements,
+            @JsonProperty("variant") String variant
+            ) {
         super(styleClass,inlineElements, variant);
     }
 

@@ -2,6 +2,9 @@ package de.kaiser.model.font;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Enum representing different font style values: normal, italic, and oblique.
+ */
 public enum FontStyleValue {
     @JsonProperty("normal")
     NORMAL,
@@ -10,5 +13,17 @@ public enum FontStyleValue {
     ITALIC,
 
     @JsonProperty("oblique")
-    OBLIQUE
+    OBLIQUE;
+
+    @Override
+    public String toString() {
+        return switch (this) {
+            case NORMAL -> "normal";
+            case ITALIC -> "italic";
+            case OBLIQUE -> "oblique";
+            default ->
+                //Should not happen
+                    "HAPPENS";
+        };
+    }
 }

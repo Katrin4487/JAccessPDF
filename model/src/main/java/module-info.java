@@ -6,6 +6,10 @@ module de.kaiser.model {
     requires com.fasterxml.jackson.annotation;
     requires org.slf4j;
 
+    opens de.kaiser.model.structure to com.fasterxml.jackson.databind;
+    opens de.kaiser.model.style to com.fasterxml.jackson.databind;
+    opens de.kaiser.model.font to com.fasterxml.jackson.databind;
+
 
 
 }

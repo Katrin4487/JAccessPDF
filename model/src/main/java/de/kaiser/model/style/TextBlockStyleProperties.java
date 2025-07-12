@@ -10,8 +10,8 @@ import java.util.Optional;
  */
 public class TextBlockStyleProperties extends ElementBlockStyleProperties {
 
-    @JsonProperty("font-style-name")
-    private String fontStyleName;
+    @JsonProperty("text-style-name")
+    private String textStyleName;
 
     @JsonProperty("text-color")
     private String textColor; //color in FOP!
@@ -27,12 +27,12 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
         //prevent init from outside
     }
 
-    public String getFontStyleName() {
-        return fontStyleName;
+    public String getTextStyleName() {
+        return textStyleName;
     }
 
-    public void setFontStyleName(String fontStyleName) {
-        this.fontStyleName = fontStyleName;
+    public void setTextStyleName(String textStyleName) {
+        this.textStyleName = textStyleName;
     }
 
     public String getTextColor() {
@@ -72,7 +72,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
             return;
         }
 
-        this.fontStyleName = Optional.ofNullable(this.fontStyleName).orElse(textBase.getFontStyleName());
+        this.textStyleName = Optional.ofNullable(this.textStyleName).orElse(textBase.getTextStyleName());
         this.textColor = Optional.ofNullable(this.textColor).orElse(textBase.getTextColor());
         this.lineHeight = Optional.ofNullable(this.lineHeight).orElse(textBase.getLineHeight());
         this.textAlign = Optional.ofNullable(this.textAlign).orElse(textBase.getTextAlign());
@@ -88,7 +88,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
     protected void applyPropertiesTo(ElementBlockStyleProperties target) {
         super.applyPropertiesTo(target);
         if (target instanceof TextBlockStyleProperties textBase) {
-            textBase.setFontStyleName(this.fontStyleName);
+            textBase.setTextStyleName(this.textStyleName);
             textBase.setTextColor(this.textColor);
             textBase.setLineHeight(this.lineHeight);
             textBase.setTextAlign(this.textAlign);

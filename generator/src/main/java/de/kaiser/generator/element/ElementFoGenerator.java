@@ -45,8 +45,8 @@ public abstract class ElementFoGenerator {
      */
     protected void setFontStyle(StyleSheet styleSheet, ElementStyleProperties style, StringBuilder builder) {
         if (style instanceof TextBlockStyleProperties textStyle) {
-            styleSheet.findFontStyleByName(textStyle.getFontStyleName()).ifPresent(fs -> {
-                builder.append(" font-family=\"").append(escapeXml(fs.fontStyle())).append("\"");
+            styleSheet.findFontStyleByName(textStyle.getTextStyleName()).ifPresent(fs -> {
+                builder.append(" font-family=\"").append(escapeXml(fs.fontFamilyName())).append("\"");
                 builder.append(" font-size=\"").append(escapeXml(fs.fontSize())).append("\"");
                 builder.append(" font-weight=\"").append(escapeXml(fs.fontWeight())).append("\"");
                 builder.append(" font-style=\"").append(escapeXml(fs.fontStyle())).append("\"");

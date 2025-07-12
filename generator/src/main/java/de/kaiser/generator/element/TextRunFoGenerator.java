@@ -1,18 +1,72 @@
 package de.kaiser.generator.element;
 
 import de.kaiser.model.structure.InlineElement;
+import de.kaiser.model.structure.TextRun;
 import de.kaiser.model.style.StyleSheet;
+import de.kaiser.model.style.TextRunStyleProperties;
+import de.kaiser.model.style.TextStyle;
 
-public class TextRunFoGenerator extends InlineElementFoGenerator{
-    /**
-     * Generates the XSL-FO string for a specific inline element.
-     *
-     * @param element    The inline element to be processed.
-     * @param styleSheet The entire StyleSheet for accessing font information.
-     * @param builder    The StringBuilder to which the generated string is appended.
-     */
+import java.util.Optional;
+
+/**
+ * Generates XSL-FO for a styled TextRun element.
+ * It resolves the font-style-name to apply correct font attributes.
+ */
+public class TextRunFoGenerator extends InlineElementFoGenerator {
+
     @Override
     public void generate(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
+        TextRun textRun = (TextRun) element;
+        TextRunStyleProperties style = textRun.getResolvedStyle();
 
+        // If the text run has no specific styling, just output the plain text.
+        if (style == null) {
+            builder.append(escapeXml(textRun.getText()));
+            return;
+        }
+
+        // Find the referenced font style from the stylesheet
+        Optional<TextStyle> textStyleOpt = Optional.empty();
+        if (style.getFontStyleName() != null) {
+            textStyleOpt = styleSheet.findFontStyleByName(style.getFontStyleName());
+        }
+
+        // Check if there is any styling to apply. If not, don't create an empty <fo:inline>.
+        boolean hasStyling = textStyleOpt.isPresent() || style.getTextColor() != null || style.getTextDecoration() != null;
+
+        if (hasStyling) {
+            builder.append("<fo:inline");
+
+            // Apply attributes from the found TextStyle object
+            textStyleOpt.ifPresent(ts -> {
+                if (ts.fontFamilyName() != null) {
+                    builder.append(" font-family=\"").append(escapeXml(ts.fontFamilyName())).append("\"");
+                }
+                if (ts.fontSize() != null) {
+                    builder.append(" font-size=\"").append(escapeXml(ts.fontSize())).append("\"");
+                }
+                if (ts.fontWeight() != null) {
+                    builder.append(" font-weight=\"").append(escapeXml(ts.fontWeight())).append("\"");
+                }
+                if (ts.fontStyle() != null) {
+                    builder.append(" font-style=\"").append(escapeXml(ts.fontStyle().toLowerCase())).append("\"");
+                }
+            });
+
+            // Apply other, non-font-related styles from TextRunStyleProperties
+            if (style.getTextColor() != null) {
+                builder.append(" color=\"").append(escapeXml(style.getTextColor())).append("\"");
+            }
+            if (style.getTextDecoration() != null) {
+                builder.append(" text-decoration=\"").append(escapeXml(style.getTextDecoration())).append("\"");
+            }
+
+            builder.append(">");
+            builder.append(escapeXml(textRun.getText()));
+            builder.append("</fo:inline>");
+        } else {
+            // No specific styling found, just output the text.
+            builder.append(escapeXml(textRun.getText()));
+        }
     }
 }

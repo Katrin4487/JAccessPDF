@@ -25,7 +25,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
     public void mergeWith(ElementStyleProperties elemBase) {
 
         if(elemBase instanceof TextBlockStyleProperties textBase){
-            this.fontStyleName = Optional.ofNullable(this.fontStyleName).orElse(textBase.getFontStyleName());
+            this.fontStyleName = Optional.ofNullable(this.fontStyleName).orElse(textBase.getTextStyleName());
             this.textColor = Optional.ofNullable(this.textColor).orElse(textBase.getTextColor());
         }
     }
