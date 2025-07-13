@@ -15,17 +15,106 @@
             "inline-elements": [
               {
                 "type": "text-run",
-                "text": "This is a sentence with a "
+                "text": "This is a sentence with a ",
+                "style-class": "normal-text-run"
               },
               {
                 "type": "hyperlink",
                 "href": "https://example.com",
                 "text": "link",
                 "style-class": "hyperlink-style"
+              },
+              {
+                "type": "text-run",
+                "text": ". You can write ",
+                "style-class": "normal-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": " bold text",
+                "style-class": "bold-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": " or ",
+                "style-class": "normal-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": "italic text ",
+                "style-class": "italic-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": ". An you can write more and more and more and more...",
+                "style-class": "normal-text-run"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "style-class": "standard-paragraph",
+            "inline-elements": [
+
+              {
+                "type": "text-run",
+                "text": "Do you like the color",
+                "style-class": "normal-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": " red",
+                "style-class": "red-bold-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": "? Or do you want to underline ",
+                "style-class": "normal-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": "something",
+                "style-class": "underline-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": "? ",
+                "style-class": "normal-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": "You can also overline ",
+                "style-class": "normal-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": "something ",
+                "style-class": "overline-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": "or line-through ",
+                "style-class": "normal-text-run"
+              },
+              {
+                "type": "text-run",
+                "text": "something ",
+                "style-class": "line-through-text-run"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "style-class": "space-before-paragraph",
+            "inline-elements": [
+              {
+                "type": "text-run",
+                "text": "This is a paragraph with 1cm space before. You you see it? I have to write a little bit more, to show it i all it's beauty!",
+                "style-class": "normal-text-run"
               }
             ]
           }
-        ]
+            ]
       }
     }
   ]

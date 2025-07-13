@@ -28,7 +28,14 @@
         "font-family-name": "Open Sans",
         "font-weight": "400",
         "font-style": "italic"
-      }
+      },
+    {
+      "name": "bold",
+      "font-size": "11pt",
+      "font-family-name": "Open Sans",
+      "font-weight": "700",
+      "font-style": "normal"
+    }
   ],
   "element-styles": [
     {
@@ -50,12 +57,78 @@
       }
     },
     {
+      "name": "space-before-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-align": "justify",
+        "line-height": "20pt",
+        "space-before" :  "1cm"
+      }
+    },
+    {
       "name": "hyperlink-style",
       "target-element": "text-run",
       "properties": {
         "text-style-name": "normal-text",
         "text-color": "green",
         "text-decoration": "underline"
+      }
+    },
+    {
+      "name": "red-bold-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "bold",
+        "text-color": "red"
+      }
+    },
+    {
+      "name": "underline-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal",
+        "text-decoration": "underline"
+      }
+    },
+    {
+      "name": "overline-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal",
+        "text-decoration": "overline"
+      }
+    },
+    {
+      "name": "line-through-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal",
+        "text-decoration": "line-through"
+      }
+    },
+    {
+      "name": "normal-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-color": "black"
+      }
+    },
+    {
+      "name": "bold-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "bold",
+        "text-color": "black"
+      }
+    },
+    {
+      "name": "italic-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "emphasis",
+        "text-color": "black"
       }
     }
   ]
