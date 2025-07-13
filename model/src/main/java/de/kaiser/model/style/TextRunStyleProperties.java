@@ -10,11 +10,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName(StyleTargetTypes.TEXT_RUN)
 public class TextRunStyleProperties extends InlineTextElementStyleProperties{
 
-    @JsonProperty("baseline-shift")
+     @JsonProperty("baseline-shift")
     private String baselineShift; //super
-
-    // --- Getters and Setters ---
-
 
     public String getBaselineShift() {
         return baselineShift;
@@ -34,23 +31,25 @@ public class TextRunStyleProperties extends InlineTextElementStyleProperties{
     public static TextRunStyleProperties createResolved(TextBlockStyleProperties parentStyle, TextRunStyleProperties specificStyle) {
         TextRunStyleProperties newResolvedStyle = new TextRunStyleProperties();
 
-        // Resolve text color: specific style wins over parent style.
         if (specificStyle != null && specificStyle.getTextColor() != null) {
             newResolvedStyle.setTextColor(specificStyle.getTextColor());
         } else if (parentStyle != null && parentStyle.getTextColor() != null) {
             newResolvedStyle.setTextColor(parentStyle.getTextColor());
         }
 
-        // Resolve font style name: specific style wins over parent style.
-        if (specificStyle != null && specificStyle.getFontStyleName() != null) {
-            newResolvedStyle.setFontStyleName(specificStyle.getFontStyleName());
+        if (specificStyle != null && specificStyle.getTextStyleName() != null) {
+            newResolvedStyle.setTextStyleName(specificStyle.getTextStyleName());
         } else if (parentStyle != null && parentStyle.getTextStyleName() != null) {
-            newResolvedStyle.setFontStyleName(parentStyle.getTextStyleName());
+            newResolvedStyle.setTextStyleName(parentStyle.getTextStyleName());
         }
 
-        // Resolve text-decoration (only exists in specific style)
-        if (specificStyle != null && specificStyle.getTextDecoration() != null) {
-            newResolvedStyle.setTextDecoration(specificStyle.getTextDecoration());
+        if (specificStyle != null) {
+            if(specificStyle.getTextDecoration()!=null){
+                newResolvedStyle.setTextDecoration(specificStyle.getTextDecoration());
+            }
+            if(specificStyle.getBaselineShift()!=null){
+                newResolvedStyle.setBaselineShift(specificStyle.getBaselineShift());
+            }
         }
 
         return newResolvedStyle;

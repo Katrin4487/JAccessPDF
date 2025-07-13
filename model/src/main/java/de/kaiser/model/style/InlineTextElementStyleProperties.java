@@ -51,7 +51,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
     // --- Getter & Setter ---
 
 
-    public String getFontStyleName() {
+    public String getTextStyleName() {
         return textStyleName;
     }
 
@@ -65,7 +65,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
         return textColor;
     }
 
-    public void setFontStyleName(String fontStyleName) {
+    public void setTextStyleName(String fontStyleName) {
         this.textStyleName = fontStyleName;
     }
 

@@ -5,6 +5,8 @@ import de.kaiser.model.structure.TextRun;
 import de.kaiser.model.style.StyleSheet;
 import de.kaiser.model.style.TextRunStyleProperties;
 import de.kaiser.model.style.TextStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -13,6 +15,8 @@ import java.util.Optional;
  * It resolves the font-style-name to apply correct font attributes.
  */
 public class TextRunFoGenerator extends InlineElementFoGenerator {
+
+    private static final Logger log = LoggerFactory.getLogger(TextRunFoGenerator.class);
 
     @Override
     public void generate(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
@@ -25,17 +29,18 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
         }
 
         Optional<TextStyle> textStyleOpt = Optional.empty();
-        if (style.getFontStyleName() != null) {
-            textStyleOpt = styleSheet.findFontStyleByName(style.getFontStyleName());
+        if (style.getTextStyleName() != null) {
+            textStyleOpt = styleSheet.findFontStyleByName(style.getTextStyleName());
         }
 
-        // Check if there is any styling to apply. If not, don't create an empty <fo:inline>.
-        boolean hasStyling = textStyleOpt.isPresent() || style.getTextColor() != null || style.getTextDecoration() != null;
+        boolean hasStyling = textStyleOpt.isPresent()
+                || style.getTextColor() != null
+                || style.getTextDecoration() != null
+                || style.getBaselineShift() != null;
+
+        builder.append("<fo:inline");
 
         if (hasStyling) {
-            builder.append("<fo:inline");
-
-            // Apply attributes from the found TextStyle object
             textStyleOpt.ifPresent(ts -> {
                 if (ts.fontFamilyName() != null) {
                     builder.append(" font-family=\"").append(escapeXml(ts.fontFamilyName())).append("\"");
@@ -64,10 +69,11 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
 
             builder.append(">");
             builder.append(escapeXml(textRun.getText()));
-            builder.append("</fo:inline>");
         } else {
-            // No specific styling found, just output the text.
+
             builder.append(escapeXml(textRun.getText()));
         }
+        builder.append("</fo:inline>");
+        log.debug("Generated: {}",builder);
     }
 }

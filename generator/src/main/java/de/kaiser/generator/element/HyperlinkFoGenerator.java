@@ -21,7 +21,7 @@ public class HyperlinkFoGenerator extends InlineElementFoGenerator {
 
         TextRunStyleProperties style = link.getResolvedStyle();
         if(style != null) {
-            Optional<TextStyle> fontStyleName = styleSheet.findFontStyleByName(style.getFontStyleName());
+            Optional<TextStyle> fontStyleName = styleSheet.findFontStyleByName(style.getTextStyleName());
             if (fontStyleName.isPresent()) {
                 TextStyle fontStyle = fontStyleName.get();
                 builder.append("\" font-family=\"")
