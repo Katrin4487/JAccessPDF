@@ -11,8 +11,8 @@ import java.util.Optional;
  */
 public abstract class InlineTextElementStyleProperties extends InlineElementStyleProperties{
 
-    @JsonProperty("font-style-name")
-    private String fontStyleName;
+    @JsonProperty("text-style-name")
+    private String textStyleName;
 
     @JsonProperty("text-decoration")
     private String textDecoration;
@@ -25,7 +25,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
     public void mergeWith(ElementStyleProperties elemBase) {
 
         if(elemBase instanceof TextBlockStyleProperties textBase){
-            this.fontStyleName = Optional.ofNullable(this.fontStyleName).orElse(textBase.getTextStyleName());
+            this.textStyleName = Optional.ofNullable(this.textStyleName).orElse(textBase.getTextStyleName());
             this.textColor = Optional.ofNullable(this.textColor).orElse(textBase.getTextColor());
         }
     }
@@ -42,7 +42,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
     protected void applyPropertiesTo(InlineElementStyleProperties target) {
         super.applyPropertiesTo(target);
         if (target instanceof InlineTextElementStyleProperties textTarget) {
-            textTarget.fontStyleName = this.fontStyleName;
+            textTarget.textStyleName = this.textStyleName;
             textTarget.textDecoration = this.textDecoration;
             textTarget.textColor = this.textColor;
         }
@@ -52,7 +52,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
 
 
     public String getFontStyleName() {
-        return fontStyleName;
+        return textStyleName;
     }
 
 
@@ -66,7 +66,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
     }
 
     public void setFontStyleName(String fontStyleName) {
-        this.fontStyleName = fontStyleName;
+        this.textStyleName = fontStyleName;
     }
 
     public void setTextDecoration(String textDecoration) {
