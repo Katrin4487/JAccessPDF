@@ -11,7 +11,7 @@ class SimpleInlineElementsTest {
     @DisplayName("Hyperlink should hold all its properties")
     void hyperlinkShouldHoldAllProperties() {
         // Act
-        Hyperlink hyperlink = new Hyperlink("Click here", "link-style", "external", "https://example.com");
+        Hyperlink hyperlink = new Hyperlink("Click here", "link-style", "external", "https://example.com",null);
 
         // Assert
         assertEquals("Click here", hyperlink.getText());
