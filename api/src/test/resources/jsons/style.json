@@ -48,6 +48,15 @@
         "text-align": "justify",
         "line-height": "1.5"
       }
+    },
+    {
+      "name": "hyperlink-style",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-color": "green",
+        "text-decoration": "underline"
+      }
     }
   ]
 }

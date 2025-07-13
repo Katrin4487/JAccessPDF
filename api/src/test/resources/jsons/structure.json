@@ -20,7 +20,8 @@
               {
                 "type": "hyperlink",
                 "href": "https://example.com",
-                "text": "link"
+                "text": "link",
+                "style-class": "hyperlink-style"
               }
             ]
           }
