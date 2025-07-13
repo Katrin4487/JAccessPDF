@@ -4,7 +4,6 @@ package de.kaiser.generator.element;
 import de.kaiser.model.structure.Hyperlink;
 import de.kaiser.model.structure.InlineElement;
 import de.kaiser.model.style.StyleSheet;
-import de.kaiser.model.style.TextBlockStyleProperties;
 import de.kaiser.model.style.TextRunStyleProperties;
 import de.kaiser.model.style.TextStyle;
 
