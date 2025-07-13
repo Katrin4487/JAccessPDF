@@ -19,13 +19,11 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
         TextRun textRun = (TextRun) element;
         TextRunStyleProperties style = textRun.getResolvedStyle();
 
-        // If the text run has no specific styling, just output the plain text.
         if (style == null) {
             builder.append(escapeXml(textRun.getText()));
             return;
         }
 
-        // Find the referenced font style from the stylesheet
         Optional<TextStyle> textStyleOpt = Optional.empty();
         if (style.getFontStyleName() != null) {
             textStyleOpt = styleSheet.findFontStyleByName(style.getFontStyleName());
@@ -53,12 +51,15 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
                 }
             });
 
-            // Apply other, non-font-related styles from TextRunStyleProperties
             if (style.getTextColor() != null) {
                 builder.append(" color=\"").append(escapeXml(style.getTextColor())).append("\"");
             }
             if (style.getTextDecoration() != null) {
                 builder.append(" text-decoration=\"").append(escapeXml(style.getTextDecoration())).append("\"");
+            }
+
+            if(style.getBaselineShift() != null){
+                builder.append(" baseline-shift=\"").append(escapeXml(style.getBaselineShift())).append("\"");
             }
 
             builder.append(">");
