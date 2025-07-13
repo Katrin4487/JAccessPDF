@@ -2,13 +2,35 @@
   "metadata": {
     "title": "My Document Title",
     "author": "Katrin Kaiser",
-    "language": "de-DE"
+    "language": "en-US"
   },
   "page-sequences": [
     {
       "style-class": "main-content",
       "body": {
         "elements": [
+          {
+            "type": "headline",
+            "style-class": "h1-style",
+            "level": 1,
+            "inline-elements": [
+              {
+                "type": "text-run",
+                "text": "Examples for different available Elements and Stylings"
+              }
+            ]
+          },
+          {
+            "type": "headline",
+            "style-class": "h2-style",
+            "level": 2,
+            "inline-elements": [
+              {
+                "type": "text-run",
+                "text": "Text Variations"
+              }
+            ]
+          },
           {
             "type": "paragraph",
             "style-class": "standard-paragraph",
@@ -55,7 +77,6 @@
             "type": "paragraph",
             "style-class": "standard-paragraph",
             "inline-elements": [
-
               {
                 "type": "text-run",
                 "text": "Do you like the color",
@@ -109,12 +130,137 @@
             "inline-elements": [
               {
                 "type": "text-run",
-                "text": "This is a paragraph with 1cm space before. You you see it? I have to write a little bit more, to show it i all it's beauty!",
+                "text": "This is a paragraph with 1cm space before. Can you see it? And a start indent with 1.5 cm too. It's all so beautiful!",
                 "style-class": "normal-text-run"
               }
             ]
-          }
+          },
+          {
+            "type": "paragraph",
+            "style-class": "space-after-paragraph",
+            "inline-elements": [
+              {
+                "type": "text-run",
+                "text": "So let's have a paragraph with a little space after... And an end indent to. I don't realy like end indents. But it's ok here",
+                "style-class": "normal-text-run"
+              }
             ]
+          },
+          {
+            "type": "headline",
+            "style-class": "h2-style",
+            "level": 2,
+            "inline-elements": [
+              {
+                "type": "text-run",
+                "text": "Lists"
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "style-class": "simple-list",
+            "ordering": "ordered",
+            "items": [
+              {
+                "type": "list-item",
+                "elements": [
+                  {
+                    "type": "paragraph",
+                    "style-class": "standard-paragraph",
+                    "inline-elements": [
+                      {
+                        "type": "text-run",
+                        "text": "This is hopefully the first item",
+                        "style-class": "normal-text-run"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list-item",
+                "elements": [
+                  {
+                    "type": "paragraph",
+                    "style-class": "standard-paragraph",
+                    "inline-elements": [
+                      {
+                        "type": "text-run",
+                        "text": "And this is the second icon with a lot fo text. To be perfectly honest, nonsense text. But a line break is not impossible",
+                        "style-class": "normal-text-run"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "list",
+                    "style-class": "simple-list",
+                    "ordering": "unordered",
+                    "items": [
+                      {
+                        "type": "list-item",
+                        "elements": [
+                          {
+                            "type": "paragraph",
+                            "style-class": "standard-paragraph",
+                            "inline-elements": [
+                              {
+                                "type": "text-run",
+                                "text": "This is the first item of a nested list",
+                                "style-class": "normal-text-run"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "list-item",
+                        "elements": [
+                          {
+                            "type": "paragraph",
+                            "style-class": "standard-paragraph",
+                            "inline-elements": [
+                              {
+                                "type": "text-run",
+                                "text": "And this is the second icon with a lot fo text.  Have a look: This list is unordered",
+                                "style-class": "normal-text-run"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "ordering": "unordered",
+            "style-class": "def-list",
+            "items": [
+              {
+                "type": "list-item",
+                "label": [
+                  { "type": "text-run", "style-class": "bold-text-run", "text": "First Key" }
+                ],
+                "elements": [
+                  { "type": "paragraph", "style-class": "normal-text","inline-elements": [{ "type": "text-run", "text": "This is the definition of the first key and have you recognized, that this is a definition list?" }] }
+                ]
+              },
+              {
+                "type": "list-item",
+                "label": [
+                  { "type": "text-run", "style-class": "bold-text-run", "text": "Second Key" }
+                ],
+                "elements": [
+                  { "type": "paragraph", "style-class": "normal-text","inline-elements": [{ "type": "text-run", "text": "This is the definition for the second key" }] }
+                ]
+              }
+            ]
+          }
+        ]
       }
     }
   ]

@@ -102,7 +102,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
      * @return a copy of the subclass object
      */
     @Override
-    public ElementBlockStyleProperties copy() {
+    public TextBlockStyleProperties copy() {
         TextBlockStyleProperties newInstance = new TextBlockStyleProperties();
         this.applyPropertiesTo(newInstance);
         return newInstance;

@@ -15,6 +15,13 @@
         "font-weight": "400",
         "font-style": "normal"
       },
+    {
+      "name": "headline2",
+      "font-size": "16pt",
+      "font-family-name": "Open Sans",
+      "font-weight": "400",
+      "font-style": "normal"
+    },
       {
         "name": "normal-text",
         "font-size": "11pt",
@@ -48,6 +55,15 @@
       }
     },
     {
+      "name": "h2-style",
+      "target-element": "headline",
+      "properties": {
+        "text-style-name": "headline2",
+        "space-before": "12pt",
+        "space-after": "6pt"
+      }
+    },
+    {
       "name": "standard-paragraph",
       "target-element": "paragraph",
       "properties": {
@@ -57,13 +73,54 @@
       }
     },
     {
+      "name": "footnote",
+      "target-element": "footnote",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-color": "gray"
+      }
+    },
+    {
       "name": "space-before-paragraph",
       "target-element": "paragraph",
       "properties": {
         "text-style-name": "normal-text",
         "text-align": "justify",
         "line-height": "20pt",
-        "space-before" :  "1cm"
+        "space-before" :  "1cm",
+        "start-indent" : "1.5cm"
+      }
+    },
+    {
+      "name": "space-after-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-align": "justify",
+        "line-height": "20pt",
+        "space-after" :  "1cm",
+        "end-indent" : "1.5cm"
+      }
+    },
+    {
+      "name": "bold-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "bold",
+        "text-align": "justify",
+        "line-height": "20pt",
+        "space-after" :  "1cm",
+        "end-indent" : "1.5cm"
+      }
+    },
+    {
+      "name": "padding-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-align": "justify",
+        "line-height": "20pt",
+        "padding" :  "1cm"
       }
     },
     {
@@ -129,6 +186,27 @@
       "properties": {
         "text-style-name": "emphasis",
         "text-color": "black"
+      }
+    },
+    {
+      "name" : "simple-list",
+      "target-element": "list",
+      "properties": {
+        "provisional-distance-between-starts" :  "2cm",
+        "provisional-label-separation" : "3cm",
+        "list-style-type" : "circle",
+        "list-style-position" : "outside",
+        "text-style-name": "normal-text"
+      }
+    },
+    {
+      "name" : "def-list",
+      "target-element": "list",
+      "properties": {
+        "provisional-distance-between-starts" :  "5cm",
+        "provisional-label-separation" : "0.2cm",
+        "list-style-position" : "inside",
+        "text-style-name": "normal-text"
       }
     }
   ]

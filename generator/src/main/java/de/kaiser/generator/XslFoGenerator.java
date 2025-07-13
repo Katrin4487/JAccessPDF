@@ -30,10 +30,10 @@ public class XslFoGenerator {
         // Register Block-Level Generators
         this.blockGeneratorRegistry.put(Paragraph.class, new ParagraphFoGenerator(this));
         this.blockGeneratorRegistry.put(Headline.class, new HeadlineFoGenerator(this));
-        // this.blockGeneratorRegistry.put(List.class, new ListFoGenerator(this));
+        this.blockGeneratorRegistry.put(SimpleList.class, new ListFoGenerator(this));
         // this.blockGeneratorRegistry.put(Table.class, new TableFoGenerator(this));
         // this.blockGeneratorRegistry.put(Section.class, new SectionFoGenerator(this));
-        // this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
+        this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
 
         // Register Inline-Level Generators
         this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());

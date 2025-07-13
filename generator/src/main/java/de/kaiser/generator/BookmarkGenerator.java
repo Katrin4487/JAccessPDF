@@ -14,6 +14,7 @@ public class BookmarkGenerator {
 
     /**
      * Generates the complete <fo:bookmark-tree> from a list of headlines.
+     * This version uses a more robust logic to handle hierarchy changes.
      * @param headlines The list of headlines.
      * @return The finished XML string for the bookmarks.
      */
@@ -25,31 +26,39 @@ public class BookmarkGenerator {
         StringBuilder builder = new StringBuilder();
         builder.append("  <fo:bookmark-tree>\n");
 
-        int currentLevel = 0;
-
+        int lastLevel = 0;
         for (int i = 0; i < headlines.size(); i++) {
             Headline headline = headlines.get(i);
-            int newLevel = headline.getLevel();
+            int currentLevel = headline.getLevel();
             String id = "headline" + i;
             String title = getTitleFrom(headline);
 
-            // Close tags if moving up in the hierarchy
-            while (newLevel < currentLevel) {
-                builder.append("  ".repeat(currentLevel + 1)).append("</fo:bookmark>\n");
-                currentLevel--;
+            // Before opening a new bookmark, close the previous one(s) if necessary.
+            if (i > 0) {
+                if (currentLevel > lastLevel) {
+                    // Going deeper, do nothing.
+                } else if (currentLevel == lastLevel) {
+                    // Sibling element, close the previous one.
+                    builder.append("  ".repeat(lastLevel + 2)).append("</fo:bookmark>\n");
+                } else { // currentLevel < lastLevel
+                    // Moving up, close all necessary levels.
+                    int levelsToClose = lastLevel - currentLevel + 1;
+                    for (int j = 0; j < levelsToClose; j++) {
+                        builder.append("  ".repeat(lastLevel - j + 2)).append("</fo:bookmark>\n");
+                    }
+                }
             }
 
-            // Open the new bookmark for the current headline
-            builder.append("  ".repeat(newLevel + 1)).append("<fo:bookmark internal-destination=\"").append(escapeXml(id)).append("\">\n");
-            builder.append("  ".repeat(newLevel + 2)).append("<fo:bookmark-title>").append(escapeXml(title)).append("</fo:bookmark-title>\n");
+            // Open the current bookmark.
+            builder.append("  ".repeat(currentLevel + 1)).append("<fo:bookmark internal-destination=\"").append(escapeXml(id)).append("\">\n");
+            builder.append("  ".repeat(currentLevel + 2)).append("<fo:bookmark-title>").append(escapeXml(title)).append("</fo:bookmark-title>\n");
 
-            currentLevel = newLevel;
+            lastLevel = currentLevel;
         }
 
-        // Close any remaining open tags after the loop
-        while (currentLevel > 0) {
-            builder.append("  ".repeat(currentLevel + 1)).append("</fo:bookmark>\n");
-            currentLevel--;
+        // Close all remaining open tags after the loop.
+        for (int level = lastLevel; level > 0; level--) {
+            builder.append("  ".repeat(level + 1)).append("</fo:bookmark>\n");
         }
 
         builder.append("  </fo:bookmark-tree>\n");
@@ -67,8 +76,10 @@ public class BookmarkGenerator {
         }
         StringBuilder titleBuilder = new StringBuilder();
         for (InlineElement elem : headline.getInlineElements()) {
-            if (elem instanceof TextRun textRun) {
-                titleBuilder.append((textRun.getText()));
+            if(elem instanceof TextRun textRun){
+                if (textRun.getText() != null) { // More robust check
+                    titleBuilder.append(textRun.getText());
+                }
             }
         }
         return titleBuilder.toString();

@@ -54,12 +54,11 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
     /**
      * Appends common attributes shared by all TextBlock elements.
      */
-    private void appendCommonAttributes(StringBuilder builder, TextBlockStyleProperties style, StyleSheet styleSheet) {
+    void appendCommonAttributes(StringBuilder builder, TextBlockStyleProperties style, StyleSheet styleSheet) {
         if (style == null) return;
 
         // Apply font styles
         setFontStyle(styleSheet, style, builder);
-
         // Apply other common text block properties
         if (style.getTextColor() != null) {
             builder.append(" color=\"").append(escapeXml(style.getTextColor())).append("\"");
@@ -75,6 +74,15 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
         }
         if (style.getSpaceBefore() != null) {
             builder.append(" space-before=\"").append(escapeXml(style.getSpaceBefore())).append("\"");
+        }
+        if (style.getBackgroundColor() != null) {
+            builder.append(" background-color=\"").append(escapeXml(style.getBackgroundColor())).append("\"");
+        }
+        if(style.getStartIndent() != null){
+            builder.append(" start-indent=\"").append(escapeXml(style.getStartIndent())).append("\"");
+        }
+        if(style.getEndIndent() != null){
+            builder.append(" end-indent=\"").append(escapeXml(style.getEndIndent())).append("\"");
         }
     }
 
