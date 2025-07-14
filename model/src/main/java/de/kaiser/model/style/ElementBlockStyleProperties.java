@@ -276,7 +276,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      *
      * @return A new instance with the same property values as this object.
      */
-    public ElementStyleProperties copy(){
+    public ElementBlockStyleProperties copy(){
         ElementBlockStyleProperties copy = new ElementBlockStyleProperties() {
             @Override
             public ElementBlockStyleProperties copy() {

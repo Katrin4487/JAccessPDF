@@ -271,6 +271,152 @@
                 ]
               }
             ]
+          },
+          {
+            "type": "table",
+            "style-class": "standard-table",
+            "columns": ["col-width-40", "col-width-60"],
+            "header": {
+              "rows": [
+                {
+                  "cells": [
+                    {
+                      "style-class": "header-cell",
+                      "elements": [
+                        {
+                          "type": "paragraph",
+                          "style-class": "standard-paragraph",
+                          "inline-elements": [
+                            {
+                              "type": "text-run",
+                              "text": "Product",
+                              "style-class": "normal-text-run"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "style-class": "header-cell",
+                      "elements": [
+                        {
+                          "type": "paragraph",
+                          "style-class": "standard-paragraph",
+                          "inline-elements": [
+                            {
+                              "type": "text-run",
+                              "text": "Preis",
+                              "style-class": "normal-text-run"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "body": {
+              "rows": [
+                {
+                  "cells": [
+                    {
+                      "style-class": "body-cell",
+                      "elements": [
+                        {
+                          "type": "paragraph",
+                          "style-class": "standard-paragraph",
+                          "inline-elements": [
+                            {
+                              "type": "text-run",
+                              "text": "This is a row",
+                              "style-class": "normal-text-run"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "style-class": "body-cell-amount",
+                      "elements": [
+                        {
+                          "type": "paragraph",
+                          "style-class": "standard-paragraph",
+                          "inline-elements": [
+                            {
+                              "type": "text-run",
+                              "text": "This is a row",
+                              "style-class": "normal-text-run"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "cells": [
+                    {
+                      "style-class": "body-cell",
+                      "elements": [
+                        {
+                          "type": "paragraph",
+                          "style-class": "standard-paragraph",
+                          "inline-elements": [
+                            {
+                              "type": "text-run",
+                              "text": "This is a row",
+                              "style-class": "normal-text-run"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "style-class": "body-cell-amount",
+                      "elements": [
+                        {
+                          "type": "paragraph",
+                          "style-class": "standard-paragraph",
+                          "inline-elements": [
+                            {
+                              "type": "text-run",
+                              "text": "Test",
+                              "style-class": "normal-text-run"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "footer": {
+              "rows": [
+                {
+                  "cells": [
+                    {
+                      "style-class": "footer-cell-total",
+                      "colspan": 2,
+                      "elements": [
+                        {
+                          "type": "paragraph",
+                          "style-class": "standard-paragraph",
+                          "inline-elements": [
+                            {
+                              "type": "text-run",
+                              "text": "beautiful!",
+                              "style-class": "normal-text-run"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
           }
         ]
       }

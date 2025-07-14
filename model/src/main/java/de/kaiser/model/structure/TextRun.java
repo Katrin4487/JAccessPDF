@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import de.kaiser.model.style.ElementStyle;
-import de.kaiser.model.style.StyleResolverContext;
-import de.kaiser.model.style.TextBlockStyleProperties;
-import de.kaiser.model.style.TextRunStyleProperties;
+import de.kaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +64,7 @@ public class TextRun extends AbstractInlineElement {
      */
     @Override
     public void resolveStyles(StyleResolverContext context) {
-        TextBlockStyleProperties parentStyle = context.parentBlockStyle();
+        ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
         TextRunStyleProperties specificRunStyle = null;
 
         if (styleClass != null && !styleClass.isEmpty()) {

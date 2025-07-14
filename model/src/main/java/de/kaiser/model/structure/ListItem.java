@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.kaiser.model.style.ElementBlockStyleProperties;
 import de.kaiser.model.style.ElementStyle;
 import de.kaiser.model.style.StyleResolverContext;
 import de.kaiser.model.style.TextBlockStyleProperties;
@@ -29,7 +30,7 @@ public final class ListItem implements Element {
     private final List<Element> elements;
 
     @JsonIgnore
-    private TextBlockStyleProperties resolvedStyle;
+    private ElementBlockStyleProperties resolvedStyle;
 
     @JsonCreator
     public ListItem(
@@ -50,8 +51,8 @@ public final class ListItem implements Element {
     public String getVariant() { return variant; }
     public List<InlineElement> getLabel() { return label; } // NEU
     public List<Element> getElements() { return elements; }
-    public TextBlockStyleProperties getResolvedStyle() { return resolvedStyle; }
-    public void setResolvedStyle(TextBlockStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
+    public ElementBlockStyleProperties getResolvedStyle() { return resolvedStyle; }
+    public void setResolvedStyle(ElementBlockStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
 
     @Override
     public String getType() {

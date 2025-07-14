@@ -5,6 +5,7 @@ import de.kaiser.model.structure.Element;
 import de.kaiser.model.structure.Headline;
 import de.kaiser.model.structure.InlineElement;
 import de.kaiser.model.structure.TextBlock;
+import de.kaiser.model.style.ElementBlockStyleProperties;
 import de.kaiser.model.style.StyleSheet;
 import de.kaiser.model.style.TextBlockStyleProperties;
 
@@ -54,20 +55,20 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
     /**
      * Appends common attributes shared by all TextBlock elements.
      */
-    void appendCommonAttributes(StringBuilder builder, TextBlockStyleProperties style, StyleSheet styleSheet) {
+    void appendCommonAttributes(StringBuilder builder, ElementBlockStyleProperties style, StyleSheet styleSheet) {
         if (style == null) return;
 
         // Apply font styles
         setFontStyle(styleSheet, style, builder);
         // Apply other common text block properties
-        if (style.getTextColor() != null) {
-            builder.append(" color=\"").append(escapeXml(style.getTextColor())).append("\"");
+        if (style instanceof TextBlockStyleProperties textProps && textProps.getTextColor() != null) {
+            builder.append(" color=\"").append(escapeXml(textProps.getTextColor())).append("\"");
         }
-        if (style.getLineHeight() != null) {
-            builder.append(" line-height=\"").append(escapeXml(style.getLineHeight())).append("\"");
+        if (style instanceof TextBlockStyleProperties textProps && textProps.getLineHeight() != null) {
+            builder.append(" line-height=\"").append(escapeXml(textProps.getLineHeight())).append("\"");
         }
-        if (style.getTextAlign() != null) {
-            builder.append(" text-align=\"").append(escapeXml(style.getTextAlign())).append("\"");
+        if (style instanceof TextBlockStyleProperties textProps && textProps.getTextAlign() != null) {
+            builder.append(" text-align=\"").append(escapeXml(textProps.getTextAlign())).append("\"");
         }
         if (style.getSpaceAfter() != null) {
             builder.append(" space-after=\"").append(escapeXml(style.getSpaceAfter())).append("\"");

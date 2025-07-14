@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @param parentBlockStyle Holds the style of the direct parent element. Can be null for top-level elements.
  */
-public record StyleResolverContext(Map<String, ElementStyle> styleMap, TextBlockStyleProperties parentBlockStyle) {
+public record StyleResolverContext(Map<String, ElementStyle> styleMap, ElementBlockStyleProperties parentBlockStyle) {
 
     /**
      * The main constructor for creating a style context.
@@ -26,7 +26,8 @@ public record StyleResolverContext(Map<String, ElementStyle> styleMap, TextBlock
      * @param newParentBlockStyle The resolved style of the new parent element.
      * @return A new StyleResolverContext instance.
      */
-    public StyleResolverContext createChildContext(TextBlockStyleProperties newParentBlockStyle) {
+    public StyleResolverContext createChildContext(ElementBlockStyleProperties newParentBlockStyle) {
         return new StyleResolverContext(this.styleMap, newParentBlockStyle);
     }
+
 }

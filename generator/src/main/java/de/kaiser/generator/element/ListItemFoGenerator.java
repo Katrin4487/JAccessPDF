@@ -5,6 +5,7 @@ import de.kaiser.model.structure.Element;
 import de.kaiser.model.structure.Headline;
 import de.kaiser.model.structure.ListItem;
 import de.kaiser.model.structure.TextBlock;
+import de.kaiser.model.style.ElementBlockStyleProperties;
 import de.kaiser.model.style.StyleSheet;
 import de.kaiser.model.style.TextBlockStyleProperties;
 
@@ -27,7 +28,7 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
     @Override
     public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
         ListItem listItem = (ListItem) element;
-        TextBlockStyleProperties style = listItem.getResolvedStyle();
+        ElementBlockStyleProperties style = listItem.getResolvedStyle();
 
         // The content of a list item is wrapped in a single <fo:block>.
         // This block carries all styling for the list item.
@@ -36,7 +37,9 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
         // Use the helper methods inherited from TextBlockFoGenerator
         // to apply all common text and block styles.
         appendCommonAttributes(builder, style, styleSheet);
-        appendSpecificAttributes(builder, style); // For any future ListItem-specific styles
+        if(style instanceof TextBlockStyleProperties textStyle){
+            appendSpecificAttributes(builder, textStyle);
+        }
 
         builder.append(">\n");
 

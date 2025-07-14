@@ -2,10 +2,7 @@ package de.kaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.kaiser.model.style.ElementStyle;
-import de.kaiser.model.style.ParagraphStyleProperties;
-import de.kaiser.model.style.StyleResolverContext;
-import de.kaiser.model.style.TextBlockStyleProperties;
+import de.kaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +75,7 @@ public abstract class TextBlock extends AbstractElement {
 
     @Override
     public void resolveStyles(StyleResolverContext context) {
-        TextBlockStyleProperties baseStyle = context.parentBlockStyle();
+        ElementBlockStyleProperties baseStyle = context.parentBlockStyle();
         if (baseStyle == null) {
             // If no parent, start with a fresh default style.
             baseStyle = new ParagraphStyleProperties();

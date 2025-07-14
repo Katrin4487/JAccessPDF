@@ -209,6 +209,52 @@
         "list-style-position" : "inside",
         "text-style-name": "normal-text"
       }
+    },
+    {
+      "name": "standard-table",
+      "target-element": "table",
+      "properties": {
+        "text-style-name": "normal-text",
+        "border-collapse": "collapse",
+        "width": "100%"
+      }
+    },
+    {
+      "name": "header-cell",
+      "target-element": "table-cell",
+      "properties": {
+        "background-color": "#EFEFEF",
+        "text-style-name": "bold",
+        "padding": "6pt",
+        "border": "1pt solid black",
+        "vertical-align": "middle"
+      }
+    },
+    {
+      "name": "body-cell",
+      "target-element": "table-cell",
+      "properties": {
+        "padding": "5pt",
+        "border": "1pt solid #DDDDDD"
+      }
+    },
+    {
+      "name": "body-cell-amount",
+      "target-element": "table-cell",
+      "properties": {
+        "padding": "5pt",
+        "border": "1pt solid #DDDDDD",
+        "text-align": "right"
+      }
+    },
+    {
+      "name": "footer-cell-total",
+      "target-element": "table-cell",
+      "properties": {
+        "text-align": "center",
+        "padding": "8pt",
+        "border-top": "2pt solid black"
+      }
     }
   ]
 }

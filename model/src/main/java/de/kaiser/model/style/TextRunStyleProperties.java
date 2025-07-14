@@ -28,19 +28,20 @@ public class TextRunStyleProperties extends InlineTextElementStyleProperties{
      * @param specificStyle The specific style for this text run (can be null).
      * @return A new, fully resolved TextRunStyleProperties object.
      */
-    public static TextRunStyleProperties createResolved(TextBlockStyleProperties parentStyle, TextRunStyleProperties specificStyle) {
+    public static TextRunStyleProperties createResolved(ElementBlockStyleProperties parentStyle, TextRunStyleProperties specificStyle) {
         TextRunStyleProperties newResolvedStyle = new TextRunStyleProperties();
+
 
         if (specificStyle != null && specificStyle.getTextColor() != null) {
             newResolvedStyle.setTextColor(specificStyle.getTextColor());
-        } else if (parentStyle != null && parentStyle.getTextColor() != null) {
-            newResolvedStyle.setTextColor(parentStyle.getTextColor());
+        } else if (parentStyle instanceof TextBlockStyleProperties textParent) {
+            newResolvedStyle.setTextColor(textParent.getTextColor());
         }
 
         if (specificStyle != null && specificStyle.getTextStyleName() != null) {
             newResolvedStyle.setTextStyleName(specificStyle.getTextStyleName());
-        } else if (parentStyle != null && parentStyle.getTextStyleName() != null) {
-            newResolvedStyle.setTextStyleName(parentStyle.getTextStyleName());
+        } else if (parentStyle instanceof TextBlockStyleProperties textParent) {
+            newResolvedStyle.setTextStyleName(textParent.getTextStyleName());
         }
 
         if (specificStyle != null) {
