@@ -3,6 +3,7 @@ package de.kaiser.generator.element;
 
 import de.kaiser.model.structure.Footnote;
 import de.kaiser.model.structure.InlineElement;
+import de.kaiser.model.style.FootnoteStyleProperties;
 import de.kaiser.model.style.StyleSheet;
 import de.kaiser.generator.XslFoGenerator;
 
@@ -17,6 +18,8 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
     @Override
     public void generate(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
         Footnote footnote = (Footnote) element;
+
+        FootnoteStyleProperties styleProperties = footnote.getResolvedStyle();
 
         // WORKAROUND: Use role="Span" to prevent FOP's automatic (and broken)
         // <Note> tagging. We will create the accessible structure manually.
@@ -36,16 +39,26 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
 
         // --- The Footnote Body at the bottom of the page (The Note) ---
         builder.append("<fo:footnote-body>");
-        // This block contains the footnote's content and is now explicitly tagged as a "Note"
-        // with the corresponding ID for the link to target.
-        builder.append("<fo:block id=\"").append(escapeXml(footnote.getId())).append("\">");
 
-        // The footnote's body can contain rich content, so we delegate back.
+        builder.append("<fo:block id=\"").append(escapeXml(footnote.getId())).append("\"");
+
+        if(styleProperties!=null){
+            if(styleProperties.getStartIndent() != null){
+                builder.append(" start-indent=\"").append(escapeXml(styleProperties.getStartIndent())).append("\"");
+            }
+            if(styleProperties.getEndIndent() != null){
+                builder.append(" end-indent=\"").append(escapeXml(styleProperties.getEndIndent())).append("\"");
+            }
+            //TODO set the other styles...
+        }
+        builder.append(">");
+
+
         if (footnote.getInlineElements() != null) {
             // We prepend the index number to the footnote text for clarity.
             builder.append("<fo:inline font-size=\"8pt\" vertical-align=\"super\">")
                     .append(escapeXml(footnote.getIndex()))
-                    .append("</fo:inline> "); // Add a space after the number
+                    .append("</fo:inline> ");
 
             for (InlineElement inline : footnote.getInlineElements()) {
                 mainGenerator.generateInlineElement(inline, styleSheet, builder);

@@ -224,6 +224,18 @@
                                 "type": "text-run",
                                 "text": "And this is the second icon with a lot fo text.  Have a look: This list is unordered",
                                 "style-class": "normal-text-run"
+                              },
+                              {
+                                "type": "footnote",
+                                "inline-elements": [
+                                  {
+                                    "type": "text-run",
+                                    "text": "This is a footnote text",
+                                    "style-class": "normal-text-run"
+                                  }
+                                  ],
+                                "index": "1",
+                                "style-class": "footnote-style"
                               }
                             ]
                           }

@@ -24,7 +24,8 @@ public record ElementStyle(
             @JsonSubTypes.Type(value = TableStyleProperties.class, name = StyleTargetTypes.TABLE),
             @JsonSubTypes.Type(value = TableCellStyleProperties.class, name = StyleTargetTypes.TABLE_CELL),
             @JsonSubTypes.Type(value = SectionStyleProperties.class, name = StyleTargetTypes.SECTION),
-            @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = StyleTargetTypes.TEXT_RUN)
+            @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = StyleTargetTypes.TEXT_RUN),
+            @JsonSubTypes.Type(value = FootnoteStyleProperties.class, name = StyleTargetTypes.FOOTNOTE)
     })
     public ElementStyleProperties properties() {
         return properties;

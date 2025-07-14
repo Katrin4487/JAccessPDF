@@ -73,11 +73,12 @@
       }
     },
     {
-      "name": "footnote",
+      "name": "footnote-style",
       "target-element": "footnote",
       "properties": {
         "text-style-name": "normal-text",
-        "text-color": "gray"
+        "text-color": "gray",
+        "start-indent": "2mm"
       }
     },
     {
