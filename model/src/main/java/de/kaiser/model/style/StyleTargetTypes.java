@@ -17,5 +17,6 @@ public final class StyleTargetTypes {
     public static final String SECTION = "section";
     public static final String TEXT_RUN = "text-run";
     public static final String FOOTNOTE = "footnote";
+    public static final String PART = "part";
 }
 

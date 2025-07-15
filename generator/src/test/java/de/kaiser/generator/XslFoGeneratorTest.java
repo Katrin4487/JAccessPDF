@@ -28,14 +28,11 @@ class XslFoGeneratorTest {
         // Initialize the generator to be tested
         xslFoGenerator = new XslFoGenerator();
 
-        // 1. Create a simple StyleSheet
         TextStyle textStyle = new TextStyle("Default Style","10pt","0pen Sans","400","normal");
         testStyleSheet = new StyleSheet(List.of(textStyle), Collections.emptyList(), Collections.emptyList());
 
-        // 2. Create a simple Document model
         Metadata metadata = Metadata.builder("A Title").author("An author").build();
 
-        // Create a simple paragraph with text
         List<InlineElement> elements = new ArrayList<>();
         elements.add(new TextRun("Hello World!", "default-text",null));
         Paragraph paragraph = new Paragraph("default-paragraph",elements);

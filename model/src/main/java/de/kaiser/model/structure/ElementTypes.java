@@ -15,5 +15,6 @@ public final class ElementTypes {
     public static final String LIST = "list";
     public static final String TABLE = "table";
     public static final String SECTION = "section";
+    public static final String PART = "part";
 
 }

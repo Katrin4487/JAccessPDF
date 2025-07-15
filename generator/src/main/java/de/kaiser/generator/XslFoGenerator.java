@@ -2,11 +2,7 @@ package de.kaiser.generator;
 
 import de.kaiser.generator.element.*;
 import de.kaiser.model.structure.*;
-import de.kaiser.model.style.ElementStyle;
-import de.kaiser.model.style.PageMasterStyle;
-import de.kaiser.model.style.StyleSheet;
-import de.kaiser.model.style.TextBlockStyleProperties;
-import de.kaiser.model.style.TextStyle;
+import de.kaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +40,8 @@ public class XslFoGenerator {
 
     /**
      * Main method to start the XSL-FO generation process.
-     * @param document The fully processed Document object with resolved styles.
+     *
+     * @param document   The fully processed Document object with resolved styles.
      * @param styleSheet The StyleSheet with all layout and style definitions.
      * @return A string containing the complete XSL-FO document.
      */
@@ -82,10 +79,10 @@ public class XslFoGenerator {
     /**
      * Generates XSL-FO output for a list of block elements using a specified style sheet and StringBuilder.
      *
-     * @param elements The list of block elements to generate XSL-FO for. Must not be null.
+     * @param elements   The list of block elements to generate XSL-FO for. Must not be null.
      * @param styleSheet The StyleSheet with all layout and style definitions. Must not be null.
-     * @param builder The StringBuilder where the generated XSL-FO output will be appended.
-     * @param headlines The list of headline elements to be included in the generation process.
+     * @param builder    The StringBuilder where the generated XSL-FO output will be appended.
+     * @param headlines  The list of headline elements to be included in the generation process.
      */
     public void generateBlockElements(List<Element> elements, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
         if (elements == null) return;
@@ -97,9 +94,9 @@ public class XslFoGenerator {
     /**
      * Generates XSL-FO output for the provided inline element using a specified style sheet and StringBuilder.
      *
-     * @param element The InlineElement object to be processed. Must not be null.
+     * @param element    The InlineElement object to be processed. Must not be null.
      * @param styleSheet The StyleSheet object containing font and style information. Must not be null.
-     * @param builder The StringBuilder where the generated XSL-FO output will be appended.
+     * @param builder    The StringBuilder where the generated XSL-FO output will be appended.
      */
     public void generateInlineElement(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
         if (element == null) return;
