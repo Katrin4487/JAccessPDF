@@ -22,6 +22,7 @@ import de.kaiser.model.style.StyleResolverContext;
         @JsonSubTypes.Type(value = SimpleList.class, name = ElementTypes.LIST),
         @JsonSubTypes.Type(value = Table.class, name = ElementTypes.TABLE),
         @JsonSubTypes.Type(value = Section.class, name = ElementTypes.SECTION),
+        @JsonSubTypes.Type(value = BlockImage.class, name = ElementTypes.BLOCK_IMAGE),
 })
 public interface Element {
 

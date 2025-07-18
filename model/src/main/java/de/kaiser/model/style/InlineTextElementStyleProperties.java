@@ -20,13 +20,18 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
     @JsonProperty("text-color")
     private String textColor;
 
+    @JsonProperty("linefeed-treatment")
+    private String lineFeedTreatment;
+
 
     @Override
     public void mergeWith(ElementStyleProperties elemBase) {
 
         if(elemBase instanceof TextBlockStyleProperties textBase){
+            System.out.println("Instance of TextBlockStyleProperties "+textStyleName);
             this.textStyleName = Optional.ofNullable(this.textStyleName).orElse(textBase.getTextStyleName());
             this.textColor = Optional.ofNullable(this.textColor).orElse(textBase.getTextColor());
+            this.lineFeedTreatment = Optional.ofNullable(this.lineFeedTreatment).orElse(textBase.getLinefeedTreatment());
         }
     }
 
@@ -45,6 +50,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
             textTarget.textStyleName = this.textStyleName;
             textTarget.textDecoration = this.textDecoration;
             textTarget.textColor = this.textColor;
+            textTarget.lineFeedTreatment = this.lineFeedTreatment;
         }
     }
 
@@ -75,5 +81,13 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
 
     public void setTextColor(String textColor) {
         this.textColor = textColor;
+    }
+
+    public String getLineFeedTreatment() {
+        return lineFeedTreatment;
+    }
+
+    public void setLineFeedTreatment(String lineFeedTreatment) {
+        this.lineFeedTreatment = lineFeedTreatment;
     }
 }

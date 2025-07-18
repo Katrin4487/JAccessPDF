@@ -38,7 +38,7 @@ public class ParagraphFoGenerator extends TextBlockFoGenerator {
         // This method handles properties that only exist in ParagraphStyleProperties.
         if (style instanceof ParagraphStyleProperties pStyle) {
             if (pStyle.getTextIndent() != null) {
-                builder.append(" text-indent=\"").append(escapeXml(pStyle.getTextIndent())).append("\"");
+                builder.append(" text-align=\"").append(escapeXml(pStyle.getTextIndent())).append("\"");
             }
             if (pStyle.getTextAlignLast() != null) {
                 builder.append(" text-align-last=\"").append(escapeXml(pStyle.getTextAlignLast())).append("\"");

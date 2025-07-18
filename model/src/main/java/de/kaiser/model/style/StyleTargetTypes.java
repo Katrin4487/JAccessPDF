@@ -18,5 +18,6 @@ public final class StyleTargetTypes {
     public static final String TEXT_RUN = "text-run";
     public static final String FOOTNOTE = "footnote";
     public static final String PART = "part";
+    public static final String BLOCK_IMAGE = "block-image";
 }
 

@@ -8,6 +8,8 @@ import de.kaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * Represents an inline element for displaying text within a document.
  * This class implements the {@link InlineElement} interface.
@@ -65,15 +67,23 @@ public class TextRun extends AbstractInlineElement {
     @Override
     public void resolveStyles(StyleResolverContext context) {
         ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
-        TextRunStyleProperties specificRunStyle = null;
+        System.out.println("Parent Style: " + (parentStyle instanceof TextBlockStyleProperties));
+        TextRunStyleProperties specificRunStyle = new TextRunStyleProperties();
+
 
         if (styleClass != null && !styleClass.isEmpty()) {
+
             ElementStyle specificElementStyle = context.styleMap().get(styleClass);
             if (specificElementStyle != null && specificElementStyle.properties() instanceof TextRunStyleProperties) {
+
                 specificRunStyle = (TextRunStyleProperties) specificElementStyle.properties();
+
             } else {
                 log.warn("Style class '{}' not found or has incorrect type.", this.styleClass);
+                specificRunStyle = new TextRunStyleProperties();
+               
             }
+
         }
 
 

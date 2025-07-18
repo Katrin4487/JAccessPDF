@@ -6,6 +6,8 @@ import de.kaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,14 +30,16 @@ public class XslFoGenerator {
         this.blockGeneratorRegistry.put(Headline.class, new HeadlineFoGenerator(this));
         this.blockGeneratorRegistry.put(SimpleList.class, new ListFoGenerator(this));
         this.blockGeneratorRegistry.put(Table.class, new TableFoGenerator(this));
-        // this.blockGeneratorRegistry.put(Section.class, new SectionFoGenerator(this));
+        this.blockGeneratorRegistry.put(Section.class, new SectionFoGenerator(this));
         this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
+        this.blockGeneratorRegistry.put(BlockImage.class,new ImageFoGenerator(this));
 
         // Register Inline-Level Generators
         this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());
         this.inlineGeneratorRegistry.put(PageNumber.class, new PageNumberFoGenerator());
         this.inlineGeneratorRegistry.put(Hyperlink.class, new HyperlinkFoGenerator());
         this.inlineGeneratorRegistry.put(Footnote.class, new FootnoteFoGenerator(this));
+
     }
 
     /**
@@ -45,7 +49,7 @@ public class XslFoGenerator {
      * @param styleSheet The StyleSheet with all layout and style definitions.
      * @return A string containing the complete XSL-FO document.
      */
-    public String generate(Document document, StyleSheet styleSheet) {
+    public String generate(Document document, StyleSheet styleSheet, URL imageUrl) {
         if (document == null || styleSheet == null) {
             return "";
         }
@@ -57,7 +61,7 @@ public class XslFoGenerator {
         generateRootStart(foBuilder, document, defaultFontFamily);
         generateLayoutMasterSet(foBuilder, styleSheet);
         generateDeclarations(foBuilder, document);
-        generatePageSequences(foBuilder, document, styleSheet, headlines);
+        generatePageSequences(foBuilder, document, styleSheet, headlines,imageUrl);
         generateBookmarks(foBuilder, headlines);
         generateRootEnd(foBuilder);
 
@@ -66,11 +70,11 @@ public class XslFoGenerator {
 
     // --- Public Helpers for Sub-Generators ---
 
-    public void generateBlockElement(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    public void generateBlockElement(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
         if (element == null) return;
         ElementFoGenerator generator = blockGeneratorRegistry.get(element.getClass());
         if (generator != null) {
-            generator.generate(element, styleSheet, builder, headlines);
+            generator.generate(element, styleSheet, builder, headlines, imageUrl);
         } else {
             log.warn("No block generator registered for element type {}.", element.getClass().getSimpleName());
         }
@@ -84,10 +88,10 @@ public class XslFoGenerator {
      * @param builder    The StringBuilder where the generated XSL-FO output will be appended.
      * @param headlines  The list of headline elements to be included in the generation process.
      */
-    public void generateBlockElements(List<Element> elements, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    public void generateBlockElements(List<Element> elements, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
         if (elements == null) return;
         for (Element element : elements) {
-            generateBlockElement(element, styleSheet, builder, headlines);
+            generateBlockElement(element, styleSheet, builder, headlines, imageUrl);
         }
     }
 
@@ -110,7 +114,7 @@ public class XslFoGenerator {
 
     // --- Private Generation Steps ---
 
-    private void generatePageSequences(StringBuilder foBuilder, Document document, StyleSheet styleSheet, List<Headline> headlines) {
+    private void generatePageSequences(StringBuilder foBuilder, Document document, StyleSheet styleSheet, List<Headline> headlines, URL imageUrl) {
         final String placeholder = "<§§BOOKMARK_TREE§§>";
         foBuilder.append(placeholder);
 
@@ -119,17 +123,17 @@ public class XslFoGenerator {
 
             if (sequence.header() != null) {
                 foBuilder.append("    <fo:static-content flow-name=\"xsl-region-before\">\n");
-                generateBlockElements(sequence.header().elements(), styleSheet, foBuilder, headlines);
+                generateBlockElements(sequence.header().elements(), styleSheet, foBuilder, headlines,imageUrl);
                 foBuilder.append("    </fo:static-content>\n");
             }
             if (sequence.footer() != null) {
                 foBuilder.append("    <fo:static-content flow-name=\"xsl-region-after\">\n");
-                generateBlockElements(sequence.footer().elements(), styleSheet, foBuilder, headlines);
+                generateBlockElements(sequence.footer().elements(), styleSheet, foBuilder, headlines,imageUrl);
                 foBuilder.append("    </fo:static-content>\n");
             }
 
             foBuilder.append("    <fo:flow flow-name=\"xsl-region-body\">\n");
-            generateBlockElements(sequence.body().elements(), styleSheet, foBuilder, headlines);
+            generateBlockElements(sequence.body().elements(), styleSheet, foBuilder, headlines,imageUrl);
             foBuilder.append("    </fo:flow>\n");
 
             foBuilder.append("  </fo:page-sequence>\n");
@@ -213,6 +217,12 @@ public class XslFoGenerator {
                 }
                 if (pageStyle.getFooterExtent() != null) {
                     foBuilder.append(" margin-bottom=\"").append(escapeXml(pageStyle.getFooterExtent())).append("\"");
+                }
+                if(pageStyle.getColumnCount() != null) {
+                    foBuilder.append(" column-count=\"").append(escapeXml(pageStyle.getColumnCount())).append("\"");
+                }
+                if (pageStyle.getColumnGap() != null){
+                    foBuilder.append(" column-gap=\"").append(escapeXml(pageStyle.getColumnGap())).append("\"");
                 }
                 foBuilder.append("/>\n");
 

@@ -6,6 +6,7 @@ import de.kaiser.model.structure.*;
 import de.kaiser.model.style.ListStyleProperties;
 import de.kaiser.model.style.StyleSheet;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class ListFoGenerator extends ElementFoGenerator {
     }
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
         SimpleList list = (SimpleList) element;
         ListStyleProperties style = list.getResolvedStyle();
 
@@ -54,7 +55,7 @@ public class ListFoGenerator extends ElementFoGenerator {
                 builder.append("          </fo:list-item-label>\n");
                 builder.append("          <fo:list-item-body role=\"LBody\" start-indent=\"body-start()\">\n");
 
-                mainGenerator.generateBlockElement(item, styleSheet, builder, headlines);
+                mainGenerator.generateBlockElement(item, styleSheet, builder, headlines, imageUrl);
 
                 builder.append("          </fo:list-item-body>\n");
                 builder.append("        </fo:list-item>\n");

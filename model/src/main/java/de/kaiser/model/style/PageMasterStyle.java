@@ -35,6 +35,12 @@ public class PageMasterStyle {
     @JsonProperty("footer-extent")
     private String footerExtent; // z.B. "1.5cm"
 
+    @JsonProperty("column-count")
+    private String columnCount;
+
+    @JsonProperty("column-gap")
+    private String columnGap;
+
     //-- Constructor ---
 
     public PageMasterStyle() {}
@@ -42,7 +48,7 @@ public class PageMasterStyle {
     public PageMasterStyle(String name, String pageHeight, String pageWidth,
                            String marginTop, String marginBottom,
                            String marginLeft, String marginRight, String headerExtent,
-                           String footerExtent) {
+                           String footerExtent,String columnCount,String columnGap) {
         this.name = name;
         this.pageHeight = pageHeight;
         this.pageWidth = pageWidth;
@@ -52,6 +58,8 @@ public class PageMasterStyle {
         this.marginRight = marginRight;
         this.headerExtent = headerExtent;
         this.footerExtent = footerExtent;
+        this.columnCount = columnCount;
+        this.columnGap = columnGap;
     }
 
     // --- Getter und Setter ---
@@ -134,6 +142,22 @@ public class PageMasterStyle {
 
     public void setFooterExtent(String footerExtent) {
         this.footerExtent = footerExtent;
+    }
+
+    public String getColumnCount() {
+        return columnCount;
+    }
+
+    public void setColumnCount(String columnCount) {
+        this.columnCount = columnCount;
+    }
+
+    public String getColumnGap() {
+        return columnGap;
+    }
+
+    public void setColumnGap(String columnGap) {
+        this.columnGap = columnGap;
     }
 }
 

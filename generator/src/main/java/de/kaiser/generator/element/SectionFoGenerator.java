@@ -7,6 +7,7 @@ import de.kaiser.model.structure.Section;
 import de.kaiser.model.style.SectionStyleProperties;
 import de.kaiser.model.style.StyleSheet;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ public class SectionFoGenerator extends ElementFoGenerator {
      * @param headlines  The list of headlines for bookmark generation.
      */
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
         Section section = (Section) element;
         SectionStyleProperties style = section.getResolvedStyle();
 
@@ -44,7 +45,7 @@ public class SectionFoGenerator extends ElementFoGenerator {
         builder.append(">\n");
 
         // getElements is never null
-        mainGenerator.generateBlockElements(section.getElements(), styleSheet, builder, headlines);
+        mainGenerator.generateBlockElements(section.getElements(), styleSheet, builder, headlines,imageUrl);
 
         builder.append("      </fo:block>\n");
     }
@@ -60,6 +61,7 @@ public class SectionFoGenerator extends ElementFoGenerator {
         if (style == null) return;
 
         setFontStyle(styleSheet, style, builder);
+        builder.append(" line-height=\"0pt\"  break-before=\"auto\" keep-with-previous.within-page=\"always\" border-width=\"0pt\"");
 
         if (style.getPadding() != null) {
             builder.append(" padding=\"").append(escapeXml(style.getPadding())).append("\"");
@@ -69,6 +71,18 @@ public class SectionFoGenerator extends ElementFoGenerator {
         }
         if (style.getBackgroundColor() != null) {
             builder.append(" background-color=\"").append(escapeXml(style.getBackgroundColor())).append("\"");
+        }
+        if(style.getStartIndent() != null){
+            builder.append(" start-indent=\"").append(escapeXml(style.getStartIndent())).append("\"");
+        }
+        if(style.getEndIndent() != null){
+            builder.append(" end-indent=\"").append(escapeXml(style.getEndIndent())).append("\"");
+        }
+        if(style.getSpaceBefore()!=null){
+            builder.append(" space-before=\"").append(escapeXml(style.getSpaceBefore())).append("\"");
+        }
+        if(style.getSpaceAfter()!=null){
+            builder.append(" space-after=\"").append(escapeXml(style.getSpaceAfter())).append("\"");
         }
     }
 }

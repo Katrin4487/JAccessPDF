@@ -65,27 +65,27 @@ class XslFoGeneratorTest {
         PageSequence pageSequence = new PageSequence("default", body, header, footer);
 
         // Create the final document
-        testDocument = new Document(metadata, List.of(pageSequence));
+        testDocument = new Document(null,metadata, List.of(pageSequence));
     }
 
     @Test
     @DisplayName("Should return an empty string when the document is null")
     void generate_withNullDocument_shouldReturnEmptyString() {
-        String result = xslFoGenerator.generate(null, testStyleSheet);
+        String result = xslFoGenerator.generate(null, testStyleSheet,null);
         assertEquals("", result, "An empty result was expected for a null document.");
     }
 
     @Test
     @DisplayName("Should return an empty string when the stylesheet is null")
     void generate_withNullStyleSheet_shouldReturnEmptyString() {
-        String result = xslFoGenerator.generate(testDocument, null);
+        String result = xslFoGenerator.generate(testDocument, null,null);
         assertEquals("", result, "An empty result was expected for a null stylesheet.");
     }
 
     @Test
     @DisplayName("Should generate a valid basic XSL-FO structure")
     void generate_withValidInputs_shouldProduceRootElement() {
-        String result = xslFoGenerator.generate(testDocument, testStyleSheet);
+        String result = xslFoGenerator.generate(testDocument, testStyleSheet,null);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
@@ -97,7 +97,7 @@ class XslFoGeneratorTest {
     @Test
     @DisplayName("Should generate metadata (Declarations) correctly")
     void generate_withValidInputs_shouldGenerateDeclarations() {
-        String result = xslFoGenerator.generate(testDocument, testStyleSheet);
+        String result = xslFoGenerator.generate(testDocument, testStyleSheet,null);
 
         assertTrue(result.contains("<fo:declarations>"), "fo:declarations block is missing.");
         assertTrue(result.contains("<dc:title>A Title</dc:title>"), "Title in metadata is missing.");
@@ -109,7 +109,7 @@ class XslFoGeneratorTest {
     @Test
     @DisplayName("Should generate bookmarks for headlines and replace the placeholder")
     void generate_withHeadlines_shouldGenerateBookmarks() {
-        String result = xslFoGenerator.generate(testDocument, testStyleSheet);
+        String result = xslFoGenerator.generate(testDocument, testStyleSheet,null);
 
         // Checks if the placeholder is gone and bookmark code has been inserted
         assertFalse(result.contains("<§§BOOKMARK_TREE§§>"), "The bookmark placeholder was not replaced.");

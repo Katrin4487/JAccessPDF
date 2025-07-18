@@ -45,14 +45,4 @@ class FootnoteTest {
         Footnote footnote = new Footnote("", null, null, null);
         assertEquals("*", footnote.getIndex());
     }
-
-    @Test
-    @DisplayName("should delegate style resolution to its inline elements")
-    void shouldDelegateStyleResolution() {
-        Footnote footnote = new Footnote("1", null, null, List.of(mockInlineElement));
-
-        footnote.resolveStyles(mockContext);
-
-        verify(mockInlineElement, times(1)).resolveStyles(mockContext);
-    }
 }

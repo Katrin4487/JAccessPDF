@@ -9,6 +9,7 @@ import de.kaiser.model.style.StyleSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.List;
 
 public class PartFoGenerator extends ElementFoGenerator {
@@ -22,7 +23,7 @@ public class PartFoGenerator extends ElementFoGenerator {
     }
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
         Part part = (Part) element;
         PartStyleProperties style = part.getResolvedStyle();
 
@@ -31,7 +32,7 @@ public class PartFoGenerator extends ElementFoGenerator {
         builder.append(">\n");
 
 
-        mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines);
+        mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines, imageUrl);
 
         builder.append("      </fo:block>\n");
     }

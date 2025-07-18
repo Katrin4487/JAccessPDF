@@ -67,12 +67,15 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
                 builder.append(" baseline-shift=\"").append(escapeXml(style.getBaselineShift())).append("\"");
             }
 
-            builder.append(">");
-            builder.append(escapeXml(textRun.getText()));
-        } else {
+            if(style.getLineFeedTreatment()!=null){
+                builder.append(" linefeed-treatment=\"").append(escapeXml(style.getLineFeedTreatment())).append("\"");
+            }
 
-            builder.append(escapeXml(textRun.getText()));
+
         }
+        builder.append(">");
+        builder.append(escapeXml(textRun.getText()));
+
         builder.append("</fo:inline>");
         log.debug("Generated: {}",builder);
     }

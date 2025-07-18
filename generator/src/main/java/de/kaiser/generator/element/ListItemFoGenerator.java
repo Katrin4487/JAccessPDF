@@ -9,6 +9,7 @@ import de.kaiser.model.style.ElementBlockStyleProperties;
 import de.kaiser.model.style.StyleSheet;
 import de.kaiser.model.style.TextBlockStyleProperties;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
      * that can contain other block-level elements.
      */
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
         ListItem listItem = (ListItem) element;
         ElementBlockStyleProperties style = listItem.getResolvedStyle();
 
@@ -46,7 +47,7 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
         // Delegate the generation of the list item's content back to the main generator.
         // This allows a list item to contain paragraphs, other lists, tables, etc.
         if (listItem.getElements() != null) {
-            mainGenerator.generateBlockElements(listItem.getElements(), styleSheet, builder, headlines);
+            mainGenerator.generateBlockElements(listItem.getElements(), styleSheet, builder, headlines,imageUrl);
         }
 
         builder.append("            </fo:block>\n");

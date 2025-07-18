@@ -8,6 +8,8 @@ import java.util.List;
  * Represents the root object of the document structure, deserialized from the main JSON file.
  */
 public record Document(
+        @JsonProperty("internal-addresses")
+        InternalAddresses internalAddresses,
         @JsonProperty("metadata")
         Metadata metadata,
         @JsonProperty("page-sequences")

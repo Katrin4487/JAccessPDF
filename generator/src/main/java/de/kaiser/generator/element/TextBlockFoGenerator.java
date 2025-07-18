@@ -9,6 +9,7 @@ import de.kaiser.model.style.ElementBlockStyleProperties;
 import de.kaiser.model.style.StyleSheet;
 import de.kaiser.model.style.TextBlockStyleProperties;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
     }
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
         TextBlock textBlock = (TextBlock) element;
         TextBlockStyleProperties style = textBlock.getResolvedStyle();
 
@@ -49,7 +50,7 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
             }
         }
 
-        builder.append("      </fo:block>\n");
+        builder.append("      </fo:block>");
     }
 
     /**
@@ -85,6 +86,15 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
         if(style.getEndIndent() != null){
             builder.append(" end-indent=\"").append(escapeXml(style.getEndIndent())).append("\"");
         }
+        if(style instanceof TextBlockStyleProperties textProps){
+            if(textProps.getSpan() != null){
+                builder.append(" span=\"").append(escapeXml(textProps.getSpan())).append("\"");
+            }
+            if(textProps.getLinefeedTreatment() !=null){
+                builder.append(" linefeed-treatment=\"").append(escapeXml(textProps.getLinefeedTreatment())).append("\"");
+            }
+        }
+
     }
 
     /**

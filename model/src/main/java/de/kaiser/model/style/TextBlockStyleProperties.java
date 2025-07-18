@@ -22,6 +22,11 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
     @JsonProperty("text-align")
     private String textAlign; //start, center, end, justify
 
+    private String span; //all
+
+    @JsonProperty("linefeed-treatment")
+    private String linefeedTreatment; //"preserve"
+
     public TextBlockStyleProperties() {
         super();
         //prevent init from outside
@@ -59,6 +64,22 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
         this.textAlign = textAlign;
     }
 
+    public String getSpan() {
+        return span;
+    }
+
+    public void setSpan(String span) {
+        this.span = span;
+    }
+
+    public String getLinefeedTreatment() {
+        return linefeedTreatment;
+    }
+
+    public void setLinefeedTreatment(String linefeedTreatment) {
+        this.linefeedTreatment = linefeedTreatment;
+    }
+
     /**
      * Merges properties from a base style into this one.
      * Only properties that are null in this object will be set from the base.
@@ -67,6 +88,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
      */
     @Override
     public void mergeWith(ElementStyleProperties base) {
+
         super.mergeWith(base);
         if (!(base instanceof TextBlockStyleProperties textBase)) {
             return;
@@ -76,6 +98,8 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
         this.textColor = Optional.ofNullable(this.textColor).orElse(textBase.getTextColor());
         this.lineHeight = Optional.ofNullable(this.lineHeight).orElse(textBase.getLineHeight());
         this.textAlign = Optional.ofNullable(this.textAlign).orElse(textBase.getTextAlign());
+        this.span = Optional.ofNullable(this.span).orElse(textBase.getSpan());
+        this.linefeedTreatment = Optional.ofNullable(this.linefeedTreatment).orElse(textBase.getLinefeedTreatment());
 
     }
 
@@ -92,6 +116,8 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
             textBase.setTextColor(this.textColor);
             textBase.setLineHeight(this.lineHeight);
             textBase.setTextAlign(this.textAlign);
+            textBase.setSpan(this.span);
+            textBase.setLinefeedTreatment(this.linefeedTreatment);
 
         }
     }

@@ -6,6 +6,7 @@ import de.kaiser.model.style.StyleSheet;
 import de.kaiser.model.style.TableCellStyleProperties;
 import de.kaiser.model.style.TableStyleProperties;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ public class TableFoGenerator extends ElementFoGenerator {
      * @param headlines  The list of headlines for bookmark generation.
      */
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
         Table table = (Table) element;
         TableStyleProperties style = table.getResolvedStyle();
 
@@ -69,19 +70,19 @@ public class TableFoGenerator extends ElementFoGenerator {
         // Generate table header
         if (table.getHeader() != null) {
             builder.append("          <fo:table-header>\n");
-            generateRows(table.getHeader(), styleSheet, builder, headlines);
+            generateRows(table.getHeader(), styleSheet, builder, headlines,imageUrl);
             builder.append("          </fo:table-header>\n");
         }
         if (table.getFooter() != null) {
             builder.append("          <fo:table-footer>\n");
-            generateRows(table.getFooter(), styleSheet, builder, headlines);
+            generateRows(table.getFooter(), styleSheet, builder, headlines,imageUrl);
             builder.append("          </fo:table-footer>\n");
         }
 
         // Generate table body
         if (table.getBody() != null) {
             builder.append("          <fo:table-body>\n");
-            generateRows(table.getBody(), styleSheet, builder, headlines);
+            generateRows(table.getBody(), styleSheet, builder, headlines,imageUrl);
             builder.append("          </fo:table-body>\n");
         }
 
@@ -94,13 +95,13 @@ public class TableFoGenerator extends ElementFoGenerator {
     /**
      * Helper method: generates rows for a specific table section (body, header, footer).
      */
-    private void generateRows(TableSection section, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    private void generateRows(TableSection section, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines,URL imageUrl) {
         if (section == null || section.rows() == null) return;
         for (TableRow row : section.rows()) {
             builder.append("            <fo:table-row>\n");
             if (row.cells() != null) {
                 for (TableCell cell : row.cells()) {
-                    generateCell(cell, styleSheet, builder, headlines);
+                    generateCell(cell, styleSheet, builder, headlines,imageUrl);
                 }
             }
             builder.append("            </fo:table-row>\n");
@@ -110,7 +111,7 @@ public class TableFoGenerator extends ElementFoGenerator {
     /**
      * Helper method: creates a single cell with content.
      */
-    private void generateCell(TableCell cell, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines) {
+    private void generateCell(TableCell cell, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines,URL imageUrl) {
         TableCellStyleProperties style = cell.getResolvedStyle();
 
         builder.append("              <fo:table-cell");
@@ -146,7 +147,7 @@ public class TableFoGenerator extends ElementFoGenerator {
         // The content of a cell is a block, so we need a block container.
         builder.append("                <fo:block>\n");
         // Delegate generation of the cell's content back to the main generator.
-        mainGenerator.generateBlockElements(cell.getElements(), styleSheet, builder, headlines);
+        mainGenerator.generateBlockElements(cell.getElements(), styleSheet, builder, headlines,imageUrl);
         builder.append("                </fo:block>\n");
 
         builder.append("              </fo:table-cell>\n");

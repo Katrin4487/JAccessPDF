@@ -30,6 +30,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
+import java.net.URL;
 
 /**
  * The facade is the central entry point for the creation of a PDF.
@@ -81,8 +82,14 @@ public final class PdfGenerationFacade {
         String fopConfigXml = buildFopConfig(fontLoader);
         InputStream fopConfigStream = new ByteArrayInputStream(fopConfigXml.getBytes());
 
+        URL imageUrl = null;
+        if(document.internalAddresses()!=null && document.internalAddresses().imageDictionary()!=null){
+            imageUrl = provider.getResource(document.internalAddresses().imageDictionary());
+        }
+
+
         // 3. Generate XSL-FO string from the document model
-        String xslFoString = foGenerator.generate(document, styleSheet);
+        String xslFoString = foGenerator.generate(document, styleSheet,imageUrl);
         System.out.println("######### OUT ####\n"+xslFoString);
         InputStream xslFoStream = new ByteArrayInputStream(xslFoString.getBytes());
 

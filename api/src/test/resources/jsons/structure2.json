@@ -1,0 +1,57 @@
+{
+  "internal-addresses": {
+    "font-dictionary": "/fonts",
+    "image-dictionary": "/images"
+  },
+  "metadata": {
+    "title": "My Document Title",
+    "author": "Katrin Kaiser",
+    "language": "en-US"
+  },
+  "page-sequences": [
+    {
+      "style-class": "main-content",
+      "header": {
+        "elements": [
+          {
+            "type": "block-image",
+            "path": "test.png"
+          }
+        ]
+      },
+      "body": {
+        "elements": [
+          {
+            "type": "headline",
+            "style-class": "h1-style-all",
+            "level": 1,
+            "inline-elements": [
+              {
+                "type": "text-run",
+                "text": "Sie sind fast am Ziel. Bitte legitimieren Sie sich ganz einfach\nmit einer der folgenden Möglichkeiten:"
+
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "style-class": "gray-section",
+            "elements": [
+              {
+                "type": "headline",
+                "style-class": "h1-style",
+                "level": 2,
+                "inline-elements": [
+                  {
+                    "type": "text-run",
+                    "text": "Legitimation per Smartphone oder Tablet"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

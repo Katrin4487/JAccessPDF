@@ -43,6 +43,11 @@ public class TextRunStyleProperties extends InlineTextElementStyleProperties{
         } else if (parentStyle instanceof TextBlockStyleProperties textParent) {
             newResolvedStyle.setTextStyleName(textParent.getTextStyleName());
         }
+        if (specificStyle != null && specificStyle.getLineFeedTreatment() != null) {
+            newResolvedStyle.setLineFeedTreatment(specificStyle.getLineFeedTreatment());
+        } else if (parentStyle instanceof TextBlockStyleProperties textParent) {
+            newResolvedStyle.setLineFeedTreatment(textParent.getLinefeedTreatment());
+        }
 
         if (specificStyle != null) {
             if(specificStyle.getTextDecoration()!=null){

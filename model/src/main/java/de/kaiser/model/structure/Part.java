@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@JsonTypeName(ElementTypes.PART) // Annahme: ElementTypes.PART = "part"
+@JsonTypeName(ElementTypes.PART)
 public final class Part implements Element {
 
     private static final Logger log = LoggerFactory.getLogger(Part.class);

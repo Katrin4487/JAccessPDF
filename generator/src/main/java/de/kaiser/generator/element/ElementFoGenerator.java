@@ -5,6 +5,8 @@ import de.kaiser.model.structure.Headline;
 import de.kaiser.model.style.ElementStyleProperties;
 import de.kaiser.model.style.StyleSheet;
 import de.kaiser.model.style.TextBlockStyleProperties;
+
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -19,7 +21,7 @@ public abstract class ElementFoGenerator {
      * @param styleSheet The entire StyleSheet for accessing, for example, Font information.
      * @param builder The StringBuilder to which the generated string is appended.
      */
-    public abstract void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines);
+    public abstract void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl);
 
     /**
      * Escapes special characters in a given text to ensure it can be safely used in XML.

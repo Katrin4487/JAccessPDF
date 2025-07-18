@@ -77,23 +77,26 @@ public abstract class TextBlock extends AbstractElement {
     public void resolveStyles(StyleResolverContext context) {
         ElementBlockStyleProperties baseStyle = context.parentBlockStyle();
         if (baseStyle == null) {
-            // If no parent, start with a fresh default style.
             baseStyle = new ParagraphStyleProperties();
         }
 
+        TextBlockStyleProperties finalStyle = new TextBlockStyleProperties();
         // Start with a copy of the base style.
-        TextBlockStyleProperties finalStyle = (TextBlockStyleProperties) baseStyle.copy();
-
-        // If a specific style class is defined, find it and merge it.
-        if (this.styleClass != null) {
-            ElementStyle specificElementStyle = context.styleMap().get(this.styleClass);
-            if (specificElementStyle != null && specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
-                // The specific style's properties are merged into our final style.
-                finalStyle.mergeWith(specificStyle);
-            }
+        if(baseStyle instanceof TextBlockStyleProperties) {
+            finalStyle = (TextBlockStyleProperties) baseStyle.copy();
         }
 
-        this.resolvedStyle = finalStyle;
+            // If a specific style class is defined, find it and merge it.
+            if (this.styleClass != null) {
+                ElementStyle specificElementStyle = context.styleMap().get(this.styleClass);
+                if (specificElementStyle != null && specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
+                    // The specific style's properties are merged into our final style.
+                    finalStyle.mergeWith(specificStyle);
+                }
+            }
+
+            this.resolvedStyle = finalStyle;
+
 
         // Delegate to inline elements with the newly resolved context.
         StyleResolverContext childContext = context.createChildContext(this.resolvedStyle);

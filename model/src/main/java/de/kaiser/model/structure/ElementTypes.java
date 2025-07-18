@@ -16,5 +16,6 @@ public final class ElementTypes {
     public static final String TABLE = "table";
     public static final String SECTION = "section";
     public static final String PART = "part";
+    public static final String BLOCK_IMAGE = "block-image";
 
 }

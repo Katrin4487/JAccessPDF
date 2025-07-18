@@ -20,7 +20,7 @@ public class DocumentTest {
 
         List<PageSequence> sequences = Collections.singletonList(PageSequence.builder("style").build());
 
-        Document document = new Document(metadata, sequences);
+        Document document = new Document(null,metadata, sequences);
 
         assertEquals(metadata, document.metadata());
         assertEquals(sequences, document.pageSequences());
@@ -31,7 +31,7 @@ public class DocumentTest {
     public void shouldReplaceNullPageSequencesWithEmptyList() {
 
         Metadata metadata = new Metadata("A title");
-        Document document = new Document(metadata, null);
+        Document document = new Document(null,metadata, null);
         assertNotNull(document.pageSequences(), "The pageSequences list should never be null.");
         assertTrue(document.pageSequences().isEmpty(), "The list should be empty.");
     }
