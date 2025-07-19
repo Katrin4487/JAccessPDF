@@ -32,7 +32,7 @@ public class XslFoGenerator {
         this.blockGeneratorRegistry.put(Table.class, new TableFoGenerator(this));
         this.blockGeneratorRegistry.put(Section.class, new SectionFoGenerator(this));
         this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
-        this.blockGeneratorRegistry.put(BlockImage.class,new ImageFoGenerator(this));
+        this.blockGeneratorRegistry.put(BlockImage.class,new ImageFoGenerator());
 
         // Register Inline-Level Generators
         this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());
@@ -122,21 +122,21 @@ public class XslFoGenerator {
             foBuilder.append("  <fo:page-sequence master-reference=\"").append(escapeXml(sequence.styleClass())).append("\">\n");
 
             if (sequence.header() != null) {
-                foBuilder.append("    <fo:static-content flow-name=\"xsl-region-before\">\n");
+                foBuilder.append("    <fo:static-content flow-name=\"xsl-region-before\">");
                 generateBlockElements(sequence.header().elements(), styleSheet, foBuilder, headlines,imageUrl);
                 foBuilder.append("    </fo:static-content>\n");
             }
             if (sequence.footer() != null) {
-                foBuilder.append("    <fo:static-content flow-name=\"xsl-region-after\">\n");
+                foBuilder.append("    <fo:static-content flow-name=\"xsl-region-after\">");
                 generateBlockElements(sequence.footer().elements(), styleSheet, foBuilder, headlines,imageUrl);
                 foBuilder.append("    </fo:static-content>\n");
             }
 
-            foBuilder.append("    <fo:flow flow-name=\"xsl-region-body\">\n");
+            foBuilder.append("    <fo:flow flow-name=\"xsl-region-body\">");
             generateBlockElements(sequence.body().elements(), styleSheet, foBuilder, headlines,imageUrl);
-            foBuilder.append("    </fo:flow>\n");
+            foBuilder.append("    </fo:flow>");
 
-            foBuilder.append("  </fo:page-sequence>\n");
+            foBuilder.append("  </fo:page-sequence>");
         }
     }
 
@@ -155,7 +155,7 @@ public class XslFoGenerator {
         Metadata metadata = document.metadata();
         String lang = (metadata != null && metadata.language() != null && !metadata.language().isEmpty()) ? metadata.language() : "en";
 
-        foBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+        foBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
                 .append("<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\"")
                 .append(" xmlns:fox=\"http://xmlgraphics.apache.org/fop/extensions\"")
                 .append(" xml:lang=\"").append(escapeXml(lang)).append("\"");
@@ -164,7 +164,7 @@ public class XslFoGenerator {
             foBuilder.append(" font-family=\"").append(escapeXml(defaultFontFamily)).append("\"");
         }
 
-        foBuilder.append(" xmlns:x=\"adobe:ns:meta/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n");
+        foBuilder.append(" xmlns:x=\"adobe:ns:meta/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">");
     }
 
     private void generateDeclarations(StringBuilder foBuilder, Document document) {
@@ -174,27 +174,27 @@ public class XslFoGenerator {
             return;
         }
 
-        foBuilder.append("  <fo:declarations>\n")
-                .append("    <x:xmpmeta>\n")
-                .append("      <rdf:RDF>\n")
-                .append("        <rdf:Description rdf:about=\"\">\n")
-                .append("          <dc:title>").append(escapeXml(metadata.title())).append("</dc:title>\n");
+        foBuilder.append("  <fo:declarations>")
+                .append("    <x:xmpmeta>")
+                .append("      <rdf:RDF>")
+                .append("        <rdf:Description rdf:about=\"\">")
+                .append("          <dc:title>").append(escapeXml(metadata.title())).append("</dc:title>");
 
         if (metadata.author() != null) {
-            foBuilder.append("          <dc:creator>").append(escapeXml(metadata.author())).append("</dc:creator>\n");
+            foBuilder.append("          <dc:creator>").append(escapeXml(metadata.author())).append("</dc:creator>");
         }
         if (metadata.subject() != null) {
-            foBuilder.append("          <dc:description>").append(escapeXml(metadata.subject())).append("</dc:description>\n");
+            foBuilder.append("          <dc:description>").append(escapeXml(metadata.subject())).append("</dc:description>");
         }
 
-        foBuilder.append("        </rdf:Description>\n")
-                .append("      </rdf:RDF>\n")
-                .append("    </x:xmpmeta>\n")
-                .append("  </fo:declarations>\n");
+        foBuilder.append("        </rdf:Description>")
+                .append("      </rdf:RDF>")
+                .append("    </x:xmpmeta>")
+                .append("  </fo:declarations>");
     }
 
     private void generateLayoutMasterSet(StringBuilder foBuilder, StyleSheet styleSheet) {
-        foBuilder.append("  <fo:layout-master-set>\n");
+        foBuilder.append("  <fo:layout-master-set>");
         if (styleSheet.pageMasterStyles() != null) {
             for (PageMasterStyle pageStyle : styleSheet.pageMasterStyles()) {
                 foBuilder.append("    <fo:simple-page-master master-name=\"").append(escapeXml(pageStyle.getName())).append("\"")
@@ -229,21 +229,21 @@ public class XslFoGenerator {
                 if (pageStyle.getHeaderExtent() != null) {
                     foBuilder.append("      <fo:region-before region-name=\"xsl-region-before\" extent=\"")
                             .append(escapeXml(pageStyle.getHeaderExtent()))
-                            .append("\"/>\n");
+                            .append("\"/>");
                 }
                 if (pageStyle.getFooterExtent() != null) {
                     foBuilder.append("      <fo:region-after region-name=\"xsl-region-after\" extent=\"")
                             .append(escapeXml(pageStyle.getFooterExtent()))
-                            .append("\"/>\n");
+                            .append("\"/>");
                 }
-                foBuilder.append("    </fo:simple-page-master>\n");
+                foBuilder.append("    </fo:simple-page-master>");
             }
         }
-        foBuilder.append("  </fo:layout-master-set>\n");
+        foBuilder.append("  </fo:layout-master-set>");
     }
 
     private void generateRootEnd(StringBuilder foBuilder) {
-        foBuilder.append("</fo:root>\n");
+        foBuilder.append("</fo:root>");
     }
 
     private String findDefaultFontFamily(StyleSheet styleSheet) {

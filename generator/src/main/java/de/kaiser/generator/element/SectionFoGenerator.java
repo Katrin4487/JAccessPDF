@@ -42,12 +42,12 @@ public class SectionFoGenerator extends ElementFoGenerator {
 
         builder.append("      <fo:block role=\"Sect\"");
         appendSectionAttributes(builder, style, styleSheet);
-        builder.append(">\n");
+        builder.append(">");
 
         // getElements is never null
         mainGenerator.generateBlockElements(section.getElements(), styleSheet, builder, headlines,imageUrl);
 
-        builder.append("      </fo:block>\n");
+        builder.append("      </fo:block>");
     }
 
     /**
@@ -61,7 +61,6 @@ public class SectionFoGenerator extends ElementFoGenerator {
         if (style == null) return;
 
         setFontStyle(styleSheet, style, builder);
-        builder.append(" line-height=\"0pt\"  break-before=\"auto\" keep-with-previous.within-page=\"always\" border-width=\"0pt\"");
 
         if (style.getPadding() != null) {
             builder.append(" padding=\"").append(escapeXml(style.getPadding())).append("\"");

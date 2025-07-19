@@ -42,7 +42,7 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
             appendSpecificAttributes(builder, textStyle);
         }
 
-        builder.append(">\n");
+        builder.append(">");
 
         // Delegate the generation of the list item's content back to the main generator.
         // This allows a list item to contain paragraphs, other lists, tables, etc.
@@ -50,7 +50,7 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
             mainGenerator.generateBlockElements(listItem.getElements(), styleSheet, builder, headlines,imageUrl);
         }
 
-        builder.append("            </fo:block>\n");
+        builder.append("            </fo:block>");
     }
 
     @Override

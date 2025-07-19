@@ -4,10 +4,14 @@
       "name": "main-content",
       "page-height": "29.7cm",
       "page-width": "21cm",
-      "margin": "2cm",
+      "margin-right": "1cm",
+      "margin-top": "1cm",
+      "margin-left": "2cm",
+      "margin-bottom": "2cm",
       "column-count": "2",
-      "column-gap": "1cm",
-      "header-extent": "5cm"
+      "column-gap": "0.2cm",
+      "header-extent": "2cm",
+      "footer-extent": "9cm"
     }
   ],
   "text-styles": [
@@ -19,29 +23,22 @@
       "font-style": "normal"
     },
     {
-      "name": "headline2",
-      "font-size": "16pt",
-      "font-family-name": "Open Sans",
-      "font-weight": "400",
-      "font-style": "normal"
-    },
-    {
       "name": "normal-text",
-      "font-size": "11pt",
+      "font-size": "8.5pt",
       "font-family-name": "Arial",
       "font-weight": "400",
       "font-style": "normal"
     },
     {
-      "name": "emphasis",
-      "font-size": "11pt",
-      "font-family-name": "Open Sans",
+      "name": "big-text",
+      "font-size": "13pt",
+      "font-family-name": "Arial",
       "font-weight": "400",
-      "font-style": "italic"
+      "font-style": "normal"
     },
     {
-      "name": "bold",
-      "font-size": "11pt",
+      "name": "bold-text",
+      "font-size": "8.5pt",
       "font-family-name": "Open Sans",
       "font-weight": "700",
       "font-style": "normal"
@@ -55,8 +52,8 @@
         "linefeed-treatment": "preserve",
         "text-style-name": "headline",
         "span": "all",
-        "line-height": "1",
-        "space-after": "0pt"
+        "line-height": "1.5",
+        "space-after": "0.5cm"
       }
     },
     {
@@ -65,16 +62,21 @@
       "properties": {
         "text-style-name": "headline",
         "space-before":"0cm",
-        "line-height": "1"
+        "line-height": "1.5",
+        "space-after": "7pt",
+        "linefeed-treatment": "preserve"
       }
     },
     {
       "name": "gray-section",
       "target-element": "section",
       "properties": {
-        "background-color": "gray",
-        "padding": "0cm",
-        "space-before": "0pt"
+        "background-color": "#D3D3D3",
+        "padding": "0.5cm",
+        "space-before": "0.2cm",
+        "space-after": "0.2cm",
+        "start-indent": "0.5cm",
+        "end-indent": "0.5cm"
       }
     },
     {
@@ -82,7 +84,77 @@
       "target-element": "paragraph",
       "properties": {
         "text-style-name": "normal-text",
-        "text-align": "justify"
+        "space-after": "0.2cm"
+      }
+    },
+    {
+      "name": "spaces-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-align": "justify",
+        "space-before": "1cm"
+      }
+    },
+    {
+      "name": "bold-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "bold-text",
+        "text-align": "justify",
+        "space-before": "0.3cm",
+        "space-after": "0.2cm"
+      }
+    },
+    {
+      "name": "logo-block",
+      "target-element": "block-image",
+      "properties": {
+        "alignment": "right"
+      }
+    },
+    {
+      "name": "center-block",
+      "target-element": "block-image",
+      "properties": {
+        "alignment": "center"
+      }
+    },
+    {
+      "name": "center-block-width",
+      "target-element": "block-image",
+      "properties": {
+        "alignment": "center",
+        "content-width": "21cm"
+      }
+    },
+    {
+      "name" : "step-list",
+      "target-element": "list",
+      "properties": {
+        "provisional-distance-between-starts" :  "0.5cm",
+        "list-style-position" : "outside",
+        "text-style-name": "bold-text",
+        "space-before": "0.2cm"
+      }
+    },
+    {
+      "name": "inline-bold",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "bold-text",
+        "text-color": "black"
+      }
+    },
+    {
+      "name": "big-paragraph-style-all",
+      "target-element": "paragraph",
+      "properties": {
+        "linefeed-treatment": "preserve",
+        "text-style-name": "big-text",
+        "span": "all",
+        "space-before": "0.5cm",
+        "text-align": "center"
       }
     }
   ]

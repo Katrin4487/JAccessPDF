@@ -15,7 +15,8 @@
         "elements": [
           {
             "type": "block-image",
-            "path": "test.png"
+            "path": "logo.png",
+            "style-class": "logo-block"
           }
         ]
       },
@@ -44,11 +45,209 @@
                 "inline-elements": [
                   {
                     "type": "text-run",
-                    "text": "Legitimation per Smartphone oder Tablet"
+                    "text": "Legitimation\nper Smartphone oder Tablet"
+                  }
+                ]
+              },
+              {
+                "type": "list",
+                "ordering": "ordered",
+                "style-class": "step-list",
+                "items": [
+                  {
+                    "type": "list-item",
+                    "elements": [
+                      { "type": "paragraph",
+                        "style-class": "bold-paragraph",
+                        "inline-elements": [{ "type": "text-run", "text": "Installieren Sie die Ident App" }]
+                      },
+                      { "type": "paragraph",
+                        "style-class": "standard-paragraph",
+                        "inline-elements": [{ "type": "text-run", "text": "Installieren Sie die App auf Ihrem Smartphone oder Tablet (iOS oder Android). Den Link zur App haben wir per SMS an Ihre Telefonnummer gesendet." }]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "list-item",
+                    "elements": [
+                      { "type": "paragraph", "style-class": "bold-paragraph","inline-elements": [{ "type": "text-run", "text": "Ein Mitarbeiter leitet Sie durch die App" }] },
+                      { "type": "paragraph",
+                        "style-class": "standard-paragraph",
+                        "inline-elements": [{ "type": "text-run", "text": "Bitte legen Sie für die Legitimation bereit:" }]
+                      },
+                      {
+                        "type": "list",
+                        "ordering": "unordered",
+                        "style-class": "step-list",
+                        "items": [
+                          {
+                            "type": "list-item",
+                            "elements": [
+                              { "type": "paragraph",
+                                "style-class": "standard-paragraph",
+                                "inline-elements": [{ "type": "text-run", "text": "Ihre Ident-ID" }]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "list-item",
+                            "elements": [
+                              { "type": "paragraph",
+                                "style-class": "standard-paragraph",
+                                "inline-elements": [{ "type": "text-run", "text": "Ihren gültigen Personalausweis" }]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              { "type": "paragraph",
+                "style-class": "spaces-paragraph",
+                "inline-elements": [{ "type": "text-run", "text": "Die Legitimation ist täglich von 8 bis 24 Uhr möglich. Während des videoIDENTs werden Ton- und Bildaufnahmen von Ihnen und Ihrem Ausweis zum Zweck der Legitimation angefertigt. Die Commerzbank AG wird diese personenbezogenen Daten nur zu diesem Zweck verarbeiten und ohne ausdrückliche Einwilligung nicht an Dritte weitergeben." }]
+              },
+              { "type": "paragraph",
+                "style-class": "spaces-paragraph",
+                "inline-elements": [
+                  { "type": "text-run", "style-class":"inline-bold", "text": "Ihr Vorteil:"},
+                  { "type": "text-run", "text": " Sie legitimieren sich in wenigen Minuten. Der Auftrag ist direkt nach der Legitimation abgeschlossen." },
+                  { "type": "text-run", "style-class":"inline-bold", "text": " Sie müssen KEINE Unterlagen an die Bank senden."}
+                ]
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "style-class": "gray-section",
+            "elements": [
+
+              {
+                "type": "headline",
+                "style-class": "h1-style",
+                "level": 2,
+                "inline-elements": [
+                  {
+                    "type": "text-run",
+                    "text": "Legitimation in einer\nFiliale der Deutschen Post"
+                  }
+                ]
+              },
+              {
+                "type": "list",
+                "ordering": "ordered",
+                "style-class": "step-list",
+                "items": [
+                  {
+                    "type": "list-item",
+                    "elements": [
+                      { "type": "paragraph",
+                        "style-class": "bold-paragraph",
+                        "inline-elements": [{ "type": "text-run", "text": "Drucken Sie diese Seite aus" }]
+                      },
+                      { "type": "paragraph",
+                        "style-class": "standard-paragraph",
+                        "inline-elements": [{ "type": "text-run", "text": "Der für die Post benötigte POSTIDENT-Coupon befindet sich im unteren Abschnitt dieser Seite." }]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "list-item",
+                    "elements": [
+                      { "type": "paragraph", "style-class": "bold-paragraph","inline-elements": [{ "type": "text-run", "text": "Gehen Sie zu einer Filiale der Deutschen Post" }] },
+                      { "type": "paragraph",
+                        "style-class": "standard-paragraph",
+                        "inline-elements": [{ "type": "text-run", "text": "Bringen Sie bitte mit" }]
+                      },
+                      {
+                        "type": "list",
+                        "ordering": "unordered",
+                        "style-class": "step-list",
+                        "items": [
+                          {
+                            "type": "list-item",
+                            "elements": [
+                              { "type": "paragraph",
+                                "style-class": "standard-paragraph",
+                                "inline-elements": [{ "type": "text-run", "text": "Ihre gültigen Personalausweis oder Reisepass" }]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "list-item",
+                            "elements": [
+                              { "type": "paragraph",
+                                "style-class": "standard-paragraph",
+                                "inline-elements": [{ "type": "text-run", "text": "Der ausgedruckte POSTIDENT-Coupon" }]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              { "type": "paragraph",
+                "style-class": "spaces-paragraph",
+                "inline-elements": [
+                  { "type": "text-run", "text": "Der Mitarbeiter legitimiert Sie und leitet Ihre Daten kostenlos an die Commerzbank weiter." },
+                  { "type": "text-run", "style-class":"inline-bold", "text": " Sie müssen KEINE Unterlagen an die Bank senden."}
+                ]
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "style-class": "gray-section",
+            "elements": [
+              {
+                "type": "headline",
+                "style-class": "h1-style",
+                "level": 2,
+                "inline-elements": [
+                  {
+                    "type": "text-run",
+                    "text": "Legitimation in einer\nFiliale der Commerzbank"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "style-class": "standard-paragraph",
+                "inline-elements": [
+                  {
+                    "type": "text-run",
+                    "text": "Gehen Sie zu einer Filiale der Commerzbank.  Bringen Sie Ihren gültigen Personalausweis oder Reisepass  mit. Der Mitarbeiter erledigt alles Notwendige für Sie."
                   }
                 ]
               }
             ]
+          },
+          {
+            "type": "paragraph",
+            "style-class": "big-paragraph-style-all",
+            "inline-elements": [
+              {
+                "type": "text-run",
+                "text": "Haben Sie Fragen? Wir sind jeden Tag 24h für Sie da: 069 5 8000 8000"
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "elements": [
+          {
+            "type": "block-image",
+            "path": "scissor.png",
+            "style-class": "center-block"
+          },
+          {
+            "type": "block-image",
+            "path": "coupon.png",
+            "style-class": "center-block"
           }
         ]
       }

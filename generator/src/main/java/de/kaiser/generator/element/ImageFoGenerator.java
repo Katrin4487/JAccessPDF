@@ -22,11 +22,6 @@ import java.util.List;
 public class ImageFoGenerator extends ElementFoGenerator {
     private static final Logger log = LoggerFactory.getLogger(PartFoGenerator.class);
 
-    private final XslFoGenerator mainGenerator;
-
-    public ImageFoGenerator(XslFoGenerator mainGenerator) {
-        this.mainGenerator = mainGenerator;
-    }
 
     @Override
     public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
@@ -35,7 +30,7 @@ public class ImageFoGenerator extends ElementFoGenerator {
 
         builder.append("      <fo:block");
         appendBlockAttributes(builder, style, styleSheet);
-        builder.append(">\n");
+        builder.append(">");
         builder.append("<fo:external-graphic ");
         appendImageAttributes(builder, style);
 
@@ -45,25 +40,24 @@ public class ImageFoGenerator extends ElementFoGenerator {
             URL fileUrl = imageUrl.toURI().resolve(blockImage.getPath()).toURL();
             InputStream inputStream = fileUrl.openStream();
             byte[] imageBytes = inputStream.readAllBytes();
-
             String mimeType = fileUrl.toString().endsWith("png") ? "image/png" : "image/jpeg";
-
             String base64String = Base64.getEncoder().encodeToString(imageBytes);
-
             String srcDataUri = "data:" + mimeType + ";base64," + base64String;
             builder.append(" src=\"").append(srcDataUri).append("\"");
-            System.out.println("InputStream erfolgreich geöffnet. Verfügbare Bytes: " + inputStream.available());
 
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }
 
-        builder.append("/>\n");
-        builder.append("      </fo:block>\n");
+        builder.append("/>");
+        builder.append("      </fo:block>");
     }
 
     private void appendBlockAttributes(StringBuilder builder, BlockImageStyleProperties style, StyleSheet styleSheet) {
         if (style == null) return;
+        if(style.getAlignment()!=null){
+            builder.append(" text-align=\"").append(escapeXml(style.getAlignment())).append("\"");
+        }
         setFontStyle(styleSheet, style, builder);
 
     }

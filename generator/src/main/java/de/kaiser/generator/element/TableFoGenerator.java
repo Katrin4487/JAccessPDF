@@ -46,7 +46,7 @@ public class TableFoGenerator extends ElementFoGenerator {
             // Apply text properties from the table style to the container block
             setFontStyle(styleSheet, style, builder);
         }
-        builder.append(">\n");
+        builder.append(">");
 
         // Start the table and apply table-specific styles
         builder.append("        <fo:table");
@@ -58,7 +58,7 @@ public class TableFoGenerator extends ElementFoGenerator {
                 builder.append(" width=\"").append(escapeXml(style.getWidth())).append("\"");
             }
         }
-        builder.append(" table-layout=\"fixed\">\n");
+        builder.append(" table-layout=\"fixed\">");
 
         // Define table columns
         if (table.getColumns() != null) {
@@ -69,26 +69,26 @@ public class TableFoGenerator extends ElementFoGenerator {
 
         // Generate table header
         if (table.getHeader() != null) {
-            builder.append("          <fo:table-header>\n");
+            builder.append("          <fo:table-header>");
             generateRows(table.getHeader(), styleSheet, builder, headlines,imageUrl);
-            builder.append("          </fo:table-header>\n");
+            builder.append("          </fo:table-header>");
         }
         if (table.getFooter() != null) {
-            builder.append("          <fo:table-footer>\n");
+            builder.append("          <fo:table-footer>");
             generateRows(table.getFooter(), styleSheet, builder, headlines,imageUrl);
-            builder.append("          </fo:table-footer>\n");
+            builder.append("          </fo:table-footer>");
         }
 
         // Generate table body
         if (table.getBody() != null) {
-            builder.append("          <fo:table-body>\n");
+            builder.append("          <fo:table-body>");
             generateRows(table.getBody(), styleSheet, builder, headlines,imageUrl);
-            builder.append("          </fo:table-body>\n");
+            builder.append("          </fo:table-body>");
         }
 
 
-        builder.append("        </fo:table>\n");
-        builder.append("      </fo:block>\n");
+        builder.append("        </fo:table>");
+        builder.append("      </fo:block>");
     }
 
 
@@ -98,13 +98,13 @@ public class TableFoGenerator extends ElementFoGenerator {
     private void generateRows(TableSection section, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines,URL imageUrl) {
         if (section == null || section.rows() == null) return;
         for (TableRow row : section.rows()) {
-            builder.append("            <fo:table-row>\n");
+            builder.append("            <fo:table-row>");
             if (row.cells() != null) {
                 for (TableCell cell : row.cells()) {
                     generateCell(cell, styleSheet, builder, headlines,imageUrl);
                 }
             }
-            builder.append("            </fo:table-row>\n");
+            builder.append("            </fo:table-row>");
         }
     }
 
@@ -145,11 +145,11 @@ public class TableFoGenerator extends ElementFoGenerator {
         builder.append(">\n");
 
         // The content of a cell is a block, so we need a block container.
-        builder.append("                <fo:block>\n");
+        builder.append("                <fo:block>");
         // Delegate generation of the cell's content back to the main generator.
         mainGenerator.generateBlockElements(cell.getElements(), styleSheet, builder, headlines,imageUrl);
-        builder.append("                </fo:block>\n");
+        builder.append("                </fo:block>");
 
-        builder.append("              </fo:table-cell>\n");
+        builder.append("              </fo:table-cell>");
     }
 }

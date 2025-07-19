@@ -71,14 +71,14 @@ public final class ListItem implements Element {
             this.setResolvedStyle(context.parentBlockStyle() != null ? context.parentBlockStyle().copy() : null);
         }
 
-        // Create a new context for the children.
+
         StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
 
-        // Delegate style resolution to both label and body elements.
         if (label != null) {
             label.forEach(el -> el.resolveStyles(childContext));
         }
         if (elements != null) {
+            System.out.println("Resolve !!!");
             elements.forEach(el -> el.resolveStyles(childContext));
         }
     }

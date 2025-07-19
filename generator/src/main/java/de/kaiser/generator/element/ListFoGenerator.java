@@ -39,8 +39,8 @@ public class ListFoGenerator extends ElementFoGenerator {
             int counter = 1;
             for (ListItem item : list.getItems()) {
 
-                builder.append("        <fo:list-item role=\"LI\">\n");
-                builder.append("          <fo:list-item-label role=\"Lbl\" end-indent=\"label-end()\">\n");
+                builder.append("        <fo:list-item space-before=\"0.2cm\" role=\"LI\">");
+                builder.append("          <fo:list-item-label role=\"Lbl\" end-indent=\"label-end()\">");
                 builder.append("            <fo:block>");
 
                 if (item.getLabel() != null && !item.getLabel().isEmpty()) {
@@ -51,18 +51,18 @@ public class ListFoGenerator extends ElementFoGenerator {
                     generateDefaultListItemLabel(builder, list.getOrdering(), style, counter);
                 }
 
-                builder.append("</fo:block>\n");
-                builder.append("          </fo:list-item-label>\n");
-                builder.append("          <fo:list-item-body role=\"LBody\" start-indent=\"body-start()\">\n");
+                builder.append("</fo:block>");
+                builder.append("          </fo:list-item-label>");
+                builder.append("          <fo:list-item-body role=\"LBody\" start-indent=\"body-start()\">");
 
                 mainGenerator.generateBlockElement(item, styleSheet, builder, headlines, imageUrl);
 
-                builder.append("          </fo:list-item-body>\n");
-                builder.append("        </fo:list-item>\n");
+                builder.append("          </fo:list-item-body>");
+                builder.append("        </fo:list-item>");
                 counter++;
             }
         }
-        builder.append("      </fo:list-block>\n");
+        builder.append("      </fo:list-block>");
     }
 
 

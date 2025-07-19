@@ -81,26 +81,25 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
     }
 
     /**
-     * Merges properties from a base style into this one.
-     * Only properties that are null in this object will be set from the base.
+     * Merges properties from a specific style into this one.
+     * All properties are set from the specific style if they are available.
+     *If they are not available this style is used
      *
-     * @param base The base style to inherit from.
+     * @param specific The specific style.
      */
     @Override
-    public void mergeWith(ElementStyleProperties base) {
+    public void mergeWith(ElementStyleProperties specific) {
 
-        super.mergeWith(base);
-        if (!(base instanceof TextBlockStyleProperties textBase)) {
-            return;
+        super.mergeWith(specific);
+        if (specific instanceof TextBlockStyleProperties textSpec){
+            this.textStyleName = Optional.ofNullable(textSpec.getTextStyleName()).orElse(this.getTextStyleName());
+            this.textColor = Optional.ofNullable(textSpec.getTextColor()).orElse(this.getTextColor());
+            this.lineHeight = Optional.ofNullable(textSpec.getLineHeight()).orElse(this.getLineHeight());
+            this.textAlign = Optional.ofNullable(textSpec.getTextAlign()).orElse(this.getTextAlign());
+            this.span = Optional.ofNullable(textSpec.getSpan()).orElse(this.getSpan());
+            this.linefeedTreatment = Optional.ofNullable(textSpec.getLinefeedTreatment()).orElse(this.getLinefeedTreatment());
+
         }
-
-        this.textStyleName = Optional.ofNullable(this.textStyleName).orElse(textBase.getTextStyleName());
-        this.textColor = Optional.ofNullable(this.textColor).orElse(textBase.getTextColor());
-        this.lineHeight = Optional.ofNullable(this.lineHeight).orElse(textBase.getLineHeight());
-        this.textAlign = Optional.ofNullable(this.textAlign).orElse(textBase.getTextAlign());
-        this.span = Optional.ofNullable(this.span).orElse(textBase.getSpan());
-        this.linefeedTreatment = Optional.ofNullable(this.linefeedTreatment).orElse(textBase.getLinefeedTreatment());
-
     }
 
     /**

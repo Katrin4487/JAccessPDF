@@ -29,12 +29,12 @@ public class PartFoGenerator extends ElementFoGenerator {
 
         builder.append("      <fo:block");
         appendPartAttributes(builder, style, styleSheet);
-        builder.append(">\n");
+        builder.append(">");
 
 
         mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines, imageUrl);
 
-        builder.append("      </fo:block>\n");
+        builder.append("      </fo:block>");
     }
 
     private void appendPartAttributes(StringBuilder builder, PartStyleProperties style, StyleSheet styleSheet) {

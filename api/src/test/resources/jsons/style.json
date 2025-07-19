@@ -193,9 +193,7 @@
       "name" : "simple-list",
       "target-element": "list",
       "properties": {
-        "provisional-distance-between-starts" :  "2cm",
-        "provisional-label-separation" : "3cm",
-        "list-style-type" : "circle",
+        "provisional-distance-between-starts" :  "0.5cm",
         "list-style-position" : "outside",
         "text-style-name": "normal-text"
       }

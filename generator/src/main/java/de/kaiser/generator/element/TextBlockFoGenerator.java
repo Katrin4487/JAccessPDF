@@ -41,7 +41,7 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
         appendCommonAttributes(builder, style, styleSheet);
         appendSpecificAttributes(builder, style);
 
-        builder.append(">\n");
+        builder.append(">");
 
         // Delegate inline content generation to the main generator.
         if (textBlock.getInlineElements() != null) {
@@ -89,6 +89,8 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
         if(style instanceof TextBlockStyleProperties textProps){
             if(textProps.getSpan() != null){
                 builder.append(" span=\"").append(escapeXml(textProps.getSpan())).append("\"");
+                builder.append(" space-before.conditionality=\"retain\"");
+                builder.append(" space-after.conditionality=\"retain\"");
             }
             if(textProps.getLinefeedTreatment() !=null){
                 builder.append(" linefeed-treatment=\"").append(escapeXml(textProps.getLinefeedTreatment())).append("\"");
