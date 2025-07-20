@@ -65,6 +65,9 @@ public class SectionFoGenerator extends ElementFoGenerator {
         if (style.getPadding() != null) {
             builder.append(" padding=\"").append(escapeXml(style.getPadding())).append("\"");
         }
+        if(style.getPaddingBottom() != null){
+            builder.append(" padding-bottom=\"").append(escapeXml(style.getPaddingBottom())).append("\"");
+        }
         if (style.getBorder() != null) {
             builder.append(" border=\"").append(escapeXml(style.getBorder())).append("\"");
         }

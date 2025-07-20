@@ -14,10 +14,6 @@ import java.util.function.Consumer;
 public class SectionStyleProperties extends ElementBlockStyleProperties {
 
 
-
-
-
-
     // --- Overrides ---
     public void mergeWith(ElementBlockStyleProperties base) {
         super.mergeWith(base);

@@ -11,6 +11,9 @@ public class BlockImageStyleProperties extends ElementBlockStyleProperties {
     @JsonProperty("content-width")
     private String contentWidth;
 
+    @JsonProperty("block-width")
+    private String blockWidth;
+
     @JsonProperty("scaling")
     private String scaling;
 
@@ -44,6 +47,14 @@ public class BlockImageStyleProperties extends ElementBlockStyleProperties {
         this.alignment = alignment;
     }
 
+    public String getBlockWidth() {
+        return blockWidth;
+    }
+
+    public void setBlockWidth(String blockWidth) {
+        this.blockWidth = blockWidth;
+    }
+
     // --- Overrides ---
     public void mergeWith(ElementBlockStyleProperties base) {
         super.mergeWith(base);
@@ -51,6 +62,7 @@ public class BlockImageStyleProperties extends ElementBlockStyleProperties {
             mergeProperty(this.contentWidth, basePart.contentWidth, this::setContentWidth);
             mergeProperty(this.scaling, basePart.scaling, this::setScaling);
             mergeProperty(this.alignment, basePart.alignment, this::setAlignment);
+            mergeProperty(this.blockWidth, basePart.blockWidth, this::setBlockWidth);
         }
     }
 
@@ -68,6 +80,7 @@ public class BlockImageStyleProperties extends ElementBlockStyleProperties {
             partTarget.setContentWidth(contentWidth);
             partTarget.setScaling(scaling);
             partTarget.setAlignment(alignment);
+            partTarget.setBlockWidth(blockWidth);
         }
     }
 

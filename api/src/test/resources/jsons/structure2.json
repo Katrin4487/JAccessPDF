@@ -4,9 +4,9 @@
     "image-dictionary": "/images"
   },
   "metadata": {
-    "title": "My Document Title",
-    "author": "Katrin Kaiser",
-    "language": "en-US"
+    "title": "Legitimationsblatt Commerzbank",
+    "author": "Commerzbank",
+    "language": "de-DE"
   },
   "page-sequences": [
     {
@@ -39,15 +39,23 @@
             "style-class": "gray-section",
             "elements": [
               {
-                "type": "headline",
-                "style-class": "h1-style",
-                "level": 2,
-                "inline-elements": [
-                  {
-                    "type": "text-run",
-                    "text": "Legitimation\nper Smartphone oder Tablet"
-                  }
-                ]
+                "type": "layout-table",
+                "element-left": {
+                  "type": "headline",
+                  "style-class": "h1-style",
+                  "level": 2,
+                  "inline-elements": [
+                    {
+                      "type": "text-run",
+                      "text": "Legitimation\nper Smartphone oder Tablet"
+                    }
+                  ]
+                },
+                "element-right": {
+                  "type": "block-image",
+                  "path": "handy.png",
+                  "style-class": "logo-block"
+                }
               },
               {
                 "type": "list",
@@ -124,15 +132,23 @@
             "elements": [
 
               {
-                "type": "headline",
-                "style-class": "h1-style",
-                "level": 2,
-                "inline-elements": [
-                  {
-                    "type": "text-run",
-                    "text": "Legitimation in einer\nFiliale der Deutschen Post"
-                  }
-                ]
+                "type": "layout-table",
+                "element-left": {
+                  "type": "headline",
+                  "style-class": "h1-style",
+                  "level": 2,
+                  "inline-elements": [
+                    {
+                      "type": "text-run",
+                      "text": "Legitimation in einer\nFiliale der deutschen Post"
+                    }
+                  ]
+                },
+                "element-right": {
+                  "type": "block-image",
+                  "path": "post.png",
+                  "style-class": "logo-block"
+                }
               },
               {
                 "type": "list",
@@ -200,18 +216,26 @@
           },
           {
             "type": "section",
-            "style-class": "gray-section",
+            "style-class": "gray-section-last",
             "elements": [
               {
-                "type": "headline",
-                "style-class": "h1-style",
-                "level": 2,
-                "inline-elements": [
-                  {
-                    "type": "text-run",
-                    "text": "Legitimation in einer\nFiliale der Commerzbank"
-                  }
-                ]
+                "type": "layout-table",
+                "element-left": {
+                  "type": "headline",
+                  "style-class": "h1-style",
+                  "level": 2,
+                  "inline-elements": [
+                    {
+                      "type": "text-run",
+                      "text": "Legitimation in einer\nFiliale der Commerzbank"
+                    }
+                  ]
+                },
+                "element-right": {
+                  "type": "block-image",
+                  "path": "branch.png",
+                  "style-class": "logo-block"
+                }
               },
               {
                 "type": "paragraph",

@@ -36,7 +36,6 @@ public class ImageFoGenerator extends ElementFoGenerator {
 
 
         try{
-
             URL fileUrl = imageUrl.toURI().resolve(blockImage.getPath()).toURL();
             InputStream inputStream = fileUrl.openStream();
             byte[] imageBytes = inputStream.readAllBytes();
@@ -44,6 +43,7 @@ public class ImageFoGenerator extends ElementFoGenerator {
             String base64String = Base64.getEncoder().encodeToString(imageBytes);
             String srcDataUri = "data:" + mimeType + ";base64," + base64String;
             builder.append(" src=\"").append(srcDataUri).append("\"");
+            builder.append(" fox:alt-text=\"\""); //ToDO
 
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
@@ -58,6 +58,10 @@ public class ImageFoGenerator extends ElementFoGenerator {
         if(style.getAlignment()!=null){
             builder.append(" text-align=\"").append(escapeXml(style.getAlignment())).append("\"");
         }
+        if(style.getBlockWidth()!=null){
+            builder.append(" width=\"").append(style.getBlockWidth()).append("\"");
+        }
+
         setFontStyle(styleSheet, style, builder);
 
     }

@@ -33,6 +33,7 @@ public class XslFoGenerator {
         this.blockGeneratorRegistry.put(Section.class, new SectionFoGenerator(this));
         this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
         this.blockGeneratorRegistry.put(BlockImage.class,new ImageFoGenerator());
+        this.blockGeneratorRegistry.put(LayoutTable.class,new LayoutTableFoGenerator(this));
 
         // Register Inline-Level Generators
         this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());

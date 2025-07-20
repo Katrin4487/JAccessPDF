@@ -27,6 +27,7 @@ public record ElementStyle(
             @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = StyleTargetTypes.TEXT_RUN),
             @JsonSubTypes.Type(value = FootnoteStyleProperties.class, name = StyleTargetTypes.FOOTNOTE),
             @JsonSubTypes.Type(value = BlockImageStyleProperties.class, name = StyleTargetTypes.BLOCK_IMAGE),
+            @JsonSubTypes.Type(value = LayoutTableStyleProperties.class, name = StyleTargetTypes.LAYOUT_TABLE),
 
     })
     public ElementStyleProperties properties() {
