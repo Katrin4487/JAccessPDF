@@ -27,7 +27,7 @@ public abstract class ElementFoGenerator {
      * Escapes special characters in a given text to ensure it can be safely used in XML.
      *
      * @param text The text to escape special characters from.
-     * @return The text with special XML characters escaped (&, <, >, ", ').
+     * @return The text with special XML characters escaped
      */
     protected String escapeXml(String text) {
         if (text == null) return "";

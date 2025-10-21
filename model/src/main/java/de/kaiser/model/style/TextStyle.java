@@ -14,6 +14,7 @@ public record TextStyle(
         @JsonProperty("font-weight") String fontWeight,
         @JsonProperty("font-style") String fontStyle
 ) {
-
-
+    public String getFontFamilyName() {
+        return fontFamilyName;
+    }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Abstract base class for all block-level text elements (e.g., paragraphs, headlines).
- * It handles the common logic of generating an <fo:block> and its inline content.
+ * It handles the common logic of generating an fo:block and its inline content.
  */
 public abstract class TextBlockFoGenerator extends ElementFoGenerator {
 

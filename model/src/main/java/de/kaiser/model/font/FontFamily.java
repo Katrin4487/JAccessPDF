@@ -12,4 +12,8 @@ public record FontFamily(
         @JsonProperty("font-family") String fontFamily,
         @JsonProperty("types") List<FontType> fontTypes
 ) {
+
+    public String getName(){
+        return fontFamily;
+    }
 }

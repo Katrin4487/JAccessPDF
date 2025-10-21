@@ -7,7 +7,7 @@ import de.kaiser.model.style.StyleResolverContext;
 
 /**
  * An empty "marker" element
- * (XSL-FO <fo:page-number/>)
+ * (XSL-FO page number)
  */
 @JsonTypeName("page-number")
 public class PageNumber extends AbstractInlineElement {

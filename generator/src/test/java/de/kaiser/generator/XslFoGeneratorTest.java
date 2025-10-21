@@ -91,7 +91,7 @@ class XslFoGeneratorTest {
         assertFalse(result.isEmpty());
         assertTrue(result.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), "XML declaration is missing.");
         assertTrue(result.contains("<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\""), "fo:root element is missing or incorrect.");
-        assertTrue(result.endsWith("</fo:root>\n"), "fo:root element is not closed correctly.");
+        assertTrue(result.endsWith("</fo:root>"), "fo:root element is not closed correctly.");
     }
 
     @Test

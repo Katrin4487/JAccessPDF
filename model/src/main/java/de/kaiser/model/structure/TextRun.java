@@ -67,7 +67,6 @@ public class TextRun extends AbstractInlineElement {
     @Override
     public void resolveStyles(StyleResolverContext context) {
         ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
-        System.out.println("Parent Style: " + (parentStyle instanceof TextBlockStyleProperties));
         TextRunStyleProperties specificRunStyle = new TextRunStyleProperties();
 
 

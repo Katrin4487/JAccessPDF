@@ -13,7 +13,7 @@ public class BookmarkGenerator {
     private static final Logger log = LoggerFactory.getLogger(BookmarkGenerator.class);
 
     /**
-     * Generates the complete <fo:bookmark-tree> from a list of headlines.
+     * Generates the complete fo:bookmark-tree from a list of headlines.
      * This version uses a more robust logic to handle hierarchy changes.
      * @param headlines The list of headlines.
      * @return The finished XML string for the bookmarks.

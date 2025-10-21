@@ -90,13 +90,13 @@ public final class PdfGenerationFacade {
 
         // 3. Generate XSL-FO string from the document model
         String xslFoString = foGenerator.generate(document, styleSheet,imageUrl);
-        System.out.println("######### OUT ####\n"+xslFoString);
+        //System.out.println("######### OUT ####\n"+xslFoString);
         InputStream xslFoStream = new ByteArrayInputStream(xslFoString.getBytes());
 
         // 4. Use FOP to transform XSL-FO to PDF
         ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
 
-        // CORRECTED: Create the correct ResourceResolver for FOP
+        // Create the correct ResourceResolver for FOP
         ResourceResolver fopResourceResolver = new EFopResourceResolver(provider);
         FopFactoryBuilder fopFactoryBuilder = new FopFactoryBuilder(new File(".").toURI(), fopResourceResolver);
 
@@ -134,7 +134,7 @@ public final class PdfGenerationFacade {
                 "    </renderer>\n" +
                 "  </renderers>\n" +
                 "</fop>";
-        System.out.println("\n######### FOP #############\n"+out);
+        //System.out.println("\n######### FOP #############\n"+out);
         return out;
     }
 }

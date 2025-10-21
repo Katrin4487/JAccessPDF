@@ -78,7 +78,6 @@ public final class ListItem implements Element {
             label.forEach(el -> el.resolveStyles(childContext));
         }
         if (elements != null) {
-            System.out.println("Resolve !!!");
             elements.forEach(el -> el.resolveStyles(childContext));
         }
     }

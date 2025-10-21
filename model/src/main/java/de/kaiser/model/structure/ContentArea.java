@@ -24,4 +24,8 @@ public record ContentArea(
         this(null);
     }
 
+    public void addElement(Element element){
+        elements.add(element);
+    }
+
 }

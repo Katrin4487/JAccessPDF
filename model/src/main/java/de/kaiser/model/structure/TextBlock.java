@@ -83,14 +83,11 @@ public abstract class TextBlock extends AbstractElement {
         TextBlockStyleProperties finalStyle = new TextBlockStyleProperties();
 
         if(baseStyle instanceof TextBlockStyleProperties) {
-            System.out.println("Base is Text");
             finalStyle = (TextBlockStyleProperties) baseStyle.copy();
         }
 
             if (this.styleClass != null) {
-                System.out.println(" has StyleClass " + this.styleClass);
                 ElementStyle specificElementStyle = context.styleMap().get(this.styleClass);
-                System.out.println(context.styleMap().keySet());
                 if (specificElementStyle != null && specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
                     // The specific style's properties are merged into our final style.
                     finalStyle.mergeWith(specificStyle);

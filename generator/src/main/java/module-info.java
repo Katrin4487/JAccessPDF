@@ -1,7 +1,7 @@
-module de.kaiser.generator {
+module generator {
     requires org.slf4j;
     requires java.compiler;
-    requires de.kaiser.model;
+    requires model;
 
-    exports de.kaiser.generator to de.kaiser.api;
+    exports de.kaiser.generator;
 }
