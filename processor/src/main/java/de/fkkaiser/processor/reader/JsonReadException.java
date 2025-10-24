@@ -1,0 +1,17 @@
+package de.fkkaiser.processor.reader;
+
+/**
+ * Should be thrown if a json-file is not readable.
+ */
+public class JsonReadException extends Exception{
+
+    public JsonReadException(String message){
+        super(message);
+    }
+
+
+    public JsonReadException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+}

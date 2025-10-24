@@ -3,5 +3,5 @@ module generator {
     requires java.compiler;
     requires model;
 
-    exports de.kaiser.generator;
+    exports de.fkkaiser.generator;
 }

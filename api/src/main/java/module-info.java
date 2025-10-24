@@ -5,7 +5,11 @@ module api {
     requires org.apache.xmlgraphics.commons;
     requires org.apache.xmlgraphics.fop.core;
     requires org.slf4j;
-    requires model;
+
     requires processor;
     requires generator;
+    requires model;
+
+    exports de.fkkaiser.api.simplelayer;
+
 }
