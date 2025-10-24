@@ -23,13 +23,13 @@ class MetadataTest {
         void shouldApplyDefaultsWhenFieldsAreNull() {
             Metadata metadata = new Metadata(null, null, null, null, null, null, null, null);
 
-            assertNotNull(metadata.creationDate());
-            assertTrue(metadata.displayDocTitle());
-            assertNotNull(metadata.keywords());
-            assertTrue(metadata.keywords().isEmpty());
-            assertEquals(DEFAULT_TITLE, metadata.title());
-            assertEquals(DEFAULT_LANGUAGE, metadata.language());
-            assertEquals(PRODUCER, metadata.producer());
+            assertNotNull(metadata.getCreationDate());
+            assertTrue(metadata.isDisplayDocTitle());
+            assertNotNull(metadata.getKeywords());
+            assertTrue(metadata.getKeywords().isEmpty());
+            assertEquals(DEFAULT_TITLE, metadata.getTitle());
+            assertEquals(DEFAULT_LANGUAGE, metadata.getLanguage());
+            assertEquals(PRODUCER, metadata.getProducer());
         }
 
         @Test
@@ -43,12 +43,12 @@ class MetadataTest {
                     specificKeywords, "en-US", "ignored-producer", specificDate, false
             );
 
-            assertEquals("Explicit Title", metadata.title());
-            assertEquals("en-US", metadata.language());
-            assertEquals(specificDate, metadata.creationDate());
-            assertFalse(metadata.displayDocTitle());
-            assertEquals(specificKeywords, metadata.keywords());
-            assertEquals(PRODUCER, metadata.producer(), "Producer should always be set to the constant");
+            assertEquals("Explicit Title", metadata.getTitle());
+            assertEquals("en-US", metadata.getLanguage());
+            assertEquals(specificDate, metadata.getCreationDate());
+            assertFalse(metadata.isDisplayDocTitle());
+            assertEquals(specificKeywords, metadata.getKeywords());
+            assertEquals(PRODUCER, metadata.getProducer(), "Producer should always be set to the constant");
         }
     }
 
@@ -61,10 +61,10 @@ class MetadataTest {
         void shouldWorkForTitleOnlyConstructor() {
             Metadata metadata = new Metadata("My Title");
 
-            assertEquals("My Title", metadata.title());
-            assertEquals(DEFAULT_LANGUAGE, metadata.language());
-            assertTrue(metadata.displayDocTitle());
-            assertNotNull(metadata.creationDate());
+            assertEquals("My Title", metadata.getTitle());
+            assertEquals(DEFAULT_LANGUAGE, metadata.getLanguage());
+            assertTrue(metadata.isDisplayDocTitle());
+            assertNotNull(metadata.getCreationDate());
         }
 
         @Test
@@ -73,9 +73,9 @@ class MetadataTest {
 
             Metadata metadata = new Metadata("My Title", "fr-FR");
 
-            assertEquals("My Title", metadata.title());
-            assertEquals("fr-FR", metadata.language());
-            assertTrue(metadata.displayDocTitle());
+            assertEquals("My Title", metadata.getTitle());
+            assertEquals("fr-FR", metadata.getLanguage());
+            assertTrue(metadata.isDisplayDocTitle());
         }
     }
 
@@ -89,10 +89,10 @@ class MetadataTest {
 
             Metadata metadata = Metadata.builder("Builder Title").build();
 
-            assertEquals("Builder Title", metadata.title());
-            assertEquals(DEFAULT_LANGUAGE, metadata.language());
-            assertTrue(metadata.displayDocTitle());
-            assertNull(metadata.author());
+            assertEquals("Builder Title", metadata.getTitle());
+            assertEquals(DEFAULT_LANGUAGE, metadata.getLanguage());
+            assertTrue(metadata.isDisplayDocTitle());
+            assertNull(metadata.getAuthor());
         }
 
         @Test
@@ -109,12 +109,12 @@ class MetadataTest {
                     .displayDocTitle(false)
                     .build();
 
-            assertEquals("Fully Built", metadata.title());
-            assertEquals("Builder Author", metadata.author());
-            assertEquals("es-ES", metadata.language());
-            assertEquals(specificDate, metadata.creationDate());
-            assertFalse(metadata.displayDocTitle());
-            assertEquals(2, metadata.keywords().size());
+            assertEquals("Fully Built", metadata.getTitle());
+            assertEquals("Builder Author", metadata.getAuthor());
+            assertEquals("es-ES", metadata.getLanguage());
+            assertEquals(specificDate, metadata.getCreationDate());
+            assertFalse(metadata.isDisplayDocTitle());
+            assertEquals(2, metadata.getKeywords().size());
         }
     }
 }

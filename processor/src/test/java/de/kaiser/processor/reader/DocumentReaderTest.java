@@ -41,7 +41,7 @@ class DocumentReaderTest {
 
         assertNotNull(document, "Document should not be null for valid JSON.");
         assertNotNull(document.metadata(), "Metadata should be parsed.");
-        assertEquals("Test Document", document.metadata().title());
+        assertEquals("Test Document", document.metadata().getTitle());
         assertNotNull(document.pageSequences(), "PageSequences list should be parsed.");
     }
 

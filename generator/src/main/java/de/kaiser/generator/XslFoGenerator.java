@@ -6,7 +6,6 @@ import de.kaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,7 +153,7 @@ public class XslFoGenerator {
 
     private void generateRootStart(StringBuilder foBuilder, Document document, String defaultFontFamily) {
         Metadata metadata = document.metadata();
-        String lang = (metadata != null && metadata.language() != null && !metadata.language().isEmpty()) ? metadata.language() : "en";
+        String lang = (metadata != null && metadata.getLanguage() != null && !metadata.getLanguage().isEmpty()) ? metadata.getLanguage() : "en";
 
         foBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
                 .append("<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\"")
@@ -170,7 +169,7 @@ public class XslFoGenerator {
 
     private void generateDeclarations(StringBuilder foBuilder, Document document) {
         Metadata metadata = document.metadata();
-        if (metadata == null || metadata.title() == null || metadata.title().isEmpty()) {
+        if (metadata == null || metadata.getTitle() == null || metadata.getTitle().isEmpty()) {
             log.warn("PDF/UA-1 conformance requires a title, but none was provided in the metadata. Skipping XMP metadata generation.");
             return;
         }
@@ -179,13 +178,13 @@ public class XslFoGenerator {
                 .append("    <x:xmpmeta>")
                 .append("      <rdf:RDF>")
                 .append("        <rdf:Description rdf:about=\"\">")
-                .append("          <dc:title>").append(escapeXml(metadata.title())).append("</dc:title>");
+                .append("          <dc:title>").append(escapeXml(metadata.getTitle())).append("</dc:title>");
 
-        if (metadata.author() != null) {
-            foBuilder.append("          <dc:creator>").append(escapeXml(metadata.author())).append("</dc:creator>");
+        if (metadata.getAuthor() != null) {
+            foBuilder.append("          <dc:creator>").append(escapeXml(metadata.getAuthor())).append("</dc:creator>");
         }
-        if (metadata.subject() != null) {
-            foBuilder.append("          <dc:description>").append(escapeXml(metadata.subject())).append("</dc:description>");
+        if (metadata.getSubject() != null) {
+            foBuilder.append("          <dc:description>").append(escapeXml(metadata.getSubject())).append("</dc:description>");
         }
 
         foBuilder.append("        </rdf:Description>")

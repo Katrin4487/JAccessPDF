@@ -59,17 +59,6 @@ class SimpleStyleManagerTest {
         }
     }
 
-    @Test
-    @DisplayName("Should set and use custom language")
-    void shouldSetAndUseCustomLanguage() {
-        // When
-        styleManager.setLanguage("en-US");
-
-        // Then
-        // Language is used internally, can't directly test without building StyleSheet
-        // But we verify no exception is thrown
-        assertDoesNotThrow(() -> styleManager.setLanguage("fr-FR"));
-    }
 
     @Test
     @DisplayName("Should set and use custom font family")

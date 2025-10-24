@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,10 +28,10 @@ public final class Headline extends TextBlock {
      * The primary constructor used by Jackson for deserialization from JSON.
      * It initializes all properties, including those from the parent classes.
      *
-     * @param styleClass The CSS-like class for styling.
+     * @param styleClass     The CSS-like class for styling.
      * @param inlineElements The list of inline elements (e.g., TextRun) forming the content.
-     * @param variant A semantic variant of the element (e.g., "warning").
-     * @param level The headline level (1-6).
+     * @param variant        A semantic variant of the element (e.g., "warning").
+     * @param level          The headline level (1-6).
      */
     @JsonCreator
     public Headline(
@@ -48,6 +49,12 @@ public final class Headline extends TextBlock {
         } else {
             this.level = level;
         }
+    }
+
+    public Headline(String styleClass,
+                    String text, Integer level) {
+        this(styleClass, Collections.singletonList(new TextRun(text)), null, level);
+
     }
 
     @Override

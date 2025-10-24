@@ -11,17 +11,14 @@ import java.util.List;
  */
 class SimpleStyleManager {
 
-    private String language = "de-DE";
-    private String fontFamily = "Open Sans"; // PDF/UA: embedded font required
+
     private static final String PAGE_MASTER_NAME = "simple-a4-portrait";
+    private String fontFamily = "Open Sans"; // PDF/UA: embedded font required
 
     String getDefaultPageMasterName() {
         return PAGE_MASTER_NAME;
     }
 
-    void setLanguage(String languageCode) {
-        this.language = languageCode;
-    }
 
     void setFontFamily(String fontFamily) {
         this.fontFamily = fontFamily;
@@ -83,7 +80,7 @@ class SimpleStyleManager {
             headingProps.setTextStyleName("text-heading-" + level);
             elementStyles.add(new ElementStyle(
                     "heading-" + level,
-                    StyleTargetTypes.PARAGRAPH,
+                    StyleTargetTypes.HEADLINE,
                     headingProps
             ));
         }
@@ -94,4 +91,5 @@ class SimpleStyleManager {
 
         return new StyleSheet(textStyles, elementStyles, pageMasterStyles);
     }
+
 }

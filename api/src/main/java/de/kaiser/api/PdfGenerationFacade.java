@@ -123,7 +123,8 @@ public final class PdfGenerationFacade {
      */
     private String buildFopConfig(EFontFamilyLoader fontLoader) throws IOException {
         String fontListXml = fontLoader.getFontListString();
-        String out= "<?xml version=\"1.0\"?>\n" +
+        //System.out.println("\n######### FOP #############\n"+out);
+        return "<?xml version=\"1.0\"?>\n" +
                 "<fop version=\"1.0\">\n" +
                 "  <strict-validation>false</strict-validation>\n" +
                 "  <accessibility>true</accessibility>\n" +
@@ -134,7 +135,5 @@ public final class PdfGenerationFacade {
                 "    </renderer>\n" +
                 "  </renderers>\n" +
                 "</fop>";
-        //System.out.println("\n######### FOP #############\n"+out);
-        return out;
     }
 }

@@ -60,7 +60,6 @@ public class Hyperlink extends TextRun {
      * @param styleClass The class specifying the style of the hyperlink.
      * @param href The URL or destination of the hyperlink.
      */
-    @SuppressWarnings("unused")
     public Hyperlink(String text, String styleClass, String href) {
         this(text, styleClass, null, href, null);
     }

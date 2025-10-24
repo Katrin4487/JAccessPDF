@@ -1,12 +1,12 @@
 package de.kaiser.api;
+
 import de.kaiser.api.utils.EClasspathResourceProvider;
 import de.kaiser.api.utils.EResourceProvider;
-import de.kaiser.model.font.*;
+import de.kaiser.model.font.FontFamilyList;
 import de.kaiser.model.structure.*;
-import de.kaiser.model.style.*;
+import de.kaiser.model.style.StyleSheet;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,12 +40,15 @@ public class SimpleDocument {
     private StyleSheet styleSheet;
     private FontFamilyList fontFamilyList;
 
+    private Metadata metadata;
+
     private SimpleDocument(String title) {
         this.title = title;
         this.elements = new ArrayList<>();
         this.styleManager = new SimpleStyleManager();
         this.fontManager = new SimpleFontManager();
         this.resourceProvider = new EClasspathResourceProvider();
+        this.metadata = new Metadata(title);
     }
 
     /**
@@ -106,19 +109,10 @@ public class SimpleDocument {
     }
 
     /**
-     * Sets the document language for accessibility (PDF/UA).
-     * Default is "de-DE".
-     */
-    public SimpleDocument withLanguage(String languageCode) {
-        styleManager.setLanguage(languageCode);
-        return this;
-    }
-
-    /**
      * Builds the internal model structures.
      * Must be called before saveAs() or toStream().
      */
-    public SimpleDocument build() throws Exception {
+    public SimpleDocument build() {
         // Build font list
         this.fontFamilyList = fontManager.buildFontFamilyList();
 
@@ -169,9 +163,6 @@ public class SimpleDocument {
     }
 
     private Document buildDocument() {
-        // Create metadata
-        Metadata metadata = new Metadata(title);
-
         // Convert elements to actual Paragraph objects
         List<Element> contentElements = new ArrayList<>();
         for (ContentElement element : elements) {
@@ -212,19 +203,19 @@ public class SimpleDocument {
         }
     }
 
-    private static class HeadingElement implements ContentElement {
-        private final String text;
-        private final int level;
-
-        HeadingElement(String text, int level) {
-            this.text = text;
-            this.level = level;
-        }
+    private record HeadingElement(String text, int level) implements ContentElement {
 
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
             String styleName = styleManager.getHeadingStyleName(level);
-            return new Paragraph(styleName, text);
+            return new Headline(styleName, text, this.level);
         }
     }
+
+    public SimpleDocument withLanguage(String language){
+        this.metadata.setLanguage(language);
+
+        return this;
+    }
+
 }

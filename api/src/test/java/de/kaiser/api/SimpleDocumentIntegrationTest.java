@@ -91,7 +91,7 @@ class SimpleDocumentIntegrationTest {
 
         // Add many elements
         for (int i = 1; i <= 100; i++) {
-            doc.addHeading("Section " + i, 2);
+            doc.addHeading("Section " + i );
             doc.addParagraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(10));
         }
 
