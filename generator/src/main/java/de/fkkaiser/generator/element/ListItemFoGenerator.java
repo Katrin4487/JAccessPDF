@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
@@ -27,7 +28,7 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
      * that can contain other block-level elements.
      */
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
         ListItem listItem = (ListItem) element;
         ElementBlockStyleProperties style = listItem.getResolvedStyle();
 
@@ -47,7 +48,7 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
         // Delegate the generation of the list item's content back to the main generator.
         // This allows a list item to contain paragraphs, other lists, tables, etc.
         if (listItem.getElements() != null) {
-            mainGenerator.generateBlockElements(listItem.getElements(), styleSheet, builder, headlines,imageUrl);
+            mainGenerator.generateBlockElements(listItem.getElements(), styleSheet, builder, headlines,resolver);
         }
 
         builder.append("            </fo:block>");

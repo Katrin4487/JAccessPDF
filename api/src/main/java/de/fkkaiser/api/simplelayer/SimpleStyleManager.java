@@ -37,6 +37,18 @@ class SimpleStyleManager {
         return "heading-" + level;
     }
 
+    String getUnorderedListName(){
+        return "list-style-unordered";
+    }
+
+    String getOrderedListName(){
+        return "list-style-ordered";
+    }
+
+    String getDefaultImageName() {
+        return "image-default";
+    }
+
     /**
      * Builds a StyleSheet with PDF/UA compliant defaults.
      * Uses Open Sans (embedded) by default.
@@ -87,6 +99,40 @@ class SimpleStyleManager {
             ));
         }
 
+        // Style for unordered list
+        ListStyleProperties listPropsUnordered = new ListStyleProperties();
+        listPropsUnordered.setTextStyleName("text-default");
+        listPropsUnordered.setListStyleType("disc");
+        listPropsUnordered.setListStylePosition("inside");
+        elementStyles.add(new ElementStyle(
+                "list-style-unordered",
+                StyleTargetTypes.LIST,
+                listPropsUnordered
+        ));
+
+        // Style for ordered list
+        ListStyleProperties listPropsOrdered = new ListStyleProperties();
+        listPropsOrdered.setTextStyleName("text-default");
+        listPropsOrdered.setListStyleType("decimal"); // Korrigiert (war 'disc')
+        listPropsOrdered.setListStylePosition("inside");
+        elementStyles.add(new ElementStyle(
+                "list-style-ordered",
+                StyleTargetTypes.LIST,
+                listPropsOrdered
+        ));
+
+        // Default image style
+        BlockImageStyleProperties imagePropsDefault = new BlockImageStyleProperties();
+        imagePropsDefault.setAlignment("center");
+        imagePropsDefault.setScaling("uniform");
+        imagePropsDefault.setContentWidth("100%"); // Fit to container
+        imagePropsDefault.setBlockWidth("100%");
+        elementStyles.add(new ElementStyle(
+                "image-default",
+                StyleTargetTypes.BLOCK_IMAGE,
+                imagePropsDefault
+        ));
+
         // Default page master (A4 portrait)
         PageMasterStyle pageMaster = new PageMasterStyle(PAGE_MASTER_NAME);
         pageMasterStyles.add(pageMaster);
@@ -95,3 +141,4 @@ class SimpleStyleManager {
     }
 
 }
+

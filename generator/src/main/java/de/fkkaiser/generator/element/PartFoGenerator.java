@@ -1,11 +1,13 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.Part;
 import de.fkkaiser.model.style.PartStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
+import org.apache.xmlgraphics.image.loader.spi.ImageImplRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +25,7 @@ public class PartFoGenerator extends ElementFoGenerator {
     }
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
         Part part = (Part) element;
         PartStyleProperties style = part.getResolvedStyle();
 
@@ -32,7 +34,7 @@ public class PartFoGenerator extends ElementFoGenerator {
         builder.append(">");
 
 
-        mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines, imageUrl);
+        mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines,resolver);
 
         builder.append("      </fo:block>");
     }

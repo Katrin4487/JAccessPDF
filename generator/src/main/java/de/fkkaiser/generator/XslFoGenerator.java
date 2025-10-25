@@ -49,7 +49,7 @@ public class XslFoGenerator {
      * @param styleSheet The StyleSheet with all layout and style definitions.
      * @return A string containing the complete XSL-FO document.
      */
-    public String generate(Document document, StyleSheet styleSheet, URL imageUrl) {
+    public String generate(Document document, StyleSheet styleSheet,ImageResolver resolver) {
         if (document == null || styleSheet == null) {
             return "";
         }
@@ -61,7 +61,7 @@ public class XslFoGenerator {
         generateRootStart(foBuilder, document, defaultFontFamily);
         generateLayoutMasterSet(foBuilder, styleSheet);
         generateDeclarations(foBuilder, document);
-        generatePageSequences(foBuilder, document, styleSheet, headlines,imageUrl);
+        generatePageSequences(foBuilder, document, styleSheet, headlines,resolver);
         generateBookmarks(foBuilder, headlines);
         generateRootEnd(foBuilder);
 
@@ -70,11 +70,11 @@ public class XslFoGenerator {
 
     // --- Public Helpers for Sub-Generators ---
 
-    public void generateBlockElement(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
+    public void generateBlockElement(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines,ImageResolver resolver) {
         if (element == null) return;
         ElementFoGenerator generator = blockGeneratorRegistry.get(element.getClass());
         if (generator != null) {
-            generator.generate(element, styleSheet, builder, headlines, imageUrl);
+            generator.generate(element, styleSheet, builder, headlines,resolver);
         } else {
             log.warn("No block generator registered for element type {}.", element.getClass().getSimpleName());
         }
@@ -88,10 +88,10 @@ public class XslFoGenerator {
      * @param builder    The StringBuilder where the generated XSL-FO output will be appended.
      * @param headlines  The list of headline elements to be included in the generation process.
      */
-    public void generateBlockElements(List<Element> elements, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
+    public void generateBlockElements(List<Element> elements, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines,ImageResolver resolver) {
         if (elements == null) return;
         for (Element element : elements) {
-            generateBlockElement(element, styleSheet, builder, headlines, imageUrl);
+            generateBlockElement(element, styleSheet, builder, headlines,resolver);
         }
     }
 
@@ -114,7 +114,7 @@ public class XslFoGenerator {
 
     // --- Private Generation Steps ---
 
-    private void generatePageSequences(StringBuilder foBuilder, Document document, StyleSheet styleSheet, List<Headline> headlines, URL imageUrl) {
+    private void generatePageSequences(StringBuilder foBuilder, Document document, StyleSheet styleSheet, List<Headline> headlines, ImageResolver resolver) {
         final String placeholder = "<§§BOOKMARK_TREE§§>";
         foBuilder.append(placeholder);
 
@@ -123,17 +123,17 @@ public class XslFoGenerator {
 
             if (sequence.header() != null) {
                 foBuilder.append("    <fo:static-content flow-name=\"xsl-region-before\">");
-                generateBlockElements(sequence.header().elements(), styleSheet, foBuilder, headlines,imageUrl);
+                generateBlockElements(sequence.header().elements(), styleSheet, foBuilder, headlines,resolver);
                 foBuilder.append("    </fo:static-content>\n");
             }
             if (sequence.footer() != null) {
                 foBuilder.append("    <fo:static-content flow-name=\"xsl-region-after\">");
-                generateBlockElements(sequence.footer().elements(), styleSheet, foBuilder, headlines,imageUrl);
+                generateBlockElements(sequence.footer().elements(), styleSheet, foBuilder, headlines,resolver);
                 foBuilder.append("    </fo:static-content>\n");
             }
 
             foBuilder.append("    <fo:flow flow-name=\"xsl-region-body\">");
-            generateBlockElements(sequence.body().elements(), styleSheet, foBuilder, headlines,imageUrl);
+            generateBlockElements(sequence.body().elements(), styleSheet, foBuilder, headlines,resolver);
             foBuilder.append("    </fo:flow>");
 
             foBuilder.append("  </fo:page-sequence>");

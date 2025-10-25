@@ -34,9 +34,6 @@ public class SimpleDocument {
     private final FontFamilyList fontFamilyList;
     private final EResourceProvider resourceProvider;
 
-    // Internal style manager, not needed after construction
-    // private final SimpleStyleManager styleManager;
-
     /**
      * Internal constructor, called by SimpleDocumentBuilder.
      * This constructor does the "heavy lifting" of converting the simple
@@ -53,19 +50,14 @@ public class SimpleDocument {
         this.fontFamilyList = fontManager.buildFontFamilyList();
         this.resourceProvider = resourceProvider;
 
-        // Cleanup 4: Pass elements directly to buildDocument, don't store as field
+        // Pass elements directly to buildDocument, don't store as field
         this.document = buildDocument(elements, styleManager, metadata);
-
-        // We no longer need the styleManager or fontManager as fields,
-        // as the styleSheet and fontFamilyList are now built.
-        // this.styleManager = styleManager;
     }
 
     /**
      * Saves the PDF to the specified file path.
      */
     public void saveAs(String filePath) throws Exception {
-        // Cleanup 3: No need for ensureBuilt()
         ByteArrayOutputStream stream = generatePDF();
 
         Path outputPath = Paths.get(filePath);
@@ -78,7 +70,6 @@ public class SimpleDocument {
      * Generates the PDF and returns it as a ByteArrayOutputStream.
      */
     public ByteArrayOutputStream toStream() throws Exception {
-        // Cleanup 3: No need for ensureBuilt()
         return generatePDF();
     }
 
@@ -111,6 +102,8 @@ public class SimpleDocument {
                 .build();
 
         // Create document
+        // V4-Logik: Wir übergeben 'null' für InternalAddresses,
+        // da der Builder (V4) die vollen Pfade liefert.
         return new Document(null, metadata, Collections.singletonList(sequence));
     }
 
@@ -136,6 +129,31 @@ public class SimpleDocument {
         }
     }
 
+    static class ListElement implements ContentElement {
+        private final List<String> items;
+        private final String styleName;
+        private final boolean ordered; // Tippfehler 'oderered' korrigiert
+
+        ListElement(List<String> items, String styleName, boolean ordered) {
+            this.items = items;
+            this.styleName = styleName;
+            this.ordered = ordered;
+        }
+
+        @Override
+        public Element toModelObject(SimpleStyleManager styleManager) {
+            ListOrdering ordering = ordered ? ListOrdering.ORDERED  : ListOrdering.UNORDERED;
+
+            List<ListItem> listItems = new ArrayList<>();
+            for (String item : items){
+                Paragraph paragraph = new Paragraph("paragraph-default",item);
+                ListItem listItem = new ListItem(null,null,null,Collections.singletonList(paragraph));
+                listItems.add(listItem);
+            }
+            return new SimpleList(styleName,ordering,listItems);
+        }
+    }
+
     record HeadingElement(String text, int level) implements ContentElement {
 
         @Override
@@ -144,4 +162,30 @@ public class SimpleDocument {
             return new Headline(styleName, text, this.level);
         }
     }
+
+    /**
+     * Internal element for an image.
+     */
+    static class ImageElement implements ContentElement {
+        private final String path; // Der volle Pfad, z.B. "images/logo.png"
+        private final String altText;
+
+        ImageElement(String path) {
+            this.path = path;
+            this.altText = null;
+        }
+
+        ImageElement(String path,String altText) {
+            this.path = path;
+            this.altText = altText;
+        }
+
+        @Override
+        public Element toModelObject(SimpleStyleManager styleManager) {
+            // Nutze den "default" Style für Bilder, wie im StyleManager definiert
+            String actualStyleName = styleManager.getDefaultImageName();
+            return new BlockImage(actualStyleName, path,altText);
+        }
+    }
 }
+

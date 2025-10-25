@@ -8,7 +8,6 @@ import de.fkkaiser.model.style.BlockImageStyleProperties;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +20,7 @@ public final class BlockImage implements Element {
 
     private final String styleClass;
     private final String path;
+    private final String altText;
 
     @JsonIgnore
     private BlockImageStyleProperties resolvedStyle;
@@ -28,10 +28,12 @@ public final class BlockImage implements Element {
     @JsonCreator
     public BlockImage(
             @JsonProperty("style-class") String styleClass,
-            @JsonProperty("path") String path
+            @JsonProperty("path") String path,
+            @JsonProperty("alt-text") String altText
     ) {
         this.styleClass = styleClass;
         this.path = path;
+        this.altText = altText;
     }
 
     // --- Getters ---
@@ -43,6 +45,8 @@ public final class BlockImage implements Element {
     public String getPath() {
         return path;
     }
+
+    public String getAltText() {return altText;}
 
     public BlockImageStyleProperties getResolvedStyle() {
         return resolvedStyle;

@@ -1,6 +1,7 @@
 package de.fkkaiser.generator.element;
 
 
+import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListStyleProperties;
@@ -27,7 +28,7 @@ public class ListFoGenerator extends ElementFoGenerator {
     }
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
         SimpleList list = (SimpleList) element;
         ListStyleProperties style = list.getResolvedStyle();
 
@@ -55,7 +56,7 @@ public class ListFoGenerator extends ElementFoGenerator {
                 builder.append("          </fo:list-item-label>");
                 builder.append("          <fo:list-item-body role=\"LBody\" start-indent=\"body-start()\">");
 
-                mainGenerator.generateBlockElement(item, styleSheet, builder, headlines, imageUrl);
+                mainGenerator.generateBlockElement(item, styleSheet, builder, headlines,resolver);
 
                 builder.append("          </fo:list-item-body>");
                 builder.append("        </fo:list-item>");

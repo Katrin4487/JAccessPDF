@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
@@ -25,7 +26,7 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
     }
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
         TextBlock textBlock = (TextBlock) element;
         TextBlockStyleProperties style = textBlock.getResolvedStyle();
 

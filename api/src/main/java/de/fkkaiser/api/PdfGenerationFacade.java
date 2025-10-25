@@ -4,6 +4,7 @@ import de.fkkaiser.api.utils.EFopResourceResolver;
 import de.fkkaiser.api.utils.EFopURIResolver;
 import de.fkkaiser.api.utils.EResourceProvider;
 
+import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 
 import de.fkkaiser.model.font.FontFamilyList;
@@ -74,6 +75,13 @@ public final class PdfGenerationFacade {
     public ByteArrayOutputStream generatePDF(Document document, StyleSheet styleSheet, FontFamilyList fontFamilyList, EResourceProvider provider) throws Exception {
         log.debug("Generating PDF from model objects...");
 
+        // Instance of image resolver: necessary to find the right path to image-resources e.g. in jar-file...
+        ImageResolver imageResolver = new ImageResolver() {
+            @Override
+            public URL resolve(String relativePath) throws IOException {
+                return provider.getResource(relativePath);
+            }
+        };
         // 1. Link styles with content
         StyleResolverService.resolve(document, styleSheet);
 
@@ -82,14 +90,8 @@ public final class PdfGenerationFacade {
         String fopConfigXml = buildFopConfig(fontLoader);
         InputStream fopConfigStream = new ByteArrayInputStream(fopConfigXml.getBytes());
 
-        URL imageUrl = null;
-        if(document.internalAddresses()!=null && document.internalAddresses().imageDictionary()!=null){
-            imageUrl = provider.getResource(document.internalAddresses().imageDictionary());
-        }
-
-
         // 3. Generate XSL-FO string from the document model
-        String xslFoString = foGenerator.generate(document, styleSheet,imageUrl);
+        String xslFoString = foGenerator.generate(document, styleSheet,imageResolver);
         //System.out.println("######### OUT ####\n"+xslFoString);
         InputStream xslFoStream = new ByteArrayInputStream(xslFoString.getBytes());
 

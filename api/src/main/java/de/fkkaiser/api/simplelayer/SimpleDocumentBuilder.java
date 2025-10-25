@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SimpleDocumentBuilder {
 
@@ -101,6 +102,50 @@ public class SimpleDocumentBuilder {
         return addHeading(text, 1);
     }
 
+    public SimpleDocumentBuilder addUnorderedList(List<String> items){
+        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items,styleManager.getUnorderedListName(),false);
+        elements.add(listElement);
+        return this;
+    }
+
+    public SimpleDocumentBuilder addOrderedList(List<String> items){
+        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items,styleManager.getOrderedListName(),true);
+        elements.add(listElement);
+        return this;
+    }
+
+    /**
+     * Adds an image to the document.
+     * The path must be relative to the 'resources' folder (e.g., "logo.png" or "images/logo.png").
+     * This method ensures the final path is correctly prefixed with "images/" for the generator.
+     *
+     * @param relativePath The path to the image, relative to 'resources'
+     * @param altText alt text for this image
+     */
+    public SimpleDocumentBuilder addImage(String relativePath,String altText) {
+        if (relativePath == null || relativePath.trim().isEmpty()) {
+            throw new IllegalArgumentException("Image path cannot be null or empty");
+        }
+
+        // Normalize path (remove leading slashes, fix backslashes)
+        String finalPath = relativePath.replace("\\", "/");
+        if (finalPath.startsWith("/")) {
+            finalPath = finalPath.substring(1);
+        }
+
+        if (!finalPath.startsWith("images/")) {
+            finalPath = "images/" + finalPath;
+        }
+
+        elements.add(new SimpleDocument.ImageElement(finalPath,altText));
+        return this;
+    }
+
+    public SimpleDocumentBuilder addImage(String relativePath) {
+       return addImage(relativePath,null);
+    }
+
+
     /**
      * Sets a custom resource provider (e.g., for custom font locations).
      * By default, uses classpath resources.
@@ -131,4 +176,25 @@ public class SimpleDocumentBuilder {
 
         return new SimpleDocument(elements, styleManager, fontManager, metadata, providerToUse);
     }
+
+    /**
+     * BEREINIGT EINEN BILD-PFAD
+     * Diese Logik stellt sicher, dass der Pfad relativ zum Classpath-Root ist
+     * und 'images/' enthält.
+     * @param relativePath Der vom Nutzer angegebene Pfad (z.B. "logo.png" oder "images/logo.png")
+     * @return Der bereinigte, volle Pfad (z.B. "images/logo.png")
+     */
+    public static String normalizeImagePath(String relativePath) {
+        if (relativePath == null) {
+            return "";
+        }
+        // Ersetze Backslashes und entferne führende Slashes
+        String cleanPath = relativePath.replace("\\", "/").replaceAll("^/", "");
+
+        if (cleanPath.startsWith("images/")) {
+            return cleanPath; // Pfad ist schon korrekt
+        }
+        return "images/" + cleanPath; // Füge 'images/' Präfix hinzu
+    }
 }
+

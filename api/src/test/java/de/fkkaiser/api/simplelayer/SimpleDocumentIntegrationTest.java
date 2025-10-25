@@ -7,6 +7,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -298,6 +299,70 @@ class SimpleDocumentIntegrationTest {
                 .addParagraph("First paragraph")
                 .addParagraph("Second paragraph")
                 .addParagraph("Third paragraph")
+                .build()
+                .saveAs(outputPath.toString());
+
+        // Then
+        assertTrue(Files.exists(outputPath));
+    }
+
+    @Test
+    @DisplayName("Should handle document with ordered list")
+    void shouldHandleDocumentWithOrderedList(@TempDir Path tempDir) throws Exception {
+        // Given
+        Path outputPath = tempDir.resolve("orderedlist.pdf");
+
+        // When
+        SimpleDocumentBuilder.create("Ordered List")
+                .addOrderedList(List.of("Item 1","Item 2"))
+                .build()
+                .saveAs(outputPath.toString());
+
+        // Then
+        assertTrue(Files.exists(outputPath));
+    }
+
+    @Test
+    @DisplayName("Should handle document with unordered list")
+    void shouldHandleDocumentWithUnorderedList(@TempDir Path tempDir) throws Exception {
+        // Given
+        Path outputPath = tempDir.resolve("unorderedlist.pdf");
+
+        // When
+        SimpleDocumentBuilder.create("Unordered List")
+                .addUnorderedList(List.of("Item 1","Item 2"))
+                .build()
+                .saveAs(outputPath.toString());
+
+        // Then
+        assertTrue(Files.exists(outputPath));
+    }
+
+    @Test
+    @DisplayName("Should handle document with image without alt text")
+    void shouldHandleDocumentWithImage(@TempDir Path tempDir) throws Exception {
+        // Given
+        Path outputPath = tempDir.resolve("image.pdf");
+
+        // When
+        SimpleDocumentBuilder.create("Image")
+                .addImage("images/logo.png")
+                .build()
+                .saveAs(outputPath.toString());
+
+        // Then
+        assertTrue(Files.exists(outputPath));
+    }
+
+    @Test
+    @DisplayName("Should handle document with image with alt text")
+    void shouldHandleDocumentWithImageWithAltText(@TempDir Path tempDir) throws Exception {
+        // Given
+        Path outputPath = tempDir.resolve("image.pdf");
+
+        // When
+        SimpleDocumentBuilder.create("Image")
+                .addImage("images/logo.png","Alt Text")
                 .build()
                 .saveAs(outputPath.toString());
 

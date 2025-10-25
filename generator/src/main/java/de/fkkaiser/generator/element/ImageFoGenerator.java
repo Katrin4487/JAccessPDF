@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.model.structure.BlockImage;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
@@ -20,7 +21,7 @@ public class ImageFoGenerator extends ElementFoGenerator {
 
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl) {
+    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver imageResolver) {
         BlockImage blockImage = (BlockImage) element;
         BlockImageStyleProperties style = blockImage.getResolvedStyle();
 
@@ -32,17 +33,26 @@ public class ImageFoGenerator extends ElementFoGenerator {
 
 
         try{
-            URL fileUrl = imageUrl.toURI().resolve(blockImage.getPath()).toURL();
-            InputStream inputStream = fileUrl.openStream();
-            byte[] imageBytes = inputStream.readAllBytes();
-            String mimeType = fileUrl.toString().endsWith("png") ? "image/png" : "image/jpeg";
-            String base64String = Base64.getEncoder().encodeToString(imageBytes);
-            String srcDataUri = "data:" + mimeType + ";base64," + base64String;
-            builder.append(" src=\"").append(srcDataUri).append("\"");
-            builder.append(" fox:alt-text=\"\""); //ToDO
+            URL absoluteUrl = imageResolver.resolve(blockImage.getPath());
 
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
+
+            if(absoluteUrl!=null) {
+                InputStream inputStream = absoluteUrl.openStream();
+                byte[] imageBytes = inputStream.readAllBytes();
+                String mimeType = absoluteUrl.toString().endsWith("png") ? "image/png" : "image/jpeg";
+                String base64String = Base64.getEncoder().encodeToString(imageBytes);
+                String srcDataUri = "data:" + mimeType + ";base64," + base64String;
+
+                builder.append(" src=\"").append(srcDataUri).append("\"");
+                if(blockImage.getAltText()!=null && !blockImage.getAltText().isEmpty()){
+                    builder.append(" alt=\"").append(blockImage.getAltText()).append("\"");
+                }else{
+                    builder.append(" fox:alt-text=\"\"");
+                }
+
+            }
+        } catch (IOException e){
+            log.error("Unable to resolve image url for block image");
         }
 
         builder.append("/>");

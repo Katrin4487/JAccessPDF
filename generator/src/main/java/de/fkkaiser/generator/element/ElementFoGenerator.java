@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.style.ElementStyleProperties;
@@ -21,7 +22,7 @@ public abstract class ElementFoGenerator {
      * @param styleSheet The entire StyleSheet for accessing, for example, Font information.
      * @param builder The StringBuilder to which the generated string is appended.
      */
-    public abstract void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, URL imageUrl);
+    public abstract void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver);
 
     /**
      * Escapes special characters in a given text to ensure it can be safely used in XML.
