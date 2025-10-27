@@ -2,12 +2,14 @@ package de.fkkaiser.api.simplelayer;
 
 import de.fkkaiser.api.utils.EClasspathResourceProvider;
 import de.fkkaiser.api.utils.EResourceProvider;
-import de.fkkaiser.model.structure.Metadata;
+import de.fkkaiser.model.structure.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SimpleDocumentBuilder {
 
@@ -143,6 +145,14 @@ public class SimpleDocumentBuilder {
 
     public SimpleDocumentBuilder addImage(String relativePath) {
        return addImage(relativePath,null);
+    }
+
+    public SimpleDocumentBuilder addTable(SimpleTable table) {
+        if (table == null) {
+            throw new IllegalArgumentException("Table object cannot be null");
+        }
+        elements.add(new SimpleDocument.TableElement(table));
+        return this;
     }
 
 

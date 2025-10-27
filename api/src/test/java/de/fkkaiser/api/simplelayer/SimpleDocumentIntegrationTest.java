@@ -355,6 +355,31 @@ class SimpleDocumentIntegrationTest {
     }
 
     @Test
+    @DisplayName("Should handle document with table")
+    void shouldHandleDocumentWithTable(@TempDir Path tempDir) throws Exception {
+        // Given
+        Path outputPath = tempDir.resolve("table.pdf");
+
+        SimpleTable table = new SimpleTable()
+                .setColumns("50%", "50%")
+                .addHeaderRow("Header 1", "Header 2")
+                .addBodyRow("Zelle 1", "Zelle 2")
+                .addBodyRow(
+                SimpleTableCell.of("Komplexe Zelle").addParagraph("Absatz..."),
+ SimpleTableCell.of("Zelle 4")
+                );
+
+        // When
+        SimpleDocumentBuilder.create("Table")
+                .addTable(table)
+                .build()
+                .saveAs(outputPath.toString());
+
+        // Then
+        assertTrue(Files.exists(outputPath));
+    }
+
+    @Test
     @DisplayName("Should handle document with image with alt text")
     void shouldHandleDocumentWithImageWithAltText(@TempDir Path tempDir) throws Exception {
         // Given

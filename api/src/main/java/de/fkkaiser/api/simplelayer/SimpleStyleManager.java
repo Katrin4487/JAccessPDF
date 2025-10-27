@@ -49,6 +49,10 @@ class SimpleStyleManager {
         return "image-default";
     }
 
+    String getDefaultCellStyleName(){
+        return "cell-default";
+    }
+
     /**
      * Builds a StyleSheet with PDF/UA compliant defaults.
      * Uses Open Sans (embedded) by default.
@@ -132,6 +136,13 @@ class SimpleStyleManager {
                 StyleTargetTypes.BLOCK_IMAGE,
                 imagePropsDefault
         ));
+
+        TableStyleProperties tableProp = new TableStyleProperties();
+        tableProp.setTextStyleName("text-default");
+        elementStyles.add(new ElementStyle("table-default", StyleTargetTypes.TABLE, tableProp));
+
+        TableCellStyleProperties tableCellStyleProperties = new TableCellStyleProperties();
+        elementStyles.add(new ElementStyle("cell-default", StyleTargetTypes.TABLE_CELL, tableCellStyleProperties));
 
         // Default page master (A4 portrait)
         PageMasterStyle pageMaster = new PageMasterStyle(PAGE_MASTER_NAME);

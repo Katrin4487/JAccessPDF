@@ -92,7 +92,7 @@ public final class PdfGenerationFacade {
 
         // 3. Generate XSL-FO string from the document model
         String xslFoString = foGenerator.generate(document, styleSheet,imageResolver);
-        //System.out.println("######### OUT ####\n"+xslFoString);
+        System.out.println("######### OUT ####\n"+xslFoString);
         InputStream xslFoStream = new ByteArrayInputStream(xslFoString.getBytes());
 
         // 4. Use FOP to transform XSL-FO to PDF

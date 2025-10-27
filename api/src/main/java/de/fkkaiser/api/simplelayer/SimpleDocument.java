@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a finalized, "built" PDF document.
@@ -185,6 +186,85 @@ public class SimpleDocument {
             // Nutze den "default" Style für Bilder, wie im StyleManager definiert
             String actualStyleName = styleManager.getDefaultImageName();
             return new BlockImage(actualStyleName, path,altText);
+        }
+    }
+
+    /**
+     * Repräsentiert eine Tabelle.
+     * Dies ist die Brücke zwischen der SimpleTable-Helferklasse und dem Core-Modell.
+     */
+    record TableElement(SimpleTable simpleTable) implements SimpleDocument.ContentElement {
+
+        @Override
+        public Element toModelObject(SimpleStyleManager styleManager) {
+            // 1. Header-Sektion umwandeln
+            TableSection header = null;
+            if (simpleTable.headerRows != null && !simpleTable.headerRows.isEmpty()) {
+                header = new TableSection(convertRows(simpleTable.headerRows, styleManager));
+            }
+
+            // 2. Body-Sektion umwandeln
+            TableSection body = null;
+            if (simpleTable.bodyRows != null && !simpleTable.bodyRows.isEmpty()) {
+                body = new TableSection(convertRows(simpleTable.bodyRows, styleManager));
+            }
+
+            // 3. Core Table-Objekt erstellen
+            return new Table(
+                    simpleTable.styleClass,
+                    simpleTable.columns,
+                    header,
+                    body,
+                    null // Footer wird (noch) nicht unterstützt
+            );
+        }
+
+        /**
+         * Hilfsmethode: Wandelt eine Liste von SimpleTableRows in eine Liste von Core TableRows um.
+         */
+        private List<TableRow> convertRows(List<SimpleTableRow> simpleRows, SimpleStyleManager styleManager) {
+            if (simpleRows == null) {
+                return Collections.emptyList();
+            }
+            return simpleRows.stream()
+                    .map(simpleRow -> new TableRow(convertCells(simpleRow.cells, styleManager)))
+                    .collect(Collectors.toList());
+        }
+
+        /**
+         * Hilfsmethode: Wandelt eine Liste von SimpleTableCells in eine Liste von Core TableCells um.
+         */
+        private List<TableCell> convertCells(List<SimpleTableCell> simpleCells, SimpleStyleManager styleManager) {
+            if (simpleCells == null) {
+                return Collections.emptyList();
+            }
+            return simpleCells.stream()
+                    .map(simpleCell -> convertCell(simpleCell, styleManager))
+                    .collect(Collectors.toList());
+        }
+
+        /**
+         * Hilfsmethode: Wandelt eine einzelne SimpleTableCell in eine Core TableCell um.
+         * HIER PASSIERT DIE REKURSION: Inhalte einer Zelle werden zu Core-Elementen.
+         */
+        private TableCell convertCell(SimpleTableCell simpleCell, SimpleStyleManager styleManager) {
+            // Wandle die 'ContentElement'-Liste (Paragraph, List, Image) der Zelle
+            // in eine 'Element'-Liste des Core-Modells um.
+            List<Element> coreElements;
+            if (simpleCell.elements == null) {
+                coreElements = Collections.emptyList();
+            } else {
+                coreElements = simpleCell.elements.stream()
+                        .map(contentElement -> contentElement.toModelObject(styleManager))
+                        .collect(Collectors.toList());
+            }
+
+            return new TableCell(
+                    styleManager.getDefaultCellStyleName(), // Verwendet einen Standard-Zellen-Stil
+                    coreElements,
+                    simpleCell.colspan,
+                    simpleCell.rowspan
+            );
         }
     }
 }
