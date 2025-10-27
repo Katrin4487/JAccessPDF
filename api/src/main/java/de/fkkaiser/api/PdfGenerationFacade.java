@@ -46,33 +46,40 @@ public final class PdfGenerationFacade {
     private final StyleSheetReader styleSheetReader;
     private final FontFamilyListReader fontListReader;
     private final XslFoGenerator foGenerator;
+    private final EResourceProvider provider;
 
-    public PdfGenerationFacade() {
+    public PdfGenerationFacade(EResourceProvider provider) {
+        if (provider == null) {
+            log.error("No provider specified");
+            throw new IllegalArgumentException("EResourceProvider cannot be null.");
+        }
+        this.provider = provider; // Speichern
         this.documentReader = new DocumentReader();
         this.styleSheetReader = new StyleSheetReader();
         this.fontListReader = new FontFamilyListReader();
         this.foGenerator = new XslFoGenerator();
+
     }
 
     /**
      * API Facade 1: Generates a PDF from JSON input streams.
      * Ideal for web services or data-driven applications.
      */
-    public ByteArrayOutputStream generatePDF(InputStream structureJson, InputStream styleJson, InputStream fontListJson, EResourceProvider provider) throws Exception {
+    public ByteArrayOutputStream generatePDF(InputStream structureJson, InputStream styleJson, InputStream fontListJson) throws Exception {
         log.debug("Reading models from input streams...");
         Document doc = documentReader.readJson(structureJson);
         StyleSheet styleSheet = styleSheetReader.readJson(styleJson);
         FontFamilyList fontFamilyList = fontListReader.readJson(fontListJson);
 
         // Delegate to the object-based method
-        return generatePDF(doc, styleSheet, fontFamilyList, provider);
+        return generatePDF(doc, styleSheet, fontFamilyList);
     }
 
     /**
      * API Facade 2: Generates a PDF from pre-built Java model objects.
      * Ideal for programmatic PDF creation within a Java application.
      */
-    public ByteArrayOutputStream generatePDF(Document document, StyleSheet styleSheet, FontFamilyList fontFamilyList, EResourceProvider provider) throws Exception {
+    public ByteArrayOutputStream generatePDF(Document document, StyleSheet styleSheet, FontFamilyList fontFamilyList) throws Exception {
         log.debug("Generating PDF from model objects...");
 
         // Instance of image resolver: necessary to find the right path to image-resources e.g. in jar-file...
@@ -92,7 +99,7 @@ public final class PdfGenerationFacade {
 
         // 3. Generate XSL-FO string from the document model
         String xslFoString = foGenerator.generate(document, styleSheet,imageResolver);
-        System.out.println("######### OUT ####\n"+xslFoString);
+        //System.out.println("######### OUT ####\n"+xslFoString);
         InputStream xslFoStream = new ByteArrayInputStream(xslFoString.getBytes());
 
         // 4. Use FOP to transform XSL-FO to PDF

@@ -16,15 +16,16 @@ public class PdfGenerationFacadeTest {
 
     @Test
     public void shouldGeneratePdfFromJsons() throws Exception {
-        PdfGenerationFacade pdfGenerationFacade = new PdfGenerationFacade();
+
 
         EResourceProvider provider = new EClasspathResourceProvider();
+        PdfGenerationFacade pdfGenerationFacade = new PdfGenerationFacade(provider);
 
         InputStream structureStream = getResourceAsStream("jsons/structure2.json");
         InputStream styleStream = getResourceAsStream("jsons/style2.json");
         InputStream fontStream = getResourceAsStream("jsons/font-families.json"); // Using the name from the previous example
 
-        ByteArrayOutputStream out = pdfGenerationFacade.generatePDF(structureStream,styleStream,fontStream,provider);
+        ByteArrayOutputStream out = pdfGenerationFacade.generatePDF(structureStream,styleStream,fontStream);
 
         writeOutputStreamToFile(out, "output.pdf");
 

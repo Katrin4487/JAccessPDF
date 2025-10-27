@@ -1,7 +1,7 @@
 package de.fkkaiser.api.simplelayer;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayOutputStream;
@@ -9,7 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SimpleDocument Integration Tests")
 class SimpleDocumentIntegrationTest {
@@ -92,7 +93,7 @@ class SimpleDocumentIntegrationTest {
 
         // Add many elements
         for (int i = 1; i <= 100; i++) {
-            doc.addHeading("Section " + i );
+            doc.addHeading("Section " + i);
             doc.addParagraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(10));
         }
 
@@ -314,7 +315,7 @@ class SimpleDocumentIntegrationTest {
 
         // When
         SimpleDocumentBuilder.create("Ordered List")
-                .addOrderedList(List.of("Item 1","Item 2"))
+                .addOrderedList(List.of("Item 1", "Item 2"))
                 .build()
                 .saveAs(outputPath.toString());
 
@@ -330,7 +331,7 @@ class SimpleDocumentIntegrationTest {
 
         // When
         SimpleDocumentBuilder.create("Unordered List")
-                .addUnorderedList(List.of("Item 1","Item 2"))
+                .addUnorderedList(List.of("Item 1", "Item 2"))
                 .build()
                 .saveAs(outputPath.toString());
 
@@ -365,9 +366,12 @@ class SimpleDocumentIntegrationTest {
                 .addHeaderRow("Header 1", "Header 2")
                 .addBodyRow("Zelle 1", "Zelle 2")
                 .addBodyRow(
-                SimpleTableCell.of("Komplexe Zelle").addParagraph("Absatz..."),
- SimpleTableCell.of("Zelle 4")
-                );
+                        SimpleTableCell.of("Komplexe Zelle").addParagraph("Absatz..."),
+                        SimpleTableCell.of("Zelle 4")
+                )
+        .addBodyRow(
+                SimpleTableCell.of("Zelle 4").withColspan(2)
+        );
 
         // When
         SimpleDocumentBuilder.create("Table")
@@ -387,7 +391,7 @@ class SimpleDocumentIntegrationTest {
 
         // When
         SimpleDocumentBuilder.create("Image")
-                .addImage("images/logo.png","Alt Text")
+                .addImage("images/logo.png", "Alt Text")
                 .build()
                 .saveAs(outputPath.toString());
 

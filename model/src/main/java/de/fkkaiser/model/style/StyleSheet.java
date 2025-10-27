@@ -1,6 +1,7 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +14,6 @@ public record StyleSheet(
         @JsonProperty("element-styles") List<ElementStyle> elementStyles,
         @JsonProperty("page-master-styles") List<PageMasterStyle> pageMasterStyles
 ) {
-
 
     /**
      * Finds a text style by its name.
@@ -28,5 +28,80 @@ public record StyleSheet(
         return this.textStyles.stream()
                 .filter(fs -> name.equals(fs.name()))
                 .findFirst();
+    }
+
+    /**
+     * Entry point to create a new StyleSheet using the Builder pattern.
+     * @return A new StyleSheetBuilder instance.
+     */
+    public static StyleSheetBuilder builder() {
+        return new StyleSheetBuilder();
+    }
+
+    /**
+     * A fluent builder for creating an immutable StyleSheet object.
+     */
+    @SuppressWarnings("unused")
+    public static class StyleSheetBuilder {
+
+        // Internal mutable lists for aggregation
+        private final List<TextStyle> textStyles = new ArrayList<>();
+        private final List<ElementStyle> elementStyles = new ArrayList<>();
+        private final List<PageMasterStyle> pageMasterStyles = new ArrayList<>();
+
+        /**
+         * Private constructor to enforce usage via StyleSheet.builder()
+         */
+        private StyleSheetBuilder() {
+        }
+
+        /**
+         * Adds a TextStyle to the stylesheet.
+         * @param style The TextStyle to add.
+         * @return This builder instance for fluent chaining.
+         */
+        public StyleSheetBuilder addTextStyle(TextStyle style) {
+            if (style != null) {
+                this.textStyles.add(style);
+            }
+            return this;
+        }
+
+        /**
+         * Adds an ElementStyle to the stylesheet.
+         * @param style The ElementStyle to add.
+         * @return This builder instance for fluent chaining.
+         */
+        public StyleSheetBuilder addElementStyle(ElementStyle style) {
+            if (style != null) {
+                this.elementStyles.add(style);
+            }
+            return this;
+        }
+
+        /**
+         * Adds a PageMasterStyle to the stylesheet.
+         * @param style The PageMasterStyle to add.
+         * @return This builder instance for fluent chaining.
+         */
+        public StyleSheetBuilder addPageMasterStyle(PageMasterStyle style) {
+            if (style != null) {
+                this.pageMasterStyles.add(style);
+            }
+            return this;
+        }
+
+        /**
+         * Builds the final, immutable StyleSheet object.
+         * @return A new StyleSheet record.
+         */
+        public StyleSheet build() {
+            // Use List.copyOf to create immutable lists for the record
+            return new StyleSheet(
+                    List.copyOf(this.textStyles),
+                    List.copyOf(this.elementStyles),
+                    List.copyOf(this.pageMasterStyles)
+            );
+        }
     }
 }

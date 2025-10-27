@@ -77,8 +77,8 @@ public class SimpleDocument {
     // === Private Helper Methods ===
 
     private ByteArrayOutputStream generatePDF() throws Exception {
-        PdfGenerationFacade facade = new PdfGenerationFacade();
-        return facade.generatePDF(document, styleSheet, fontFamilyList, resourceProvider);
+        PdfGenerationFacade facade = new PdfGenerationFacade(resourceProvider);
+        return facade.generatePDF(document, styleSheet, fontFamilyList);
     }
 
     /**
