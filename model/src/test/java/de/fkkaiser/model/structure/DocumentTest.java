@@ -35,4 +35,27 @@ public class DocumentTest {
         assertNotNull(document.pageSequences(), "The pageSequences list should never be null.");
         assertTrue(document.pageSequences().isEmpty(), "The list should be empty.");
     }
+
+    @Test
+    @DisplayName("Should create an Document with metadata only")
+    public void shouldCreateDocumentWithMetadataOnly() {
+
+        Document document = Document.builder(new Metadata("A title")).build();
+        assertNotNull(document.metadata(), "The metadata should never be null.");
+        assertTrue(document.pageSequences().isEmpty(), "The pageSequences list should never be null but empty.");
+        assertNull(document.internalAddresses(), "The internal addresses should be null, if not present.");
+    }
+
+    @Test
+    @DisplayName("Should add Page Sequences with Builder")
+    public void shouldAddPageSequencesWithBuilder() {
+        Document document = Document.builder(new Metadata("A title"))
+                .addPageSequence(new PageSequence("style",new ContentArea(),new ContentArea(),new ContentArea()))
+                .withInternalAddresses(new InternalAddresses("fonts","images"))
+                .build();
+
+        assertFalse(document.pageSequences().isEmpty());
+        assertNotNull(document.internalAddresses());
+
+    }
 }
