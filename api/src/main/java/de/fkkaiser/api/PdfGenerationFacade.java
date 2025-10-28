@@ -7,7 +7,10 @@ import de.fkkaiser.api.utils.EResourceProvider;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 
+import de.fkkaiser.model.font.FontFamily;
 import de.fkkaiser.model.font.FontFamilyList;
+import de.fkkaiser.model.font.FontStyleValue;
+import de.fkkaiser.model.font.FontType;
 import de.fkkaiser.model.structure.Document;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.processor.StyleResolverService;
@@ -31,7 +34,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The facade is the central entry point for the creation of a PDF.
@@ -83,14 +88,29 @@ public final class PdfGenerationFacade {
         log.debug("Generating PDF from model objects...");
 
         // Instance of image resolver: necessary to find the right path to image-resources e.g. in jar-file...
-        ImageResolver imageResolver = new ImageResolver() {
-            @Override
-            public URL resolve(String relativePath) throws IOException {
-                return provider.getResource(relativePath);
-            }
-        };
+        ImageResolver imageResolver = provider::getResource;
         // 1. Link styles with content
         StyleResolverService.resolve(document, styleSheet);
+
+        // Add default Font if fontFamilyList is empty
+        if(fontFamilyList == null ){
+            fontFamilyList = new FontFamilyList();
+        }
+
+        if (fontFamilyList.getFontFamilyList() != null) {
+            List<FontFamily> mutableList = new ArrayList<>(fontFamilyList.getFontFamilyList());
+            mutableList.removeIf(fontFamily ->
+                    fontFamily.fontTypes() == null || fontFamily.fontTypes().isEmpty()
+            );
+
+            fontFamilyList.setFontFamilyList(mutableList);
+        }
+        if(fontFamilyList.getFontFamilyList().isEmpty()){
+            log.error("FontFamilyList is empty. Adding Default Font");
+            FontType fontType = new FontType("fonts/OpenSans-Regular.ttf", FontStyleValue.NORMAL,"400");
+            FontFamily fontFamily = new FontFamily("Open Sans", Collections.singletonList(fontType));
+            fontFamilyList.setFontFamilyList(Collections.singletonList(fontFamily));
+        }
 
         // 2. Build FOP configuration dynamically
         EFontFamilyLoader fontLoader = new EFontFamilyLoader(provider, fontFamilyList);

@@ -21,9 +21,8 @@ public enum FontStyleValue {
             case NORMAL -> "normal";
             case ITALIC -> "italic";
             case OBLIQUE -> "oblique";
-            default ->
-                //Should not happen
-                    "HAPPENS";
+            //Should not happen
         };
     }
+
 }

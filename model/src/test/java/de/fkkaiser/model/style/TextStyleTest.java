@@ -1,11 +1,13 @@
 package de.fkkaiser.model.style;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TextStyleTest {
 
     @Test
+    @DisplayName("Should create text style with correct properties")
     void shouldCreateTextStyleWithCorrectProperties() {
         String name = "headline-font";
         String fontSize = "16px";
