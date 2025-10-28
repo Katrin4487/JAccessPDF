@@ -20,12 +20,12 @@ public class FontFamilyListTest {
     @DisplayName("Should build an FontFamilyList with chaining")
     public void shouldBuildAnFontFamilyListWithChain() {
         FontFamilyList fontFamilyList = FontFamilyList.builder()
-                .addNewFontFamily("Arial")
-                .addNewFont("/apath",FontStyleValue.NORMAL,"400")
-                .addNewFont("/secondpath",FontStyleValue.ITALIC,"400")
+                .addFontFamily("Arial")
+                .addFont("/apath",FontStyleValue.NORMAL,"400")
+                .addFont("/secondpath",FontStyleValue.ITALIC,"400")
                 .endFontFamily()
-                .addNewFontFamily("Arial")
-                .addNewFont("/cpath",FontStyleValue.NORMAL,"400")
+                .addFontFamily("Arial")
+                .addFont("/cpath",FontStyleValue.NORMAL,"400")
                 .endFontFamily()
                 .build();
 
@@ -37,11 +37,11 @@ public class FontFamilyListTest {
     @DisplayName("Should end font family chain automatically")
     public void shouldEndFontFamilyChainAutomatically() {
         FontFamilyList fontFamilyList = FontFamilyList.builder()
-                .addNewFontFamily("Arial")
-                .addNewFont("/apath",FontStyleValue.NORMAL,"400")
-                .addNewFont("/secondpath",FontStyleValue.ITALIC,"400")
-                .addNewFontFamily("Arial")
-                .addNewFont("/cpath",FontStyleValue.NORMAL,"400")
+                .addFontFamily("Arial")
+                .addFont("/apath",FontStyleValue.NORMAL,"400")
+                .addFont("/secondpath",FontStyleValue.ITALIC,"400")
+                .addFontFamily("Arial")
+                .addFont("/cpath",FontStyleValue.NORMAL,"400")
                 .build();
 
         assertEquals(2, fontFamilyList.getFontFamilyList().size());
