@@ -34,12 +34,26 @@ public record ElementStyle(
         return properties;
     }
 
+    /**
+     * Creates an ElementStyle object for a paragarph
+     * @param name name for this element style object (unique identifier)
+     * @param textStyle TextStyle object that should be used for the paragraph
+     * @return ElementStyle object used for paragraphs
+     */
+    @SuppressWarnings("unused")
     public static ElementStyle forParagraph(String name,TextStyle textStyle) {
         ParagraphStyleProperties paragraphStyleProperties = new ParagraphStyleProperties();
         paragraphStyleProperties.setTextStyleName(textStyle.name());
         return new ElementStyle(name,StyleTargetTypes.PARAGRAPH,paragraphStyleProperties);
     }
 
+    /**
+     * Creates an ElementStyle object for a headline
+     * @param name name for this element style object (unique identifier)
+     * @param textStyle TextStyle object that should be used for the headline
+     * @return ElementStyle object used for headlines
+     */
+    @SuppressWarnings("unused")
     public static ElementStyle forHeadline(String name,TextStyle textStyle) {
         HeadlineStyleProperties headlineStyleProperties = new HeadlineStyleProperties();
         headlineStyleProperties.setTextStyleName(textStyle.name());
