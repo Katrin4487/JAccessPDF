@@ -33,4 +33,16 @@ public record ElementStyle(
     public ElementStyleProperties properties() {
         return properties;
     }
+
+    public static ElementStyle forParagraph(String name,TextStyle textStyle) {
+        ParagraphStyleProperties paragraphStyleProperties = new ParagraphStyleProperties();
+        paragraphStyleProperties.setTextStyleName(textStyle.name());
+        return new ElementStyle(name,StyleTargetTypes.PARAGRAPH,paragraphStyleProperties);
+    }
+
+    public static ElementStyle forHeadline(String name,TextStyle textStyle) {
+        HeadlineStyleProperties headlineStyleProperties = new HeadlineStyleProperties();
+        headlineStyleProperties.setTextStyleName(textStyle.name());
+        return new ElementStyle(name,StyleTargetTypes.HEADLINE,headlineStyleProperties);
+    }
 }
