@@ -11,6 +11,7 @@ import de.fkkaiser.model.font.FontStyleValue;
 import de.fkkaiser.model.font.FontType;
 import de.fkkaiser.model.structure.Document;
 import de.fkkaiser.model.style.StyleSheet;
+import de.fkkaiser.model.style.TextStyle;
 import de.fkkaiser.processor.StyleResolverService;
 import de.fkkaiser.processor.reader.DocumentReader;
 import de.fkkaiser.processor.reader.FontFamilyListReader;
@@ -117,7 +118,7 @@ import java.util.List;
  * call its methods concurrently.
  *
  * @author FK Kaiser
- * @version 1.1
+ * @version 1.2
  * @see Document
  * @see StyleSheet
  * @see FontFamilyList
@@ -246,6 +247,7 @@ public final class PdfGenerationFacade {
      * <ol>
      *   <li>Resolves and links styles to document elements</li>
      *   <li>Validates and prepares the font family list (adds default font if necessary)</li>
+     *   <li>Validates that all text styles have corresponding fonts</li>
      *   <li>Creates the Apache FOP factory with font configuration</li>
      *   <li>Generates XSL-FO (Formatting Objects) from the document model</li>
      *   <li>Transforms XSL-FO to PDF using Apache FOP</li>
@@ -260,6 +262,11 @@ public final class PdfGenerationFacade {
      * The method automatically resolves style references in the document, linking style
      * definitions from the style sheet to the appropriate document elements.
      *
+     * <p><b>Font Validation:</b></p>
+     * Before PDF generation, the method validates that every text style defined in the
+     * style sheet has a corresponding font variant (matching weight and style) in the
+     * font family list. If a mismatch is detected, a {@link PdfGenerationException} is thrown.
+     *
      * @param document       the document structure to be rendered as PDF;
      *                       must not be {@code null}
      * @param styleSheet     the style definitions to be applied to the document;
@@ -267,7 +274,8 @@ public final class PdfGenerationFacade {
      * @param fontFamilyList the list of font families to be used in the PDF;
      *                       may be {@code null} (default font will be used)
      * @return a ByteArrayOutputStream containing the generated PDF data
-     * @throws PdfGenerationException if an error occurs during PDF generation
+     * @throws PdfGenerationException if an error occurs during PDF generation or if
+     *                                text styles reference missing fonts
      */
     public ByteArrayOutputStream generatePDF(Document document,
                                              StyleSheet styleSheet,
@@ -282,15 +290,19 @@ public final class PdfGenerationFacade {
             // Step 2: Ensure we have a valid font list (with fallback to default)
             FontFamilyList validatedFonts = ensureValidFontList(fontFamilyList);
 
-            // Step 3: Create FOP factory with font configuration
+            // Step 3: Validate that all text styles have corresponding fonts
+            validateTextStyleFonts(styleSheet, validatedFonts);
+            log.debug("Text style font validation completed");
+
+            // Step 4: Create FOP factory with font configuration
             FopFactory fopFactory = createFopFactory(validatedFonts);
             log.debug("FOP factory created successfully");
 
-            // Step 4: Generate XSL-FO from document model
+            // Step 5: Generate XSL-FO from document model
             String xslFoString = generateXslFo(document, styleSheet);
             log.debug("XSL-FO generation completed, length: {} characters", xslFoString.length());
 
-            // Step 5: Transform XSL-FO to PDF
+            // Step 6: Transform XSL-FO to PDF
             ByteArrayOutputStream pdfOutput = transformToPdf(fopFactory, xslFoString);
             log.debug("PDF generation completed successfully, size: {} bytes", pdfOutput.size());
 
@@ -300,6 +312,140 @@ public final class PdfGenerationFacade {
             log.error("Failed to generate PDF from model objects", e);
             throw new PdfGenerationException("PDF generation failed", e);
         }
+    }
+
+    /**
+     * Validates that all text styles in the style sheet have corresponding font variants
+     * in the font family list. This ensures that Apache FOP can find the correct font files
+     * for all text styles used in the document.
+     *
+     * <p><b>Validation Rules:</b></p>
+     * For each text style in the style sheet:
+     * <ol>
+     *   <li>Checks that the referenced font family exists in the font family list</li>
+     *   <li>Checks that a font type with matching style and weight exists in that family</li>
+     * </ol>
+     *
+     * <p><b>Common Issues:</b></p>
+     * This validation catches common configuration errors such as:
+     * <ul>
+     *   <li>Referencing a font family that wasn't registered (typo in family name)</li>
+     *   <li>Using bold text without providing a bold font variant</li>
+     *   <li>Using italic text without providing an italic font variant</li>
+     *   <li>Mismatched font weights (e.g., style uses "700" but only "400" is available)</li>
+     * </ul>
+     *
+     * <p><b>Example Error Scenarios:</b></p>
+     * <pre>{@code
+     * // Scenario 1: Missing font family
+     * TextStyle style = new TextStyle("heading", "24pt", "Arial", "700", "normal");
+     * // But "Arial" was not added to FontFamilyList
+     * // → Throws: Font family 'Arial' referenced by text style 'heading' is not in the font family list
+     *
+     * // Scenario 2: Missing bold variant
+     * FontFamily roboto = new FontFamily("Roboto", List.of(
+     *     FontType.regular("fonts/Roboto-Regular.ttf")  // Only regular, no bold!
+     * ));
+     * TextStyle boldStyle = new TextStyle("bold-text", "12pt", "Roboto", "700", "normal");
+     * // → Throws: Text style 'bold-text' requires font weight '700' and style 'normal',
+     * //           but font family 'Roboto' does not have a matching font variant
+     * }</pre>
+     *
+     * @param styleSheet     the style sheet containing text style definitions;
+     *                       must not be {@code null}
+     * @param fontFamilyList the validated font family list;
+     *                       must not be {@code null} and must contain at least one font family
+     * @throws IllegalArgumentException if a text style references a missing font family
+     *                                  or font variant
+     */
+    private void validateTextStyleFonts(StyleSheet styleSheet, FontFamilyList fontFamilyList) {
+        if (styleSheet == null || styleSheet.textStyles() == null) {
+            log.debug("No text styles to validate");
+            return;
+        }
+
+        log.debug("Validating {} text style(s) against font family list",
+                styleSheet.textStyles().size());
+
+        for (TextStyle textStyle : styleSheet.textStyles()) {
+            String styleName = textStyle.name();
+            String familyName = textStyle.fontFamilyName();
+            String requiredWeight = textStyle.fontWeight();
+            String requiredStyle = textStyle.fontStyle();
+
+            log.trace("Validating text style '{}': family='{}', weight='{}', style='{}'",
+                    styleName, familyName, requiredWeight, requiredStyle);
+
+            // Step 1: Find the font family
+            FontFamily fontFamily = findFontFamily(fontFamilyList, familyName)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            String.format("Font family '%s' referenced by text style '%s' " +
+                                            "is not in the font family list",
+                                    familyName, styleName)
+                    ));
+
+            // Step 2: Find a matching font type with the required weight and style
+            boolean hasMatchingFont = fontFamily.fontTypes().stream()
+                    .anyMatch(fontType ->
+                            fontType.fontWeight().equals(requiredWeight) &&
+                                    fontType.fontStyle().toString().equalsIgnoreCase(requiredStyle)
+                    );
+
+            if (!hasMatchingFont) {
+                throw new IllegalArgumentException(
+                        String.format("Text style '%s' requires font weight '%s' and style '%s', " +
+                                        "but font family '%s' does not have a matching font variant. " +
+                                        "Available variants: %s",
+                                styleName, requiredWeight, requiredStyle, familyName,
+                                formatAvailableFontVariants(fontFamily))
+                );
+            }
+
+            log.trace("Text style '{}' validation successful", styleName);
+        }
+
+        log.debug("All text styles validated successfully");
+    }
+
+    /**
+     * Finds a font family by name in the font family list.
+     *
+     * @param fontFamilyList the font family list to search
+     * @param familyName     the name of the font family to find
+     * @return an Optional containing the font family if found, empty otherwise
+     */
+    private java.util.Optional<FontFamily> findFontFamily(FontFamilyList fontFamilyList, String familyName) {
+        if (fontFamilyList.getFontFamilyList() == null) {
+            return java.util.Optional.empty();
+        }
+
+        return fontFamilyList.getFontFamilyList().stream()
+                .filter(ff -> ff.getName().equals(familyName))
+                .findFirst();
+    }
+
+    /**
+     * Formats the available font variants in a font family for error messages.
+     * This helps users understand what font variants are available when a validation error occurs.
+     *
+     * @param fontFamily the font family to format
+     * @return a formatted string listing all available font variants
+     */
+    private String formatAvailableFontVariants(FontFamily fontFamily) {
+        if (fontFamily.fontTypes() == null || fontFamily.fontTypes().isEmpty()) {
+            return "(none)";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < fontFamily.fontTypes().size(); i++) {
+            FontType ft = fontFamily.fontTypes().get(i);
+            sb.append(String.format("[weight=%s, style=%s]",
+                    ft.fontWeight(), ft.fontStyle().toString().toLowerCase()));
+            if (i < fontFamily.fontTypes().size() - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
     }
 
     /**
