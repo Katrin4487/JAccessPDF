@@ -27,7 +27,7 @@ class StyleSheetReaderTest {
         String json = """
         {
           "text-styles": [
-            { "name": "normal" }
+            { "font-family-name":"Arial","name": "normal" , "font-size":"12pt", "font-weight":"700", "font-style":"italic" }
           ]
         }
         """;
