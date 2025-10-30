@@ -23,6 +23,7 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
         TextRun textRun = (TextRun) element;
         TextRunStyleProperties style = textRun.getResolvedStyle();
 
+
         if (style == null) {
             builder.append(escapeXml(textRun.getText()));
             return;
@@ -63,20 +64,20 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
                 builder.append(" text-decoration=\"").append(escapeXml(style.getTextDecoration())).append("\"");
             }
 
-            if(style.getBaselineShift() != null){
+            if (style.getBaselineShift() != null) {
                 builder.append(" baseline-shift=\"").append(escapeXml(style.getBaselineShift())).append("\"");
             }
 
-            if(style.getLineFeedTreatment()!=null){
+            if (style.getLineFeedTreatment() != null) {
                 builder.append(" linefeed-treatment=\"").append(escapeXml(style.getLineFeedTreatment())).append("\"");
             }
 
 
         }
         builder.append(">");
-        builder.append(escapeXml(textRun.getText()));
+        builder.append(normalizeText(textRun.getText()));
 
         builder.append("</fo:inline>");
-        log.debug("Generated: {}",builder);
+        log.debug("Generated: {}", builder);
     }
 }

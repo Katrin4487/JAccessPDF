@@ -606,6 +606,8 @@ public final class PdfGenerationFacade {
             // Set URI resolver for external resource resolution
             transformer.setURIResolver(new EFopURIResolver(resourceProvider));
 
+            log.debug("################# XSL-FO-String ################\n{}", xslFoString);
+
             // Prepare source and result
             InputStream xslFoStream = new ByteArrayInputStream(xslFoString.getBytes());
             Source source = new StreamSource(xslFoStream);

@@ -1,0 +1,91 @@
+package de.fkkaiser.model.style.builder;
+
+import de.fkkaiser.model.style.ElementStyle;
+import de.fkkaiser.model.style.HeadlineStyleProperties;
+import de.fkkaiser.model.style.StyleTargetTypes;
+import de.fkkaiser.model.style.TextStyle;
+
+/**
+ * Fluent builder for creating headline element styles with detailed properties.
+ *
+ */
+public class HeadlineStyleBuilder {
+    private final String name;
+    private final HeadlineStyleProperties properties;
+
+    public HeadlineStyleBuilder(String name, TextStyle textStyle) {
+        this.name = name;
+        this.properties = new HeadlineStyleProperties();
+        this.properties.setTextStyleName(textStyle.name());
+    }
+
+    /**
+     * Defines the white space before a headline.
+     * You can choose between the units: mm, cm, in, pt, pc, em or %.
+     *
+     * @param spaceBefore String with value and unit for space before
+     * @return HeadlineStyleBuilder to use this method in a chain
+     */
+    @SuppressWarnings("unused")
+    public HeadlineStyleBuilder withSpaceBefore(String spaceBefore) {
+        properties.setSpaceBefore(spaceBefore);
+        return this;
+    }
+
+    /**
+     * Defines the white space after a headline.
+     * You can choose between the units: mm, cm, in, pt, pc, em or %.
+     *
+     * @param spaceAfter String with value and unit for space after
+     * @return HeadlineStyleBuilder to use this method in a chain
+     */
+    @SuppressWarnings("unused")
+    public HeadlineStyleBuilder withSpaceAfter(String spaceAfter) {
+        properties.setSpaceAfter(spaceAfter);
+        return this;
+    }
+
+    /**
+     * Defines the layout instruction that prevents a page break between the current block and
+     * the block that immediately follows it.
+     * Available values are:
+     * <ul>
+     *     <li>int value: sets a strength or priority for the keep</li>
+     *     <li>auto: (default): sets strength to 0</li>
+     *     <li>always: is equivalent to the highest possible strength (like infinity)</li>
+     * </ul>
+     * @param keepWithNext key-value for keept with next
+     * @return HeadlineStyleBuilder to use this method in a chain
+     */
+    public HeadlineStyleBuilder withKeepWithNext(boolean keepWithNext) {
+        properties.setKeepWithNext(keepWithNext);
+        return this;
+    }
+
+    /**
+     * Defines the background color of this headline. Valid color values are:
+     * <ul>
+     *     <li>HexCode: e.g. #F0F0F0</li>
+     *     <li>Color Name: e.g. yellow</li>
+     *     <li>RGB-Function: rgb(255,0,0)</li>
+     * </ul>
+     *
+     * @param color background color for this headline as string
+     * @return HeadlineStyleBuilder to use this method in a chain
+     */
+    @SuppressWarnings("unused")
+    public HeadlineStyleBuilder withBackgroundColor(String color) {
+        properties.setBackgroundColor(color);
+        return this;
+    }
+
+    /**
+     * Builder method of the HeadlineStyleBuilder chain. This method must be called
+     * at the end of every HeadlineStyleBuilder chain.
+     *
+     * @return ElementStyle of a headline that was created with a HeadlineBuilder chain.
+     */
+    public ElementStyle build() {
+        return new ElementStyle(name, StyleTargetTypes.HEADLINE, properties);
+    }
+}

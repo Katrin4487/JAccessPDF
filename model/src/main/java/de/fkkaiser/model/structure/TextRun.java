@@ -8,11 +8,8 @@ import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
 import de.fkkaiser.model.style.TextRunStyleProperties;
-import de.fkkaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Represents an inline element for displaying text within a document.
@@ -36,6 +33,7 @@ public class TextRun extends AbstractInlineElement {
             @JsonProperty("variant") String variant
     ) {
         super(styleClass, variant);
+        log.debug("Creating TextRun with text {} and style-class {}", text,styleClass);
         this.text = text;
     }
 
@@ -63,7 +61,7 @@ public class TextRun extends AbstractInlineElement {
 
     /**
      * Resolves the styles for this text run based on the provided context.
-     * The logic is now more explicit: it determines the final value for each property
+     * TIt determines the final value for each property
      * by checking the specific style first, then falling back to the parent style.
      *
      * @param context The style resolver context containing necessary style information.
@@ -72,7 +70,6 @@ public class TextRun extends AbstractInlineElement {
     public void resolveStyles(StyleResolverContext context) {
         ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
         TextRunStyleProperties specificRunStyle = new TextRunStyleProperties();
-
 
         if (styleClass != null && !styleClass.isEmpty()) {
 
@@ -89,6 +86,7 @@ public class TextRun extends AbstractInlineElement {
 
         }
 
+        log.debug("Resolving specific run style {} for text {}", specificRunStyle.getTextStyleName(),this.text);
 
         this.resolvedStyle = TextRunStyleProperties.createResolved(parentStyle, specificRunStyle);
     }

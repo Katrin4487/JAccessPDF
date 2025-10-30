@@ -22,11 +22,11 @@ public abstract class AbstractInlineElement extends AbstractElement implements I
             @JsonProperty("style-class") String styleClass,
             @JsonProperty("variant") String variant
     ) {
-        // We call the constructor of the parent class (AbstractElement)
-        // to initialize the common fields.
+
         super(styleClass, variant);
     }
 
+    @SuppressWarnings("unused")
     public AbstractInlineElement(String styleClass){
         this(styleClass, null);
     }

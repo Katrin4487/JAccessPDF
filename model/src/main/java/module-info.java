@@ -2,6 +2,7 @@ module model {
     exports de.fkkaiser.model.structure;
     exports de.fkkaiser.model.font;
     exports de.fkkaiser.model.style;
+    exports de.fkkaiser.model.style.builder;
 
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;

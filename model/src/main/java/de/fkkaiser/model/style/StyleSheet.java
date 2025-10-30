@@ -1,6 +1,9 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +18,7 @@ public record StyleSheet(
         @JsonProperty("page-master-styles") List<PageMasterStyle> pageMasterStyles
 ) {
 
+    private static final Logger log = LoggerFactory.getLogger(StyleSheet.class);
     /**
      * Finds a text style by its name.
      *
@@ -97,6 +101,19 @@ public record StyleSheet(
          */
         public StyleSheet build() {
             // Use List.copyOf to create immutable lists for the record
+
+            StringBuilder txtStyles = new StringBuilder();
+            for (TextStyle textStyle : this.textStyles) {
+                txtStyles.append(textStyle.name()).append(",");
+            }
+            log.debug("Text styles: {}",txtStyles);
+            StringBuilder elmeStyles = new StringBuilder();
+            for (ElementStyle elementStyle : this.elementStyles) {
+                elmeStyles.append(elementStyle.name()).append(",");
+            }
+
+            log.debug("Element styles: {}",elmeStyles);
+
             return new StyleSheet(
                     List.copyOf(this.textStyles),
                     List.copyOf(this.elementStyles),

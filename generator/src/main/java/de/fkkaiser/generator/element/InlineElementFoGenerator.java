@@ -24,4 +24,18 @@ public abstract class InlineElementFoGenerator {
                 .replace("\"", "&quot;")
                 .replace("'", "&apos;");
     }
+
+    /**
+     * Helper to normalize texts in text elements.
+     * Replaces '\n' with '\u2028'.
+     * @param text text that should be normalized
+     * @return normalized String
+     */
+    protected String normalizeText(String text) {
+        if (text == null) return "";
+
+        String normalized = text.replace("\n", "\u2028");
+
+        return escapeXml(normalized);
+    }
 }

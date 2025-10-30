@@ -81,4 +81,5 @@ public class TextRunStyleProperties extends InlineTextElementStyleProperties{
         }
 
     }
+
 }

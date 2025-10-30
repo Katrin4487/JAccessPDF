@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.NotExtensible;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,7 +74,7 @@ class ElementStyleTest {
 
     @Test
     @DisplayName("Should create ParagraphStyle with chain")
-    public void shouldCreateParagraphStyleWithChain() throws Exception {
+    public void shouldCreateParagraphStyleWithChain() {
         TextStyle.TextStyleFactory factory = new TextStyle.TextStyleFactory("Open Sans");
         TextStyle aStyle = factory.normal("normal-font",12);
         ElementStyle style = ElementStyle.paragraphBuilder("aName",aStyle)
