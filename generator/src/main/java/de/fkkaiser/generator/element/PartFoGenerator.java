@@ -7,11 +7,8 @@ import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.Part;
 import de.fkkaiser.model.style.PartStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
-import org.apache.xmlgraphics.image.loader.spi.ImageImplRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.URL;
 import java.util.List;
 
 public class PartFoGenerator extends ElementFoGenerator {
@@ -25,16 +22,21 @@ public class PartFoGenerator extends ElementFoGenerator {
     }
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
+    public void generate(Element element,
+                         StyleSheet styleSheet,
+                         StringBuilder builder,
+                         List<Headline> headlines,
+                         ImageResolver resolver,
+                         boolean isExternalParagraph) {
         Part part = (Part) element;
         PartStyleProperties style = part.getResolvedStyle();
 
-        builder.append("      <fo:block");
+        builder.append("      <fo:block fox:content-type=\"external-artifact\"");
         appendPartAttributes(builder, style, styleSheet);
         builder.append(">");
 
 
-        mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines,resolver);
+        mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines,resolver,false);
 
         builder.append("      </fo:block>");
     }

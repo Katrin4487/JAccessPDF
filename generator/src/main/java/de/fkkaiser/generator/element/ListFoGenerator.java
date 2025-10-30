@@ -6,8 +6,6 @@ import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
-
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -28,12 +26,20 @@ public class ListFoGenerator extends ElementFoGenerator {
     }
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
+    public void generate(Element element,
+                         StyleSheet styleSheet,
+                         StringBuilder builder,
+                         List<Headline> headlines,
+                         ImageResolver resolver,
+                         boolean isExternalArtefact) {
         SimpleList list = (SimpleList) element;
         ListStyleProperties style = list.getResolvedStyle();
 
         builder.append("      <fo:list-block role=\"L\"");
         appendListBlockAttributes(builder, style, styleSheet);
+        if(isExternalArtefact) {
+            builder.append(" fox:content-type=\"external-artifact\"");
+        }
         builder.append(">\n");
 
         if (list.getItems() != null) {
@@ -56,7 +62,7 @@ public class ListFoGenerator extends ElementFoGenerator {
                 builder.append("          </fo:list-item-label>");
                 builder.append("          <fo:list-item-body role=\"LBody\" start-indent=\"body-start()\">");
 
-                mainGenerator.generateBlockElement(item, styleSheet, builder, headlines,resolver);
+                mainGenerator.generateBlockElement(item, styleSheet, builder, headlines,resolver,false);
 
                 builder.append("          </fo:list-item-body>");
                 builder.append("        </fo:list-item>");
@@ -98,13 +104,13 @@ public class ListFoGenerator extends ElementFoGenerator {
 
         String listStyleType = (style != null) ? style.getListStyleType() : null;
 
+        String label;
         if (ordering == ListOrdering.ORDERED) {
-            String label = getOrderedLabel(listStyleType, counter);
-            builder.append(label);
+            label = getOrderedLabel(listStyleType, counter);
         } else {
-            String label = getUnorderedLabel(listStyleType);
-            builder.append(label);
+            label = getUnorderedLabel(listStyleType);
         }
+        builder.append(label);
     }
 
     private String getOrderedLabel(String type, int counter) {

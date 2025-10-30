@@ -7,8 +7,6 @@ import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.Section;
 import de.fkkaiser.model.style.SectionStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
-
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -37,7 +35,12 @@ public class SectionFoGenerator extends ElementFoGenerator {
      * @param headlines  The list of headlines for bookmark generation.
      */
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
+    public void generate(Element element,
+                         StyleSheet styleSheet,
+                         StringBuilder builder,
+                         List<Headline> headlines,
+                         ImageResolver resolver,
+                         boolean isExternalArtefact) {
         Section section = (Section) element;
         SectionStyleProperties style = section.getResolvedStyle();
 
@@ -46,7 +49,7 @@ public class SectionFoGenerator extends ElementFoGenerator {
         builder.append(">");
 
         // getElements is never null
-        mainGenerator.generateBlockElements(section.getElements(), styleSheet, builder, headlines,resolver);
+        mainGenerator.generateBlockElements(section.getElements(), styleSheet, builder, headlines,resolver,isExternalArtefact);
 
         builder.append("      </fo:block>");
     }

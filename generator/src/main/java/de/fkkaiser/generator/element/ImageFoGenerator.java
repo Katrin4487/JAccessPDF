@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.List;
@@ -21,11 +20,19 @@ public class ImageFoGenerator extends ElementFoGenerator {
 
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver imageResolver) {
+    public void generate(Element element,
+                         StyleSheet styleSheet,
+                         StringBuilder builder,
+                         List<Headline> headlines,
+                         ImageResolver imageResolver,
+                         boolean isExternalArtefact) {
         BlockImage blockImage = (BlockImage) element;
         BlockImageStyleProperties style = blockImage.getResolvedStyle();
 
         builder.append("      <fo:block");
+        if(isExternalArtefact) {
+            builder.append(" fox:content-type=\"external-artifact\"");
+        }
         appendBlockAttributes(builder, style, styleSheet);
         builder.append(">");
         builder.append("<fo:external-graphic ");

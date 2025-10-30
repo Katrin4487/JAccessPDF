@@ -9,8 +9,6 @@ import de.fkkaiser.model.structure.TextBlock;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TextBlockStyleProperties;
-
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -26,7 +24,12 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
     }
 
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
+    public void generate(Element element,
+                         StyleSheet styleSheet,
+                         StringBuilder builder,
+                         List<Headline> headlines,
+                         ImageResolver resolver,
+                         boolean isExternalArtefact) {
         TextBlock textBlock = (TextBlock) element;
         TextBlockStyleProperties style = textBlock.getResolvedStyle();
 
@@ -36,11 +39,18 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
             headlines.add((Headline) element);
         }
 
-        builder.append("      <fo:block").append(headlineId).append(" role=\"").append(getRole(textBlock)).append("\"");
+        builder.append("      <fo:block")
+                .append(headlineId)
+                .append(" role=\"").append(getRole(textBlock)
+                ).append("\"");
 
         // Append all style attributes
         appendCommonAttributes(builder, style, styleSheet);
         appendSpecificAttributes(builder, style);
+
+        if (isExternalArtefact) {
+            builder.append(" fox:content-type=\"external-artifact\"");
+        }
 
         builder.append(">");
 

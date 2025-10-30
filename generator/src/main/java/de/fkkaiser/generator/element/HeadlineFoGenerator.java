@@ -47,4 +47,5 @@ public class HeadlineFoGenerator extends TextBlockFoGenerator {
 
         }
     }
+
 }

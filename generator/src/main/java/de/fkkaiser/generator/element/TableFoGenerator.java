@@ -6,8 +6,6 @@ import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TableCellStyleProperties;
 import de.fkkaiser.model.style.TableStyleProperties;
-
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -37,12 +35,17 @@ public class TableFoGenerator extends ElementFoGenerator {
      * @param headlines  The list of headlines for bookmark generation.
      */
     @Override
-    public void generate(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
+    public void generate(Element element,
+                         StyleSheet styleSheet,
+                         StringBuilder builder,
+                         List<Headline> headlines,
+                         ImageResolver resolver,
+                         boolean isExternalArtefact) {
         Table table = (Table) element;
         TableStyleProperties style = table.getResolvedStyle();
 
         // The entire table is wrapped in a block to control spacing before/after.
-        builder.append("      <fo:block");
+        builder.append("      <fo:block fox:content-type=\"external-artifact\"");
         if (style != null) {
             // Apply text properties from the table style to the container block
             setFontStyle(styleSheet, style, builder);
@@ -148,7 +151,7 @@ public class TableFoGenerator extends ElementFoGenerator {
         // The content of a cell is a block, so we need a block container.
         builder.append("                <fo:block>");
         // Delegate generation of the cell's content back to the main generator.
-        mainGenerator.generateBlockElements(cell.getElements(), styleSheet, builder, headlines,resolver);
+        mainGenerator.generateBlockElements(cell.getElements(), styleSheet, builder, headlines,resolver,false);
         builder.append("                </fo:block>");
 
         builder.append("              </fo:table-cell>");
