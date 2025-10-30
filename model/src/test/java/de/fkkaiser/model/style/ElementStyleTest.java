@@ -114,4 +114,20 @@ class ElementStyleTest {
         assertEquals(properties.getBackgroundColor(),"#F0F0F0", "Should create style with set background color");
         assertTrue(properties.getKeepWithNext());
     }
+
+    @Test
+    @DisplayName("Should create image with chain")
+    public void shouldCreateImageWithChain(){
+        ElementStyle elementStyle = ElementStyle.imageBuilder("default")
+                .withContentWidth("auto")
+                .withAlignment("right")
+                .withScaling("uniform")
+                .build();
+        assertEquals(elementStyle.targetElement(),StyleTargetTypes.BLOCK_IMAGE, "should have the correct target type");
+
+        BlockImageStyleProperties properties = (BlockImageStyleProperties) elementStyle.properties();
+        assertEquals(properties.getContentWidth(),"auto", "Should create style with set alignment");
+        assertEquals(properties.getAlignment(),"right", "Should create style with set alignment");
+        assertEquals(properties.getScaling(),"uniform", "Should create style with set scaling");
+    }
 }
