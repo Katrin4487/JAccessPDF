@@ -57,7 +57,7 @@ public class StyleSheetTest {
         ElementStyleProperties elementStyleProperties = new ElementBlockStyleProperties();
         StyleSheet styleSheet = StyleSheet.builder()
                 .addTextStyle(new TextStyle("default-text-style", "12pt", "Arial", "700", "normal"))
-                .addElementStyle(new ElementStyle("default-element-style", "target-Element", elementStyleProperties))
+                .addElementStyle(new ElementStyle("default-element-style", StyleTargetTypes.PARAGRAPH, elementStyleProperties))
                 .addPageMasterStyle(new PageMasterStyle())
                 .build();
 
