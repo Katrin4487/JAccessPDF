@@ -5,22 +5,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.fkkaiser.api.simplelayer.SimpleStyleManager.TABLE_STYLE_NAME;
+
+
 /**
- * Eine Helferklasse, um eine Tabelle für den SimpleDocumentBuilder zu definieren.
- * Sie kapselt die Komplexität der Tabellenerstellung.
+ * Helper class to define a table in the SimpleDocumentBuilder.
+ * Encapsulates the complexity of table creation.
  *
- * Beispiel:
- * <pre>
+ * <p>Example usage:
+ * <pre>{@code
  * SimpleTable table = new SimpleTable()
- * .setColumns("50%", "50%")
- * .addHeaderRow("Header 1", "Header 2")
- * .addBodyRow("Zelle 1", "Zelle 2")
- * .addBodyRow(
- * SimpleTableCell.of("Komplexe Zelle").addParagraph("Absatz..."),
- * SimpleTableCell.of("Zelle 4").withColspan(2)
- * );
+ *     .setColumns("50%", "50%")
+ *     .addHeaderRow("Header 1", "Header 2")
+ *     .addBodyRow("Cell 1", "Cell 2")
+ *     .addBodyRow(
+ *         SimpleTableCell.of("complex cell").addParagraph("paragraph..."),
+ *         SimpleTableCell.of("Cell 4").withColspan(2)
+ *     );
  * builder.addTable(table);
- * </pre>
+ * }</pre>
  */
 public class SimpleTable {
 
@@ -28,29 +31,23 @@ public class SimpleTable {
     final List<String> columns;
     final List<SimpleTableRow> headerRows = new ArrayList<>();
     final List<SimpleTableRow> bodyRows = new ArrayList<>();
-    // Footer wird der Einfachheit halber weggelassen, kann aber leicht ergänzt werden
+
 
     /**
-     * Erstellt eine Tabelle mit Standard-Style.
+     * Creates table with standard style.
      */
+    @SuppressWarnings("unused")
     public SimpleTable() {
-        this.styleClass = "table-default";
+        this.styleClass = TABLE_STYLE_NAME;
         this.columns = new ArrayList<>();
     }
 
-    /**
-     * Erstellt eine Tabelle mit einem spezifischen Style-Namen.
-     * @param styleClass Der Name des Styles (definiert im SimpleStyleManager).
-     */
-    public SimpleTable(String styleClass) {
-        this.styleClass = styleClass;
-        this.columns = new ArrayList<>();
-    }
 
     /**
-     * Setzt die Spaltenbreiten.
-     * @param widths Breitenangaben (z.B. "50%", "10cm", "1fr")
+     * Sets the column widths.
+     * @param widths widths (e.g. "50%", "10cm", "1fr")
      */
+    @SuppressWarnings("unused")
     public SimpleTable setColumns(String... widths) {
         this.columns.clear();
         this.columns.addAll(Arrays.asList(widths));
@@ -58,19 +55,21 @@ public class SimpleTable {
     }
 
     /**
-     * Fügt eine Zeile zum Tabellenkopf hinzu (mit einfachen Text-Zellen).
+     * Adds a row to the table header (with simple text-cells).
      */
+    @SuppressWarnings("unused")
     public SimpleTable addHeaderRow(String... cellTexts) {
         List<SimpleTableCell> cells = Arrays.stream(cellTexts)
-                .map(SimpleTableCell::of)
+                .map(SimpleTableCell::ofHeader)
                 .collect(Collectors.toList());
         this.headerRows.add(new SimpleTableRow(cells));
         return this;
     }
 
     /**
-     * Fügt eine Zeile zum Tabellenkörper hinzu (mit einfachen Text-Zellen).
+     * Adds a row to the table body (with simple text cells).
      */
+    @SuppressWarnings("unused")
     public SimpleTable addBodyRow(String... cellTexts) {
         List<SimpleTableCell> cells = Arrays.stream(cellTexts)
                 .map(SimpleTableCell::of)
@@ -80,28 +79,21 @@ public class SimpleTable {
     }
 
     /**
-     * Fügt eine Zeile zum Tabellenkopf hinzu (mit komplexen Zellen).
+     * Adds a row to the table header (with more complex cells).
      */
+    @SuppressWarnings("unused")
     public SimpleTable addHeaderRow(SimpleTableCell... cells) {
         this.headerRows.add(new SimpleTableRow(Arrays.asList(cells)));
         return this;
     }
 
     /**
-     * Fügt eine Zeile zum Tabellenkörper hinzu (mit komplexen Zellen).
+     * Adds a row to the table body (with more complex cells).
      */
+    @SuppressWarnings("unused")
     public SimpleTable addBodyRow(SimpleTableCell... cells) {
         this.bodyRows.add(new SimpleTableRow(Arrays.asList(cells)));
         return this;
     }
 }
 
-/**
- * Interne Repräsentation einer Tabellenzeile.
- */
-class SimpleTableRow {
-    final List<SimpleTableCell> cells;
-    SimpleTableRow(List<SimpleTableCell> cells) {
-        this.cells = cells;
-    }
-}

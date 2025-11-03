@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
+import static de.fkkaiser.api.simplelayer.SimpleStyleManager.PAGE_MASTER_STYLE_NAME;
+import static de.fkkaiser.api.simplelayer.SimpleStyleManager.PREFIX_HEADINGS_STYLE_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("SimpleStyleManager Tests")
@@ -18,57 +20,18 @@ class SimpleStyleManagerTest {
         styleManager = new SimpleStyleManager();
     }
 
-    @Test
-    @DisplayName("Should return default page master name")
-    void shouldReturnDefaultPageMasterName() {
-        // When
-        String name = styleManager.getDefaultPageMasterName();
 
-        // Then
-        assertNotNull(name);
-        assertFalse(name.isEmpty());
-    }
-
-    @Test
-    @DisplayName("Should map default paragraph style name")
-    void shouldMapDefaultParagraphStyleName() {
-        // When
-        String styleName = styleManager.getParagraphStyleName("default");
-
-        // Then
-        assertEquals("paragraph-default", styleName);
-    }
-
-    @Test
-    @DisplayName("Should map custom paragraph style name")
-    void shouldMapCustomParagraphStyleName() {
-        // When
-        String styleName = styleManager.getParagraphStyleName("custom");
-
-        // Then
-        assertEquals("paragraph-custom", styleName);
-    }
 
     @Test
     @DisplayName("Should map heading style names for all levels")
     void shouldMapHeadingStyleNamesForAllLevels() {
         // When & Then
         for (int level = 1; level <= 6; level++) {
-            String styleName = styleManager.getHeadingStyleName(level);
+            String styleName = PREFIX_HEADINGS_STYLE_NAME +level;
             assertEquals("heading-" + level, styleName);
         }
     }
 
-
-    @Test
-    @DisplayName("Should set and use custom font family")
-    void shouldSetAndUseCustomFontFamily() {
-        // When
-        styleManager.setFontFamily("Roboto");
-
-        // Then
-        assertDoesNotThrow(() -> styleManager.setFontFamily("Arial"));
-    }
 
     @Test
     @DisplayName("Should build valid StyleSheet")
@@ -154,7 +117,7 @@ class SimpleStyleManagerTest {
         // Then
         assertFalse(styleSheet.pageMasterStyles().isEmpty());
         assertEquals(
-                styleManager.getDefaultPageMasterName(),
+                PAGE_MASTER_STYLE_NAME,
                 styleSheet.pageMasterStyles().getFirst().getName()
         );
     }
@@ -212,21 +175,6 @@ class SimpleStyleManagerTest {
         }
     }
 
-    @Test
-    @DisplayName("Should use custom font family when set")
-    void shouldUseCustomFontFamilyWhenSet() {
-        // Given
-        styleManager.setFontFamily("Roboto");
-
-        // When
-        StyleSheet styleSheet = styleManager.buildStyleSheet();
-
-        // Then
-        for (TextStyle textStyle : styleSheet.textStyles()) {
-            assertEquals("Roboto", textStyle.getFontFamilyName(),
-                    "All styles should use custom font: " + textStyle.name());
-        }
-    }
 
     // Helper methods
 

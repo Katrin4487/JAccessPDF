@@ -18,7 +18,7 @@ import java.util.Objects;
  * The class provides intelligent defaults for list spacing that adapt based
  * on the list-style-position property, while still allowing power users to
  * override these values explicitly.
- * </p>
+ *
  */
 @JsonTypeName(StyleTargetTypes.LIST)
 public class ListStyleProperties extends TextBlockStyleProperties {
@@ -78,7 +78,7 @@ public class ListStyleProperties extends TextBlockStyleProperties {
 
     /**
      * Returns the provisional distance between the start of list item labels.
-     * <p>
+     *<p>
      * This method implements intelligent defaulting with the following priority:
      * <ol>
      *   <li><strong>Explicit value:</strong> If a specific value was set (by power users),
@@ -88,7 +88,7 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      *   <li><strong>Default:</strong> Returns {@link #DEFAULT_OUTSIDE_DISTANCE} for
      *       standard "outside" positioning</li>
      * </ol>
-     * </p>
+     *
      *
      * @return the provisional distance between list item starts
      */

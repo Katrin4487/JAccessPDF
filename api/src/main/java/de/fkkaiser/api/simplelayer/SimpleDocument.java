@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.fkkaiser.api.simplelayer.SimpleStyleManager.*;
+
 /**
  * Represents a finalized, "built" PDF document.
  * This object is immutable and can be safely exported.
@@ -94,104 +96,95 @@ public class SimpleDocument {
             contentElements.add(element.toModelObject(styleManager));
         }
 
-        // Create content area
+        // Create a content area
         ContentArea bodyContent = new ContentArea(contentElements);
 
-        // Create page sequence with default page master
-        PageSequence sequence = PageSequence.builder(styleManager.getDefaultPageMasterName())
+        // Create a page sequence with the default page master
+        PageSequence sequence = PageSequence.builder(PAGE_MASTER_STYLE_NAME)
                 .body(bodyContent)
                 .build();
 
-        // Create document
-        // V4-Logik: Wir übergeben 'null' für InternalAddresses,
-        // da der Builder (V4) die vollen Pfade liefert.
+        // Create a document
         return new Document(null, metadata, Collections.singletonList(sequence));
     }
 
-    // === Internal Element Classes (as before) ===
+    // === Internal Element Classes ===
 
     interface ContentElement {
         Element toModelObject(SimpleStyleManager styleManager);
     }
 
-    static class ParagraphElement implements ContentElement {
-        private final String text;
-        private final String styleName;
-
-        ParagraphElement(String text, String styleName) {
-            this.text = text;
-            this.styleName = styleName;
-        }
+    record ParagraphElement(String text, String styleName) implements ContentElement {
 
         @Override
-        public Element toModelObject(SimpleStyleManager styleManager) {
-            String actualStyleName = styleManager.getParagraphStyleName(styleName);
-            return new Paragraph(actualStyleName, text);
-        }
-    }
-
-    static class ListElement implements ContentElement {
-        private final List<String> items;
-        private final String styleName;
-        private final boolean ordered; // Tippfehler 'oderered' korrigiert
-
-        ListElement(List<String> items, String styleName, boolean ordered) {
-            this.items = items;
-            this.styleName = styleName;
-            this.ordered = ordered;
-        }
-
-        @Override
-        public Element toModelObject(SimpleStyleManager styleManager) {
-            ListOrdering ordering = ordered ? ListOrdering.ORDERED  : ListOrdering.UNORDERED;
-
-            List<ListItem> listItems = new ArrayList<>();
-            for (String item : items){
-                Paragraph paragraph = new Paragraph("paragraph-default",item);
-                ListItem listItem = new ListItem(null,null,null,Collections.singletonList(paragraph));
-                listItems.add(listItem);
+            public Element toModelObject(SimpleStyleManager styleManager) {
+                return new Paragraph(styleName, text);
             }
-            return new SimpleList(styleName,ordering,listItems);
         }
-    }
 
+    /**
+     * Represents a list element that can be included in a document.
+     * This class supports both ordered
+     * and unordered lists, with each list item containing a paragraph of text.
+     *<p>
+     * The list element is built into a model object during document processing, where each
+     * item in the list is converted into a structured `ListItem` object within a `SimpleList`.
+     */
+    record ListElement(List<String> items, String styleName, boolean ordered) implements ContentElement {
+
+        @Override
+            public Element toModelObject(SimpleStyleManager styleManager) {
+                ListOrdering ordering = ordered ? ListOrdering.ORDERED : ListOrdering.UNORDERED;
+
+                List<ListItem> listItems = new ArrayList<>();
+                for (String item : items) {
+                    Paragraph paragraph = new Paragraph(PARAGRAPH_STYLE_NAME, item);
+                    ListItem listItem = new ListItem(null, null, null, Collections.singletonList(paragraph));
+                    listItems.add(listItem);
+                }
+                return new SimpleList(styleName, ordering, listItems);
+            }
+        }
+
+    /**
+     * Represents a heading element in a document. This class implements the {@link ContentElement}
+     * interface, allowing it to be converted into a corresponding model object representation.
+     *<p>
+     * The heading element is characterized by its text content and its heading level, which indicates
+     * the level of the heading (e.g., H1, H2, etc.). The heading level determines the specific style that
+     * will be applied to this element when converting it to a model object.
+     *
+     * @param text  The text content of the heading.
+     * @param level The level of the heading (e.g., 1 for H1, 2 for H2, etc.).
+     */
     record HeadingElement(String text, int level) implements ContentElement {
 
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
-            String styleName = styleManager.getHeadingStyleName(level);
+            String styleName = PREFIX_HEADINGS_STYLE_NAME +level;
             return new Headline(styleName, text, this.level);
         }
     }
 
     /**
      * Internal element for an image.
+     *
+     * @param path the relative path, z.B. "images/logo.png"
      */
-    static class ImageElement implements ContentElement {
-        private final String path; // Der volle Pfad, z.B. "images/logo.png"
-        private final String altText;
-
-        ImageElement(String path) {
-            this.path = path;
-            this.altText = null;
-        }
-
-        ImageElement(String path,String altText) {
-            this.path = path;
-            this.altText = altText;
-        }
+        record ImageElement(String path, String altText) implements ContentElement {
+            ImageElement(String path) {
+                this(path, null);
+            }
 
         @Override
-        public Element toModelObject(SimpleStyleManager styleManager) {
-            // Nutze den "default" Style für Bilder, wie im StyleManager definiert
-            String actualStyleName = styleManager.getDefaultImageName();
-            return new BlockImage(actualStyleName, path,altText);
+            public Element toModelObject(SimpleStyleManager styleManager) {
+
+            return new BlockImage(IMAGE_STYLE_NAME, path, altText);
+            }
         }
-    }
 
     /**
-     * Repräsentiert eine Tabelle.
-     * Dies ist die Brücke zwischen der SimpleTable-Helferklasse und dem Core-Modell.
+     * Represents a table.
      */
     record TableElement(SimpleTable simpleTable) implements SimpleDocument.ContentElement {
 
@@ -212,24 +205,32 @@ public class SimpleDocument {
                     simpleTable.columns,
                     header,
                     body,
-                    null // Footer wird (noch) nicht unterstützt
+                    null // Footer isn't supported yet
             );
         }
 
         /**
-         * Helper method: Wandelt eine Liste von SimpleTableRows in eine Liste von Core TableRows um.
+         * Converts a list of {@link SimpleTableRow} objects into a list of {@link TableRow} objects.
+         *
+         * @param simpleRows the list of {@link SimpleTableRow} to be converted; if null, an empty list is returned
+         * @param styleManager the {@link SimpleStyleManager} responsible for managing styles during the conversion
+         * @return a list of {@link TableRow} objects derived from the input {@link SimpleTableRow} list
          */
         private List<TableRow> convertRows(List<SimpleTableRow> simpleRows, SimpleStyleManager styleManager) {
             if (simpleRows == null) {
                 return Collections.emptyList();
             }
             return simpleRows.stream()
-                    .map(simpleRow -> new TableRow(convertCells(simpleRow.cells, styleManager)))
+                    .map(simpleRow -> new TableRow(convertCells(simpleRow.cells(), styleManager)))
                     .collect(Collectors.toList());
         }
 
         /**
-         * Hilfsmethode: Wandelt eine Liste von SimpleTableCells in eine Liste von Core TableCells um.
+         * Converts a list of {@link SimpleTableCell} objects into a list of {@link TableCell} objects.
+         *
+         * @param simpleCells the list of {@link SimpleTableCell} to be converted; if null, an empty list is returned
+         * @param styleManager the {@link SimpleStyleManager} responsible for managing styles during the conversion
+         * @return a list of {@link TableCell} objects derived from the input {@link SimpleTableCell} list
          */
         private List<TableCell> convertCells(List<SimpleTableCell> simpleCells, SimpleStyleManager styleManager) {
             if (simpleCells == null) {
@@ -241,12 +242,15 @@ public class SimpleDocument {
         }
 
         /**
-         * Hilfsmethode: Wandelt eine einzelne SimpleTableCell in eine Core TableCell um.
-         * HIER PASSIERT DIE REKURSION: Inhalte einer Zelle werden zu Core-Elementen.
+         * Converts a {@link SimpleTableCell} into a {@link TableCell} by transforming its contents
+         * and applying the specified style manager for style resolution.
+         *
+         * @param simpleCell the {@link SimpleTableCell} to be converted; must not be null
+         * @param styleManager the {@link SimpleStyleManager} responsible for managing styles during the conversion; must not be null
+         * @return a {@link TableCell} object created from the given {@link SimpleTableCell}, with transformed elements and applied styles
          */
         private TableCell convertCell(SimpleTableCell simpleCell, SimpleStyleManager styleManager) {
-            // Wandle die 'ContentElement'-Liste (Paragraph, List, Image) der Zelle
-            // in eine 'Element'-Liste des Core-Modells um.
+
             List<Element> coreElements;
             coreElements = simpleCell.elements.stream()
                         .map(contentElement -> contentElement.toModelObject(styleManager))
@@ -254,7 +258,7 @@ public class SimpleDocument {
 
 
             return new TableCell(
-                    styleManager.getDefaultCellStyleName(), // Verwendet einen Standard-Zellen-Stil
+                    TABLE_CELL_STYLE_NAME,
                     coreElements,
                     simpleCell.colspan,
                     simpleCell.rowspan

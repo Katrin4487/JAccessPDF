@@ -9,10 +9,16 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.fkkaiser.api.simplelayer.SimpleStyleManager.*;
+
+/**
+ * A builder class for constructing a SimpleDocument.
+ * This class allows stepwise creation of a document by adding various elements like paragraphs, headings, lists, images, and tables.
+ * It supports defining metadata such as title and language for the document, and customization of resource providers for external dependencies.
+ */
 public class SimpleDocumentBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleDocumentBuilder.class);
-
 
     private final ArrayList<SimpleDocument.ContentElement> elements;
     private final SimpleStyleManager styleManager;
@@ -44,7 +50,7 @@ public class SimpleDocumentBuilder {
      * Adds a paragraph with the given text using default styling.
      */
     public SimpleDocumentBuilder addParagraph(String text) {
-        return addParagraph(text, "default");
+        return addParagraph(text, PARAGRAPH_STYLE_NAME);
     }
 
     /**
@@ -62,7 +68,7 @@ public class SimpleDocumentBuilder {
      * Adds a heading with the given text.
      * Level 1 = largest, Level 6 = smallest.
      * <br/>
-     * Proof's if heading level is allowed at this position ad add's the heading with
+     * Proof's if heading level is allowed at this position ad adds the heading with
      * level 1, if the heading level is not allowed.
      */
     public SimpleDocumentBuilder addHeading(String text, int level) {
@@ -93,20 +99,20 @@ public class SimpleDocumentBuilder {
     }
 
     /**
-     * Adds a heading level 1 (convenience method).
+     * Adds heading level 1 (convenience method).
      */
     public SimpleDocumentBuilder addHeading(String text) {
         return addHeading(text, 1);
     }
 
     public SimpleDocumentBuilder addUnorderedList(List<String> items) {
-        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items, styleManager.getUnorderedListName(), false);
+        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items, UNORDERED_LIST_STYLE_NAME, false);
         elements.add(listElement);
         return this;
     }
 
     public SimpleDocumentBuilder addOrderedList(List<String> items) {
-        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items, styleManager.getOrderedListName(), true);
+        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items, ORDERED_LIST_STYLE_NAME, true);
         elements.add(listElement);
         return this;
     }
@@ -124,7 +130,7 @@ public class SimpleDocumentBuilder {
             throw new IllegalArgumentException("Image path cannot be null or empty");
         }
 
-        // Normalize path (remove leading slashes, fix backslashes)
+        // Normalize a path (remove leading slashes, fix backslashes)
         String finalPath = relativePath.replace("\\", "/");
         if (finalPath.startsWith("/")) {
             finalPath = finalPath.substring(1);
@@ -174,7 +180,7 @@ public class SimpleDocumentBuilder {
      * This object can then be saved or exported as a stream.
      */
     public SimpleDocument build() {
-        // Fix 2: Pass the configured resource provider, or use a default if null
+        // Fix 2: Pass the configured resource provider or use a default if null
         EResourceProvider providerToUse = (this.resourceProvider != null)
                 ? this.resourceProvider
                 : new EClasspathResourceProvider();
@@ -183,24 +189,25 @@ public class SimpleDocumentBuilder {
     }
 
     /**
-     * BEREINIGT EINEN BILD-PFAD
-     * Diese Logik stellt sicher, dass der Pfad relativ zum Classpath-Root ist
-     * und 'images/' enthält.
+     * Normalizes a given relative image path by ensuring it uses consistent directory
+     * separators, removes leading slashes, and prefixes the path with "images/" if necessary.
      *
-     * @param relativePath Der vom Nutzer angegebene Pfad (z.B. "logo.png" oder "images/logo.png")
-     * @return Der bereinigte, volle Pfad (z.B. "images/logo.png")
+     * @param relativePath The relative path to the image that needs normalization.
+     *                     Can include leading slashes or backslashes.
+     * @return A normalized image path with "images/" prefixed, unless the path
+     *         already starts with "images/". Returns an empty string if the input is null.
      */
     public static String normalizeImagePath(String relativePath) {
         if (relativePath == null) {
             return "";
         }
-        // Ersetze Backslashes und entferne führende Slashes
+        // Replace backslashes and delete leading slashes
         String cleanPath = relativePath.replace("\\", "/").replaceAll("^/", "");
 
         if (cleanPath.startsWith("images/")) {
-            return cleanPath; // Pfad ist schon korrekt
+            return cleanPath; // the path is already correct
         }
-        return "images/" + cleanPath; // Füge 'images/' Präfix hinzu
+        return "images/" + cleanPath; // Add 'images/' prefix
     }
 
 

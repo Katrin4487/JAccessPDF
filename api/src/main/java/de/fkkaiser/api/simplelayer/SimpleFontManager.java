@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static de.fkkaiser.api.simplelayer.SimpleStyleManager.FONT_FAMILY;
+
 /**
  * Manages fonts for SimpleDocument.
  *<br>
@@ -72,7 +74,7 @@ class SimpleFontManager {
                 "700"
         ));
 
-        FontFamily openSans = new FontFamily("Open Sans", openSansVariants);
+        FontFamily openSans = new FontFamily(FONT_FAMILY, openSansVariants);
 
         return Collections.singletonList(openSans);
     }

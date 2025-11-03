@@ -7,6 +7,7 @@ import de.fkkaiser.model.style.PageMasterStyle;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Manages default styles for SimpleDocument.
  * <p>
@@ -17,90 +18,29 @@ import java.util.List;
  */
 class SimpleStyleManager {
 
-    private static final String PAGE_MASTER_NAME = "simple-a4-portrait";
+    static final String PAGE_MASTER_STYLE_NAME = "simple-a4-portrait";
+
+    // Element Style Identifier (names)
+    static final String PARAGRAPH_STYLE_NAME = "paragraph-default";
+    static final String PREFIX_HEADINGS_STYLE_NAME = "heading-";
+    static final String UNORDERED_LIST_STYLE_NAME = "list-style-unordered";
+    static final String ORDERED_LIST_STYLE_NAME = "list-style-ordered";
+    static final String IMAGE_STYLE_NAME = "image-style";
+    static final String TABLE_STYLE_NAME = "table-style";
+    static final String TABLE_HEADER_CELL_STYLE_NAME = "header-cell";
+    static final String TABLE_CELL_STYLE_NAME = "cell-default";
+
+    // Text style identifier (names)
+    private static final String REGULAR_PARAGRAPH_TEXT = "text-default";
+    private static final String PREFIX_HEADINGS_TEXT = "text-heading-";
+    private static final String BOLD_PARAGRAPH_TEXT = "text-bold-default";
 
     /**
      * Default font family used for all text styles.
      * PDF/UA requires embedded fonts for accessibility compliance.
      */
-    private String fontFamily = "Open Sans";
+    static final String FONT_FAMILY = "Open Sans";
 
-    /**
-     * Returns the name of the default page master style.
-     *
-     * @return the page master name constant
-     */
-    String getDefaultPageMasterName() {
-        return PAGE_MASTER_NAME;
-    }
-
-    /**
-     * Sets the font family to be used for all text styles.
-     *
-     * @param fontFamily the font family name (must be embedded for PDF/UA compliance)
-     */
-    void setFontFamily(String fontFamily) {
-        this.fontFamily = fontFamily;
-    }
-
-    /**
-     * Generates the style name for a paragraph with the given identifier.
-     *
-     * @param name the paragraph identifier (use "default" for default paragraph style)
-     * @return the fully qualified paragraph style name
-     */
-    String getParagraphStyleName(String name) {
-        if ("default".equals(name)) {
-            return "paragraph-default";
-        }
-        return "paragraph-" + name;
-    }
-
-    /**
-     * Generates the style name for a heading of the specified level.
-     *
-     * @param level the heading level (1-6)
-     * @return the heading style name
-     */
-    String getHeadingStyleName(int level) {
-        return "heading-" + level;
-    }
-
-    /**
-     * Returns the style name for unordered lists.
-     *
-     * @return the unordered list style name
-     */
-    String getUnorderedListName() {
-        return "list-style-unordered";
-    }
-
-    /**
-     * Returns the style name for ordered lists.
-     *
-     * @return the ordered list style name
-     */
-    String getOrderedListName() {
-        return "list-style-ordered";
-    }
-
-    /**
-     * Returns the default style name for images.
-     *
-     * @return the default image style name
-     */
-    String getDefaultImageName() {
-        return "image-default";
-    }
-
-    /**
-     * Returns the default style name for table cells.
-     *
-     * @return the default cell style name
-     */
-    String getDefaultCellStyleName() {
-        return "cell-default";
-    }
 
     /**
      * Builds a complete StyleSheet with PDF/UA compliant default styles.
@@ -122,11 +62,11 @@ class SimpleStyleManager {
         List<ElementStyle> elementStyles = new ArrayList<>();
         List<PageMasterStyle> pageMasterStyles = new ArrayList<>();
 
-        // Create default text style with base font settings
+        // Create the default text style with base font settings
         textStyles.add(new TextStyle(
-                "text-default",
+                REGULAR_PARAGRAPH_TEXT,
                 "12px",
-                fontFamily,
+                FONT_FAMILY,
                 "400",      // normal weight
                 "normal"    // normal style
         ));
@@ -136,19 +76,28 @@ class SimpleStyleManager {
         for (int level = 1; level <= 6; level++) {
             int fontSize = 24 - (level - 1) * 2;
             textStyles.add(new TextStyle(
-                    "text-heading-" + level,
+                    PREFIX_HEADINGS_TEXT + level,
                     fontSize + "px",
-                    fontFamily,
+                    FONT_FAMILY,
                     "700",      // bold weight
                     "normal"
             ));
         }
 
+        textStyles.add(new TextStyle(
+                BOLD_PARAGRAPH_TEXT,
+                "12px",
+                FONT_FAMILY,
+                "700",
+                "normal"
+        ));
+
         // Default paragraph element style
         ParagraphStyleProperties defaultProps = new ParagraphStyleProperties();
-        defaultProps.setTextStyleName("text-default");
+        defaultProps.setSpaceBefore("1em");
+        defaultProps.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
         elementStyles.add(new ElementStyle(
-                "paragraph-default",
+                PARAGRAPH_STYLE_NAME,
                 StyleTargetTypes.PARAGRAPH,
                 defaultProps
         ));
@@ -156,9 +105,10 @@ class SimpleStyleManager {
         // Create element styles for each heading level
         for (int level = 1; level <= 6; level++) {
             ParagraphStyleProperties headingProps = new ParagraphStyleProperties();
-            headingProps.setTextStyleName("text-heading-" + level);
+            headingProps.setTextStyleName(PREFIX_HEADINGS_TEXT + level);
+            headingProps.setSpaceBefore("1.5em");
             elementStyles.add(new ElementStyle(
-                    "heading-" + level,
+                    PREFIX_HEADINGS_STYLE_NAME + level,
                     StyleTargetTypes.HEADLINE,
                     headingProps
             ));
@@ -166,20 +116,20 @@ class SimpleStyleManager {
 
         // Unordered list style with disc bullets
         ListStyleProperties listPropsUnordered = new ListStyleProperties();
-        listPropsUnordered.setTextStyleName("text-default");
+        listPropsUnordered.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
         listPropsUnordered.setListStyleType("disc");
         elementStyles.add(new ElementStyle(
-                "list-style-unordered",
+                UNORDERED_LIST_STYLE_NAME,
                 StyleTargetTypes.LIST,
                 listPropsUnordered
         ));
 
         // Ordered list style with decimal numbering
         ListStyleProperties listPropsOrdered = new ListStyleProperties();
-        listPropsOrdered.setTextStyleName("text-default");
+        listPropsOrdered.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
         listPropsOrdered.setListStyleType("decimal");
         elementStyles.add(new ElementStyle(
-                "list-style-ordered",
+                ORDERED_LIST_STYLE_NAME,
                 StyleTargetTypes.LIST,
                 listPropsOrdered
         ));
@@ -191,30 +141,39 @@ class SimpleStyleManager {
         imagePropsDefault.setContentWidth("100%");
         imagePropsDefault.setBlockWidth("100%");
         elementStyles.add(new ElementStyle(
-                "image-default",
+                IMAGE_STYLE_NAME,
                 StyleTargetTypes.BLOCK_IMAGE,
                 imagePropsDefault
         ));
 
         // Default table style
         TableStyleProperties tableProp = new TableStyleProperties();
-        tableProp.setTextStyleName("text-default");
+        tableProp.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
         elementStyles.add(new ElementStyle(
-                "table-default",
+                TABLE_STYLE_NAME,
                 StyleTargetTypes.TABLE,
                 tableProp
+        ));
+
+        // Header Cells
+        TableCellStyleProperties tableHeaderCellStyleProperties = new TableCellStyleProperties();
+        tableHeaderCellStyleProperties.setTextStyleName(BOLD_PARAGRAPH_TEXT);
+        elementStyles.add(new ElementStyle(
+                TABLE_HEADER_CELL_STYLE_NAME,
+                StyleTargetTypes.TABLE_CELL,
+                tableHeaderCellStyleProperties
         ));
 
         // Default table cell style
         TableCellStyleProperties tableCellStyleProperties = new TableCellStyleProperties();
         elementStyles.add(new ElementStyle(
-                "cell-default",
+                TABLE_CELL_STYLE_NAME,
                 StyleTargetTypes.TABLE_CELL,
                 tableCellStyleProperties
         ));
 
         // A4 portrait page master
-        PageMasterStyle pageMaster = new PageMasterStyle(PAGE_MASTER_NAME);
+        PageMasterStyle pageMaster = new PageMasterStyle(PAGE_MASTER_STYLE_NAME);
         pageMasterStyles.add(pageMaster);
 
         return new StyleSheet(textStyles, elementStyles, pageMasterStyles);
