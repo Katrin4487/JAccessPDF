@@ -7,17 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SimpleDocumentBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleDocumentBuilder.class);
 
 
-    // Internal state
-    private final String title;
     private final ArrayList<SimpleDocument.ContentElement> elements;
     private final SimpleStyleManager styleManager;
     private final SimpleFontManager fontManager;
@@ -25,13 +21,11 @@ public class SimpleDocumentBuilder {
     private final Metadata metadata;
 
     private SimpleDocumentBuilder(String title) {
-        this.title = title;
+        // Internal state
         this.elements = new ArrayList<>();
         this.styleManager = new SimpleStyleManager();
         this.fontManager = new SimpleFontManager();
-        // Fix 1: Initialize metadata to prevent NullPointerException
         this.metadata = new Metadata();
-        // Set title as initial metadata
         this.metadata.setTitle(title);
     }
 
@@ -74,24 +68,25 @@ public class SimpleDocumentBuilder {
     public SimpleDocumentBuilder addHeading(String text, int level) {
         if (level < 1 || level > 6) {
             throw new IllegalArgumentException("Heading level must be between 1 and 6");
-        }else if(level != 1) {
+        } else if (level != 1) {
             boolean found = false;
-            for(int i = elements.size() - 1; i >= 0; i--){
+            for (int i = elements.size() - 1; i >= 0; i--) {
                 SimpleDocument.ContentElement currElem = elements.get(i);
-                if(currElem instanceof SimpleDocument.HeadingElement heading){
-                    if(heading.level() == level || heading.level()-1 == level){
+                if (currElem instanceof SimpleDocument.HeadingElement heading) {
+
+                    if (heading.level() == level || heading.level() + 1 == level) {
                         found = true;
                         break; // everything's fine
                     }
                 }
             }
-            if(!found){
+            if (!found) {
                 log.warn("Heading level {} is not allowed for heading with text {}. Adding heading with level 1", level, text);
                 elements.add(new SimpleDocument.HeadingElement(text, 1));
-            }else {
+            } else {
                 elements.add(new SimpleDocument.HeadingElement(text, level));
             }
-        }else {
+        } else {
             elements.add(new SimpleDocument.HeadingElement(text, level));
         }
         return this;
@@ -104,14 +99,14 @@ public class SimpleDocumentBuilder {
         return addHeading(text, 1);
     }
 
-    public SimpleDocumentBuilder addUnorderedList(List<String> items){
-        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items,styleManager.getUnorderedListName(),false);
+    public SimpleDocumentBuilder addUnorderedList(List<String> items) {
+        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items, styleManager.getUnorderedListName(), false);
         elements.add(listElement);
         return this;
     }
 
-    public SimpleDocumentBuilder addOrderedList(List<String> items){
-        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items,styleManager.getOrderedListName(),true);
+    public SimpleDocumentBuilder addOrderedList(List<String> items) {
+        SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items, styleManager.getOrderedListName(), true);
         elements.add(listElement);
         return this;
     }
@@ -122,9 +117,9 @@ public class SimpleDocumentBuilder {
      * This method ensures the final path is correctly prefixed with "images/" for the generator.
      *
      * @param relativePath The path to the image, relative to 'resources'
-     * @param altText alt text for this image
+     * @param altText      alt text for this image
      */
-    public SimpleDocumentBuilder addImage(String relativePath,String altText) {
+    public SimpleDocumentBuilder addImage(String relativePath, String altText) {
         if (relativePath == null || relativePath.trim().isEmpty()) {
             throw new IllegalArgumentException("Image path cannot be null or empty");
         }
@@ -139,12 +134,12 @@ public class SimpleDocumentBuilder {
             finalPath = "images/" + finalPath;
         }
 
-        elements.add(new SimpleDocument.ImageElement(finalPath,altText));
+        elements.add(new SimpleDocument.ImageElement(finalPath, altText));
         return this;
     }
 
     public SimpleDocumentBuilder addImage(String relativePath) {
-       return addImage(relativePath,null);
+        return addImage(relativePath, null);
     }
 
     public SimpleDocumentBuilder addTable(SimpleTable table) {
@@ -169,7 +164,7 @@ public class SimpleDocumentBuilder {
      * Sets the document's language (e.g., "en-US", "de-DE").
      * Required for PDF/UA compliance.
      */
-    public SimpleDocumentBuilder withLanguage(String language){
+    public SimpleDocumentBuilder withLanguage(String language) {
         this.metadata.setLanguage(language);
         return this;
     }
@@ -191,6 +186,7 @@ public class SimpleDocumentBuilder {
      * BEREINIGT EINEN BILD-PFAD
      * Diese Logik stellt sicher, dass der Pfad relativ zum Classpath-Root ist
      * und 'images/' enthält.
+     *
      * @param relativePath Der vom Nutzer angegebene Pfad (z.B. "logo.png" oder "images/logo.png")
      * @return Der bereinigte, volle Pfad (z.B. "images/logo.png")
      */
@@ -205,6 +201,16 @@ public class SimpleDocumentBuilder {
             return cleanPath; // Pfad ist schon korrekt
         }
         return "images/" + cleanPath; // Füge 'images/' Präfix hinzu
+    }
+
+
+    /**
+     * Method for test only
+     *
+     * @return list of content elements of the Simple Document
+     */
+    List<SimpleDocument.ContentElement> getElements() {
+        return elements;
     }
 }
 

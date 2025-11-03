@@ -180,7 +180,7 @@ public class Paragraph extends TextBlock {
      */
     @SuppressWarnings("unused")
     public Paragraph(String styleClass, String standAloneText) {
-        super(styleClass, List.of(new TextRun(standAloneText, styleClass, null)));
+        super(styleClass, List.of(new TextRun(standAloneText, null, null)));
     }
 
     /**
@@ -669,7 +669,7 @@ public class Paragraph extends TextBlock {
             Hyperlink hyperlink;
 
             if(styleClassHyperlink == null){
-                log.warn("No style class for hyperlink defined. Set normal style class for hyperlink with text {} and href {}",text,href);
+                log.warn("No style class for hyperlink with alt text defined. Set normal style class for hyperlink with text {} and href {}",text,href);
                 hyperlink = new Hyperlink(text,styleClass,href,altText);
             }else {
                 hyperlink = new Hyperlink(text,styleClassHyperlink,href,altText);

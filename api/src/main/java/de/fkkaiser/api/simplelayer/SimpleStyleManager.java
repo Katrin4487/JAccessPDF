@@ -117,7 +117,7 @@ class SimpleStyleManager {
         // Style for ordered list
         ListStyleProperties listPropsOrdered = new ListStyleProperties();
         listPropsOrdered.setTextStyleName("text-default");
-        listPropsOrdered.setListStyleType("decimal"); // Korrigiert (war 'disc')
+        listPropsOrdered.setListStyleType("decimal");
         listPropsOrdered.setListStylePosition("inside");
         elementStyles.add(new ElementStyle(
                 "list-style-ordered",
@@ -129,7 +129,7 @@ class SimpleStyleManager {
         BlockImageStyleProperties imagePropsDefault = new BlockImageStyleProperties();
         imagePropsDefault.setAlignment("center");
         imagePropsDefault.setScaling("uniform");
-        imagePropsDefault.setContentWidth("100%"); // Fit to container
+        imagePropsDefault.setContentWidth("100%");
         imagePropsDefault.setBlockWidth("100%");
         elementStyles.add(new ElementStyle(
                 "image-default",

@@ -197,19 +197,16 @@ public class SimpleDocument {
 
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
-            // 1. Header-Sektion umwandeln
             TableSection header = null;
-            if (simpleTable.headerRows != null && !simpleTable.headerRows.isEmpty()) {
+            if (!simpleTable.headerRows.isEmpty()) {
                 header = new TableSection(convertRows(simpleTable.headerRows, styleManager));
             }
 
-            // 2. Body-Sektion umwandeln
             TableSection body = null;
-            if (simpleTable.bodyRows != null && !simpleTable.bodyRows.isEmpty()) {
+            if (!simpleTable.bodyRows.isEmpty()) {
                 body = new TableSection(convertRows(simpleTable.bodyRows, styleManager));
             }
 
-            // 3. Core Table-Objekt erstellen
             return new Table(
                     simpleTable.styleClass,
                     simpleTable.columns,
@@ -220,7 +217,7 @@ public class SimpleDocument {
         }
 
         /**
-         * Hilfsmethode: Wandelt eine Liste von SimpleTableRows in eine Liste von Core TableRows um.
+         * Helper method: Wandelt eine Liste von SimpleTableRows in eine Liste von Core TableRows um.
          */
         private List<TableRow> convertRows(List<SimpleTableRow> simpleRows, SimpleStyleManager styleManager) {
             if (simpleRows == null) {
@@ -251,13 +248,10 @@ public class SimpleDocument {
             // Wandle die 'ContentElement'-Liste (Paragraph, List, Image) der Zelle
             // in eine 'Element'-Liste des Core-Modells um.
             List<Element> coreElements;
-            if (simpleCell.elements == null) {
-                coreElements = Collections.emptyList();
-            } else {
-                coreElements = simpleCell.elements.stream()
+            coreElements = simpleCell.elements.stream()
                         .map(contentElement -> contentElement.toModelObject(styleManager))
                         .collect(Collectors.toList());
-            }
+
 
             return new TableCell(
                     styleManager.getDefaultCellStyleName(), // Verwendet einen Standard-Zellen-Stil
