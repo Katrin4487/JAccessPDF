@@ -138,8 +138,7 @@ class SimpleStyleManager {
         BlockImageStyleProperties imagePropsDefault = new BlockImageStyleProperties();
         imagePropsDefault.setAlignment("center");
         imagePropsDefault.setScaling("uniform");
-        imagePropsDefault.setContentWidth("100%");
-        imagePropsDefault.setBlockWidth("100%");
+        imagePropsDefault.setContentWidth("auto");
         elementStyles.add(new ElementStyle(
                 IMAGE_STYLE_NAME,
                 StyleTargetTypes.BLOCK_IMAGE,
