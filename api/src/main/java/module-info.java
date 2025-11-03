@@ -11,5 +11,6 @@ module api {
     requires model;
 
     exports de.fkkaiser.api.simplelayer;
+    exports de.fkkaiser.api.utils;
 
 }
