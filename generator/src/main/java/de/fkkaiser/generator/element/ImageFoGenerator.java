@@ -52,7 +52,7 @@ public class ImageFoGenerator extends ElementFoGenerator {
 
                 builder.append(" src=\"").append(srcDataUri).append("\"");
                 if(blockImage.getAltText()!=null && !blockImage.getAltText().isEmpty()){
-                    builder.append(" alt=\"").append(blockImage.getAltText()).append("\"");
+                    builder.append(" fox:alt-text=\"").append(blockImage.getAltText()).append("\"");
                 }else{
                     builder.append(" fox:alt-text=\"\"");
                 }

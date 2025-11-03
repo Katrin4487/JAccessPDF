@@ -6,6 +6,9 @@ import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -14,6 +17,7 @@ import java.util.List;
  */
 public class ListFoGenerator extends ElementFoGenerator {
 
+    private static final Logger log = LoggerFactory.getLogger(ListFoGenerator.class);
     protected final XslFoGenerator mainGenerator;
 
     /**
@@ -46,7 +50,11 @@ public class ListFoGenerator extends ElementFoGenerator {
             int counter = 1;
             for (ListItem item : list.getItems()) {
 
-                builder.append("        <fo:list-item space-before=\"0.2cm\" role=\"LI\">");
+                builder.append("        <fo:list-item space-before=\"0.2cm\" role=\"LI\"");
+                if (style.getListStylePosition() != null) {
+                    builder.append(" list-style-position=\"").append(escapeXml(style.getListStylePosition())).append("\"");
+                }
+                builder.append(">");
                 builder.append("          <fo:list-item-label role=\"Lbl\" end-indent=\"label-end()\">");
                 builder.append("            <fo:block>");
 
@@ -70,6 +78,8 @@ public class ListFoGenerator extends ElementFoGenerator {
             }
         }
         builder.append("      </fo:list-block>");
+
+        log.info("List-Block finished: {}",builder);
     }
 
 
@@ -86,9 +96,6 @@ public class ListFoGenerator extends ElementFoGenerator {
         }
         if (style.getProvLabelSeparation() != null) {
             builder.append(" provisional-label-separation=\"").append(escapeXml(style.getProvLabelSeparation())).append("\"");
-        }
-        if (style.getListStylePosition() != null) {
-            builder.append(" list-style-position=\"").append(escapeXml(style.getListStylePosition())).append("\"");
         }
     }
 

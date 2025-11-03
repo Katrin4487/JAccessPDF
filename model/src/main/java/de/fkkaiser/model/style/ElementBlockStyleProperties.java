@@ -81,7 +81,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      @Override
     public void mergeWith(ElementStyleProperties elemBase){
         if(!(elemBase instanceof ElementBlockStyleProperties base)) {
-            log.warn("Attempted to merge with an incompatible style type: {}. Merge will be skipped.",
+            log.info("Attempted to merge with an incompatible style type: {}. Merge will be skipped.",
                     elemBase==null ? "null" :elemBase.getClass().getName());
             return;
         }
@@ -226,6 +226,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
         this.keepWithNext = keepWithNext;
     }
 
+    @SuppressWarnings("unused")
     public boolean isPageBreakBefore() {
         return pageBreakBefore;
     }
