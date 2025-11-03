@@ -23,7 +23,6 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
         TextRun textRun = (TextRun) element;
         TextRunStyleProperties style = textRun.getResolvedStyle();
 
-
         if (style == null) {
             builder.append(escapeXml(textRun.getText()));
             return;
@@ -57,6 +56,7 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
                 }
             });
 
+            log.debug("Text-Color -->{}",style.getTextColor());
             if (style.getTextColor() != null) {
                 builder.append(" color=\"").append(escapeXml(style.getTextColor())).append("\"");
             }

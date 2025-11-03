@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.fkkaiser.model.style.builder.BlockImageStyleBuilder;
 import de.fkkaiser.model.style.builder.HeadlineStyleBuilder;
 import de.fkkaiser.model.style.builder.ParagraphStyleBuilder;
+import de.fkkaiser.model.style.builder.TextRunStyleBuilder;
 
 /**
  * Represents a single, named style definition in the stylesheet.
@@ -465,5 +466,10 @@ public record ElementStyle(
     @SuppressWarnings("unused")
     public static BlockImageStyleBuilder imageBuilder(String name) {
         return new BlockImageStyleBuilder(name);
+    }
+
+    @SuppressWarnings("unused")
+    public static TextRunStyleBuilder textRunBuilder(String name) {
+        return new TextRunStyleBuilder(name);
     }
 }

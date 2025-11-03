@@ -74,6 +74,7 @@ public class TextRun extends AbstractInlineElement {
         if (styleClass != null && !styleClass.isEmpty()) {
 
             ElementStyle specificElementStyle = context.styleMap().get(styleClass);
+            log.debug("speciifc {}", specificElementStyle);
             if (specificElementStyle != null && specificElementStyle.properties() instanceof TextRunStyleProperties) {
 
                 specificRunStyle = (TextRunStyleProperties) specificElementStyle.properties();
