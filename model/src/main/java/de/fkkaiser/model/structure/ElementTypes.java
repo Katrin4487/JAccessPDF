@@ -1,22 +1,72 @@
 package de.fkkaiser.model.structure;
 
+import de.fkkaiser.model.annotation.PublicAPI;
 /**
  * Defines the available 'type' constants for content elements.
- * This class should be used by the library's users,
- * to set the type of element in the JSON structure.
+ *
+ * <p>These constants are used in the JSON structure to identify element types
+ * and are mapped to concrete Java classes through Jackson's {@code @JsonTypeName}
+ * and {@code @JsonSubTypes} annotations.</p>
+ *
+ * <p><b>Usage in JSON:</b></p>
+ * <pre>{@code
+ * {
+ *   "type": "paragraph",
+ *   "style-class": "body-text",
+ *   "inline-elements": [...]
+ * }
+ * }</pre>
+ *
+ * <p><b>Usage in Java:</b></p>
+ * <pre>{@code
+ * String elementType = element.getType();
+ * if (ElementTypes.PARAGRAPH.equals(elementType)) {
+ *     // Handle paragraph
+ * }
+ * }</pre>
+ *
+ * <p><b>Important:</b> These constants must match the values used in
+ * {@code @JsonTypeName} annotations on the corresponding element classes.</p>
+ *
+ * @author FK Kaiser
+ * @version 1.0
+ * @see Element
+ * @see InlineElementTypes
  */
 public final class ElementTypes {
 
-    /** Prevents instantiation of the class. */
+    /** Prevents instantiation of this utility class. */
     private ElementTypes() {}
 
+    /** Type identifier for paragraph elements. @see Paragraph */
+    @PublicAPI
     public static final String PARAGRAPH = "paragraph";
-    public static final String HEADLINE = "headline";
-    public static final String LIST = "list";
-    public static final String TABLE = "table";
-    public static final String SECTION = "section";
-    public static final String PART = "part";
-    public static final String BLOCK_IMAGE = "block-image";
-    public static final String LAYOUT_TABLE = "layout-table";
 
+    /** Type identifier for headline elements. @see Headline */
+    @PublicAPI
+    public static final String HEADLINE = "headline";
+
+    /** Type identifier for list elements. @see SimpleList */
+    @PublicAPI
+    public static final String LIST = "list";
+
+    /** Type identifier for table elements. @see Table */
+    @PublicAPI
+    public static final String TABLE = "table";
+
+    /** Type identifier for section elements. @see Section */
+    @PublicAPI
+    public static final String SECTION = "section";
+
+    /** Type identifier for part elements. @see Part */
+    @PublicAPI
+    public static final String PART = "part";
+
+    /** Type identifier for block image elements. @see BlockImage */
+    @PublicAPI
+    public static final String BLOCK_IMAGE = "block-image";
+
+    /** Type identifier for layout table elements. @see LayoutTable */
+    @PublicAPI
+    public static final String LAYOUT_TABLE = "layout-table";
 }

@@ -1,6 +1,7 @@
 package de.fkkaiser.model.font;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.annotation.PublicAPI;
 
 import java.util.List;
 
@@ -123,6 +124,7 @@ public record FontFamily(
         if (fontTypes == null || fontTypes.isEmpty()) {
             throw new IllegalArgumentException("Font types list cannot be null or empty");
         }
+        fontTypes = List.copyOf(fontTypes);
     }
 
     /**
@@ -163,7 +165,7 @@ public record FontFamily(
      * @return a new FontFamily with a single regular font type
      * @throws IllegalArgumentException if any parameter is null or empty
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public static FontFamily withSingleFont(String familyName, String fontPath) {
         FontType regular = FontType.regular(fontPath);
         return new FontFamily(familyName, List.of(regular));
@@ -201,7 +203,7 @@ public record FontFamily(
      * @return a new FontFamily with four standard font variants
      * @throws IllegalArgumentException if any parameter is null or empty
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public static FontFamily withStandardVariants(
             String familyName,
             String regularPath,
@@ -243,7 +245,7 @@ public record FontFamily(
      * @return a new FontFamily with regular and bold font variants
      * @throws IllegalArgumentException if any parameter is null or empty
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public static FontFamily withBoldVariant(
             String familyName,
             String regularPath,
