@@ -1,5 +1,6 @@
 module model {
     exports de.fkkaiser.model.structure;
+    exports de.fkkaiser.model.structure.builder;
     exports de.fkkaiser.model.font;
     exports de.fkkaiser.model.style;
     exports de.fkkaiser.model.style.builder;
