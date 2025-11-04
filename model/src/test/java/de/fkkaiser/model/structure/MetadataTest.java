@@ -81,7 +81,7 @@ class MetadataTest {
 
     @Nested
     @DisplayName("Builder Tests")
-    class BuilderTests {
+    class PageSequenceBuilderTests {
 
         @Test
         @DisplayName("Should build with minimal properties and apply defaults")

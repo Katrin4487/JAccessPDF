@@ -1,6 +1,7 @@
 package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.structure.builder.PageSequenceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ public record PageSequence(
         String styleClass,
         @JsonProperty("body")
         ContentArea body,
+        @JsonProperty("header")
         ContentArea header,
         @JsonProperty("footer")
         ContentArea footer
@@ -37,29 +39,9 @@ public record PageSequence(
      * @param styleClass the style class for the PageSequence (required)
      * @return a new instance of Builder with the provided style class
      */
-    public static Builder builder(String styleClass) {
-        return new Builder(styleClass);
+    public static PageSequenceBuilder builder(String styleClass) {
+        return new PageSequenceBuilder(styleClass);
     }
 
-    /**
-     * A builder for creating instances of {@link PageSequence}.
-     */
-    public static class Builder {
-        private final String styleClass;
-        private ContentArea body;
-        private ContentArea header;
-        private ContentArea footer;
 
-        public Builder(String styleClass) {
-            this.styleClass = styleClass;
-        }
-
-        public Builder body(ContentArea body) { this.body = body; return this; }
-        public Builder header(ContentArea header) { this.header = header; return this; }
-        public Builder footer(ContentArea footer) { this.footer = footer; return this; }
-
-        public PageSequence build() {
-            return new PageSequence(styleClass, body, header, footer);
-        }
-    }
 }

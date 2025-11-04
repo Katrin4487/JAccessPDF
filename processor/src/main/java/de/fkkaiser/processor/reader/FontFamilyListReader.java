@@ -13,7 +13,6 @@ import java.io.InputStream;
 public class FontFamilyListReader {
     private static final Logger log = LoggerFactory.getLogger(FontFamilyListReader.class);
 
-    // 1. ObjectMapper wird nur einmal initialisiert und wiederverwendet.
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
@@ -42,6 +41,3 @@ public class FontFamilyListReader {
         }
     }
 }
-
-// Diese Exception-Klasse in eine eigene Datei legen.
-// public class FontReadException extends RuntimeException { ... }

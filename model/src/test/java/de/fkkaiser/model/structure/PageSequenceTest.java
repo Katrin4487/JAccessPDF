@@ -29,7 +29,7 @@ class PageSequenceTest {
 
     @Nested
     @DisplayName("Builder Logic")
-    class BuilderTests {
+    class PageSequenceBuilderTests {
 
         @Test
         @DisplayName("should build with only the required styleClass")
