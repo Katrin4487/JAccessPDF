@@ -333,7 +333,7 @@ public class DocumentBuilder {
      * <pre>{@code
      * InternalAddresses addresses = new InternalAddresses(
      *     null,  // Use default fonts
-     *     "images/product-images.json"
+     *     "images"
      * );
      *
      * Document doc = Document.builder(metadata)

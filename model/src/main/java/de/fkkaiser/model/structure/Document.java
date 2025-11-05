@@ -322,8 +322,8 @@ public record Document(
      *         .build()
      * )
      * .withInternalAddresses(new InternalAddresses(
-     *     "fonts/corporate-fonts.json",
-     *     "images/company-images.json"
+     *     "fonts",
+     *     "images"
      * ))
      * .addPageSequence(titlePage)
      * .addPageSequence(tocPage)
