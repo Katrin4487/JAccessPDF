@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -128,7 +129,7 @@ public class FontFamilyList {
      * @return the list of {@link FontFamily} objects, or an empty list if not set
      */
     public List<FontFamily> getFontFamilyList() {
-        return fontFamilyList == null ? List.of() : fontFamilyList;
+        return fontFamilyList == null ? List.of() : Collections.unmodifiableList(fontFamilyList);
     }
 
     /**

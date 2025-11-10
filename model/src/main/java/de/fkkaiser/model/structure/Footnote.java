@@ -7,9 +7,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.FootnoteStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.FootnoteStyleProperties;
-import de.fkkaiser.model.style.StyleResolverContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +27,6 @@ public final class Footnote extends AbstractInlineElement {
     private final String index;
     private final List<InlineElement> inlineElements;
 
-
-    // NEU: Feld für den aufgelösten Stil des Fußnotentextes
     @JsonIgnore
     private FootnoteStyleProperties resolvedStyle;
 
@@ -53,12 +48,11 @@ public final class Footnote extends AbstractInlineElement {
         this.inlineElements = inlineElements;
     }
 
-    // --- Getters und ein neuer Setter ---
     public String getId() { return id; }
     public String getIndex() { return index; }
     public List<InlineElement> getInlineElements() { return inlineElements; }
     public FootnoteStyleProperties getResolvedStyle() { return resolvedStyle; }
-    public void setResolvedStyle(FootnoteStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
+    void setResolvedStyle(FootnoteStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
 
 
     @Override

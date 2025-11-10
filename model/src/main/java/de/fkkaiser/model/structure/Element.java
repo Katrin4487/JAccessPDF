@@ -3,7 +3,6 @@ package de.fkkaiser.model.structure;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.StyleResolverContext;
 
 
 

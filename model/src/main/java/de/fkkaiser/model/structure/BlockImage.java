@@ -8,15 +8,10 @@ import de.fkkaiser.model.style.BlockImageStyleProperties;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Optional;
 
 @JsonTypeName(ElementTypes.BLOCK_IMAGE)
 public final class BlockImage implements Element {
-
-    private static final Logger log = LoggerFactory.getLogger(Part.class);
 
     private final String styleClass;
     private final String path;
@@ -52,11 +47,6 @@ public final class BlockImage implements Element {
         return resolvedStyle;
     }
 
-    public void setResolvedStyle(BlockImageStyleProperties resolvedStyle) {
-        this.resolvedStyle = resolvedStyle;
-    }
-
-
     @Override
     public String getType() {
         return ElementTypes.BLOCK_IMAGE;
@@ -74,6 +64,7 @@ public final class BlockImage implements Element {
 
         BlockImageStyleProperties finalStyle = specificStyle.copy();
         finalStyle.mergeWith(parentStyle);
-        this.setResolvedStyle(finalStyle);
+
+        this.resolvedStyle = finalStyle;
     }
 }
