@@ -46,6 +46,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
         return widows;
     }
 
+    @SuppressWarnings("unused")
     public void setWidows(boolean widows) {
         this.widows = widows;
     }
@@ -64,6 +65,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
         return textAlignLast;
     }
 
+    @SuppressWarnings("unused")
     public void setTextAlignLast(String textAlignLast) {
         this.textAlignLast = textAlignLast;
     }
@@ -88,22 +90,22 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
         return orphans;
     }
 
+    @SuppressWarnings("unused")
     public void setOrphans(boolean orphans) {
         this.orphans = orphans;
     }
 
 
     // --- Overrides ---
-
     @Override
     public void mergeWith(ElementStyleProperties base) {
         super.mergeWith(base);
         if (base instanceof ParagraphStyleProperties baseParagraph) {
-            this.textIndent = Optional.ofNullable(this.textIndent).orElse(baseParagraph.textAlign);
-            this.textAlign = Optional.ofNullable(this.textAlign).orElse(baseParagraph.textAlignLast);
+            this.textIndent = Optional.ofNullable(this.textIndent).orElse(baseParagraph.textIndent);
+            this.textAlign = Optional.ofNullable(this.textAlign).orElse(baseParagraph.textAlign);
             this.textAlignLast = Optional.ofNullable(this.textAlignLast).orElse(baseParagraph.textAlignLast);
             this.language = Optional.ofNullable(this.language).orElse(baseParagraph.language);
-        }
+ }
     }
 
     @Override

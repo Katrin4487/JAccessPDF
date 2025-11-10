@@ -8,10 +8,6 @@ import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
 import de.fkkaiser.model.style.TextBlockStyleProperties;
-import de.fkkaiser.model.style.ElementBlockStyleProperties;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.TextBlockStyleProperties;
 
 import java.util.List;
 
@@ -56,7 +52,6 @@ public final class ListItem implements Element {
     public List<InlineElement> getLabel() { return label; } // NEU
     public List<Element> getElements() { return elements; }
     public ElementBlockStyleProperties getResolvedStyle() { return resolvedStyle; }
-    public void setResolvedStyle(ElementBlockStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
 
     @Override
     public String getType() {
@@ -67,17 +62,23 @@ public final class ListItem implements Element {
     public void resolveStyles(StyleResolverContext context) {
         // Resolve the style for the list item container itself
         ElementStyle specificElementStyle = context.styleMap().get(this.getStyleClass());
+        ElementBlockStyleProperties newResolvedStyle; // KORREKTUR: Als Variable deklariert
+
         if (specificElementStyle != null && specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
-            TextBlockStyleProperties newResolvedStyle = specificStyle.copy();
+            newResolvedStyle = specificStyle.copy();
             newResolvedStyle.mergeWith(context.parentBlockStyle());
-            this.setResolvedStyle(newResolvedStyle);
         } else {
-            this.setResolvedStyle(context.parentBlockStyle() != null ? context.parentBlockStyle().copy() : null);
+               if (context.parentBlockStyle() != null) {
+                newResolvedStyle = context.parentBlockStyle().copy();
+            } else {
+                // Fallback, wenn es keinen Parent-Stil gibt (z.B. Top-Level-Liste)
+                newResolvedStyle = new TextBlockStyleProperties();
+            }
         }
 
+        this.resolvedStyle = newResolvedStyle;
 
         StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
-
         if (label != null) {
             label.forEach(el -> el.resolveStyles(childContext));
         }

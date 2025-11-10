@@ -92,13 +92,12 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
 
         super.mergeWith(specific);
         if (specific instanceof TextBlockStyleProperties textSpec){
-            this.textStyleName = Optional.ofNullable(textSpec.getTextStyleName()).orElse(this.getTextStyleName());
-            this.textColor = Optional.ofNullable(textSpec.getTextColor()).orElse(this.getTextColor());
-            this.lineHeight = Optional.ofNullable(textSpec.getLineHeight()).orElse(this.getLineHeight());
-            this.textAlign = Optional.ofNullable(textSpec.getTextAlign()).orElse(this.getTextAlign());
-            this.span = Optional.ofNullable(textSpec.getSpan()).orElse(this.getSpan());
-            this.linefeedTreatment = Optional.ofNullable(textSpec.getLinefeedTreatment()).orElse(this.getLinefeedTreatment());
-
+            this.textStyleName = Optional.ofNullable(this.textStyleName).orElse(textSpec.getTextStyleName());
+            this.textColor = Optional.ofNullable(this.textColor).orElse(textSpec.getTextColor());
+            this.lineHeight = Optional.ofNullable(this.lineHeight).orElse(textSpec.getLineHeight());
+            this.textAlign = Optional.ofNullable(this.textAlign).orElse(textSpec.getTextAlign());
+            this.span = Optional.ofNullable(this.span).orElse(textSpec.getSpan());
+            this.linefeedTreatment = Optional.ofNullable(this.linefeedTreatment).orElse(textSpec.getLinefeedTreatment());
         }
     }
 

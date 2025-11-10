@@ -30,9 +30,10 @@ public class TableStyleProperties extends TextBlockStyleProperties {
 
     // --- Overrides ---
 
-    public void mergeWith(TextBlockStyleProperties base) {
-         super.mergeWith(base);
-         if (base instanceof TableStyleProperties baseTable) {
+    @Override
+    public void mergeWith(ElementStyleProperties base) {
+        super.mergeWith(base);
+        if (base instanceof TableStyleProperties baseTable) {
             if (this.borderCollapse == null) {
                 this.borderCollapse = baseTable.getBorderCollapse();
             }

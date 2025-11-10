@@ -5,7 +5,6 @@ import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.LayoutTableStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.*;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -43,7 +42,7 @@ public class LayoutTable implements Element{
         return resolvedStyle;
     }
 
-    public void setResolvedStyle(LayoutTableStyleProperties resolvedStyle) {
+    void setResolvedStyle(LayoutTableStyleProperties resolvedStyle) {
         this.resolvedStyle = resolvedStyle;
     }
 
@@ -74,14 +73,15 @@ public class LayoutTable implements Element{
                 .map(LayoutTableStyleProperties.class::cast)
                 .orElse(new LayoutTableStyleProperties()); // Standard-Style, wenn nichts gefunden wurde
 
-        LayoutTableStyleProperties finalStyle = (LayoutTableStyleProperties) specificStyle.copy();
-        if(finalStyle==null){
-            finalStyle = new LayoutTableStyleProperties();
-        }
+        LayoutTableStyleProperties finalStyle = specificStyle.copy();
+        finalStyle.mergeWith(parentStyle);
+
+        this.resolvedStyle = finalStyle;
+
+        StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
         finalStyle.mergeWith(parentStyle);
         this.setResolvedStyle(finalStyle);
 
-        StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
         Stream.of(elementLeft,elementRight)
                 .filter(Objects::nonNull)
                 .forEach(elem -> elem.resolveStyles(childContext));
