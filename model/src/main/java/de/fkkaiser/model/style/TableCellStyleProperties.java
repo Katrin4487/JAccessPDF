@@ -38,8 +38,7 @@ public class TableCellStyleProperties extends TextBlockStyleProperties {
     public void setVerticalAlign(String verticalAlign) { this.verticalAlign = verticalAlign; }
 
     // --- Overrides ---
-    @Override
-    public void mergeWith(ElementStyleProperties base) {
+    public void mergeWith(TextBlockStyleProperties base) {
         super.mergeWith(base);
 
         if (base instanceof TableCellStyleProperties baseCell) {
