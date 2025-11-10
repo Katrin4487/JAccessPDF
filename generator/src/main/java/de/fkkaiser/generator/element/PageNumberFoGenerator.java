@@ -13,6 +13,6 @@ public class PageNumberFoGenerator extends InlineElementFoGenerator{
      */
     @Override
     public void generate(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
-
+        builder.append("<fo:page-number/>");
     }
 }
