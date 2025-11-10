@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.ListStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
 
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents a list element in a document with a specific style class,
@@ -50,17 +52,24 @@ public final class SimpleList implements Element {
     public ListOrdering getOrdering() { return ordering; }
     public List<ListItem> getItems() { return items; }
     public ListStyleProperties getResolvedStyle() { return resolvedStyle; }
-    public void setResolvedStyle(ListStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
+
 
     @Override
     public void resolveStyles(StyleResolverContext context) {
-        ElementStyle style = context.styleMap().get(this.getStyleClass());
-        if (style != null && style.properties() instanceof ListStyleProperties listStyleProperties) {
-            this.setResolvedStyle(listStyleProperties);
-        }
+          ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
 
-        StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
+        ListStyleProperties specificStyle = Optional.ofNullable(context.styleMap().get(this.getStyleClass()))
+                .map(ElementStyle::properties)
+                .filter(ListStyleProperties.class::isInstance)
+                .map(ListStyleProperties.class::cast)
+                .orElse(new ListStyleProperties()); // Leeres Objekt, falls kein Stil definiert ist.
 
+         ListStyleProperties finalStyle = specificStyle.copy();
+        finalStyle.mergeWith(parentStyle); // Vererbung vom Parent
+
+         this.resolvedStyle = finalStyle;
+
+         StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
 
         if (items != null) {
             for (ListItem item : items) {
