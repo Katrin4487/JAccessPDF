@@ -1,18 +1,44 @@
 package de.fkkaiser.generator.element;
 
-
 import de.fkkaiser.model.structure.Footnote;
 import de.fkkaiser.model.structure.InlineElement;
+import de.fkkaiser.model.structure.TextBlock;
+import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.FootnoteStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.model.style.TextBlockStyleProperties;
 
 public class FootnoteFoGenerator extends InlineElementFoGenerator {
 
     private final XslFoGenerator mainGenerator;
+    // KORREKTUR: Helfer-Klasse zum Anwenden von Block-Stilen hinzugefügt
+    private final StyleApplier styleHelper;
+
 
     public FootnoteFoGenerator(XslFoGenerator mainGenerator) {
         this.mainGenerator = mainGenerator;
+        // KORREKTUR: Initialisierung des Helfers für die Style-Anwendung
+        this.styleHelper = new StyleApplier(mainGenerator);
+    }
+
+    /**
+     * Private innere Helferklasse, die von TextBlockFoGenerator erbt,
+     * nur um an die (package-private) Methode appendCommonAttributes zu gelangen.
+     */
+    private static class StyleApplier extends TextBlockFoGenerator {
+        public StyleApplier(XslFoGenerator mainGenerator) {
+            super(mainGenerator);
+        }
+
+        // Exponiert die Methode, die wir brauchen
+        public void applyStyles(StringBuilder builder, ElementBlockStyleProperties style, StyleSheet styleSheet) {
+            super.appendCommonAttributes(builder, style, styleSheet);
+        }
+
+        // Erfüllt die abstrakten Methoden
+        @Override protected String getRole(TextBlock textBlock) { return null; }
+        @Override protected void appendSpecificAttributes(StringBuilder builder, TextBlockStyleProperties style) { }
     }
 
     @Override
@@ -20,38 +46,21 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
         Footnote footnote = (Footnote) element;
 
         FootnoteStyleProperties styleProperties = footnote.getResolvedStyle();
-
-        // WORKAROUND: Use role="Span" to prevent FOP's automatic (and broken)
         // <Note> tagging. We will create the accessible structure manually.
         builder.append("<fo:footnote role=\"Span\">");
 
-        // --- The Reference in the Text (The Link) ---
-        // This inline element is explicitly tagged as a Link for accessibility.
-        builder.append("<fo:inline role=\"Link\">");
-        // The basic-link points to the ID of the note's content block.
-        builder.append("<fo:basic-link fox:alt-text=\"Link Footnote\" internal-destination=\"").append(escapeXml(footnote.getId())).append("\">");
-        // The visual representation of the link (the superscript number)
-        builder.append("<fo:inline font-size=\"8pt\" vertical-align=\"super\">")
-                .append(escapeXml(footnote.getIndex()))
-                .append("</fo:inline>");
-        builder.append("</fo:basic-link>");
-        builder.append("</fo:inline>");
-
-        // --- The Footnote Body at the bottom of the page (The Note) ---
         builder.append("<fo:footnote-body>");
 
         builder.append("<fo:block id=\"").append(escapeXml(footnote.getId())).append("\"");
 
         if(styleProperties!=null){
-            if(styleProperties.getStartIndent() != null){
-                builder.append(" start-indent=\"").append(escapeXml(styleProperties.getStartIndent())).append("\"");
-            }
-            if(styleProperties.getEndIndent() != null){
-                builder.append(" end-indent=\"").append(escapeXml(styleProperties.getEndIndent())).append("\"");
-            }
-            //TODO set the other styles...
+            // KORREKTUR: Anstatt Stile manuell zu setzen, rufen wir den Helfer auf,
+            // der ALLE TextBlock-Stile (Schriftart, Farbe, Abstände, Einzüge etc.) anwendet.
+            styleHelper.applyStyles(builder, styleProperties, styleSheet);
+
         }
         builder.append(">");
+
 
 
         if (footnote.getInlineElements() != null) {

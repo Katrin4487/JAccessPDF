@@ -49,7 +49,6 @@ public final class Table implements Element {
     public TableSection getBody() { return body; }
     public TableSection getFooter() { return footer; }
     public TableStyleProperties getResolvedStyle() { return resolvedStyle; }
-    public void setResolvedStyle(TableStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
 
     @Override
     public String getType() {
@@ -76,12 +75,13 @@ public final class Table implements Element {
                 .map(TableStyleProperties.class::cast)
                 .orElse(new TableStyleProperties()); // Standard-Style, wenn nichts gefunden wurde
 
-        TableStyleProperties finalStyle = (TableStyleProperties) specificTableStyle.copy();
+        TableStyleProperties finalStyle = specificTableStyle.copy();
         finalStyle.mergeWith(parentStyle);
-        this.setResolvedStyle(finalStyle);
 
-        StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
-        Stream.of(header, body, footer)
+        // KORREKTUR: Das Feld wird hier direkt gesetzt.
+        this.resolvedStyle = finalStyle;
+
+        StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());Stream.of(header, body, footer)
                 .filter(Objects::nonNull)
                 .forEach(section -> section.resolveStyles(childContext));
     }

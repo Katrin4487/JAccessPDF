@@ -1,10 +1,12 @@
 package de.fkkaiser.model.font;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.annotation.PublicAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -124,10 +126,10 @@ public class FontFamilyList {
     /**
      * Returns the list of font families.
      *
-     * @return the list of {@link FontFamily} objects, or {@code null} if not set
+     * @return the list of {@link FontFamily} objects, or an empty list if not set
      */
     public List<FontFamily> getFontFamilyList() {
-        return fontFamilyList;
+        return fontFamilyList == null ? List.of() : Collections.unmodifiableList(fontFamilyList);
     }
 
     /**
@@ -154,9 +156,10 @@ public class FontFamilyList {
      * @param fontFamily the font family to add; must not be {@code null}
      * @throws IllegalArgumentException if fontFamily is {@code null}
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public void addFontFamily(FontFamily fontFamily) {
         if (fontFamily == null) {
+            log.error("Attempted to add null font family");
             throw new IllegalArgumentException("Font family cannot be null");
         }
 
@@ -383,7 +386,7 @@ public class FontFamilyList {
          * @param variant the font variant (REGULAR, BOLD, ITALIC, etc.); must not be {@code null}
          * @return this builder instance for method chaining
          */
-        @SuppressWarnings("unused")
+        @PublicAPI
         public FontFamilyListBuilder addFont(String path, FontVariants variant) {
             if (variant == null) {
                 throw new IllegalArgumentException("Font variant cannot be null");

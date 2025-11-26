@@ -3,9 +3,7 @@ package de.fkkaiser.model.structure;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.TableCellStyleProperties;
+import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
 import de.fkkaiser.model.style.TableCellStyleProperties;
@@ -48,7 +46,7 @@ public class TableCell {
     public int getColspan() { return colspan; }
     public int getRowspan() { return rowspan; }
     public TableCellStyleProperties getResolvedStyle() { return resolvedStyle; }
-    public void setResolvedStyle(TableCellStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
+
 
     /**
      * Resolves styles for the cell and its contained elements.
@@ -56,13 +54,20 @@ public class TableCell {
      */
     public void resolveStyles(StyleResolverContext context) {
 
-        Optional.ofNullable(context.styleMap().get(this.getStyleClass()))
+         ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
+
+        TableCellStyleProperties specificStyle = Optional.ofNullable(context.styleMap().get(this.getStyleClass()))
                 .map(ElementStyle::properties)
                 .filter(TableCellStyleProperties.class::isInstance)
                 .map(TableCellStyleProperties.class::cast)
-                .ifPresent(this::setResolvedStyle);
+                .orElse(new TableCellStyleProperties()); // Leeres Objekt, falls kein Stil definiert ist.
 
-        StyleResolverContext childContext = context.createChildContext(null);
+        TableCellStyleProperties finalStyle = specificStyle.copy();
+        finalStyle.mergeWith(parentStyle); // Vererbung vom Parent
+
+        // 4. Internes Feld direkt setzen.
+        this.resolvedStyle = finalStyle;
+        StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
         elements.forEach(element -> element.resolveStyles(childContext));
     }
 }
