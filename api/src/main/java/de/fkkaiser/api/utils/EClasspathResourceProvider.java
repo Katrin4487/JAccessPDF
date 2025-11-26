@@ -30,8 +30,8 @@ import java.net.URL;
  * URL logo = provider.getResource("images/company-logo.png");
  * }</pre>
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see EResourceProvider
  */
 public class EClasspathResourceProvider implements EResourceProvider {

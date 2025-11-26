@@ -282,23 +282,24 @@ public final class PdfGenerationFacade {
                                              FontFamilyList fontFamilyList) throws PdfGenerationException {
         log.debug("Starting PDF generation from model objects");
 
-        try {
+        try (EFopResourceResolver fopResolver = new EFopResourceResolver(resourceProvider)) {
+
             // Step 1: Resolve styles and link them to document elements
             StyleResolverService.resolve(document, styleSheet);
             log.debug("Style resolution completed");
 
-            // Step 2: Ensure we have a valid font list (with fallback to default)
+            // Step 2: Ensure we have a valid font list
             FontFamilyList validatedFonts = ensureValidFontList(fontFamilyList);
 
-            // Step 3: Validate that all text styles have corresponding fonts
+            // Step 3: Validate text styles
             validateTextStyleFonts(styleSheet, validatedFonts);
             log.debug("Text style font validation completed");
 
-            // Step 4: Create FOP factory with font configuration
-            FopFactory fopFactory = createFopFactory(validatedFonts);
+            // Step 4: Create FOP factory
+            FopFactory fopFactory = createFopFactory(validatedFonts, fopResolver);
             log.debug("FOP factory created successfully");
 
-            // Step 5: Generate XSL-FO from document model
+            // Step 5: Generate XSL-FO
             String xslFoString = generateXslFo(document, styleSheet);
             log.debug("XSL-FO generation completed, length: {} characters", xslFoString.length());
 
@@ -312,6 +313,7 @@ public final class PdfGenerationFacade {
             log.error("Failed to generate PDF from model objects", e);
             throw new PdfGenerationException("PDF generation failed", e);
         }
+
     }
 
     /**
@@ -515,22 +517,16 @@ public final class PdfGenerationFacade {
      * Creates and configures an Apache FOP factory with the specified font configuration.
      * The factory is responsible for creating FOP instances that can transform XSL-FO
      * into PDF documents.
+     /**
+     * Creates and configures an Apache FOP factory.
+     * NOTE: The resolver is now passed in, so the caller controls its lifecycle (closing streams).
      *
-     * <p><b>Configuration:</b></p>
-     * The FOP factory is configured with:
-     * <ul>
-     *   <li>Custom resource resolver for loading external resources</li>
-     *   <li>Font configuration based on the provided font family list</li>
-     *   <li>PDF/UA-1 accessibility mode</li>
-     *   <li>Configurable validation settings</li>
-     * </ul>
-     *
-     * @param fontFamilyList the list of font families to register with FOP;
-     *                       must not be {@code null} or empty
-     * @return a configured FopFactory instance ready for PDF generation
-     * @throws Exception if FOP factory creation or configuration fails
+     * @param fontFamilyList the list of font families to register with FOP
+     * @param fopResourceResolver the resource resolver for FOP to locate external resources
+     * @return a configured FopFactory instance
+     * @throws Exception if an error occurs during FOP factory creation
      */
-    private FopFactory createFopFactory(FontFamilyList fontFamilyList) throws Exception {
+    private FopFactory createFopFactory(FontFamilyList fontFamilyList, ResourceResolver fopResourceResolver) throws Exception {
         // Build font configuration XML
         EFontFamilyLoader fontLoader = new EFontFamilyLoader(resourceProvider, fontFamilyList);
         String fontConfigXml = fontLoader.getFontListString();
@@ -539,10 +535,8 @@ public final class PdfGenerationFacade {
         String fopConfigXml = buildFopConfigXml(fontConfigXml);
         InputStream fopConfigStream = new ByteArrayInputStream(fopConfigXml.getBytes());
 
-        // Create resource resolver for FOP
-        ResourceResolver fopResourceResolver = new EFopResourceResolver(resourceProvider);
 
-        // Build FOP factory
+        // Build FOP factory with the passed resolver
         FopFactoryBuilder fopFactoryBuilder = new FopFactoryBuilder(
                 new File(".").toURI(),
                 fopResourceResolver

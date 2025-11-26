@@ -1,123 +1,127 @@
 package de.fkkaiser.api.utils;
 
+import de.fkkaiser.model.annotation.Internal;
 import org.apache.xmlgraphics.io.Resource;
 import org.apache.xmlgraphics.io.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * A custom {@link org.apache.xmlgraphics.io.ResourceResolver} for Apache FOP that integrates with the {@link EResourceProvider}.
- * This class acts as a bridge between Apache FOP's resource resolution mechanism and the application's
- * resource provider, enabling FOP to access resources such as images, fonts, and other assets
- * referenced in XSL-FO documents.
- *
- * <p><b>Purpose:</b></p>
- * Apache FOP works primarily with absolute file paths and URLs, which makes it difficult
- * to use resources packaged within JAR files. This implementation bridges that gap by
- * using an {@link EResourceProvider} to resolve and load resources from various sources
- * (classpath, filesystem, etc.) and providing them to FOP in a way it can process.
- *
- * <p><b>Resource Types:</b></p>
- * This resolver can handle various resource types referenced in XSL-FO documents:
+ * Bridges Apache FOP's resource loading with the application's {@link EResourceProvider}.
+ * <p>
+ * During PDF generation, Apache FOP needs to access external assets such as:
  * <ul>
- *   <li>Images (PNG, JPEG, GIF, etc.)</li>
- *   <li>Fonts (TTF, OTF, etc.)</li>
- *   <li>SVG graphics</li>
- *   <li>Other external resources</li>
+ * <li><b>Images</b> (referenced in the document via {@code addImage})</li>
+ * <li><b>Fonts</b> (referenced in the style definitions, e.g., "Open Sans")</li>
  * </ul>
+ * <p>
+ * Since FOP cannot natively load files from inside a JAR or a custom classpath structure,
+ * this resolver intercepts these requests and delegates them to the {@link EResourceProvider}.
+ * </p>
+ * <p>
+ * <b>Lifecycle Management:</b><br>
+ * This class implements {@link AutoCloseable} to track and close all InputStreams opened
+ * during the PDF generation process. This prevents file locks and memory leaks.
+ * </p>
  *
- * <p><b>Usage Example:</b></p>
- * <pre>{@code
- * // Create a resource provider
- * EResourceProvider resourceProvider = new EClasspathResourceProvider();
- *
- * // Create the resolver
- * EFopResourceResolver resolver = new EFopResourceResolver(resourceProvider);
- *
- * }</pre>
- *
- * @author FK Kaiser
- * @version 1.0
- * @see ResourceResolver
- * @see EResourceProvider
- * @see EFopURIResolver
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
-public final class EFopResourceResolver implements ResourceResolver {
+@Internal
+public class EFopResourceResolver implements ResourceResolver, AutoCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(EFopResourceResolver.class);
-
-    /**
-     * The resource provider used to locate and load resources.
-     */
     private final EResourceProvider resourceProvider;
 
+    // Tracks all streams opened for FOP to ensure they are closed later
+    private final List<InputStream> openStreams = Collections.synchronizedList(new ArrayList<>());
+
     /**
-     * Constructs a new EFopResourceResolver with the specified resource provider.
+     * Creates a new resolver that uses the given provider to locate assets.
      *
-     * @param resourceProvider the resource provider to use for resolving resources;
-     *                         must not be {@code null}
-     * @throws IllegalArgumentException if resourceProvider is {@code null}
+     * @param resourceProvider the provider used to load images and fonts from the classpath/filesystem
      */
     public EFopResourceResolver(EResourceProvider resourceProvider) {
-        if (resourceProvider == null) {
-            throw new IllegalArgumentException("ResourceProvider cannot be null.");
-        }
-        this.resourceProvider = resourceProvider;
+        this.resourceProvider = Objects.requireNonNull(resourceProvider, "ResourceProvider cannot be null.");
     }
 
     /**
-     * Resolves and retrieves a resource for the given URI.
-     * This method is called by Apache FOP when it encounters a resource reference
-     * in an XSL-FO document (e.g., an image or font reference).
+     * Called by Apache FOP when it needs to load an asset (Image or Font).
+     * <p>
+     * This method translates the URI request from FOP (e.g., "images/logo.png") into an
+     * actual InputStream provided by the application's resource handling.
+     * </p>
      *
-     * <p>The method performs the following steps:</p>
-     * <ol>
-     *   <li>Logs the URI being resolved for debugging purposes</li>
-     *   <li>Delegates to the {@link EResourceProvider} to locate the resource</li>
-     *   <li>Opens an InputStream to the resource</li>
-     *   <li>Wraps the InputStream in a {@link Resource} object</li>
-     * </ol>
-     *
-     * @param uri the URI of the resource to retrieve (e.g., "images/logo.png",
-     *            "fonts/Arial.ttf")
-     * @return a {@link Resource} object containing the InputStream for the resource
-     * @throws IOException if the resource cannot be found or an I/O error occurs
-     *                     while opening the resource
+     * @param uri the URI of the asset (image path or font file) required by FOP
+     * @return a {@link Resource} containing the InputStream and MIME-type of the asset
+     * @throws IOException if the asset (image/font) could not be found via the ResourceProvider
      */
     @Override
     public Resource getResource(URI uri) throws IOException {
-        log.debug("FOP ResourceResolver is resolving URI: {}", uri);
+        log.debug("FOP requesting asset: {}", uri.getPath());
 
-        URL resourceUrl = resourceProvider.getResource(uri.toString());
+        // Normalize URI: FOP might send 'file:images/logo.png' or just 'images/logo.png'
+        String pathRequest = uri.getPath();
+        if (pathRequest == null) pathRequest = uri.toString();
 
-        if (resourceUrl != null) {
-            // Return a new Resource object, which wraps the InputStream
-            return new Resource(resourceUrl.openStream());
+        // Delegate to our provider (e.g., load from JAR)
+        URL resourceUrl = resourceProvider.getResource(pathRequest);
+        if (resourceUrl == null) {
+            throw new IOException("Asset not found via ResourceProvider: " + pathRequest);
         }
 
-        log.warn("Could not resolve resource for URI via ResourceProvider: {}", uri);
-        throw new IOException("Resource not found: " + uri);
+        // Open connection to detect MIME-type (important for image processing)
+        URLConnection connection = resourceUrl.openConnection();
+        connection.setUseCaches(false); // Avoid caching issues with JAR resources
+
+        InputStream inputStream = connection.getInputStream();
+        String mimeType = connection.getContentType();
+
+        // Track the stream to close it safely after PDF generation
+        openStreams.add(inputStream);
+
+        return new Resource(mimeType, inputStream);
     }
 
     /**
-     * Attempts to get an OutputStream for writing to a resource at the given URI.
-     *
-     * <p><b>Note:</b> This operation is not supported by this resolver as it is designed
-     * for read-only resource access. Apache FOP typically only needs to read resources,
-     * not write them.</p>
-     *
-     * @param uri the URI of the resource to write to
-     * @return an OutputStream (this method always throws an exception)
-     * @throws UnsupportedOperationException always thrown, as writing resources is not supported
+     * Returns an OutputStream for the given URI.
+     * This is strictly for reading assets (images/fonts), so writing is disabled.
      */
     @Override
     public OutputStream getOutputStream(URI uri) {
-        log.error("OutputStream resolution is not supported by this resolver for URI: {}", uri);
         throw new UnsupportedOperationException("Writing resources is not supported by this resolver.");
+    }
+
+    /**
+     * Closes all InputStreams that were opened for FOP during this session.
+     * This ensures that no file handles (images/fonts) remain locked after PDF generation.
+     */
+    @Override
+    public void close() {
+        if (openStreams.isEmpty()) {
+            return;
+        }
+        log.debug("Cleaning up: closing {} asset streams managed by EFopResourceResolver.", openStreams.size());
+
+        for (InputStream stream : openStreams) {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                // Log but continue closing other streams
+                log.warn("Warning: Failed to close an asset stream: {}", e.getMessage());
+            }
+        }
+        openStreams.clear();
     }
 }

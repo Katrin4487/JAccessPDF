@@ -21,8 +21,8 @@ import java.net.URL;
  * }
  * }</pre>
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see EClasspathResourceProvider
  * @see EFopResourceResolver
  * @see EFopURIResolver
@@ -39,6 +39,7 @@ public interface EResourceProvider {
      *             "images/logo.png", "styles/template.xsl")
      * @return a URL pointing to the resource, or {@code null} if the resource cannot be found
      * @throws IOException if an I/O error occurs while attempting to locate the resource
+     *
      */
     URL getResource(String name) throws IOException;
 }
