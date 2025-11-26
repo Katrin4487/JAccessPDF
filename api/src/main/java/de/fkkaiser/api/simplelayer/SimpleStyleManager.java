@@ -16,7 +16,7 @@ import java.util.List;
  * It handles text styles, element styles, and page master configurations.
  * </p>
  *
- * @author FK Kaiser
+ * @author Katrin Kaiser
  * @version 1.0.0
  */
 @Internal("Used internally by SimpleDocumentBuilder")

@@ -1,9 +1,14 @@
 package de.fkkaiser.api.simplelayer;
 
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import static de.fkkaiser.api.simplelayer.SimpleStyleManager.TABLE_STYLE_NAME;
 
@@ -24,8 +29,14 @@ import static de.fkkaiser.api.simplelayer.SimpleStyleManager.TABLE_STYLE_NAME;
  *     );
  * builder.addTable(table);
  * }</pre>
+ *
+ * @author FK Kaiser
+ * @version 1.0.0
  */
+@PublicAPI
 public class SimpleTable {
+
+    private static final Logger log = LoggerFactory.getLogger(SimpleTable.class);
 
     final String styleClass;
     final List<String> columns;
@@ -36,7 +47,6 @@ public class SimpleTable {
     /**
      * Creates table with standard style.
      */
-    @SuppressWarnings("unused")
     public SimpleTable() {
         this.styleClass = TABLE_STYLE_NAME;
         this.columns = new ArrayList<>();
@@ -44,56 +54,142 @@ public class SimpleTable {
 
 
     /**
-     * Sets the column widths.
-     * @param widths widths (e.g. "50%", "10cm", "1fr")
+     * Sets the column widths for the table.
+     * Calling this method multiple times will replace previous column definitions.
+     * Supported units: percentages (%), absolute units (cm, mm, in, pt, pc), or fractional units (fr).
+     *
+     * @param widths column width specifications (e.g., "50%", "10cm", "1fr")
+     * @return this table instance for method chaining
+     * @throws IllegalArgumentException if widths is empty
+     * @throws NullPointerException if widths is null
      */
-    @SuppressWarnings("unused")
     public SimpleTable setColumns(String... widths) {
+        Objects.requireNonNull(widths, "widths cannot be null");
+        if (widths.length == 0) {
+            throw new IllegalArgumentException("widths cannot be null or empty");
+        }
         this.columns.clear();
         this.columns.addAll(Arrays.asList(widths));
         return this;
     }
 
     /**
-     * Adds a row to the table header (with simple text-cells).
+     * Adds a row to the table header with simple text cells.
+     * Each text will be automatically styled as a header cell (bold).
+     *
+     * @param cellTexts text content for each header cell
+     * @return this table instance for method chaining
+     * @throws IllegalArgumentException if cellTexts is null or empty
+     * @throws NullPointerException if cellTexts is null
      */
-    @SuppressWarnings("unused")
     public SimpleTable addHeaderRow(String... cellTexts) {
-        List<SimpleTableCell> cells = Arrays.stream(cellTexts)
+        Objects.requireNonNull(cellTexts, "cellTexts cannot be null");
+        if (cellTexts.length == 0) {
+            throw new IllegalArgumentException("cellTexts cannot empty");
+        }
+
+        if (!this.columns.isEmpty() && cellTexts.length != this.columns.size()) {
+            log.warn("Adding header row with {} cells, but table has {} columns defined. " +
+                            "This may cause rendering issues.",
+                    cellTexts.length, this.columns.size());
+        }
+
+        final List<SimpleTableCell> cells = Arrays.stream(cellTexts)
                 .map(SimpleTableCell::ofHeader)
-                .collect(Collectors.toList());
+                .toList();
         this.headerRows.add(new SimpleTableRow(cells));
         return this;
     }
 
     /**
      * Adds a row to the table body (with simple text cells).
+     * @param cellTexts text-content of the cells
      */
-    @SuppressWarnings("unused")
     public SimpleTable addBodyRow(String... cellTexts) {
-        List<SimpleTableCell> cells = Arrays.stream(cellTexts)
+        if (cellTexts == null || cellTexts.length == 0) {
+            throw new IllegalArgumentException("cellTexts cannot be null or empty");
+        }
+        final List<SimpleTableCell> cells = Arrays.stream(cellTexts)
                 .map(SimpleTableCell::of)
-                .collect(Collectors.toList());
+                .toList();
         this.bodyRows.add(new SimpleTableRow(cells));
         return this;
     }
 
     /**
      * Adds a row to the table header (with more complex cells).
+     * @param cells list of {@link SimpleTableCell} objects that fills the row
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public SimpleTable addHeaderRow(SimpleTableCell... cells) {
+        if (cells == null || cells.length == 0) {
+            throw new IllegalArgumentException("cells cannot be null or empty");
+        }
+
         this.headerRows.add(new SimpleTableRow(Arrays.asList(cells)));
         return this;
     }
 
     /**
      * Adds a row to the table body (with more complex cells).
+     * @param cells list of {@link SimpleTableCell} that fills the row
      */
-    @SuppressWarnings("unused")
     public SimpleTable addBodyRow(SimpleTableCell... cells) {
         this.bodyRows.add(new SimpleTableRow(Arrays.asList(cells)));
         return this;
+    }
+
+    /**
+     * Validates that column counts in body rows, header rows, and column settings are consistent.
+     * Checks for colspan support and warns about mismatches.
+     *
+     * @throws IllegalStateException if the validation fails
+     */
+    @Internal("Used in SimpleDocumentBuilder")
+    void validate() {
+        // If no columns defined, check for consistency between rows
+        if (columns.isEmpty()) {
+            validateConsistentRowLengths();
+            return;
+        }
+
+        // if columns defined, strict validation
+        validateAgainstDefinedColumns();
+    }
+
+    private void validateAgainstDefinedColumns() {
+        final int expectedColumns = columns.size();
+
+        // Validate all rows with colspan support
+        for (int i = 0; i < headerRows.size(); i++) {
+            validateRow("Header", i, headerRows.get(i).cells(), expectedColumns);
+        }
+
+        for (int i = 0; i < bodyRows.size(); i++) {
+            validateRow("Body", i, bodyRows.get(i).cells(), expectedColumns);
+        }
+    }
+
+    private void validateRow(String rowType, int rowIndex, List<SimpleTableCell> cells, int expectedColumns) {
+        final int effectiveColumns = cells.stream().mapToInt(cell -> cell.colspan).sum();
+        if (effectiveColumns != expectedColumns) {
+            throw new IllegalStateException(
+                    String.format("%s row %d spans %d columns (including colspan), but table has %d columns defined",
+                            rowType, rowIndex, effectiveColumns, expectedColumns)
+            );
+        }
+    }
+
+    private void validateConsistentRowLengths() {
+        // Checks if all rows have the same number of columns
+        if (!headerRows.isEmpty() && !bodyRows.isEmpty()) {
+            final int headerCols = headerRows.getFirst().cells().size();
+            final int bodyCols = bodyRows.getFirst().cells().size();
+            if (headerCols != bodyCols) {
+                log.warn("Header has {} columns but body has {} columns. Consider using setColumns().",
+                        headerCols, bodyCols);
+            }
+        }
     }
 }
 

@@ -19,7 +19,7 @@ import static de.fkkaiser.api.simplelayer.SimpleStyleManager.FONT_FAMILY;
  * Default: Uses Open Sans (Apache 2.0 License, Google Fonts).
  * </p>
  *
- * @author FK Kaiser
+ * @author Katrin Kaiser
  * @version 1.0.0
  */
 @Internal("Used internally by SimpleDocumentBuilder")

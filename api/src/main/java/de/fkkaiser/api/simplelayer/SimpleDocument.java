@@ -3,6 +3,7 @@ package de.fkkaiser.api.simplelayer;
 import de.fkkaiser.api.PdfGenerationException;
 import de.fkkaiser.api.PdfGenerationFacade;
 import de.fkkaiser.api.utils.EResourceProvider;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.font.FontFamilyList;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.StyleSheet;
@@ -16,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static de.fkkaiser.api.simplelayer.SimpleStyleManager.*;
@@ -47,12 +49,26 @@ public class SimpleDocument {
     /**
      * Internal constructor used by SimpleDocumentBuilder.
      * Converts simple elements into the document model.
+     *
+     * @param elements         list of content elements
+     * @param styleManager     style manager
+     * @param fontManager      font manager
+     * @param metadata         document metadata
+     * @param resourceProvider resource provider for images and fonts
+     * @throws NullPointerException if any argument is null
+     *
      */
-    SimpleDocument(ArrayList<ContentElement> elements,
+    SimpleDocument(List<ContentElement> elements,
                    SimpleStyleManager styleManager,
                    SimpleFontManager fontManager,
                    Metadata metadata,
                    EResourceProvider resourceProvider) {
+
+        Objects.requireNonNull(elements, "elements must not be null");
+        Objects.requireNonNull(styleManager, "styleManager must not be null");
+        Objects.requireNonNull(fontManager, "fontManager must not be null");
+        Objects.requireNonNull(resourceProvider, "resourceProvider must not be null");
+
 
         // Build final models
         this.styleSheet = styleManager.buildStyleSheet();
@@ -101,8 +117,13 @@ public class SimpleDocument {
 
     /**
      * Converts the simple builder elements into the final document model.
+     *
+     * @param elements     list of content elements
+     * @param styleManager style manager
+     * @param metadata     document metadata
+     * @return built Document
      */
-    private Document buildDocument(ArrayList<ContentElement> elements,
+    private Document buildDocument(List<ContentElement> elements,
                                    SimpleStyleManager styleManager,
                                    Metadata metadata) {
 
@@ -129,14 +150,24 @@ public class SimpleDocument {
     /**
      * Internal interface for elements that can be converted to model objects.
      */
+    @Internal
     interface ContentElement {
         Element toModelObject(SimpleStyleManager styleManager);
     }
 
+    @Internal
     record ParagraphElement(String text, String styleName) implements ContentElement {
-
+        /**
+         * Converts this paragraph element into a model object representation.
+         *
+         * @param styleManager the style manager (not used here)
+         * @return the corresponding model object
+         * @throws NullPointerException if text is null
+         */
+        @Internal
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
+
             return new Paragraph(styleName, text);
         }
     }
@@ -154,12 +185,21 @@ public class SimpleDocument {
      * @param styleName the name of the style class to be applied to this list element
      * @param ordered   {@code true} for ordered lists, {@code false} for unordered lists
      */
+    @Internal
     record ListElement(List<String> items, String styleName, boolean ordered) implements ContentElement {
 
+        /**
+         * Converts this list element into a model object representation.
+         *
+         * @param styleManager the style manager
+         * @return the corresponding model object
+         * @throws NullPointerException if items is null
+         */
+        @Internal
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
+            Objects.requireNonNull(items, "items must not be null");
             ListOrdering ordering = ordered ? ListOrdering.ORDERED : ListOrdering.UNORDERED;
-
             List<ListItem> listItems = new ArrayList<>();
             for (String item : items) {
                 Paragraph paragraph = new Paragraph(PARAGRAPH_STYLE_NAME, item);
@@ -183,8 +223,21 @@ public class SimpleDocument {
      */
     record HeadingElement(String text, int level) implements ContentElement {
 
+        /**
+         * Converts this heading element into a model object representation.
+         *
+         * @param styleManager the style manager
+         * @return the corresponding model object
+         * @throws NullPointerException     if text is null
+         * @throws IllegalArgumentException if text is empty OR level is not between 1 and 6
+         */
+        @Internal
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
+            Objects.requireNonNull(text, "text must not be null");
+            if (text.trim().isEmpty() || level < 1 || level > 6) {
+                throw new IllegalArgumentException("Heading level must be between 1 and 6");
+            }
             String styleName = PREFIX_HEADINGS_STYLE_NAME + level;
             return new Headline(styleName, text, this.level);
         }
@@ -202,9 +255,17 @@ public class SimpleDocument {
             this(path, null);
         }
 
+        /**
+         * Converts this image element into a model object representation.
+         *
+         * @param styleManager the style manager
+         * @return the corresponding model object
+         * @throws NullPointerException if path is null
+         */
+        @Internal
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
-
+            Objects.requireNonNull(path, "path must not be null");
             return new BlockImage(IMAGE_STYLE_NAME, path, altText);
         }
     }
@@ -216,8 +277,10 @@ public class SimpleDocument {
      */
     record TableElement(SimpleTable simpleTable) implements SimpleDocument.ContentElement {
 
+        @Internal
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
+            Objects.requireNonNull(simpleTable, "simpleTable must not be null");
             TableSection header = null;
             if (!simpleTable.headerRows.isEmpty()) {
                 header = new TableSection(convertRows(simpleTable.headerRows, styleManager));
@@ -253,6 +316,10 @@ public class SimpleDocument {
 
         /**
          * Converts SimpleTableRow list to TableRow list.
+         *
+         * @param simpleCells  list of SimpleTableCell objects to be converted
+         * @param styleManager the style manager for style resolution
+         * @return list of TableCell objects
          */
         private List<TableCell> convertCells(List<SimpleTableCell> simpleCells, SimpleStyleManager styleManager) {
             if (simpleCells == null) {
@@ -270,9 +337,12 @@ public class SimpleDocument {
          * @param simpleCell   the {@link SimpleTableCell} to be converted; must not be null
          * @param styleManager the {@link SimpleStyleManager} responsible for managing styles during the conversion; must not be null
          * @return a {@link TableCell} object created from the given {@link SimpleTableCell}, with transformed elements and applied styles
+         * @throws NullPointerException if either simpleCell or styleManager is null
          */
         private TableCell convertCell(SimpleTableCell simpleCell, SimpleStyleManager styleManager) {
 
+            Objects.requireNonNull(simpleCell, "simpleCell must not be null");
+            Objects.requireNonNull(styleManager, "styleManager must not be null");
             final List<Element> coreElements = simpleCell.elements.stream()
                     .map(contentElement -> contentElement.toModelObject(styleManager))
                     .collect(Collectors.toList());

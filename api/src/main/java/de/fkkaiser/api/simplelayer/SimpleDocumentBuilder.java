@@ -2,6 +2,8 @@ package de.fkkaiser.api.simplelayer;
 
 import de.fkkaiser.api.utils.EClasspathResourceProvider;
 import de.fkkaiser.api.utils.EResourceProvider;
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.annotation.VisibleForTesting;
 import de.fkkaiser.model.structure.*;
 import org.slf4j.Logger;
@@ -9,19 +11,27 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static de.fkkaiser.api.simplelayer.SimpleStyleManager.*;
 
 /**
- * A builder class for constructing a SimpleDocument.
+ * A builder class for constructing a {@link SimpleDocument}.
  * This class allows stepwise creation of a document by adding various elements like paragraphs,
  * headings, lists, images, and tables.
+ * <p>
  * It supports defining metadata such as title and language for the document, and
  * customization of resource providers for external dependencies.
+ * </p>
+ * <p>
+ * <strong>Note:</strong> This class is not thread-safe. It is intended to be used within
+ * a single thread context (e.g., creating a document request-scoped).
+ * </p>
  *
- * @author FK Kaiser
+ * @author Katrin Kaiser
  * @version 1.0.0
  */
+@PublicAPI
 public class SimpleDocumentBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleDocumentBuilder.class);
@@ -46,9 +56,13 @@ public class SimpleDocumentBuilder {
      * The title is used for PDF metadata (required for PDF/UA).
      *
      * @param title title of the PDF document.
+     * @throws NullPointerException     if title is {@code null}
+     * @throws IllegalArgumentException if title is empty
      */
+    @PublicAPI
     public static SimpleDocumentBuilder create(String title) {
-        if (title == null || title.trim().isEmpty()) {
+        Objects.requireNonNull(title, "Document title cannot be null");
+        if (title.trim().isEmpty()) {
             throw new IllegalArgumentException("Document title is required (PDF/UA compliance)");
         }
         return new SimpleDocumentBuilder(title);
@@ -58,7 +72,11 @@ public class SimpleDocumentBuilder {
      * Adds a paragraph with the given text using default styling.
      *
      * @param text content of the paragraph.
+     * @return this builder instance
+     * @throws NullPointerException     if text is {@code null}
+     * @throws IllegalArgumentException if text is empty
      */
+    @PublicAPI
     public SimpleDocumentBuilder addParagraph(String text) {
         return addParagraph(text, PARAGRAPH_STYLE_NAME);
     }
@@ -68,11 +86,13 @@ public class SimpleDocumentBuilder {
      *
      * @param text      content of the paragraph
      * @param styleName style-class of the paragraph
+     * @return this builder instance
+     * @throws NullPointerException if weather text or styleName is {@code null}
      */
+    @PublicAPI
     public SimpleDocumentBuilder addParagraph(String text, String styleName) {
-        if (text == null) {
-            throw new IllegalArgumentException("Paragraph text cannot be null");
-        }
+        Objects.requireNonNull(text, "Paragraph text cannot be null");
+        Objects.requireNonNull(styleName, "Paragraph style name cannot be null");
         elements.add(new SimpleDocument.ParagraphElement(text, styleName));
         return this;
     }
@@ -90,8 +110,11 @@ public class SimpleDocumentBuilder {
      * @param level the heading level (1-6)
      * @return this builder instance
      * @throws IllegalArgumentException if level is not between 1 and 6
+     * @throws NullPointerException     if text is {@code null}
      */
+    @PublicAPI
     public SimpleDocumentBuilder addHeading(String text, int level) {
+        Objects.requireNonNull(text, "Heading text cannot be null");
         if (level < 1 || level > 6) {
             throw new IllegalArgumentException("Heading level must be between 1 and 6");
         }
@@ -136,6 +159,8 @@ public class SimpleDocumentBuilder {
      * Adds heading level 1 (convenience method).
      *
      * @param text content of the heading
+     * @return this builder instance
+     * @throws NullPointerException if text is {@code null}
      */
     public SimpleDocumentBuilder addHeading(String text) {
         return addHeading(text, 1);
@@ -146,12 +171,14 @@ public class SimpleDocumentBuilder {
      *
      * @param items {@link java.util.List} of Strings that forms the content of the items
      * @return this builder instance
-     * @throws IllegalArgumentException if items is {@code null} or empty
+     * @throws IllegalArgumentException if items is empty
+     * @throws NullPointerException     if items is {@code null}
      */
     public SimpleDocumentBuilder addUnorderedList(List<String> items) {
 
-        if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("Unordered list cannot be null or empty");
+        Objects.requireNonNull(items, "Unordered list cannot be null");
+        if (items.isEmpty()) {
+            throw new IllegalArgumentException("Unordered list cannot be empty");
         }
         SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items, UNORDERED_LIST_STYLE_NAME, false);
         elements.add(listElement);
@@ -164,10 +191,12 @@ public class SimpleDocumentBuilder {
      * @param items {@link java.util.List} of Strings that forms the content of the items
      * @return this builder instance
      * @throws IllegalArgumentException if items is {@code null} or empty
+     * @throws NullPointerException     if items is {@code null}
      */
     public SimpleDocumentBuilder addOrderedList(List<String> items) {
-        if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("Ordered list cannot be null or empty");
+        Objects.requireNonNull(items, "Ordered list cannot be null");
+        if (items.isEmpty()) {
+            throw new IllegalArgumentException("Ordered list cannot empty");
         }
         SimpleDocument.ListElement listElement = new SimpleDocument.ListElement(items, ORDERED_LIST_STYLE_NAME, true);
         elements.add(listElement);
@@ -181,13 +210,14 @@ public class SimpleDocumentBuilder {
      *
      * @param relativePath The path to the image, relative to 'resources'
      * @param altText      alt text for this image
-     * @throws IllegalArgumentException if relativePath is {@code null} or empty
+     * @return this builder instance
+     * @throws IllegalArgumentException if relativePath is empty
+     * @throws NullPointerException     if relativePath is {@code null}
      */
     public SimpleDocumentBuilder addImage(String relativePath, String altText) {
-
-        String finalPath = normalizeImagePath(relativePath);
+        String finalPath = normalizeImagePath(relativePath); // throws NPE if null
         if (finalPath.isEmpty()) {
-            throw new IllegalArgumentException("Image path cannot be null or empty");
+            throw new IllegalArgumentException("Image path cannot empty");
         }
 
         elements.add(new SimpleDocument.ImageElement(finalPath, altText));
@@ -199,6 +229,8 @@ public class SimpleDocumentBuilder {
      *
      * @param relativePath relative Path to the image file (e.g. images/myimage.png)
      * @return this builder instance
+     * @throws IllegalArgumentException if relativePath is empty
+     * @throws NullPointerException     if relativePath is {@code null}
      */
     public SimpleDocumentBuilder addImage(String relativePath) {
         return addImage(relativePath, null);
@@ -209,11 +241,12 @@ public class SimpleDocumentBuilder {
      *
      * @param table {@link SimpleTable} that represents the table
      * @return this builder instance
+     * @throws NullPointerException  if table is {@code null}
+     * @throws IllegalStateException if the column sizes does not match
      */
     public SimpleDocumentBuilder addTable(SimpleTable table) {
-        if (table == null) {
-            throw new IllegalArgumentException("Table object cannot be null");
-        }
+        Objects.requireNonNull(table, "Table cannot be null");
+        table.validate();
         elements.add(new SimpleDocument.TableElement(table));
         return this;
     }
@@ -224,8 +257,11 @@ public class SimpleDocumentBuilder {
      * By default, uses classpath resources.
      *
      * @param provider {@link de.fkkaiser.api.utils.EResourceProvider} that should be used
+     * @return this builder instance
+     * @throws NullPointerException if provider is {@code null}
      */
     public SimpleDocumentBuilder withResourceProvider(EResourceProvider provider) {
+        Objects.requireNonNull(provider, "Resource provider cannot be null");
         this.resourceProvider = provider;
         return this;
     }
@@ -236,8 +272,11 @@ public class SimpleDocumentBuilder {
      *
      * @param language language code in BCP 47 format
      * @return this builder instance
+     * @throws NullPointerException if language is {@code null}
      */
+    @PublicAPI
     public SimpleDocumentBuilder withLanguage(String language) {
+        Objects.requireNonNull(language, "Language cannot be null");
         this.metadata.setLanguage(language);
         return this;
     }
@@ -248,6 +287,7 @@ public class SimpleDocumentBuilder {
      *
      * @return the final {@link SimpleDocument}
      */
+    @PublicAPI
     public SimpleDocument build() {
         final EResourceProvider providerToUse = (this.resourceProvider != null)
                 ? this.resourceProvider
@@ -263,10 +303,14 @@ public class SimpleDocumentBuilder {
      * @param relativePath The relative path to the image that needs normalization.
      *                     Can include leading slashes or backslashes.
      * @return A normalized image path with "images/" prefixed, unless the path
-     * already starts with "images/". Returns an empty string if the input is null.
+     * already starts with "images/". if the input is empty or only whitespace, returns an empty string.
+     * @throws NullPointerException if relativePath is {@code null}
+     *
      */
-    public static String normalizeImagePath(String relativePath) {
-        if (relativePath == null || relativePath.trim().isEmpty()) {
+    @Internal
+    static String normalizeImagePath(String relativePath) {
+        Objects.requireNonNull(relativePath, "Image path cannot be null");
+        if (relativePath.trim().isEmpty()) {
             return "";
         }
         String cleanPath = relativePath.replace("\\", "/").replaceAll("^/", "");
@@ -280,7 +324,7 @@ public class SimpleDocumentBuilder {
      * @return list of content elements of the Simple Document
      */
     @VisibleForTesting
-    List<SimpleDocument.ContentElement> getElements() {
+    ArrayList<SimpleDocument.ContentElement> getElements() {
         return elements;
     }
 }
