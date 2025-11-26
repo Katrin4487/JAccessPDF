@@ -83,9 +83,9 @@ public class SimpleDocument {
      * Generates the PDF and returns it as a ByteArrayOutputStream.
      *
      * @return {@link java.io.ByteArrayOutputStream} of the PDF.
-     * @throws Exception if it was not possible to generate the PDF.
+     * @throws PdfGenerationException if it was not possible to generate the PDF.
      */
-    public ByteArrayOutputStream toStream() throws Exception {
+    public ByteArrayOutputStream toStream() throws PdfGenerationException {
         return generatePDF();
     }
 
