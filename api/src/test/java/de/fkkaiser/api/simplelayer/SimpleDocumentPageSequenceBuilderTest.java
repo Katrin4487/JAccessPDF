@@ -20,7 +20,7 @@ public class SimpleDocumentPageSequenceBuilderTest {
         assertEquals(2, hl.level(), "should use the chosen level if the level is ok for a11y");
         builder.addHeading("Third (H4) to H1",4);
         hl = (SimpleDocument.HeadingElement) builder.getElements().getLast();
-        assertEquals(1, hl.level(), "should use h1, if level is not ok fo a11y");
+        assertEquals(3, hl.level(), "should use nearest, if level is not ok fo a11y");
 
     }
 

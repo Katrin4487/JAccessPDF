@@ -181,7 +181,7 @@ class SimpleDocumentBuilderTest {
         @Test
         @DisplayName("Exception: null title")
         void nullTitleThrowsException() {
-            assertThrows(IllegalArgumentException.class,
+            assertThrows(NullPointerException.class,
                     () -> SimpleDocumentBuilder.create(null));
         }
 
@@ -246,7 +246,7 @@ class SimpleDocumentBuilderTest {
         void nullParagraphThrowsException() {
             SimpleDocumentBuilder builder = SimpleDocumentBuilder.create("Test");
 
-            assertThrows(IllegalArgumentException.class,
+            assertThrows(NullPointerException.class,
                     () -> builder.addParagraph(null));
         }
     }

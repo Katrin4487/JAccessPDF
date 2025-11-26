@@ -28,12 +28,12 @@ class SimpleDocumentTest {
     @DisplayName("Should throw exception when title is null")
     void shouldThrowExceptionWhenTitleIsNull() {
         // When & Then
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        NullPointerException exception = assertThrows(
+                NullPointerException.class,
                 () -> SimpleDocumentBuilder.create(null)
         );
 
-        assertTrue(exception.getMessage().contains("required"));
+        assertTrue(exception.getMessage().contains("null"));
     }
 
     @Test
@@ -69,7 +69,7 @@ class SimpleDocumentTest {
 
         // When & Then
         assertThrows(
-                IllegalArgumentException.class,
+                NullPointerException.class,
                 () -> doc.addParagraph(null)
         );
     }
