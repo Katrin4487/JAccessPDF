@@ -1,5 +1,6 @@
 package de.fkkaiser.model.style.builder;
 
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.ParagraphStyleProperties;
 import de.fkkaiser.model.style.StyleTargetTypes;
@@ -13,6 +14,7 @@ import de.fkkaiser.model.style.TextStyle;
  * @author FK Kaiser
  * @version 1.0.0
  */
+@PublicAPI
 public class ParagraphStyleBuilder {
     private final String name;
     private final ParagraphStyleProperties properties;
@@ -23,6 +25,7 @@ public class ParagraphStyleBuilder {
      * @param name      the name of this paragraph style
      * @param textStyle the text style to use
      */
+    @PublicAPI
     public ParagraphStyleBuilder(String name, TextStyle textStyle) {
         this.name = name;
         this.properties = new ParagraphStyleProperties();
@@ -35,6 +38,7 @@ public class ParagraphStyleBuilder {
      * @param name          the name of this paragraph style
      * @param textStyleName the name of the text style to use
      */
+    @PublicAPI
     public ParagraphStyleBuilder(String name, String textStyleName) {
         this.name = name;
         this.properties = new ParagraphStyleProperties();
@@ -60,7 +64,7 @@ public class ParagraphStyleBuilder {
      * @param textAlign alignment keyword (start, end, left, right, center, justify)
      * @return this builder instance for method chaining
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public ParagraphStyleBuilder withTextAlign(String textAlign) {
         properties.setTextAlign(textAlign);
         return this;
@@ -73,7 +77,7 @@ public class ParagraphStyleBuilder {
      * @param textIndent value with unit for the text indent (e.g., "2em", "10mm")
      * @return this builder instance for method chaining
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public ParagraphStyleBuilder withTextIndent(String textIndent) {
         properties.setTextIndent(textIndent);
         return this;
@@ -86,6 +90,7 @@ public class ParagraphStyleBuilder {
      * @param spaceBefore value with unit for space before (e.g., "1em", "5mm")
      * @return this builder instance for method chaining
      */
+    @PublicAPI
     public ParagraphStyleBuilder withSpaceBefore(String spaceBefore) {
         properties.setSpaceBefore(spaceBefore);
         return this;
@@ -98,6 +103,7 @@ public class ParagraphStyleBuilder {
      * @param spaceAfter value with unit for space after (e.g., "1em", "5mm")
      * @return this builder instance for method chaining
      */
+    @PublicAPI
     public ParagraphStyleBuilder withSpaceAfter(String spaceAfter) {
         properties.setSpaceAfter(spaceAfter);
         return this;
@@ -110,7 +116,7 @@ public class ParagraphStyleBuilder {
      * @param hyphenate true to enable hyphenation, false otherwise
      * @return this builder instance for method chaining
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public ParagraphStyleBuilder withHyphenation(boolean hyphenate) {
         properties.setHyphenate(hyphenate);
         return this;
@@ -123,6 +129,7 @@ public class ParagraphStyleBuilder {
      * @param language language code in BCP 47 format (e.g., "en-US", "de-DE")
      * @return this builder instance for method chaining
      */
+    @PublicAPI
     public ParagraphStyleBuilder withLanguage(String language) {
         properties.setLanguage(language);
         return this;
@@ -139,6 +146,7 @@ public class ParagraphStyleBuilder {
      * @param color background color for this paragraph
      * @return this builder instance for method chaining
      */
+    @PublicAPI
     public ParagraphStyleBuilder withBackgroundColor(String color) {
         properties.setBackgroundColor(color);
         return this;
@@ -150,6 +158,7 @@ public class ParagraphStyleBuilder {
      *
      * @return the configured {@link ElementStyle} for the paragraph
      */
+    @PublicAPI
     public ElementStyle build() {
         return new ElementStyle(name, StyleTargetTypes.PARAGRAPH, properties);
     }
