@@ -11,15 +11,16 @@ import java.net.URI;
 import java.net.URL;
 
 /**
- * A custom {@link ResourceResolver} for Apache FOP that integrates with the {@link EResourceProvider}.
+ * A custom {@link org.apache.xmlgraphics.io.ResourceResolver} for Apache FOP that integrates with the {@link EResourceProvider}.
  * This class acts as a bridge between Apache FOP's resource resolution mechanism and the application's
  * resource provider, enabling FOP to access resources such as images, fonts, and other assets
  * referenced in XSL-FO documents.
  *
  * <p><b>Purpose:</b></p>
- * Apache FOP requires a ResourceResolver to locate and load external resources during PDF generation.
- * This implementation delegates resource resolution to an {@link EResourceProvider}, allowing for
- * flexible resource management across different environments (classpath, filesystem, etc.).
+ * Apache FOP works primarily with absolute file paths and URLs, which makes it difficult
+ * to use resources packaged within JAR files. This implementation bridges that gap by
+ * using an {@link EResourceProvider} to resolve and load resources from various sources
+ * (classpath, filesystem, etc.) and providing them to FOP in a way it can process.
  *
  * <p><b>Resource Types:</b></p>
  * This resolver can handle various resource types referenced in XSL-FO documents:
@@ -38,9 +39,6 @@ import java.net.URL;
  * // Create the resolver
  * EFopResourceResolver resolver = new EFopResourceResolver(resourceProvider);
  *
- * // Configure FOP to use this resolver
- * FopFactoryBuilder builder = new FopFactoryBuilder(new File(".").toURI(), resolver);
- * FopFactory fopFactory = builder.build();
  * }</pre>
  *
  * @author FK Kaiser
@@ -118,7 +116,7 @@ public final class EFopResourceResolver implements ResourceResolver {
      * @throws UnsupportedOperationException always thrown, as writing resources is not supported
      */
     @Override
-    public OutputStream getOutputStream(URI uri) throws IOException {
+    public OutputStream getOutputStream(URI uri) {
         log.error("OutputStream resolution is not supported by this resolver for URI: {}", uri);
         throw new UnsupportedOperationException("Writing resources is not supported by this resolver.");
     }

@@ -121,6 +121,11 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <links>
+                        <link>https://javadoc.io/doc/org.apache.xmlgraphics/fop-core/latest/</link>
+                    </links>
+                </configuration>
             </plugin>
         </plugins>
 
