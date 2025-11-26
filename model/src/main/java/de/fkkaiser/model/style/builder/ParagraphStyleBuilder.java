@@ -10,11 +10,19 @@ import de.fkkaiser.model.style.TextStyle;
  * This builder allows setting all paragraph-specific properties in a readable,
  * chainable manner.
  *
+ * @author FK Kaiser
+ * @version 1.0.0
  */
-public  class ParagraphStyleBuilder {
+public class ParagraphStyleBuilder {
     private final String name;
     private final ParagraphStyleProperties properties;
 
+    /**
+     * Creates a paragraph style builder with a text style reference.
+     *
+     * @param name      the name of this paragraph style
+     * @param textStyle the text style to use
+     */
     public ParagraphStyleBuilder(String name, TextStyle textStyle) {
         this.name = name;
         this.properties = new ParagraphStyleProperties();
@@ -22,23 +30,35 @@ public  class ParagraphStyleBuilder {
     }
 
     /**
-     * Sets the text algin. The following alignments are available.
+     * Creates a paragraph style builder with a text style name reference.
+     *
+     * @param name          the name of this paragraph style
+     * @param textStyleName the name of the text style to use
+     */
+    public ParagraphStyleBuilder(String name, String textStyleName) {
+        this.name = name;
+        this.properties = new ParagraphStyleProperties();
+        this.properties.setTextStyleName(textStyleName);
+    }
+
+    /**
+     * Sets the text alignment. The following alignments are available:
      * <ul>
-     *     <li>start: Aligns the text at the start edge. In LTR-Languages it's equal to left,
-     *     in RTL-Languages it's equal to right.</li>
-     *     <li>end: Aligns the text at the end edge. In LTR-Languages it's equal to right,
-     *     in RTL-Languages it's equal to left</li>
-     *     <li>left: Aligns the text at the left edge</li>
-     *     <li>right: Aligns the text at the right edge</li>
-     *     <li>center: centers the text</li>
-     *     <li>justify: Creates justified text. The text (except the last line) is adjusted to align
-     *     flush with both the left and right margins.</li>
-     *     <li>Aligns text on a specific character. This is often used in tables to align numbers
-     *     by the decimal separator (e.g., text-align=".").</li>
+     *     <li><strong>start:</strong> Aligns the text at the start edge. In LTR languages this is
+     *     equal to left, in RTL languages this is equal to right.</li>
+     *     <li><strong>end:</strong> Aligns the text at the end edge. In LTR languages this is equal
+     *     to right, in RTL languages this is equal to left.</li>
+     *     <li><strong>left:</strong> Aligns the text at the left edge.</li>
+     *     <li><strong>right:</strong> Aligns the text at the right edge.</li>
+     *     <li><strong>center:</strong> Centers the text.</li>
+     *     <li><strong>justify:</strong> Creates justified text. The text (except the last line) is
+     *     adjusted to align flush with both the left and right margins.</li>
+     *     <li><strong>Character alignment:</strong> Aligns text on a specific character. This is often
+     *     used in tables to align numbers by the decimal separator (e.g., text-align=".").</li>
      * </ul>
      *
-     * @param textAlign keyword that defines the alignment
-     * @return ParagraphStyleBuilder to use this method in the chain
+     * @param textAlign alignment keyword (start, end, left, right, center, justify)
+     * @return this builder instance for method chaining
      */
     @SuppressWarnings("unused")
     public ParagraphStyleBuilder withTextAlign(String textAlign) {
@@ -50,8 +70,8 @@ public  class ParagraphStyleBuilder {
      * Defines the text indent (space before the text in the first line).
      * You can choose between the units: mm, cm, in, pt, pc, em or %.
      *
-     * @param textIndent String with value and unit for the text indent
-     * @return ParagraphStyleBuilder to use this method in a chain
+     * @param textIndent value with unit for the text indent (e.g., "2em", "10mm")
+     * @return this builder instance for method chaining
      */
     @SuppressWarnings("unused")
     public ParagraphStyleBuilder withTextIndent(String textIndent) {
@@ -63,8 +83,8 @@ public  class ParagraphStyleBuilder {
      * Defines the white space before a text block.
      * You can choose between the units: mm, cm, in, pt, pc, em or %.
      *
-     * @param spaceBefore String with value and unit for space before
-     * @return ParagraphStyleBuilder to use this method in a chain
+     * @param spaceBefore value with unit for space before (e.g., "1em", "5mm")
+     * @return this builder instance for method chaining
      */
     public ParagraphStyleBuilder withSpaceBefore(String spaceBefore) {
         properties.setSpaceBefore(spaceBefore);
@@ -75,8 +95,8 @@ public  class ParagraphStyleBuilder {
      * Defines the white space after a text block.
      * You can choose between the units: mm, cm, in, pt, pc, em or %.
      *
-     * @param spaceAfter String with value and unit for space after
-     * @return ParagraphStyleBuilder to use this method in a chain
+     * @param spaceAfter value with unit for space after (e.g., "1em", "5mm")
+     * @return this builder instance for method chaining
      */
     public ParagraphStyleBuilder withSpaceAfter(String spaceAfter) {
         properties.setSpaceAfter(spaceAfter);
@@ -85,10 +105,10 @@ public  class ParagraphStyleBuilder {
 
     /**
      * Defines if automatic splitting (or division) of words at the end of a line is enabled.
-     * You must specify the correct language of your text that the hybernation works correctly.
+     * You must specify the correct language of your text so that hyphenation works correctly.
      *
-     * @param hyphenate true to enabled hyphenation, else false
-     * @return ParagraphStyleBuilder to use this method in a chain
+     * @param hyphenate true to enable hyphenation, false otherwise
+     * @return this builder instance for method chaining
      */
     @SuppressWarnings("unused")
     public ParagraphStyleBuilder withHyphenation(boolean hyphenate) {
@@ -97,11 +117,11 @@ public  class ParagraphStyleBuilder {
     }
 
     /**
-     * Defines the language of the paragraph. It only make sense if the paragraph
-     * is written in a different language then the document.
+     * Defines the language of the paragraph. This only makes sense if the paragraph
+     * is written in a different language than the document.
      *
-     * @param language language as ISO-Code String (e.g. en-US)
-     * @return ParagraphStyleBuilder to use this method in a chain
+     * @param language language code in BCP 47 format (e.g., "en-US", "de-DE")
+     * @return this builder instance for method chaining
      */
     public ParagraphStyleBuilder withLanguage(String language) {
         properties.setLanguage(language);
@@ -111,13 +131,13 @@ public  class ParagraphStyleBuilder {
     /**
      * Defines the background color of this paragraph. Valid color values are:
      * <ul>
-     *     <li>HexCode: e.g. #F0F0F0</li>
-     *     <li>Color Name: e.g. yellow</li>
-     *     <li>RGB-Function: rgb(255,0,0)</li>
+     *     <li><strong>Hex code:</strong> e.g., #F0F0F0</li>
+     *     <li><strong>Color name:</strong> e.g., yellow</li>
+     *     <li><strong>RGB function:</strong> rgb(255,0,0)</li>
      * </ul>
      *
-     * @param color background color for this paragraph as string
-     * @return ParagraphStyleBuilder to use this method in a chain
+     * @param color background color for this paragraph
+     * @return this builder instance for method chaining
      */
     public ParagraphStyleBuilder withBackgroundColor(String color) {
         properties.setBackgroundColor(color);
@@ -125,11 +145,10 @@ public  class ParagraphStyleBuilder {
     }
 
     /**
-     * Build method for the ParagraphStyleBuilder.
-     * This method must be called at the end of every ParagraphBuilder chain.
+     * Builds the paragraph element style with all configured properties.
+     * This method must be called at the end of every builder chain.
      *
-     * @return ElementStyle for the paragraph, that should be created with the
-     * ParagraphStyleBuilder
+     * @return the configured {@link ElementStyle} for the paragraph
      */
     public ElementStyle build() {
         return new ElementStyle(name, StyleTargetTypes.PARAGRAPH, properties);
