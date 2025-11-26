@@ -76,9 +76,13 @@ class SimpleStyleManager {
         final List<PageMasterStyle> pageMasterStyles = new ArrayList<>();
 
         // Create the default text style with base font settings
-        elementStyles.add(new ParagraphStyleBuilder(PARAGRAPH_STYLE_NAME, REGULAR_PARAGRAPH_TEXT)
-                .withSpaceBefore("1em")
-                .build());
+        textStyles.add(new TextStyle(
+                REGULAR_PARAGRAPH_TEXT,
+                "12px",       // Standardgröße
+                FONT_FAMILY,
+                "400",        // normal weight
+                "normal"
+        ));
 
         // Create heading text styles with decreasing font sizes
         // Level 1: 24px, Level 2: 22px, Level 3: 20px, etc.
