@@ -1,8 +1,8 @@
 package de.fkkaiser.api.simplelayer;
 
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.style.*;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.PageMasterStyle;
+import de.fkkaiser.model.style.builder.ParagraphStyleBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,19 +15,32 @@ import java.util.List;
  * PDF/UA compliant styles using Open Sans as the default font family.
  * It handles text styles, element styles, and page master configurations.
  * </p>
+ *
+ * @author FK Kaiser
+ * @version 1.0.0
  */
+@Internal("Used internally by SimpleDocumentBuilder")
 class SimpleStyleManager {
 
+    /** style name for the default A4 page master style **/
     static final String PAGE_MASTER_STYLE_NAME = "simple-a4-portrait";
 
     // Element Style Identifier (names)
+    /** style name for the paragraph style **/
     static final String PARAGRAPH_STYLE_NAME = "paragraph-default";
+    /** prefix for the style names of heading styles (1-6) **/
     static final String PREFIX_HEADINGS_STYLE_NAME = "heading-";
+    /** style name for unordered list style **/
     static final String UNORDERED_LIST_STYLE_NAME = "list-style-unordered";
+    /** style name for ordered list style **/
     static final String ORDERED_LIST_STYLE_NAME = "list-style-ordered";
+    /** style name for image style **/
     static final String IMAGE_STYLE_NAME = "image-style";
+    /** style name for table style **/
     static final String TABLE_STYLE_NAME = "table-style";
+    /** style name for table header cell style **/
     static final String TABLE_HEADER_CELL_STYLE_NAME = "header-cell";
+    /** style name for normal table cell style **/
     static final String TABLE_CELL_STYLE_NAME = "cell-default";
 
     // Text style identifier (names)
@@ -58,18 +71,14 @@ class SimpleStyleManager {
      * @return a fully configured StyleSheet with all default styles
      */
     StyleSheet buildStyleSheet() {
-        List<TextStyle> textStyles = new ArrayList<>();
-        List<ElementStyle> elementStyles = new ArrayList<>();
-        List<PageMasterStyle> pageMasterStyles = new ArrayList<>();
+        final List<TextStyle> textStyles = new ArrayList<>();
+        final List<ElementStyle> elementStyles = new ArrayList<>();
+        final List<PageMasterStyle> pageMasterStyles = new ArrayList<>();
 
         // Create the default text style with base font settings
-        textStyles.add(new TextStyle(
-                REGULAR_PARAGRAPH_TEXT,
-                "12px",
-                FONT_FAMILY,
-                "400",      // normal weight
-                "normal"    // normal style
-        ));
+        elementStyles.add(new ParagraphStyleBuilder(PARAGRAPH_STYLE_NAME, REGULAR_PARAGRAPH_TEXT)
+                .withSpaceBefore("1em")
+                .build());
 
         // Create heading text styles with decreasing font sizes
         // Level 1: 24px, Level 2: 22px, Level 3: 20px, etc.

@@ -1,9 +1,11 @@
 package de.fkkaiser.api.simplelayer;
 
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.font.FontFamily;
 import de.fkkaiser.model.font.FontFamilyList;
 import de.fkkaiser.model.font.FontStyleValue;
 import de.fkkaiser.model.font.FontType;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,40 +13,43 @@ import java.util.List;
 import static de.fkkaiser.api.simplelayer.SimpleStyleManager.FONT_FAMILY;
 
 /**
- * Manages fonts for SimpleDocument.
- *<br>
- * PDF/UA REQUIREMENT: All fonts MUST be embedded.
+ * Manages fonts for {@link SimpleDocument}.
+ * <p>
+ * <strong>PDF/UA REQUIREMENT:</strong> All fonts MUST be embedded.
  * Default: Uses Open Sans (Apache 2.0 License, Google Fonts).
+ * </p>
  */
+@Internal("Used internally by SimpleDocumentBuilder")
 class SimpleFontManager {
-
-    private final List<FontFamily> customFonts = new ArrayList<>();
 
 
     /**
-     * Builds the FontFamilyList.
+     * Builds the FontFamilyList with embedded fonts.
+     * <p>
      * PDF/UA COMPLIANCE:
-     * - All fonts MUST be embedded
-     * - Default: Open Sans (Apache 2.0, Google Fonts)
+     * <ul>
+     *   <li>All fonts MUST be embedded</li>
+     *   <li>Default: Open Sans (Apache 2.0, Google Fonts)</li>
+     * </ul>
+     * </p>
+     *
+     * @return configured {@link FontFamilyList} with embedded fonts
      */
     FontFamilyList buildFontFamilyList() {
         FontFamilyList list = new FontFamilyList();
-
-        if (customFonts.isEmpty()) {
-            list.setFontFamilyList(createDefaultOpenSansFonts());
-        } else {
-            list.setFontFamilyList(customFonts);
-        }
+        list.setFontFamilyList(createDefaultOpenSansFonts());
 
         return list;
     }
 
     /**
-     * Creates default Open Sans fonts for PDF/UA compliance.
-     * Open Sans: Apache 2.0 License, Google Fonts.
+     * Creates default Open Sans (Apache 2.0 License) fonts for PDF/UA compliance.
+     * Includes Regular, Bold, Italic, and Bold Italic variants.
+     *
+     * @return list containing the Open Sans font family
      */
     private List<FontFamily> createDefaultOpenSansFonts() {
-        List<FontType> openSansVariants = new ArrayList<>();
+        final List<FontType> openSansVariants = new ArrayList<>();
 
         // Regular (400)
         openSansVariants.add(new FontType(
@@ -74,8 +79,7 @@ class SimpleFontManager {
                 "700"
         ));
 
-        FontFamily openSans = new FontFamily(FONT_FAMILY, openSansVariants);
-
+        final FontFamily openSans = new FontFamily(FONT_FAMILY, openSansVariants);
         return Collections.singletonList(openSans);
     }
 
