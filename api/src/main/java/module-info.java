@@ -12,5 +12,6 @@ module api {
 
     exports de.fkkaiser.api.simplelayer;
     exports de.fkkaiser.api.utils;
+    exports de.fkkaiser.api;
 
 }

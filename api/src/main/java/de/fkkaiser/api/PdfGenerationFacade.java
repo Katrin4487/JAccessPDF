@@ -118,7 +118,7 @@ import java.util.List;
  * call its methods concurrently.
  *
  * @author FK Kaiser
- * @version 1.2
+ * @version 1.0.0
  * @see Document
  * @see StyleSheet
  * @see FontFamilyList
