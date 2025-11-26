@@ -1,5 +1,11 @@
 package de.fkkaiser.model.annotation;
 
+/**
+ * Indicates that methods should be used in the public api.
+ *
+ * @author FK Kaiser
+ * @version 1.0.0
+ */
 public @interface PublicAPI {
 
     /**

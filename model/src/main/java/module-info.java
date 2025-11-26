@@ -12,4 +12,5 @@ module model {
     opens de.fkkaiser.model.structure to com.fasterxml.jackson.databind;
     opens de.fkkaiser.model.style to com.fasterxml.jackson.databind;
     opens de.fkkaiser.model.font to com.fasterxml.jackson.databind;
+    exports de.fkkaiser.model.annotation;
 }
