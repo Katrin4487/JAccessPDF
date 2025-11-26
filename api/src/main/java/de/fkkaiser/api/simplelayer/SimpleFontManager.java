@@ -18,6 +18,9 @@ import static de.fkkaiser.api.simplelayer.SimpleStyleManager.FONT_FAMILY;
  * <strong>PDF/UA REQUIREMENT:</strong> All fonts MUST be embedded.
  * Default: Uses Open Sans (Apache 2.0 License, Google Fonts).
  * </p>
+ *
+ * @author FK Kaiser
+ * @version 1.0.0
  */
 @Internal("Used internally by SimpleDocumentBuilder")
 class SimpleFontManager {
