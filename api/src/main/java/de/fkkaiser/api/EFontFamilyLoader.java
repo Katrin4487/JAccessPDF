@@ -1,5 +1,6 @@
 package de.fkkaiser.api;
 
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.font.FontFamily;
 import de.fkkaiser.model.font.FontFamilyList;
 import de.fkkaiser.model.font.FontType;
@@ -10,69 +11,31 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Package-private helper class for building Apache FOP font configuration XML.
  * This class processes a {@link FontFamilyList} and generates the corresponding
  * XML configuration string that FOP requires to register and use custom fonts.
  *
- * <p><b>Purpose:</b></p>
- * Apache FOP requires font configuration in a specific XML format. This loader:
- * <ul>
- *   <li>Iterates through all font families in the provided list</li>
- *   <li>Resolves font file URLs using the {@link EResourceProvider}</li>
- *   <li>Generates proper XML {@code <font>} and {@code <font-triplet>} elements</li>
- *   <li>Handles missing fonts gracefully with warning logs</li>
- *   <li>Escapes XML special characters to ensure valid output</li>
- * </ul>
- *
- * <p><b>Generated XML Structure:</b></p>
- * The generated XML follows the Apache FOP font configuration format:
- * <pre>{@code
- * <fonts>
- *   <font embed-url="file:/path/to/Roboto-Regular.ttf" kerning="false">
- *     <font-triplet name="Roboto" style="normal" weight="400"/>
- *   </font>
- *   <font embed-url="file:/path/to/Roboto-Bold.ttf" kerning="false">
- *     <font-triplet name="Roboto" style="normal" weight="700"/>
- *   </font>
- *   ...
- * </fonts>
- * }</pre>
- *
  * <p><b>Thread Safety:</b></p>
  * This class is not thread-safe. Each instance should be used by a single thread,
  * or external synchronization should be applied if shared across threads.
- *
- * <p><b>Usage Example:</b></p>
- * <pre>{@code
- * // Create font family list
- * FontFamilyList fontList = new FontFamilyList();
- * fontList.addFontFamily(myRobotoFamily);
- * fontList.addFontFamily(myArialFamily);
- *
- * // Create resource provider
- * EResourceProvider resourceProvider = new EClasspathResourceProvider();
- *
- * // Create font loader
- * EFontFamilyLoader loader = new EFontFamilyLoader(resourceProvider, fontList);
- *
- * // Generate font configuration XML
- * String fontConfigXml = loader.getFontListString();
- * }</pre>
- *
+
  * <p><b>Note:</b> This class is package-private and intended for internal use
- * within the API package. It is typically used by configuration builders or
- * FOP factory setup classes.</p>
+ * within the API package. </p>
  *
- * @author FK Kaiser
- * @version 1.1
+ * @param resourceProvider The resource provider used to resolve font file URLs.
+ * @param fontFamilyList   The list of font families to be processed and included in the configuration.
+ * @author Katrin Kaiser
+ * @version 1.1.0
  * @see FontFamilyList
  * @see FontFamily
  * @see FontType
  * @see EResourceProvider
  */
-class EFontFamilyLoader {
+@Internal
+record EFontFamilyLoader(EResourceProvider resourceProvider, FontFamilyList fontFamilyList) {
 
     private static final Logger log = LoggerFactory.getLogger(EFontFamilyLoader.class);
 
@@ -91,30 +54,16 @@ class EFontFamilyLoader {
     private static final String EMPTY_FONTS_XML = "<fonts/>";
 
     /**
-     * The resource provider used to resolve font file URLs.
-     */
-    private final EResourceProvider resourceProvider;
-
-    /**
-     * The list of font families to be processed and included in the configuration.
-     */
-    private final FontFamilyList fontFamilyList;
-
-    /**
      * Constructs a new EFontFamilyLoader with the specified resource provider and font family list.
      *
      * @param resourceProvider the resource provider to use for resolving font file paths;
      *                         must not be {@code null}
-     * @param list             the list of font families to process; may be {@code null} or empty
+     * @param fontFamilyList   the list of font families to process; may be {@code null} or empty
      *                         (in which case an empty {@code <fonts/>} element will be generated)
      * @throws IllegalArgumentException if resourceProvider is {@code null}
      */
-    public EFontFamilyLoader(EResourceProvider resourceProvider, FontFamilyList list) {
-        if (resourceProvider == null) {
-            throw new IllegalArgumentException("ResourceProvider cannot be null");
-        }
-        this.resourceProvider = resourceProvider;
-        this.fontFamilyList = list;
+    EFontFamilyLoader {
+        Objects.requireNonNull(resourceProvider, "ResourceProvider cannot be null.");
     }
 
     /**
@@ -122,49 +71,8 @@ class EFontFamilyLoader {
      * This method processes each font family and creates the corresponding FOP font
      * configuration XML that can be used to register custom fonts.
      *
-     * <p><b>Processing Steps:</b></p>
-     * <ol>
-     *   <li>Checks if the font family list is valid (not null or empty)</li>
-     *   <li>Iterates through each {@link FontFamily} in the list</li>
-     *   <li>For each {@link FontType} in a family:
-     *     <ul>
-     *       <li>Resolves the font file URL using the {@link EResourceProvider}</li>
-     *       <li>Extracts font properties (weight, style)</li>
-     *       <li>Generates the {@code <font>} and {@code <font-triplet>} XML elements</li>
-     *       <li>Escapes special XML characters in font names</li>
-     *     </ul>
-     *   </li>
-     *   <li>Wraps all font definitions in a {@code <fonts>} root element</li>
-     * </ol>
-     *
-     * <p><b>Error Handling:</b></p>
-     * <ul>
-     *   <li>If the font family list is null or empty, returns {@code "<fonts/>"} and logs a warning</li>
-     *   <li>If a font file cannot be found, logs a warning and skips that font (does not fail)</li>
-     *   <li>Escapes XML special characters to prevent malformed XML output</li>
-     * </ul>
-     *
-     * <p><b>Font Triplet Attributes:</b></p>
-     * <ul>
-     *   <li><b>name:</b> The font family name (e.g., "Roboto", "Arial"), XML-escaped</li>
-     *   <li><b>style:</b> The font style, converted to lowercase (e.g., "normal", "italic")</li>
-     *   <li><b>weight:</b> The font weight as a string (e.g., "400", "700", "bold")</li>
-     * </ul>
-     *
-     * <p><b>Example Output:</b></p>
-     * <pre>{@code
-     * <fonts>
-     *   <font embed-url="file:/fonts/Roboto-Regular.ttf" kerning="false">
-     *     <font-triplet name="Roboto" style="normal" weight="400"/>
-     *   </font>
-     *   <font embed-url="file:/fonts/Roboto-Bold.ttf" kerning="false">
-     *     <font-triplet name="Roboto" style="normal" weight="700"/>
-     *   </font>
-     * </fonts>
-     * }</pre>
-     *
      * @return an XML string containing the font configuration for Apache FOP;
-     *         returns {@code "<fonts/>"} if the font family list is null or empty
+     * returns {@code "<fonts/>"} if the font family list is null or empty
      * @throws IOException if an I/O error occurs while resolving font file URLs
      */
     public String getFontListString() throws IOException {
@@ -174,14 +82,14 @@ class EFontFamilyLoader {
         }
 
         StringBuilder xmlBuilder = new StringBuilder();
-        xmlBuilder.append("\n<").append(XML_FONTS).append(">");
+        xmlBuilder.append("<").append(XML_FONTS).append(">");
 
         List<FontFamily> fontFamilies = fontFamilyList.getFontFamilyList();
         for (FontFamily fontFamily : fontFamilies) {
             appendFontFamily(xmlBuilder, fontFamily);
         }
 
-        xmlBuilder.append("</").append(XML_FONTS).append(">\n");
+        xmlBuilder.append("</").append(XML_FONTS).append(">");
         return xmlBuilder.toString();
     }
 
@@ -276,14 +184,6 @@ class EFontFamilyLoader {
     /**
      * Escapes special XML characters to ensure valid XML output.
      * This method handles the five predefined XML entities:
-     * <ul>
-     *   <li>{@code &} → {@code &amp;}</li>
-     *   <li>{@code <} → {@code &lt;}</li>
-     *   <li>{@code >} → {@code &gt;}</li>
-     *   <li>{@code "} → {@code &quot;}</li>
-     *   <li>{@code '} → {@code &apos;}</li>
-     * </ul>
-     *
      * @param text the text to escape; may be {@code null}
      * @return the escaped text, or an empty string if input is {@code null}
      */

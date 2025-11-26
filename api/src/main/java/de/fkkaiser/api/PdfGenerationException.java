@@ -16,8 +16,8 @@ package de.fkkaiser.api;
  * }
  * }</pre>
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see PdfGenerationFacade
  */
 public class PdfGenerationException extends Exception {

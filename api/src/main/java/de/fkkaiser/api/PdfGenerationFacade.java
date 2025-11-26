@@ -26,16 +26,11 @@ import org.apache.xmlgraphics.io.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -600,7 +595,16 @@ public final class PdfGenerationFacade {
             // Set URI resolver for external resource resolution
             transformer.setURIResolver(new EFopURIResolver(resourceProvider));
 
-            log.debug("################# XSL-FO-String ################\n{}", xslFoString);
+            if(log.isDebugEnabled()){
+                Transformer prettyTransformer = TransformerFactory.newInstance().newTransformer();
+                prettyTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                prettyTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+                StringWriter writer = new StringWriter();
+                prettyTransformer.transform(new StreamSource(new ByteArrayInputStream(xslFoString.getBytes())), new StreamResult(writer));
+                String prettyXslFo = writer.toString();
+                log.debug("################# Pretty XSL-FO-String ################\n{}", prettyXslFo);
+
+            }
 
             // Prepare source and result
             InputStream xslFoStream = new ByteArrayInputStream(xslFoString.getBytes());
