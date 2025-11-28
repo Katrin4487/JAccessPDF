@@ -1,0 +1,13 @@
+JAccessPDF
+Copyright 2024 Katrin Kaiser
+
+This product includes software developed by:
+- The Apache Software Foundation (http://www.apache.org/)
+  Apache FOP (Formatting Objects Processor)
+  Copyright 1999-2024 The Apache Software Foundation
+
+- FasterXML Jackson (https://github.com/FasterXML/jackson)
+  Copyright 2007-2024 Tatu Saloranta and contributors
+
+- SLF4J (http://www.slf4j.org/)
+  Copyright 2004-2024 QOS.ch

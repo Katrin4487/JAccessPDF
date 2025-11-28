@@ -6,8 +6,25 @@
 
     <groupId>de.fkkaiser</groupId>
     <artifactId>jaccess-pdf</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.9.2-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>katrin4487</id>
+            <name>Katrin Kaiser</name>
+            <url>https://github.com/Katrin4487</url>
+        </developer>
+    </developers>
+
     <modules>
         <module>api</module>
         <module>generator</module>
@@ -27,6 +44,18 @@
         <maven.compiler.version>3.13.0</maven.compiler.version>
         <maven.surefire.version>3.3.1</maven.surefire.version>
     </properties>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/Katrin4487/JAccessPDF</url>
+        </repository>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/Katrin4487/JAccessPDF</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -111,21 +140,37 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.10.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
+                    <doclint>none</doclint>
+                    <quiet>true</quiet>
+                    <source>21</source>
+                    <detectOfflineLinks>false</detectOfflineLinks>
                     <links>
                         <link>https://javadoc.io/doc/org.apache.xmlgraphics/fop-core/latest/</link>
                     </links>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
