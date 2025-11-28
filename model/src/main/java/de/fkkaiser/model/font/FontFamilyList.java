@@ -2,12 +2,14 @@ package de.fkkaiser.model.font;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.annotation.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Container class for a list of {@link FontFamily} objects to be used in PDF generation.
@@ -99,13 +101,13 @@ import java.util.List;
  * is required. However, once the internal list is set and the object is passed to
  * the PDF generator, it should not be modified.
  *
- * @author FK Kaiser
- * @version 1.1
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see FontFamily
  * @see FontType
  * @see FontFamilyListBuilder
  */
-public class FontFamilyList {
+public final class FontFamilyList {
 
     private static final Logger log = LoggerFactory.getLogger(FontFamilyList.class);
 
@@ -146,27 +148,17 @@ public class FontFamilyList {
      * Adds a single font family to the list.
      * If the internal list is null, it will be initialized.
      *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * FontFamilyList fontList = new FontFamilyList();
-     * fontList.addFontFamily(robotoFamily);
-     * fontList.addFontFamily(openSansFamily);
-     * }</pre>
-     *
      * @param fontFamily the font family to add; must not be {@code null}
-     * @throws IllegalArgumentException if fontFamily is {@code null}
+     * @throws NullPointerException if fontFamily is {@code null}
      */
     @PublicAPI
     public void addFontFamily(FontFamily fontFamily) {
-        if (fontFamily == null) {
-            log.error("Attempted to add null font family");
-            throw new IllegalArgumentException("Font family cannot be null");
-        }
+
+        Objects.requireNonNull(fontFamily, "fontFamily must not be null");
 
         if (this.fontFamilyList == null) {
             this.fontFamilyList = new ArrayList<>();
         }
-
         this.fontFamilyList.add(fontFamily);
     }
 
@@ -195,6 +187,7 @@ public class FontFamilyList {
      *
      * @return a string representation of this font family list
      */
+    @VisibleForTesting
     @Override
     public String toString() {
         if (fontFamilyList == null || fontFamilyList.isEmpty()) {
@@ -323,10 +316,12 @@ public class FontFamilyList {
          *                       must not be {@code null} or empty
          * @return this builder instance for method chaining
          * @throws IllegalArgumentException if fontFamilyName is {@code null} or empty
+         * @throws NullPointerException    if fontFamilyName is {@code null}
          */
         public FontFamilyListBuilder addFontFamily(String fontFamilyName) {
-            if (fontFamilyName == null || fontFamilyName.trim().isEmpty()) {
-                throw new IllegalArgumentException("Font family name cannot be null or empty");
+            Objects.requireNonNull(fontFamilyName, "fontFamilyName must not be null");
+            if (fontFamilyName.trim().isEmpty()) {
+                throw new IllegalArgumentException("Font family name cannot be empty");
             }
 
             // If a family is already in progress, save it before starting a new one
@@ -356,8 +351,12 @@ public class FontFamilyList {
          * @param weight         the weight of the font (e.g., "400", "700");
          *                       must not be {@code null} or empty
          * @return this builder instance for method chaining
+         * @throws IllegalArgumentException if path or weight is {@code null} or empty
+         * @throws NullPointerException    if path, fontStyleValue, or weight is {@code null}
          */
         public FontFamilyListBuilder addFont(String path, FontStyleValue fontStyleValue, String weight) {
+            Objects.requireNonNull(path, "path must not be null");
+            Objects.requireNonNull(fontStyleValue, "fontStyleValue must not be null");
             if (currentFamilyName == null) {
                 log.error("FontFamilyListBuilder: addFont called before addFontFamily. " +
                         "Skipping font with path: {}", path);
@@ -385,12 +384,13 @@ public class FontFamilyList {
          * @param path    the resource path to the font file; must not be {@code null} or empty
          * @param variant the font variant (REGULAR, BOLD, ITALIC, etc.); must not be {@code null}
          * @return this builder instance for method chaining
+         * @throws NullPointerException if path or variant is {@code null}
          */
         @PublicAPI
         public FontFamilyListBuilder addFont(String path, FontVariants variant) {
-            if (variant == null) {
-                throw new IllegalArgumentException("Font variant cannot be null");
-            }
+            Objects.requireNonNull(path, "path must not be null");
+            Objects.requireNonNull(variant, "variant must not be null");
+
             return addFont(path, variant.fontStyleValue(), variant.fontWeight());
         }
 

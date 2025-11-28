@@ -2,8 +2,11 @@ package de.fkkaiser.model.font;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.annotation.PublicAPI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a font family, which is a collection of related {@link FontType} instances
@@ -99,30 +102,40 @@ import java.util.List;
  * @param fontTypes  the list of font types belonging to this family;
  *                   must not be {@code null} and must contain at least one font type
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see FontType
  * @see FontFamilyList
  * @see FontVariants
  */
+@PublicAPI
 public record FontFamily(
         @JsonProperty("font-family") String fontFamily,
         @JsonProperty("types") List<FontType> fontTypes
 ) {
+
+    private static final Logger log = LoggerFactory.getLogger(FontFamily.class);
 
     /**
      * Compact constructor that validates the font family parameters.
      * This constructor is automatically called whenever a FontFamily is created,
      * ensuring that all instances are valid.
      *
-     * @throws IllegalArgumentException if fontFamily is null/empty or if fontTypes is null/empty
+     * @throws IllegalArgumentException if fontFamily is empty or if fontTypes empty
+     * @throws NullPointerException    if fontFamily is null
      */
+    @PublicAPI
     public FontFamily {
-        if (fontFamily == null || fontFamily.trim().isEmpty()) {
-            throw new IllegalArgumentException("Font family name cannot be null or empty");
+        log.debug("Creating new instance of FontFamily with name: {}", fontFamily);
+        Objects.requireNonNull(fontFamily, "fontFamily must not be null");
+        Objects.requireNonNull(fontTypes, "fontTypes must not be null");
+        if (fontFamily.trim().isEmpty()) {
+            log.error("Font family must not be empty");
+            throw new IllegalArgumentException("Font family name cannot be empty");
         }
-        if (fontTypes == null || fontTypes.isEmpty()) {
-            throw new IllegalArgumentException("Font types list cannot be null or empty");
+        if (fontTypes.isEmpty()) {
+            log.error("Not able to create FontFamily {}. Font types list must contain at least one FontType", fontFamily);
+            throw new IllegalArgumentException("Font types list cannot be empty");
         }
         fontTypes = List.copyOf(fontTypes);
     }
@@ -163,12 +176,17 @@ public record FontFamily(
      * @param familyName the name of the font family; must not be {@code null} or empty
      * @param fontPath   the resource path to the font file; must not be {@code null} or empty
      * @return a new FontFamily with a single regular font type
-     * @throws IllegalArgumentException if any parameter is null or empty
+     * @throws IllegalArgumentException if any parameter is empty
+     * @throws NullPointerException     if any parameter is null
      */
     @PublicAPI
     public static FontFamily withSingleFont(String familyName, String fontPath) {
+        log.debug("Creating new instance of FontFamily with SingleFont with name: {}", familyName);
+
+        Objects.requireNonNull(familyName, "familyName must not be null");
+        Objects.requireNonNull(fontPath, "fontPath must not be null");
         FontType regular = FontType.regular(fontPath);
-        return new FontFamily(familyName, List.of(regular));
+        return new FontFamily(familyName, List.of(regular)); //throws IllegalArgumentException if familyName is empty
     }
 
     /**
@@ -202,6 +220,7 @@ public record FontFamily(
      * @param boldItalicPath the path to the bold italic font file; must not be {@code null} or empty
      * @return a new FontFamily with four standard font variants
      * @throws IllegalArgumentException if any parameter is null or empty
+     * @throws NullPointerException     if any parameter is null
      */
     @PublicAPI
     public static FontFamily withStandardVariants(
@@ -211,6 +230,13 @@ public record FontFamily(
             String italicPath,
             String boldItalicPath) {
 
+        log.debug("Creating new instance of FontFamily with StandardVariants with name: {}", familyName);
+
+        Objects.requireNonNull(familyName, "familyName must not be null");
+        Objects.requireNonNull(regularPath, "regularPath must not be null");
+        Objects.requireNonNull(boldPath, "boldPath must not be null");
+        Objects.requireNonNull(italicPath, "italicPath must not be null");
+        Objects.requireNonNull(boldItalicPath, "boldItalicPath must not be null");
         return new FontFamily(familyName, List.of(
                 FontType.regular(regularPath),
                 FontType.bold(boldPath),
@@ -244,12 +270,18 @@ public record FontFamily(
      * @param boldPath    the path to the bold font file; must not be {@code null} or empty
      * @return a new FontFamily with regular and bold font variants
      * @throws IllegalArgumentException if any parameter is null or empty
+     * @throws NullPointerException     if any parameter is null
      */
     @PublicAPI
     public static FontFamily withBoldVariant(
             String familyName,
             String regularPath,
             String boldPath) {
+        log.debug("Creating new instance of FontFamily with BoldVariant with name: {}", familyName);
+
+        Objects.requireNonNull(familyName, "familyName must not be null");
+        Objects.requireNonNull(regularPath, "regularPath must not be null");
+        Objects.requireNonNull(boldPath, "boldPath must not be null");
 
         return new FontFamily(familyName, List.of(
                 FontType.regular(regularPath),

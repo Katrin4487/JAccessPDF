@@ -52,8 +52,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * String styleString = FontStyleValue.ITALIC.toString();  // "italic"
  * }</pre>
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see FontType
  * @see FontVariants
  */

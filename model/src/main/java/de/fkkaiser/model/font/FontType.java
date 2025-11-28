@@ -1,6 +1,9 @@
 package de.fkkaiser.model.font;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.annotation.PublicAPI;
+
+import java.util.Objects;
 
 /**
  * Represents a specific font type within a {@link FontFamily}, linking a font file
@@ -109,12 +112,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @param fontWeight the weight of the font as a string (e.g., "400", "700", "bold");
  *                   must not be {@code null} or empty
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
+ *
  * @see FontFamily
  * @see FontStyleValue
  * @see FontVariants
  */
+@PublicAPI
 public record FontType(
         @JsonProperty("path") String path,
         @JsonProperty("font-style") FontStyleValue fontStyle,
@@ -126,16 +131,17 @@ public record FontType(
      * This constructor is automatically called whenever a FontType is created,
      * ensuring that all instances are valid.
      *
-     * @throws IllegalArgumentException if any parameter is null or empty
+     * @throws IllegalArgumentException if any parameter is empty
+     * @throws NullPointerException     if any parameter is null
      */
     public FontType {
-        if (path == null || path.trim().isEmpty()) {
+        Objects.requireNonNull(path, "Font path cannot be null");
+        Objects.requireNonNull(fontStyle, "Font style cannot be null");
+        Objects.requireNonNull(fontWeight, "Font weight cannot be null");
+        if (path.trim().isEmpty()) {
             throw new IllegalArgumentException("Font path cannot be null or empty");
         }
-        if (fontStyle == null) {
-            throw new IllegalArgumentException("Font style cannot be null");
-        }
-        if (fontWeight == null || fontWeight.trim().isEmpty()) {
+        if (fontWeight.trim().isEmpty()) {
             throw new IllegalArgumentException("Font weight cannot be null or empty");
         }
     }
@@ -146,8 +152,14 @@ public record FontType(
      *
      * @param path the resource path to the font file; must not be {@code null} or empty
      * @return a new FontType with normal style and weight 400
+     * @throws NullPointerException if path is {@code null}
+     * @throws IllegalArgumentException if path is empty
      */
     public static FontType regular(String path) {
+        Objects.requireNonNull(path, "Font path must not be null");
+        if (path.trim().isEmpty()) {
+            throw new IllegalArgumentException("Font path must not be empty");
+        }
         return new FontType(path, FontStyleValue.NORMAL, "400");
     }
 
@@ -157,8 +169,14 @@ public record FontType(
      *
      * @param path the resource path to the font file; must not be {@code null} or empty
      * @return a new FontType with normal style and weight 700
+     * @throws NullPointerException if path is {@code null}
+     * @throws IllegalArgumentException if path is empty
      */
     public static FontType bold(String path) {
+        Objects.requireNonNull(path, "Font path must not be null");
+        if (path.trim().isEmpty()) {
+            throw new IllegalArgumentException("Font path must not be empty");
+        }
         return new FontType(path, FontStyleValue.NORMAL, "700");
     }
 
@@ -168,8 +186,14 @@ public record FontType(
      *
      * @param path the resource path to the font file; must not be {@code null} or empty
      * @return a new FontType with italic style and weight 400
+     * @throws NullPointerException if path is {@code null}
+     * @throws IllegalArgumentException if path is empty
      */
     public static FontType italic(String path) {
+        Objects.requireNonNull(path, "Font path must not be null");
+        if (path.trim().isEmpty()) {
+            throw new IllegalArgumentException("Font path must not be empty");
+        }
         return new FontType(path, FontStyleValue.ITALIC, "400");
     }
 
@@ -179,8 +203,14 @@ public record FontType(
      *
      * @param path the resource path to the font file; must not be {@code null} or empty
      * @return a new FontType with italic style and weight 700
+     * @throws NullPointerException if path is {@code null}
+     * @throws IllegalArgumentException if path is empty
      */
     public static FontType boldItalic(String path) {
+        Objects.requireNonNull(path, "Font path must not be null");
+        if (path.trim().isEmpty()) {
+            throw new IllegalArgumentException("Font path must not be empty");
+        }
         return new FontType(path, FontStyleValue.ITALIC, "700");
     }
 }

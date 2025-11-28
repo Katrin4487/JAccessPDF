@@ -1,5 +1,9 @@
 package de.fkkaiser.model.font;
 
+import de.fkkaiser.model.annotation.PublicAPI;
+
+import java.util.Objects;
+
 /**
  * Predefined font variants that combine font style and weight into convenient constants.
  * This enum provides a simple way to specify common font variations without needing to
@@ -93,12 +97,13 @@ package de.fkkaiser.model.font;
  * </ul>
  * Most fonts use italic, but some (especially sans-serif fonts) may use oblique instead.
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see FontType
  * @see FontStyleValue
  * @see FontFamily
  */
+@PublicAPI
 public enum FontVariants {
 
     /**
@@ -174,7 +179,7 @@ public enum FontVariants {
      *
      * @return the font style value (NORMAL, ITALIC, or OBLIQUE) for this variant
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public FontStyleValue fontStyleValue() {
         return switch (this) {
             case BOLD_ITALIC, ITALIC -> FontStyleValue.ITALIC;
@@ -199,7 +204,7 @@ public enum FontVariants {
      *
      * @return the font weight as a string ("400" for regular, "700" for bold)
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public String fontWeight() {
         return switch (this) {
             case BOLD, BOLD_ITALIC, BOLD_OBLIQUE -> "700";
@@ -230,8 +235,9 @@ public enum FontVariants {
      * @return a new {@link FontType} instance with the correct style and weight for this variant
      * @throws NullPointerException if fontFilePath is {@code null}
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public FontType toFontType(String fontFilePath) {
+        Objects.requireNonNull(fontFilePath, "Font file path must no be null");
         return new FontType(fontFilePath, fontStyleValue(), fontWeight());
     }
 }
