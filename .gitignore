@@ -35,4 +35,22 @@ build/
 .vscode/
 
 ### Mac OS ###
+.DS_Store# Maven
+target/
+
+# Generated JavaDoc
+index-files/
+apidocs/
+javadoc/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# OS
 .DS_Store
