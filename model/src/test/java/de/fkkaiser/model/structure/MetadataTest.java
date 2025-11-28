@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MetadataTest {
 
-    private static final String PRODUCER = "de.kaiser.JAccessPDF v1.0";
     private static final String DEFAULT_TITLE = "PDF Dokument";
     private static final String DEFAULT_LANGUAGE = "de-DE";
 
@@ -29,7 +28,6 @@ class MetadataTest {
             assertTrue(metadata.getKeywords().isEmpty());
             assertEquals(DEFAULT_TITLE, metadata.getTitle());
             assertEquals(DEFAULT_LANGUAGE, metadata.getLanguage());
-            assertEquals(PRODUCER, metadata.getProducer());
         }
 
         @Test
@@ -40,7 +38,7 @@ class MetadataTest {
 
             Metadata metadata = new Metadata(
                     "Explicit Title", "Explicit Author", "Explicit Subject",
-                    specificKeywords, "en-US", "ignored-producer", specificDate, false
+                    specificKeywords, "en-US", "Explicit Producer", specificDate, false
             );
 
             assertEquals("Explicit Title", metadata.getTitle());
@@ -48,7 +46,6 @@ class MetadataTest {
             assertEquals(specificDate, metadata.getCreationDate());
             assertFalse(metadata.isDisplayDocTitle());
             assertEquals(specificKeywords, metadata.getKeywords());
-            assertEquals(PRODUCER, metadata.getProducer(), "Producer should always be set to the constant");
         }
     }
 

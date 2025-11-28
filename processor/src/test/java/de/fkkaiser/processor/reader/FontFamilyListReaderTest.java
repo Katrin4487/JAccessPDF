@@ -70,11 +70,9 @@ class FontFamilyListReaderTest {
     }
 
     @Test
-    @DisplayName("should throw IllegalArgumentException for null input stream")
-    void shouldThrowIllegalArgumentExceptionForNullInputStream() {
+    @DisplayName("should throw NullPointerException for null input stream")
+    void shouldThrowNullPointerExceptionForNullInputStream() {
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            reader.readJson(null);
-        });
+        assertThrows(NullPointerException.class, () -> reader.readJson(null));
     }
 }

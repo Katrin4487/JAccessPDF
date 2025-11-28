@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.structure.TextRun;
 import de.fkkaiser.model.style.StyleSheet;
@@ -46,7 +47,7 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
 
         // Output plain text if no styling is defined
         if (style == null) {
-            builder.append(escapeXml(textRun.getText()));
+            builder.append(GenerateUtils.escapeXml(textRun.getText()));
             return;
         }
 
@@ -68,35 +69,35 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
             // Apply font properties from the resolved text style
             textStyleOpt.ifPresent(ts -> {
                 if (ts.fontFamilyName() != null) {
-                    builder.append(" font-family=\"").append(escapeXml(ts.fontFamilyName())).append("\"");
+                    builder.append(" font-family=\"").append(GenerateUtils.escapeXml(ts.fontFamilyName())).append("\"");
                 }
                 if (ts.fontSize() != null) {
-                    builder.append(" font-size=\"").append(escapeXml(ts.fontSize())).append("\"");
+                    builder.append(" font-size=\"").append(GenerateUtils.escapeXml(ts.fontSize())).append("\"");
                 }
                 if (ts.fontWeight() != null) {
-                    builder.append(" font-weight=\"").append(escapeXml(ts.fontWeight())).append("\"");
+                    builder.append(" font-weight=\"").append(GenerateUtils.escapeXml(ts.fontWeight())).append("\"");
                 }
                 if (ts.fontStyle() != null) {
-                    builder.append(" font-style=\"").append(escapeXml(ts.fontStyle().toLowerCase())).append("\"");
+                    builder.append(" font-style=\"").append(GenerateUtils.escapeXml(ts.fontStyle().toLowerCase())).append("\"");
                 }
             });
 
             // Apply direct style properties
             if (style.getTextColor() != null) {
-                builder.append(" color=\"").append(escapeXml(style.getTextColor())).append("\"");
+                builder.append(" color=\"").append(GenerateUtils.escapeXml(style.getTextColor())).append("\"");
             }
             if (style.getTextDecoration() != null) {
-                builder.append(" text-decoration=\"").append(escapeXml(style.getTextDecoration())).append("\"");
+                builder.append(" text-decoration=\"").append(GenerateUtils.escapeXml(style.getTextDecoration())).append("\"");
             }
 
             // Baseline shift for superscript/subscript positioning
             if (style.getBaselineShift() != null) {
-                builder.append(" baseline-shift=\"").append(escapeXml(style.getBaselineShift())).append("\"");
+                builder.append(" baseline-shift=\"").append(GenerateUtils.escapeXml(style.getBaselineShift())).append("\"");
             }
 
             // Linefeed treatment controls how line breaks are handled
             if (style.getLineFeedTreatment() != null) {
-                builder.append(" linefeed-treatment=\"").append(escapeXml(style.getLineFeedTreatment())).append("\"");
+                builder.append(" linefeed-treatment=\"").append(GenerateUtils.escapeXml(style.getLineFeedTreatment())).append("\"");
             }
         }
 

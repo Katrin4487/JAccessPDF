@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.model.structure.BlockImage;
 import de.fkkaiser.model.structure.Element;
@@ -69,7 +70,7 @@ public class ImageFoGenerator extends ElementFoGenerator {
     private void appendBlockAttributes(StringBuilder builder, BlockImageStyleProperties style, StyleSheet styleSheet) {
         if (style == null) return;
         if(style.getAlignment()!=null){
-            builder.append(" text-align=\"").append(escapeXml(style.getAlignment())).append("\"");
+            builder.append(" text-align=\"").append(GenerateUtils.escapeXml(style.getAlignment())).append("\"");
         }
         if(style.getBlockWidth()!=null){
             builder.append(" width=\"").append(style.getBlockWidth()).append("\"");
@@ -83,10 +84,10 @@ public class ImageFoGenerator extends ElementFoGenerator {
         if (style == null) return;
 
         if (style.getContentWidth() != null) {
-            builder.append(" content-width=\"").append(escapeXml(style.getContentWidth())).append("\"");
+            builder.append(" content-width=\"").append(GenerateUtils.escapeXml(style.getContentWidth())).append("\"");
         }
         if(style.getScaling() != null){
-            builder.append(" scaling=\"").append(escapeXml(style.getScaling())).append("\"");
+            builder.append(" scaling=\"").append(GenerateUtils.escapeXml(style.getScaling())).append("\"");
         }
     }
 }

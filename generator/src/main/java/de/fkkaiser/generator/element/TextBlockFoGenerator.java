@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Element;
@@ -74,37 +75,37 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
         setFontStyle(styleSheet, style, builder);
         // Apply other common text block properties
         if (style instanceof TextBlockStyleProperties textProps && textProps.getTextColor() != null) {
-            builder.append(" color=\"").append(escapeXml(textProps.getTextColor())).append("\"");
+            builder.append(" color=\"").append(GenerateUtils.escapeXml(textProps.getTextColor())).append("\"");
         }
         if (style instanceof TextBlockStyleProperties textProps && textProps.getLineHeight() != null) {
-            builder.append(" line-height=\"").append(escapeXml(textProps.getLineHeight())).append("\"");
+            builder.append(" line-height=\"").append(GenerateUtils.escapeXml(textProps.getLineHeight())).append("\"");
         }
         if (style instanceof TextBlockStyleProperties textProps && textProps.getTextAlign() != null) {
-            builder.append(" text-align=\"").append(escapeXml(textProps.getTextAlign())).append("\"");
+            builder.append(" text-align=\"").append(GenerateUtils.escapeXml(textProps.getTextAlign())).append("\"");
         }
         if (style.getSpaceAfter() != null) {
-            builder.append(" space-after=\"").append(escapeXml(style.getSpaceAfter())).append("\"");
+            builder.append(" space-after=\"").append(GenerateUtils.escapeXml(style.getSpaceAfter())).append("\"");
         }
         if (style.getSpaceBefore() != null) {
-            builder.append(" space-before=\"").append(escapeXml(style.getSpaceBefore())).append("\"");
+            builder.append(" space-before=\"").append(GenerateUtils.escapeXml(style.getSpaceBefore())).append("\"");
         }
         if (style.getBackgroundColor() != null) {
-            builder.append(" background-color=\"").append(escapeXml(style.getBackgroundColor())).append("\"");
+            builder.append(" background-color=\"").append(GenerateUtils.escapeXml(style.getBackgroundColor())).append("\"");
         }
         if(style.getStartIndent() != null){
-            builder.append(" start-indent=\"").append(escapeXml(style.getStartIndent())).append("\"");
+            builder.append(" start-indent=\"").append(GenerateUtils.escapeXml(style.getStartIndent())).append("\"");
         }
         if(style.getEndIndent() != null){
-            builder.append(" end-indent=\"").append(escapeXml(style.getEndIndent())).append("\"");
+            builder.append(" end-indent=\"").append(GenerateUtils.escapeXml(style.getEndIndent())).append("\"");
         }
         if(style instanceof TextBlockStyleProperties textProps){
             if(textProps.getSpan() != null){
-                builder.append(" span=\"").append(escapeXml(textProps.getSpan())).append("\"");
+                builder.append(" span=\"").append(GenerateUtils.escapeXml(textProps.getSpan())).append("\"");
                 builder.append(" space-before.conditionality=\"retain\"");
                 builder.append(" space-after.conditionality=\"retain\"");
             }
             if(textProps.getLinefeedTreatment() !=null){
-                builder.append(" linefeed-treatment=\"").append(escapeXml(textProps.getLinefeedTreatment())).append("\"");
+                builder.append(" linefeed-treatment=\"").append(GenerateUtils.escapeXml(textProps.getLinefeedTreatment())).append("\"");
             }
         }
 

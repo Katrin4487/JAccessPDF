@@ -1,11 +1,13 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TableCellStyleProperties;
 import de.fkkaiser.model.style.TableStyleProperties;
+
 import java.util.List;
 
 /**
@@ -56,37 +58,37 @@ public class TableFoGenerator extends ElementFoGenerator {
         builder.append("        <fo:table");
         if (style != null) {
             if (style.getBorderCollapse() != null) {
-                builder.append(" border-collapse=\"").append(escapeXml(style.getBorderCollapse())).append("\"");
+                builder.append(" border-collapse=\"").append(GenerateUtils.escapeXml(style.getBorderCollapse())).append("\"");
             }
             if (style.getWidth() != null) {
-                builder.append(" width=\"").append(escapeXml(style.getWidth())).append("\"");
+                builder.append(" width=\"").append(GenerateUtils.escapeXml(style.getWidth())).append("\"");
             }
         }
         builder.append(" table-layout=\"fixed\">");
 
         // Define table columns
-        if (table.getColumns() != null) {
-            for (String colWidth : table.getColumns()) {
-                builder.append("          <fo:table-column column-width=\"").append(escapeXml(colWidth)).append("\"/>\n");
-            }
+
+        for (String colWidth : table.getColumns()) {
+            builder.append("          <fo:table-column column-width=\"").append(GenerateUtils.escapeXml(colWidth)).append("\"/>\n");
+
         }
 
         // Generate table header
         if (table.getHeader() != null) {
             builder.append("          <fo:table-header>");
-            generateRows(table.getHeader(), styleSheet, builder, headlines,resolver);
+            generateRows(table.getHeader(), styleSheet, builder, headlines, resolver);
             builder.append("          </fo:table-header>");
         }
         if (table.getFooter() != null) {
             builder.append("          <fo:table-footer>");
-            generateRows(table.getFooter(), styleSheet, builder, headlines,resolver);
+            generateRows(table.getFooter(), styleSheet, builder, headlines, resolver);
             builder.append("          </fo:table-footer>");
         }
 
         // Generate table body
         if (table.getBody() != null) {
             builder.append("          <fo:table-body>");
-            generateRows(table.getBody(), styleSheet, builder, headlines,resolver);
+            generateRows(table.getBody(), styleSheet, builder, headlines, resolver);
             builder.append("          </fo:table-body>");
         }
 
@@ -99,13 +101,13 @@ public class TableFoGenerator extends ElementFoGenerator {
     /**
      * Helper method: generates rows for a specific table section (body, header, footer).
      */
-    private void generateRows(TableSection section, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines,ImageResolver resolver) {
+    private void generateRows(TableSection section, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
         if (section == null || section.rows() == null) return;
         for (TableRow row : section.rows()) {
             builder.append("            <fo:table-row>");
             if (row.cells() != null) {
                 for (TableCell cell : row.cells()) {
-                    generateCell(cell, styleSheet, builder, headlines,resolver);
+                    generateCell(cell, styleSheet, builder, headlines, resolver);
                 }
             }
             builder.append("            </fo:table-row>");
@@ -115,7 +117,7 @@ public class TableFoGenerator extends ElementFoGenerator {
     /**
      * Helper method: creates a single cell with content.
      */
-    private void generateCell(TableCell cell, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines,ImageResolver resolver) {
+    private void generateCell(TableCell cell, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver) {
         TableCellStyleProperties style = cell.getResolvedStyle();
 
         builder.append("              <fo:table-cell");
@@ -131,16 +133,16 @@ public class TableFoGenerator extends ElementFoGenerator {
         if (style != null) {
             // Apply styles directly to the cell. The content will inherit them.
             if (style.getBorder() != null) {
-                builder.append(" border=\"").append(escapeXml(style.getBorder())).append("\"");
+                builder.append(" border=\"").append(GenerateUtils.escapeXml(style.getBorder())).append("\"");
             }
             if (style.getPadding() != null) {
-                builder.append(" padding=\"").append(escapeXml(style.getPadding())).append("\"");
+                builder.append(" padding=\"").append(GenerateUtils.escapeXml(style.getPadding())).append("\"");
             }
             if (style.getBackgroundColor() != null) {
-                builder.append(" background-color=\"").append(escapeXml(style.getBackgroundColor())).append("\"");
+                builder.append(" background-color=\"").append(GenerateUtils.escapeXml(style.getBackgroundColor())).append("\"");
             }
             if (style.getVerticalAlign() != null) {
-                builder.append(" display-align=\"").append(escapeXml(style.getVerticalAlign())).append("\"");
+                builder.append(" display-align=\"").append(GenerateUtils.escapeXml(style.getVerticalAlign())).append("\"");
             }
             // Apply inheritable font styles
             this.setFontStyle(styleSheet, style, builder);
@@ -151,7 +153,7 @@ public class TableFoGenerator extends ElementFoGenerator {
         // The content of a cell is a block, so we need a block container.
         builder.append("                <fo:block>");
         // Delegate generation of the cell's content back to the main generator.
-        mainGenerator.generateBlockElements(cell.getElements(), styleSheet, builder, headlines,resolver,false);
+        mainGenerator.generateBlockElements(cell.getElements(), styleSheet, builder, headlines, resolver, false);
         builder.append("                </fo:block>");
 
         builder.append("              </fo:table-cell>");

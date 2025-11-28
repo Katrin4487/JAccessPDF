@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.TextBlock;
 import de.fkkaiser.model.style.ParagraphStyleProperties;
@@ -38,16 +39,16 @@ public class ParagraphFoGenerator extends TextBlockFoGenerator {
         // This method handles properties that only exist in ParagraphStyleProperties.
         if (style instanceof ParagraphStyleProperties pStyle) {
             if (pStyle.getTextIndent() != null) {
-                builder.append(" text-indent=\"").append(escapeXml(pStyle.getTextIndent())).append("\"");
+                builder.append(" text-indent=\"").append(GenerateUtils.escapeXml(pStyle.getTextIndent())).append("\"");
             }
             if (pStyle.getTextAlignLast() != null) {
-                builder.append(" text-align-last=\"").append(escapeXml(pStyle.getTextAlignLast())).append("\"");
+                builder.append(" text-align-last=\"").append(GenerateUtils.escapeXml(pStyle.getTextAlignLast())).append("\"");
             }
             if (pStyle.isHyphenate()) {
                 builder.append(" hyphenate=\"true\"");
             }
             if (pStyle.getLanguage() != null) {
-                builder.append(" language=\"").append(escapeXml(pStyle.getLanguage())).append("\"");
+                builder.append(" language=\"").append(GenerateUtils.escapeXml(pStyle.getLanguage())).append("\"");
             }
             // The 'orphans' and 'widows' properties control the minimum number of lines
             // of a paragraph to be left at the top or bottom of a page.

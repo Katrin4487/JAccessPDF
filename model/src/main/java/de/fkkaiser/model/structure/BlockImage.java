@@ -156,8 +156,8 @@ public final class BlockImage implements Element {
     /**
      * Resolves the style properties of this element by merging specific
      * styles with parent block styles.
-     *
-     * <p>The resolution process:
+     * <p>
+     * The resolution process:
      * <ol>
      *   <li>Retrieves the parent block's style properties from the context</li>
      *   <li>Looks up element-specific styles using the styleClass from the style map</li>
@@ -166,7 +166,7 @@ public final class BlockImage implements Element {
      *   <li>Merges the parent styles into the copy, with parent values filling in gaps</li>
      *   <li>Stores the final merged result in {@link #resolvedStyle}</li>
      * </ol>
-     * </p>
+     *
      *
      * <p>This method modifies the internal state of the object by setting the
      * resolvedStyle field. It should be called once during document preparation

@@ -1,6 +1,7 @@
 package de.fkkaiser.generator.element;
 
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.model.structure.Hyperlink;
 import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.style.StyleSheet;
@@ -15,45 +16,42 @@ public class HyperlinkFoGenerator extends InlineElementFoGenerator {
         Hyperlink link = (Hyperlink) element;
 
         builder.append("<fo:basic-link external-destination=\"")
-                .append(escapeXml(link.getHref()))
+                .append(GenerateUtils.escapeXml(link.getHref()))
                 .append("\" fox:alt-text=\"")
-                .append(escapeXml(link.getAltText()));
+                .append(GenerateUtils.escapeXml(link.getAltText()));
 
         TextRunStyleProperties style = link.getResolvedStyle();
         if(style != null) {
             Optional<TextStyle> fontStyleName = styleSheet.findFontStyleByName(style.getTextStyleName());
-            if (fontStyleName.isPresent()) {
-                TextStyle fontStyle = fontStyleName.get();
-                builder.append("\" font-family=\"")
-                        .append(escapeXml(fontStyle.fontFamilyName()))
-                        .append("\" font-size=\"")
-                        .append(escapeXml(fontStyle.fontSize()))
-                        .append("\" font-weight=\"")
-                        .append(escapeXml(fontStyle.fontWeight()))
-                        .append("\" font-style=\"")
-                        .append(escapeXml(fontStyle.fontStyle()));
-            }
+            fontStyleName.ifPresent(fontStyle -> builder.append("\" font-family=\"")
+                    .append(GenerateUtils.escapeXml(fontStyle.fontFamilyName()))
+                    .append("\" font-size=\"")
+                    .append(GenerateUtils.escapeXml(fontStyle.fontSize()))
+                    .append("\" font-weight=\"")
+                    .append(GenerateUtils.escapeXml(fontStyle.fontWeight()))
+                    .append("\" font-style=\"")
+                    .append(GenerateUtils.escapeXml(fontStyle.fontStyle())));
 
             if(style.getTextColor() !=null){
                 builder.append("\" color=\"")
-                        .append(escapeXml(style.getTextColor()));
+                        .append(GenerateUtils.escapeXml(style.getTextColor()));
             }
             if(style.getBackgroundColor() !=null){
                 builder.append("\" background-color=\"")
-                        .append(escapeXml(style.getBackgroundColor()));
+                        .append(GenerateUtils.escapeXml(style.getBackgroundColor()));
             }
             if(style.getTextDecoration() !=null){
                 builder.append("\" text-decoration=\"")
-                        .append(escapeXml(style.getTextDecoration()));
+                        .append(GenerateUtils.escapeXml(style.getTextDecoration()));
             }
 
             if(style.getBaselineShift() != null){
                 builder.append("\" baseline-shift=\"")
-                        .append(escapeXml(style.getBaselineShift()));
+                        .append(GenerateUtils.escapeXml(style.getBaselineShift()));
             }
         }
         builder.append("\">");
-        builder.append(escapeXml(link.getText()));
+        builder.append(GenerateUtils.escapeXml(link.getText()));
         builder.append("</fo:basic-link>");
     }
 }

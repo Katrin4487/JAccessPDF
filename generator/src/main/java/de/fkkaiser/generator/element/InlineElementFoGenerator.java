@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.style.StyleSheet;
 
@@ -16,15 +17,7 @@ public abstract class InlineElementFoGenerator {
      */
     public abstract void generate(InlineElement element, StyleSheet styleSheet, StringBuilder builder);
 
-    protected String escapeXml(String text) {
-        if (text == null) return "";
-        return text.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&apos;");
-    }
-
+   
     /**
      * Helper to normalize texts in text elements.
      * Replaces '\n' with '\u2028'.
@@ -36,6 +29,6 @@ public abstract class InlineElementFoGenerator {
 
         String normalized = text.replace("\n", "\u2028");
 
-        return escapeXml(normalized);
+        return GenerateUtils.escapeXml(normalized);
     }
 }

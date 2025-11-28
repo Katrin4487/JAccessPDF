@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Element;
@@ -7,13 +8,9 @@ import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.Part;
 import de.fkkaiser.model.style.PartStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class PartFoGenerator extends ElementFoGenerator {
-
-    private static final Logger log = LoggerFactory.getLogger(PartFoGenerator.class);
 
     private final XslFoGenerator mainGenerator;
 
@@ -49,7 +46,7 @@ public class PartFoGenerator extends ElementFoGenerator {
 
 
         if (style.getPageBreakBefore() != null) {
-            builder.append(" break-before=\"").append(escapeXml(style.getPageBreakBefore())).append("\"");
+            builder.append(" break-before=\"").append(GenerateUtils.escapeXml(style.getPageBreakBefore())).append("\"");
         }
     }
 }

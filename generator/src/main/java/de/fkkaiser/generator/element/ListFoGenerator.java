@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.*;
@@ -99,7 +100,7 @@ public class ListFoGenerator extends ElementFoGenerator {
                     // Use the label-separation value as the text indent for the first line
                     String textIndent = style.getProvLabelSeparation();
 
-                    builder.append("<fo:block text-indent=\"").append(escapeXml(textIndent)).append("\">");
+                    builder.append("<fo:block text-indent=\"").append(GenerateUtils.escapeXml(textIndent)).append("\">");
 
                     // Generate the block element content within our wrapper
                     mainGenerator.generateBlockElement(item, styleSheet, builder, headlines, resolver, false);
@@ -136,10 +137,10 @@ public class ListFoGenerator extends ElementFoGenerator {
         setFontStyle(styleSheet, style, builder);
 
         if (style.getProvDistBetweenStarts() != null) {
-            builder.append(" provisional-distance-between-starts=\"").append(escapeXml(style.getProvDistBetweenStarts())).append("\"");
+            builder.append(" provisional-distance-between-starts=\"").append(GenerateUtils.escapeXml(style.getProvDistBetweenStarts())).append("\"");
         }
         if (style.getProvLabelSeparation() != null) {
-            builder.append(" provisional-label-separation=\"").append(escapeXml(style.getProvLabelSeparation())).append("\"");
+            builder.append(" provisional-label-separation=\"").append(GenerateUtils.escapeXml(style.getProvLabelSeparation())).append("\"");
         }
     }
 
@@ -162,7 +163,7 @@ public class ListFoGenerator extends ElementFoGenerator {
     private void generateDefaultListItemLabel(StringBuilder builder, ListOrdering ordering, ListStyleProperties style, int counter) {
         // Priority: 1. Image, 2. Type, 3. Default
         if (style != null && style.getListStyleImage() != null) {
-            builder.append("<fo:external-graphic src=\"").append(escapeXml(style.getListStyleImage())).append("\"/>");
+            builder.append("<fo:external-graphic src=\"").append(GenerateUtils.escapeXml(style.getListStyleImage())).append("\"/>");
             return;
         }
 

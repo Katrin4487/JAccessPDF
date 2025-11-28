@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Element;
@@ -67,28 +68,28 @@ public class SectionFoGenerator extends ElementFoGenerator {
         setFontStyle(styleSheet, style, builder);
 
         if (style.getPadding() != null) {
-            builder.append(" padding=\"").append(escapeXml(style.getPadding())).append("\"");
+            builder.append(" padding=\"").append(GenerateUtils.escapeXml(style.getPadding())).append("\"");
         }
         if(style.getPaddingBottom() != null){
-            builder.append(" padding-bottom=\"").append(escapeXml(style.getPaddingBottom())).append("\"");
+            builder.append(" padding-bottom=\"").append(GenerateUtils.escapeXml(style.getPaddingBottom())).append("\"");
         }
         if (style.getBorder() != null) {
-            builder.append(" border=\"").append(escapeXml(style.getBorder())).append("\"");
+            builder.append(" border=\"").append(GenerateUtils.escapeXml(style.getBorder())).append("\"");
         }
         if (style.getBackgroundColor() != null) {
-            builder.append(" background-color=\"").append(escapeXml(style.getBackgroundColor())).append("\"");
+            builder.append(" background-color=\"").append(GenerateUtils.escapeXml(style.getBackgroundColor())).append("\"");
         }
         if(style.getStartIndent() != null){
-            builder.append(" start-indent=\"").append(escapeXml(style.getStartIndent())).append("\"");
+            builder.append(" start-indent=\"").append(GenerateUtils.escapeXml(style.getStartIndent())).append("\"");
         }
         if(style.getEndIndent() != null){
-            builder.append(" end-indent=\"").append(escapeXml(style.getEndIndent())).append("\"");
+            builder.append(" end-indent=\"").append(GenerateUtils.escapeXml(style.getEndIndent())).append("\"");
         }
         if(style.getSpaceBefore()!=null){
-            builder.append(" space-before=\"").append(escapeXml(style.getSpaceBefore())).append("\"");
+            builder.append(" space-before=\"").append(GenerateUtils.escapeXml(style.getSpaceBefore())).append("\"");
         }
         if(style.getSpaceAfter()!=null){
-            builder.append(" space-after=\"").append(escapeXml(style.getSpaceAfter())).append("\"");
+            builder.append(" space-after=\"").append(GenerateUtils.escapeXml(style.getSpaceAfter())).append("\"");
         }
     }
 }
