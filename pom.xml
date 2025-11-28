@@ -6,7 +6,7 @@
 
     <groupId>de.fkkaiser</groupId>
     <artifactId>jaccess-pdf</artifactId>
-    <version>0.9.2-SNAPSHOT</version>
+    <version>0.9.2</version>
     <packaging>pom</packaging>
 
     <name>JAccessPDF</name>

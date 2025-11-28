@@ -10,7 +10,7 @@
     <logger name="de.fkkaiser.model.structure" level="DEBUG"/>
     <logger name="de.fkkaiser.model.style" level="DEBUG"/>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
     </root>
 
