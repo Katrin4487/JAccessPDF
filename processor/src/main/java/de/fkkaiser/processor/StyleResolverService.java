@@ -1,5 +1,6 @@
 package de.fkkaiser.processor;
 
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.ContentArea;
 import de.fkkaiser.model.structure.Document;
 import de.fkkaiser.model.structure.PageSequence;
@@ -16,7 +17,11 @@ import java.util.stream.Collectors;
 /**
  * The StyleResolverService is the logical heart of processing.
  * It orchestrates the recursive style resolution for all elements in a document.
+ *
+ * @author Katrin Kaiser
+ * @version 1.1.0
  */
+@Internal
 public final class StyleResolverService {
 
     private static final Logger log = LoggerFactory.getLogger(StyleResolverService.class);
@@ -49,12 +54,15 @@ public final class StyleResolverService {
                 setResolvedStylesForElements(sequence.body(), initialContext);
                 setResolvedStylesForElements(sequence.footer(), initialContext);
             }
+        }else {
+            log.warn("Document contains no page sequences, nothing to resolve.");
         }
     }
 
     /**
      * Sets resolved styles for all elements within a given page area by delegating
-     * to each element's own resolveStyles method.
+     * to each element's own resolveStyles method. The provided context is used and passed down.
+     * So that the method works recursively through all child elements.
      *
      * @param area    The page area containing elements to process.
      * @param context The current style resolver context.
@@ -62,6 +70,8 @@ public final class StyleResolverService {
     private static void setResolvedStylesForElements(ContentArea area, StyleResolverContext context) {
         if (area != null && area.elements() != null) {
             area.elements().forEach(element -> element.resolveStyles(context));
+        }else  {
+            log.info("Element area is null or empty, aborting style resolution.");
         }
     }
 }

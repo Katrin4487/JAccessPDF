@@ -6,11 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 /**
- * Reads and parses a JSON stream into a FontFamilyList object.
+ * Utility class.Reads and parses a JSON stream into a
+ * FontFamilyList object.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
-public class FontFamilyListReader {
+public final class FontFamilyListReader {
     private static final Logger log = LoggerFactory.getLogger(FontFamilyListReader.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -21,15 +26,18 @@ public class FontFamilyListReader {
      * @param inputStream The JSON input stream. Cannot be null.
      * @return A populated FontFamilyList object.
      * @throws JsonReadException if the stream cannot be read or parsed.
+     * @throws NullPointerException if the inputStream or its {@link FontFamilyList} is null.
      */
     public FontFamilyList readJson(InputStream inputStream) throws JsonReadException {
-        if (inputStream == null) {
-            throw new IllegalArgumentException("Input stream cannot be null.");
-        }
+        Objects.requireNonNull(inputStream, "inputStream is null");
+
         try {
             log.debug("Reading font family list from stream...");
             FontFamilyList list = objectMapper.readValue(inputStream, FontFamilyList.class);
-            if(list==null || list.getFontFamilyList()==null || list.getFontFamilyList().isEmpty()){
+            Objects.requireNonNull(list, "FontFamilyList-Object in inputStream is null");
+            Objects.requireNonNull(list.getFontFamilyList(), "FontFamilyList in inputStream is null");
+
+            if(list.getFontFamilyList().isEmpty()){
                 log.error("Empty font family list."); //embed fonts a required
                 throw new JsonReadException("Empty font family list.");
             }

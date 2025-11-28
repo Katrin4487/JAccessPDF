@@ -12,11 +12,13 @@ import java.io.InputStream;
 /**
  * A utility class for reading documents from JSON input streams and deserializing them into Document objects.
  * Utilizes ObjectMapper for deserialization and logging for handling errors.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
-public class DocumentReader {
+public final class DocumentReader {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentReader.class);
-
     private static final ObjectMapper objectMapper = createObjectMapper();
 
     private static ObjectMapper createObjectMapper() {
