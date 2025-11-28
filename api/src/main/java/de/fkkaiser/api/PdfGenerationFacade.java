@@ -559,7 +559,10 @@ public final class PdfGenerationFacade {
      */
     private String generateXslFo(Document document, StyleSheet styleSheet) {
         ImageResolver imageResolver = resourceProvider::getResource;
-        return foGenerator.generate(document, styleSheet, imageResolver);
+        String result = foGenerator.generate(document, styleSheet, imageResolver);
+        log.debug("--- Generated XSL-FO Content Start ---\n{}\n--- Generated XSL-FO Content End ---", result);
+
+        return result;
     }
 
     /**
