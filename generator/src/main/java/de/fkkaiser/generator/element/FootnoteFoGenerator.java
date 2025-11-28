@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.model.structure.Footnote;
 import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.structure.TextBlock;
@@ -51,7 +52,7 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
 
         builder.append("<fo:footnote-body>");
 
-        builder.append("<fo:block id=\"").append(escapeXml(footnote.getId())).append("\"");
+        builder.append("<fo:block id=\"").append(GenerateUtils.escapeXml(footnote.getId())).append("\"");
 
         if(styleProperties!=null){
             // KORREKTUR: Anstatt Stile manuell zu setzen, rufen wir den Helfer auf,
@@ -66,7 +67,7 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
         if (footnote.getInlineElements() != null) {
             // We prepend the index number to the footnote text for clarity.
             builder.append("<fo:inline font-size=\"8pt\" vertical-align=\"super\">")
-                    .append(escapeXml(footnote.getIndex()))
+                    .append(GenerateUtils.escapeXml(footnote.getIndex()))
                     .append("</fo:inline> ");
 
             for (InlineElement inline : footnote.getInlineElements()) {
