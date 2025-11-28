@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.BlockImageStyleProperties;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
+
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -56,12 +59,13 @@ import java.util.Optional;
  * is mutable by design. This field is populated during the style resolution phase
  * and is not part of the element's initial construction or JSON deserialization.
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see BlockImageStyleProperties
  * @see Element
  * @see ElementTypes
  */
+@PublicAPI
 @JsonTypeName(ElementTypes.BLOCK_IMAGE)
 public final class BlockImage implements Element {
 
@@ -170,9 +174,11 @@ public final class BlockImage implements Element {
      *
      * @param context the context containing the style map and parent styles;
      *                must not be {@code null}
+     * @throws NullPointerException if the context is null
      */
     @Override
     public void resolveStyles(StyleResolverContext context) {
+        Objects.requireNonNull(context, "StyleResolverContext must not be null");
         ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
 
         BlockImageStyleProperties specificStyle = Optional.ofNullable(context.styleMap().get(this.getStyleClass()))

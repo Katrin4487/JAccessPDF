@@ -1,6 +1,7 @@
 package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.StyleResolverContext;
 
@@ -35,12 +36,13 @@ import de.fkkaiser.model.style.StyleResolverContext;
  * (e.g., {@link de.fkkaiser.model.style.TextBlockStyleProperties} for text blocks,
  * {@link de.fkkaiser.model.style.TableStyleProperties} for tables).
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see Element
  * @see AbstractInlineElement
  * @see TextBlock
  */
+@Internal
 public abstract class AbstractElement implements Element {
 
     @JsonProperty("style-class")

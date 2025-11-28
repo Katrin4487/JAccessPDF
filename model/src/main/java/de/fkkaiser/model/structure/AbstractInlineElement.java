@@ -1,6 +1,7 @@
 package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 
 /**
@@ -37,13 +38,14 @@ import de.fkkaiser.model.annotation.PublicAPI;
  * Paragraph p = new Paragraph("body-text", List.of(normal, bold, link));
  * }</pre>
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see AbstractElement
  * @see InlineElement
  * @see TextRun
  * @see Hyperlink
  */
+@Internal
 public abstract class AbstractInlineElement extends AbstractElement implements InlineElement {
 
     /**
