@@ -560,8 +560,21 @@ public final class PdfGenerationFacade {
     private String generateXslFo(Document document, StyleSheet styleSheet) {
         ImageResolver imageResolver = resourceProvider::getResource;
         String result = foGenerator.generate(document, styleSheet, imageResolver);
-        log.debug("--- Generated XSL-FO Content Start ---\n{}\n--- Generated XSL-FO Content End ---", result);
 
+        if(log.isDebugEnabled()){
+            try {
+                Transformer prettyTransformer = TransformerFactory.newInstance().newTransformer();
+                prettyTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                prettyTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+                StringWriter writer = new StringWriter();
+                prettyTransformer.transform(new StreamSource(new ByteArrayInputStream(result.getBytes())), new StreamResult(writer));
+                String prettyXslFo = writer.toString();
+                log.debug("----------------- Pretty XSL-FO-String -----------\n{}", prettyXslFo);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        }
         return result;
     }
 
