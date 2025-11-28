@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.VisibleForTesting;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.ListStyleProperties;
@@ -77,5 +78,10 @@ public final class SimpleList implements Element {
                 item.resolveStyles(childContext);
             }
         }
+    }
+
+    @VisibleForTesting
+    public void setResolvedStyle(ListStyleProperties styleProperties) {
+        this.resolvedStyle = styleProperties;
     }
 }
