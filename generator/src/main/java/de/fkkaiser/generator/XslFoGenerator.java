@@ -41,7 +41,11 @@ public class XslFoGenerator {
     }
 
     /**
-     * Main method to start the XSL-FO generation process.
+     * Generates the complete XSL-FO document as a String.
+     * @param document {@link Document} representing the content structure
+     * @param styleSheet {@link StyleSheet} defining styles
+     * @param resolver {@link ImageResolver} for image handling
+     * @return XSL-FO document as a String
      */
     @Internal
     public String generate(Document document, StyleSheet styleSheet, ImageResolver resolver) {
@@ -64,13 +68,21 @@ public class XslFoGenerator {
 
         foBuilder.append(contentBuilder);
 
-        // D. Abschluss
         generateRootEnd(foBuilder);
 
         return foBuilder.toString();
     }
 
-    // --- Public Helpers  ---
+    /**
+     * Generates a block-level element. An {@code null} element is ignored.
+     * If no generator is registered for the element type, a warning is logged.
+     * @param element {@link Element} to generate
+     * @param styleSheet {@link StyleSheet} for styling
+     * @param builder StringBuilder to append generated FO
+     * @param headlines List of headlines for bookmarks
+     * @param resolver {@link ImageResolver} for image handling
+     * @param isExternalArtefact indicates if the element is part of an external artefact (e.g., header/footer)
+     */
     @Internal
     public void generateBlockElement(Element element, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver, boolean isExternalArtefact) {
         if (element == null) return;
@@ -82,6 +94,15 @@ public class XslFoGenerator {
         }
     }
 
+    /**
+     * Generates multiple block-level elements.
+     * @param elements List of {@link Element} to generate
+     * @param styleSheet {@link StyleSheet} for styling
+     * @param builder StringBuilder to append generated FO
+     * @param headlines List of headlines for bookmarks
+     * @param resolver {@link ImageResolver} for image handling
+     * @param isExternalArtefact indicates if the elements are part of an external artefact (e.g., header/footer)
+     */
     @Internal
     public void generateBlockElements(List<Element> elements, StyleSheet styleSheet, StringBuilder builder, List<Headline> headlines, ImageResolver resolver, boolean isExternalArtefact) {
         if (elements == null) return;
@@ -90,6 +111,13 @@ public class XslFoGenerator {
         }
     }
 
+    /**
+     * Generates an inline element. An {@code null} element is ignored. If no generator is registered
+     * for the element type, a warning is logged.
+     * @param element {@link InlineElement} to generate
+     * @param styleSheet {@link StyleSheet} for styling
+     * @param builder StringBuilder to append generated FO
+     */
     @Internal
     public void generateInlineElement(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
         if (element == null) return;
@@ -106,14 +134,23 @@ public class XslFoGenerator {
     @Internal
      private void generatePageSequences(StringBuilder builder, Document document, StyleSheet styleSheet, List<Headline> headlines, ImageResolver resolver) {
         for (PageSequence sequence : document.pageSequences()) {
+
+            log.debug("Generating page-sequence with master-reference '{}'.", sequence.styleClass());
+
             builder.append("  <fo:page-sequence master-reference=\"").append(GenerateUtils.escapeXml(sequence.styleClass())).append("\">");
 
             if (sequence.header() != null) {
+
+                log.debug("Generating headline with master-reference '{}'.", sequence.header());
+
                 builder.append("    <fo:static-content flow-name=\"xsl-region-before\">");
                 generateBlockElements(sequence.header().elements(), styleSheet, builder, headlines, resolver, true);
                 builder.append("    </fo:static-content>");
             }
             if (sequence.footer() != null) {
+
+                log.debug("Generating footer with master-reference '{}'.", sequence.footer());
+
                 builder.append("    <fo:static-content flow-name=\"xsl-region-after\">");
                 generateBlockElements(sequence.footer().elements(), styleSheet, builder, headlines, resolver, true);
                 builder.append("    </fo:static-content>");
@@ -143,6 +180,8 @@ public class XslFoGenerator {
         Metadata metadata = document.metadata();
         String lang = (metadata != null && metadata.getLanguage() != null && !metadata.getLanguage().isEmpty()) ? metadata.getLanguage() : "en";
 
+        log.debug("Generating root start. With language '{}', default font family '{}'.", lang, defaultFontFamily);
+
         foBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
                 .append("<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\"")
                 .append(" xmlns:fox=\"http://xmlgraphics.apache.org/fop/extensions\"")
@@ -161,6 +200,8 @@ public class XslFoGenerator {
             log.warn("PDF/UA-1 conformance requires a title, but none was provided in the metadata. Skipping XMP metadata generation.");
             return;
         }
+
+        log.debug("Generating XMP metadata for PDF/UA-1 compliance.");
 
         foBuilder.append("<fo:declarations>")
                 .append("<x:xmpmeta>")
@@ -236,7 +277,6 @@ public class XslFoGenerator {
     }
 
     private String findDefaultFontFamily(StyleSheet styleSheet) {
-        // ... (Code wie in deiner Vorlage) ...
         if (styleSheet == null || styleSheet.elementStyles() == null) {
             return null;
         }
