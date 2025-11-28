@@ -1,5 +1,6 @@
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
@@ -27,20 +28,6 @@ public abstract class ElementFoGenerator {
                                   ImageResolver resolver,
                                   boolean isExternalArtefact);
 
-    /**
-     * Escapes special characters in a given text to ensure it can be safely used in XML.
-     *
-     * @param text The text to escape special characters from.
-     * @return The text with special XML characters escaped
-     */
-    protected String escapeXml(String text) {
-        if (text == null) return "";
-        return text.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&apos;");
-    }
 
     /**
      * Sets the font style attributes to the provided StringBuilder based on the given StyleSheet and ElementStyleProperties.
@@ -52,10 +39,7 @@ public abstract class ElementFoGenerator {
     protected void setFontStyle(StyleSheet styleSheet, ElementStyleProperties style, StringBuilder builder) {
         if (style instanceof TextBlockStyleProperties textStyle) {
             styleSheet.findFontStyleByName(textStyle.getTextStyleName()).ifPresent(fs -> {
-                builder.append(" font-family=\"").append(escapeXml(fs.fontFamilyName())).append("\"");
-                builder.append(" font-size=\"").append(escapeXml(fs.fontSize())).append("\"");
-                builder.append(" font-weight=\"").append(escapeXml(fs.fontWeight())).append("\"");
-                builder.append(" font-style=\"").append(escapeXml(fs.fontStyle())).append("\"");
+                builder.append(" font-family=\"").append(GenerateUtils.escapeXml(fs.fontStyle())).append("\"");
             });
         }
     }

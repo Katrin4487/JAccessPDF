@@ -3,18 +3,19 @@ package de.fkkaiser.generator;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.structure.TextRun;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
+/**
+ * Generates the fo:bookmark-tree XML structure for a list of headlines.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
+ */
 public class BookmarkGenerator {
-
-    private static final Logger log = LoggerFactory.getLogger(BookmarkGenerator.class);
 
     /**
      * Generates the complete fo:bookmark-tree from a list of headlines.
-     * This version uses a more robust logic to handle hierarchy changes.
+     *
      * @param headlines The list of headlines.
      * @return The finished XML string for the bookmarks.
      */
@@ -24,7 +25,7 @@ public class BookmarkGenerator {
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append("  <fo:bookmark-tree>\n");
+        builder.append("<fo:bookmark-tree>\n");
 
         int lastLevel = 0;
         for (int i = 0; i < headlines.size(); i++) {
@@ -35,23 +36,21 @@ public class BookmarkGenerator {
 
             // Before opening a new bookmark, close the previous one(s) if necessary.
             if (i > 0) {
-                if (currentLevel > lastLevel) {
-                    // Going deeper, do nothing.
-                } else if (currentLevel == lastLevel) {
+                if (currentLevel == lastLevel) {
                     // Sibling element, close the previous one.
-                    builder.append("  ".repeat(lastLevel + 2)).append("</fo:bookmark>\n");
-                } else { // currentLevel < lastLevel
+                    builder.append("  ".repeat(lastLevel + 2)).append("</fo:bookmark>");
+                } else if(currentLevel < lastLevel) { // currentLevel < lastLevel
                     // Moving up, close all necessary levels.
                     int levelsToClose = lastLevel - currentLevel + 1;
                     for (int j = 0; j < levelsToClose; j++) {
-                        builder.append("  ".repeat(lastLevel - j + 2)).append("</fo:bookmark>\n");
+                        builder.append("  ".repeat(lastLevel - j + 2)).append("</fo:bookmark>");
                     }
                 }
             }
 
             // Open the current bookmark.
-            builder.append("  ".repeat(currentLevel + 1)).append("<fo:bookmark internal-destination=\"").append(escapeXml(id)).append("\">\n");
-            builder.append("  ".repeat(currentLevel + 2)).append("<fo:bookmark-title>").append(escapeXml(title)).append("</fo:bookmark-title>\n");
+            builder.append("  ".repeat(currentLevel + 1)).append("<fo:bookmark internal-destination=\"").append(GenerateUtils.escapeXml(id)).append("\">");
+            builder.append("  ".repeat(currentLevel + 2)).append("<fo:bookmark-title>").append(GenerateUtils.escapeXml(title)).append("</fo:bookmark-title>");
 
             lastLevel = currentLevel;
         }
@@ -61,7 +60,7 @@ public class BookmarkGenerator {
             builder.append("  ".repeat(level + 1)).append("</fo:bookmark>\n");
         }
 
-        builder.append("  </fo:bookmark-tree>\n");
+        builder.append("</fo:bookmark-tree>\n");
         return builder.toString();
     }
 
@@ -77,20 +76,11 @@ public class BookmarkGenerator {
         StringBuilder titleBuilder = new StringBuilder();
         for (InlineElement elem : headline.getInlineElements()) {
             if(elem instanceof TextRun textRun){
-                if (textRun.getText() != null) { // More robust check
+                if (textRun.getText() != null) {
                     titleBuilder.append(textRun.getText());
                 }
             }
         }
         return titleBuilder.toString();
-    }
-
-    private String escapeXml(String text) {
-        if (text == null) return "";
-        return text.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&apos;");
     }
 }

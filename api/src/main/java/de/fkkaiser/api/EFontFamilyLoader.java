@@ -1,5 +1,6 @@
 package de.fkkaiser.api;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.font.FontFamily;
 import de.fkkaiser.model.font.FontFamilyList;
@@ -162,7 +163,7 @@ record EFontFamilyLoader(EResourceProvider resourceProvider, FontFamilyList font
         // Build font element
         xmlBuilder.append("<").append(XML_FONT)
                 .append(" ").append(ATTR_EMBED_URL).append("=\"")
-                .append(escapeXml(fontUrl.toExternalForm()))
+                .append(GenerateUtils.escapeXml(fontUrl.toExternalForm()))
                 .append("\" ").append(ATTR_KERNING).append("=\"")
                 .append(KERNING_ENABLED)
                 .append("\">");
@@ -170,33 +171,15 @@ record EFontFamilyLoader(EResourceProvider resourceProvider, FontFamilyList font
         // Build font-triplet element
         xmlBuilder.append("<").append(XML_FONT_TRIPLET)
                 .append(" ").append(ATTR_NAME).append("=\"")
-                .append(escapeXml(fontFamilyName))
+                .append(GenerateUtils.escapeXml(fontFamilyName))
                 .append("\" ").append(ATTR_STYLE).append("=\"")
-                .append(escapeXml(style))
+                .append(GenerateUtils.escapeXml(style))
                 .append("\" ").append(ATTR_WEIGHT).append("=\"")
-                .append(escapeXml(weight))
+                .append(GenerateUtils.escapeXml(weight))
                 .append("\"/>");
 
         // Close font element
         xmlBuilder.append("</").append(XML_FONT).append(">");
     }
 
-    /**
-     * Escapes special XML characters to ensure valid XML output.
-     * This method handles the five predefined XML entities:
-     * @param text the text to escape; may be {@code null}
-     * @return the escaped text, or an empty string if input is {@code null}
-     */
-    private String escapeXml(String text) {
-        if (text == null) {
-            return "";
-        }
-
-        // Replace in order to avoid double-escaping
-        return text.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&apos;");
-    }
 }
