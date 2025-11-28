@@ -185,7 +185,7 @@ public class XslFoGenerator {
         foBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
                 .append("<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\"")
                 .append(" xmlns:fox=\"http://xmlgraphics.apache.org/fop/extensions\"")
-                .append(" xml:lang=\"").append(GenerateUtils.escapeXml(lang)).append("\"");
+                .append(" xml:lang=\"").append(GenerateUtils.escapeXml(lang)).append("\" ");
 
         if (defaultFontFamily != null && !defaultFontFamily.isEmpty()) {
             foBuilder.append(" font-family=\"").append(GenerateUtils.escapeXml(defaultFontFamily)).append("\"");
