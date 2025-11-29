@@ -16,11 +16,13 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.annotation.Internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -115,7 +117,6 @@ public record StyleSheet(
          * @return A new StyleSheet record.
          */
         public StyleSheet build() {
-            // Use List.copyOf to create immutable lists for the record
 
             StringBuilder txtStyles = new StringBuilder();
             for (TextStyle textStyle : this.textStyles) {
@@ -136,4 +137,27 @@ public record StyleSheet(
             );
         }
     }
+
+    /**
+     * Validates the stylesheet contents.
+     * Currently, it validates each PageMasterStyle.
+     *
+     * @throws IllegalStateException if validation fails.
+     * @throws NullPointerException if required fields are null.
+     */
+    @Internal
+    public void validate(){
+        Objects.requireNonNull(this.pageMasterStyles, "pageMasterStyles must not be null");
+        Objects.requireNonNull(this.textStyles, "textStyles must not be null");
+        if(this.pageMasterStyles.isEmpty()){
+            log.error("No page master styles defined in the stylesheet.");
+            throw new IllegalStateException("No page master styles defined in the stylesheet.");
+        }
+        if(this.textStyles.isEmpty()){
+            log.error("No text styles defined in the stylesheet.");
+            throw new IllegalStateException("No text styles defined in the stylesheet.");
+        }
+        this.pageMasterStyles.forEach(PageMasterStyle::validate);
+    }
+
 }

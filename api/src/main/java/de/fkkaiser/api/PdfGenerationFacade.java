@@ -49,6 +49,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The central facade for PDF generation from structured document models.
@@ -292,6 +293,13 @@ public final class PdfGenerationFacade {
                                              FontFamilyList fontFamilyList) throws PdfGenerationException {
         log.debug("Starting PDF generation from model objects");
 
+
+        try {
+            validateInputs(document, styleSheet, fontFamilyList);
+        }catch (Exception e) {
+            log.error("Input validation failed", e);
+            throw new PdfGenerationException("Input validation failed: " + e.getMessage(), e);
+        }
         try (EFopResourceResolver fopResolver = new EFopResourceResolver(resourceProvider)) {
 
             // Step 1: Resolve styles and link them to document elements
@@ -682,5 +690,23 @@ public final class PdfGenerationFacade {
                 FOP_PDF_UA_MODE,
                 fontListXml
         );
+    }
+
+    /**
+     * Validates the input parameters for PDF generation.
+     * This method checks that the document and style sheet are not null,
+     * and performs any necessary validation on the style sheet.
+     *
+     * @param document   the document to validate
+     * @param styleSheet the style sheet to validate
+     * @param fontFamilyList the font family list to validate (optional)
+     * @throws NullPointerException if document or styleSheet is null
+     * @throws IllegalStateException if styleSheet is invalid
+     */
+    private void validateInputs(Document document, StyleSheet styleSheet, FontFamilyList fontFamilyList) {
+        Objects.requireNonNull(document, "Document must not be null");
+        Objects.requireNonNull(styleSheet, "StyleSheet must not be null");
+
+        styleSheet.validate();
     }
 }

@@ -52,7 +52,8 @@ class PageMasterStyleTest {
                 "1.5cm",
                 "1.5cm",
                 null,
-                null
+                null,
+                true
         );
 
         assertAll("All properties should be set by the constructor",

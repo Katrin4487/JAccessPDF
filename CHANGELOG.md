@@ -1,8 +1,13 @@
 # Changelog
 
 ## [Unreleased]
+
+### Changed
+- PageMasterStyle now has sensible defaults (A4 Portrait, 2cm margins)
 ### Added
 - Copyright headers
+- Checks and normalizers regarding the dimension values in the PageMasterStyle
+
 
 ## [0.9.2] - 2025-11-29
 - Apache License 2.0 license added
