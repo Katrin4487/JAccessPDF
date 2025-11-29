@@ -1,43 +1,32 @@
-/*
- * Copyright 2025 Katrin Kaiser
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.Section;
+import de.fkkaiser.model.structure.SectionVariant;
 import de.fkkaiser.model.style.SectionStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import java.util.List;
 
 /**
- * Generates the XSL-FO structure for an ESection element.
- * An ESection is rendered as an fo:block that can contain other block-level elements.
+ * Generates the XSL-FO structure for a Section element.
+ * A Section is rendered as an fo:block with appropriate PDF/UA role based on its variant.
  */
+@Internal
 public class SectionFoGenerator extends ElementFoGenerator {
 
     private final XslFoGenerator mainGenerator;
 
     /**
-     * Constructor for ESectionFoGenerator.
+     * Constructor for SectionFoGenerator.
      *
      * @param mainGenerator The main generator used for delegating content generation.
      */
+    @Internal
     public SectionFoGenerator(XslFoGenerator mainGenerator) {
         this.mainGenerator = mainGenerator;
     }
@@ -60,12 +49,12 @@ public class SectionFoGenerator extends ElementFoGenerator {
         Section section = (Section) element;
         SectionStyleProperties style = section.getResolvedStyle();
 
-        builder.append("      <fo:block role=\"Sect\"");
-        appendSectionAttributes(builder, style, styleSheet);
+        builder.append("      <fo:block");
+        appendSectionAttributes(builder, section, style, styleSheet);
         builder.append(">");
 
-        // getElements is never null
-        mainGenerator.generateBlockElements(section.getElements(), styleSheet, builder, headlines,resolver,isExternalArtefact);
+        // Generate child elements
+        mainGenerator.generateBlockElements(section.getElements(), styleSheet, builder, headlines, resolver, isExternalArtefact);
 
         builder.append("      </fo:block>");
     }
@@ -74,10 +63,27 @@ public class SectionFoGenerator extends ElementFoGenerator {
      * Appends section-specific attributes to the fo:block tag.
      *
      * @param builder    The StringBuilder to append to.
+     * @param section    The section element.
      * @param style      The resolved style properties for the section.
      * @param styleSheet The stylesheet for font lookups.
      */
-    private void appendSectionAttributes(StringBuilder builder, SectionStyleProperties style, StyleSheet styleSheet) {
+    private void appendSectionAttributes(StringBuilder builder, Section section,
+                                         SectionStyleProperties style, StyleSheet styleSheet) {
+        // Determine PDF/UA role based on variant
+        String role = section.getVariant() != null
+                ? section.getVariant().getPdfRole()
+                : SectionVariant.SECTION.getPdfRole();
+
+        builder.append(" role=\"").append(role).append("\"");
+
+        // Add alt-text if provided
+        if (section.getAltText() != null && !section.getAltText().isEmpty()) {
+            builder.append(" fox:alt-text=\"")
+                    .append(GenerateUtils.escapeXml(section.getAltText()))
+                    .append("\"");
+        }
+
+        // Add style attributes
         if (style == null) return;
 
         setFontStyle(styleSheet, style, builder);
@@ -85,7 +91,7 @@ public class SectionFoGenerator extends ElementFoGenerator {
         if (style.getPadding() != null) {
             builder.append(" padding=\"").append(GenerateUtils.escapeXml(style.getPadding())).append("\"");
         }
-        if(style.getPaddingBottom() != null){
+        if (style.getPaddingBottom() != null) {
             builder.append(" padding-bottom=\"").append(GenerateUtils.escapeXml(style.getPaddingBottom())).append("\"");
         }
         if (style.getBorder() != null) {
@@ -94,16 +100,16 @@ public class SectionFoGenerator extends ElementFoGenerator {
         if (style.getBackgroundColor() != null) {
             builder.append(" background-color=\"").append(GenerateUtils.escapeXml(style.getBackgroundColor())).append("\"");
         }
-        if(style.getStartIndent() != null){
+        if (style.getStartIndent() != null) {
             builder.append(" start-indent=\"").append(GenerateUtils.escapeXml(style.getStartIndent())).append("\"");
         }
-        if(style.getEndIndent() != null){
+        if (style.getEndIndent() != null) {
             builder.append(" end-indent=\"").append(GenerateUtils.escapeXml(style.getEndIndent())).append("\"");
         }
-        if(style.getSpaceBefore()!=null){
+        if (style.getSpaceBefore() != null) {
             builder.append(" space-before=\"").append(GenerateUtils.escapeXml(style.getSpaceBefore())).append("\"");
         }
-        if(style.getSpaceAfter()!=null){
+        if (style.getSpaceAfter() != null) {
             builder.append(" space-after=\"").append(GenerateUtils.escapeXml(style.getSpaceAfter())).append("\"");
         }
     }

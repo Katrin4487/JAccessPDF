@@ -17,9 +17,17 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.PublicAPI;
+
 import java.util.function.Consumer;
 
-@JsonTypeName(StyleTargetTypes.PART) // Annahme: StyleTargetTypes.PART = "part"
+/**
+ * Concrete style properties for a part element.
+ * A part typically represents a major division in a document,
+ * such as a book part or volume.
+ */
+@PublicAPI
+@JsonTypeName(StyleTargetTypes.PART)
 public class PartStyleProperties extends ElementBlockStyleProperties {
 
     @JsonProperty("page-break-before")

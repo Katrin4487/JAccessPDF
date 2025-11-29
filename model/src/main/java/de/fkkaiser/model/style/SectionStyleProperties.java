@@ -15,7 +15,6 @@
  */
 package de.fkkaiser.model.style;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.function.Consumer;
