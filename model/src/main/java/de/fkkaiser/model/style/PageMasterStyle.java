@@ -57,6 +57,7 @@ import java.util.Objects;
  * @version 1.1.0
  * @see PageSize
  */
+@PublicAPI
 public class PageMasterStyle {
 
     private static final Logger log = LoggerFactory.getLogger(PageMasterStyle.class);
