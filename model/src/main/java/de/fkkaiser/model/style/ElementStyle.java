@@ -50,6 +50,7 @@ import java.util.Objects;
  *   <li>"table" → {@link TableStyleProperties}</li>
  *   <li>"table-cell" → {@link TableCellStyleProperties}</li>
  *   <li>"section" → {@link SectionStyleProperties}</li>
+ *   <li>"part" → {@link PartStyleProperties}</li>
  *   <li>"text-run" → {@link TextRunStyleProperties}</li>
  *   <li>"footnote" → {@link FootnoteStyleProperties}</li>
  *   <li>"block-image" → {@link BlockImageStyleProperties}</li>
@@ -119,18 +120,6 @@ import java.util.Objects;
  * Element styles support inheritance through the {@link ElementStyleProperties#mergeWith(ElementStyleProperties)}
  * mechanism. Child elements can inherit and override properties from parent elements.
  *
- * <p><b>Validation:</b></p>
- * The compact constructor validates that:
- * <ul>
- *   <li>name is not null or empty</li>
- *   <li>targetElement is not null or empty</li>
- *   <li>properties is not null</li>
- *   <li>targetElement matches one of the known {@link StyleTargetTypes}</li>
- * </ul>
- *
- * <p><b>Immutability:</b></p>
- * As a record, ElementStyle is immutable. Once created, its values cannot be changed.
- * This ensures thread-safety and prevents accidental modification.
  *
  * @param name          the unique identifier for this style (e.g., "body-paragraph");
  *                      must not be {@code null} or empty
@@ -140,7 +129,7 @@ import java.util.Objects;
  * @param properties    the style properties specific to the target element type;
  *                      must not be {@code null}
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.1.0
  *
  * @see ElementStyleProperties
  * @see StyleTargetTypes
@@ -373,6 +362,18 @@ public record ElementStyle(
     public static ElementStyle forSection(String name) {
         SectionStyleProperties props = new SectionStyleProperties();
         return new ElementStyle(name, StyleTargetTypes.SECTION, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a part with basic configuration.
+     * @param name the unique identifier for this element style (e.g., "part-style");
+     *             must not be {@code null} or empty
+     * @return a new ElementStyle for parts
+     */
+    @PublicAPI
+    public static ElementStyle forPart(String name) {
+        PartStyleProperties props = new PartStyleProperties();
+        return new ElementStyle(name, StyleTargetTypes.PART, props);
     }
 
     /**
