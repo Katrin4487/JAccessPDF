@@ -10,6 +10,8 @@
 - Checks and normalizers regarding the dimension values in the PageMasterStyle
 - Section can have a altText 
 - Enum SectionVariant added (Note, Aside)
+- More parameters for SectionStyle available
+- PageBreakVariant enum added (Always, Avoid, Even, Odd)
 
 
 ## [0.9.2] - 2025-11-29
