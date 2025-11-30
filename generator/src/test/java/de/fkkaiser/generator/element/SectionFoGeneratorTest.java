@@ -381,7 +381,6 @@ class SectionFoGeneratorTest {
     void shouldEscapeXmlInStyleAttributes() {
         Section section = new Section("test", null, null, List.of());
         SectionStyleProperties style = new SectionStyleProperties();
-        style.setBorder("1pt solid \"red\"");
         style.setBackgroundColor("<color>");
         section.setResolvedStyle(style);
 
@@ -389,7 +388,6 @@ class SectionFoGeneratorTest {
         generator.generate(section, styleSheet, builder, new ArrayList<>(), mockResolver, false);
 
         String result = builder.toString();
-        assertTrue(result.contains("&quot;red&quot;"));
         assertTrue(result.contains("&lt;color&gt;"));
     }
 }

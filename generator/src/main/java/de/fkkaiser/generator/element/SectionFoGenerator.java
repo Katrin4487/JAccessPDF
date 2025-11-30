@@ -23,7 +23,6 @@ import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.Section;
 import de.fkkaiser.model.structure.SectionVariant;
-import de.fkkaiser.model.style.PageBreakVariant;
 import de.fkkaiser.model.style.SectionStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 
@@ -97,19 +96,6 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
         // Keep together
         if (Boolean.TRUE.equals(style.getKeepTogether())) {
             builder.append(" keep-together.within-page=\"always\"");
-        }
-
-        // Page breaks with enum
-        if (style.getBreakBefore() != null && style.getBreakBefore() != PageBreakVariant.AUTO) {
-            builder.append(" break-before=\"")
-                    .append(GenerateUtils.escapeXml(style.getBreakBefore().getFoValue()))
-                    .append("\"");
-        }
-
-        if (style.getBreakAfter() != null && style.getBreakAfter() != PageBreakVariant.AUTO) {
-            builder.append(" break-after=\"")
-                    .append(GenerateUtils.escapeXml(style.getBreakAfter().getFoValue()))
-                    .append("\"");
         }
 
         // Orphans and widows

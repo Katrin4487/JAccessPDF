@@ -40,9 +40,6 @@ import de.fkkaiser.model.annotation.PublicAPI;
  * <ul>
  *   <li>{@link #sectionMarker} - Symbol or text displayed before the section</li>
  *   <li>{@link #keepTogether} - Prevents page breaks within the section</li>
- *   <li>{@link #breakBefore} - Forces page/column break before section</li>
- *   <li>{@link #breakAfter} - Forces page/column break after section</li>
- *   <li>{@link #keepWithNext} - Keeps section together with next element</li>
  *   <li>{@link #orphans} - Minimum lines at bottom of page</li>
  *   <li>{@link #widows} - Minimum lines at top of page</li>
  * </ul>
@@ -96,43 +93,6 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
     @JsonProperty("keep-together")
     private Boolean keepTogether;
 
-    /**
-     * Forces a break before this section.
-     * <p>Valid values:</p>
-     * <ul>
-     *   <li>"auto" - No forced break (default)</li>
-     *   <li>"page" - Start section on a new page</li>
-     *   <li>"column" - Start section in a new column</li>
-     *   <li>"even-page" - Start section on an even-numbered page</li>
-     *   <li>"odd-page" - Start section on an odd-numbered page</li>
-     * </ul>
-     * <p>Maps to XSL-FO: {@code break-before}</p>
-     */
-    @JsonProperty("break-before")
-    private PageBreakVariant breakBefore;
-
-    /**
-     * Forces a break after this section.
-     * <p>Valid values:</p>
-     * <ul>
-     *   <li>"auto" - No forced break (default)</li>
-     *   <li>"page" - Force page break after section</li>
-     *   <li>"column" - Force column break after section</li>
-     *   <li>"even-page" - Continue on an even-numbered page</li>
-     *   <li>"odd-page" - Continue on an odd-numbered page</li>
-     * </ul>
-     * <p>Maps to XSL-FO: {@code break-after}</p>
-     */
-    @JsonProperty("break-after")
-    private PageBreakVariant breakAfter;
-
-    /**
-     * If true, keeps this section together with the next element (no page break between them).
-     * Useful for keeping headings with their first paragraph.
-     * <p>Maps to XSL-FO: {@code keep-with-next.within-page="always"}</p>
-     */
-    @JsonProperty("keep-with-next")
-    private Boolean keepWithNext;
 
     /**
      * Minimum number of lines that must appear at the bottom of a page.
@@ -195,65 +155,6 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
     }
 
     /**
-     * Gets the break-before setting for the section.
-     *
-     * @return the break-before value
-     */
-    @PublicAPI
-    public PageBreakVariant getBreakBefore() {
-        return breakBefore;
-    }
-
-    /**
-     * Sets the break-before setting for the section.
-     *
-     * @param breakBefore the break-before value to set
-     */
-    @PublicAPI
-    public void setBreakBefore(PageBreakVariant breakBefore) {
-        this.breakBefore = breakBefore;
-    }
-
-    /**
-     * Gets the break-after setting for the section.
-     *
-     * @return the break-after value
-     */
-    @PublicAPI
-    public PageBreakVariant getBreakAfter() {
-        return breakAfter;
-    }
-
-    /**
-     * Sets the break-after setting for the section.
-     *
-     * @param breakAfter the break-after value to set
-     */
-    @PublicAPI
-    public void setBreakAfter(PageBreakVariant breakAfter) {
-        this.breakAfter = breakAfter;
-    }
-
-    /**
-     * Gets whether to keep the section together with the next element.
-     *
-     * @return true if the section should be kept with the next element, false otherwise
-     */
-    @PublicAPI
-    public Boolean getKeepWithNext() {
-        return keepWithNext;
-    }
-
-    /**
-     * Sets whether to keep the section together with the next element.
-     *
-     * @param keepWithNext true to keep the section with the next element, false otherwise
-     */
-    public void setKeepWithNext(Boolean keepWithNext) {
-        this.keepWithNext = keepWithNext;
-    }
-
-    /**
      * Gets the minimum number of orphans (lines at bottom of page).
      *
      * @return the number of orphans
@@ -312,15 +213,7 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
             if (this.keepTogether == null) {
                 this.keepTogether = sectionBase.keepTogether;
             }
-            if (this.breakBefore == null) {
-                this.breakBefore = sectionBase.breakBefore;
-            }
-            if (this.breakAfter == null) {
-                this.breakAfter = sectionBase.breakAfter;
-            }
-            if (this.keepWithNext == null) {
-                this.keepWithNext = sectionBase.keepWithNext;
-            }
+
             if (this.orphans == null) {
                 this.orphans = sectionBase.orphans;
             }
@@ -355,9 +248,6 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
 
         newInstance.sectionMarker = this.sectionMarker;
         newInstance.keepTogether = this.keepTogether;
-        newInstance.breakBefore = this.breakBefore;
-        newInstance.breakAfter = this.breakAfter;
-        newInstance.keepWithNext = this.keepWithNext;
         newInstance.orphans = this.orphans;
         newInstance.widows = this.widows;
     }

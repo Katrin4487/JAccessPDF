@@ -15,8 +15,8 @@
  */
 package de.fkkaiser.model.style;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 
 import java.util.function.Consumer;
@@ -25,26 +25,32 @@ import java.util.function.Consumer;
  * Concrete style properties for a part element.
  * A part typically represents a major division in a document,
  * such as a book part or volume.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
 @PublicAPI
 @JsonTypeName(StyleTargetTypes.PART)
 public class PartStyleProperties extends ElementBlockStyleProperties {
 
-    @JsonProperty("page-break-before")
-    private String pageBreakBefore;
 
-    // --- Getters and Setters ---
-    public String getPageBreakBefore() { return pageBreakBefore; }
-    public void setPageBreakBefore(String pageBreakBefore) { this.pageBreakBefore = pageBreakBefore; }
 
     // --- Overrides ---
+
+    /**
+     * Merges the current style properties with the provided base properties.
+     * @param base the base style properties to merge with
+     */
+    @Internal
     public void mergeWith(ElementBlockStyleProperties base) {
         super.mergeWith(base);
-        if (base instanceof PartStyleProperties basePart) {
-            mergeProperty(this.pageBreakBefore, basePart.getPageBreakBefore(), this::setPageBreakBefore);
-        }
     }
 
+    /**
+     * Creates a copy of the current PartStyleProperties instance.
+     * @return a new PartStyleProperties instance with the same properties
+     */
+    @Internal
     @Override
     public PartStyleProperties copy() {
         PartStyleProperties copy = new PartStyleProperties();
@@ -52,18 +58,14 @@ public class PartStyleProperties extends ElementBlockStyleProperties {
         return copy;
     }
 
+    /**
+     * Applies the current properties to the target ElementBlockStyleProperties instance.
+     * @param target The object to apply the properties to.
+     */
+    @Internal
     @Override
     public void applyPropertiesTo(ElementBlockStyleProperties target) {
         super.applyPropertiesTo(target);
-        if (target instanceof PartStyleProperties partTarget) {
-            partTarget.setPageBreakBefore(this.pageBreakBefore);
-        }
     }
 
-
-    private <T> void mergeProperty(T current, T base, Consumer<T> setter) {
-        if (current == null) {
-            setter.accept(base);
-        }
-    }
 }

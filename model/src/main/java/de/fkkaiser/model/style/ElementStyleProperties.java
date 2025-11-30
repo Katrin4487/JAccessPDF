@@ -15,6 +15,11 @@
  */
 package de.fkkaiser.model.style;
 
+import de.fkkaiser.model.annotation.Internal;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * An abstract class representing style properties for an element.
  * Base class for all StyleProperties.
@@ -32,4 +37,15 @@ public abstract class ElementStyleProperties {
      * @return A new instance with the same property values as this object.
      */
     public abstract ElementStyleProperties copy();
+
+    /**
+     * Validates the ElementStyle instance.
+     * Currently a placeholder that always returns an empty list.
+     *
+     * @return a list of validation error messages; empty if valid
+     */
+    @Internal
+    public List<String> validate() {
+        return new ArrayList<>();
+    }
 }

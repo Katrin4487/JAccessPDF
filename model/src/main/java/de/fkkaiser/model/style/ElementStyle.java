@@ -19,10 +19,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.builder.BlockImageStyleBuilder;
 import de.fkkaiser.model.style.builder.HeadlineStyleBuilder;
 import de.fkkaiser.model.style.builder.ParagraphStyleBuilder;
 import de.fkkaiser.model.style.builder.TextRunStyleBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single, named style definition in the stylesheet.
@@ -133,8 +139,9 @@ import de.fkkaiser.model.style.builder.TextRunStyleBuilder;
  *                      must not be {@code null} or empty
  * @param properties    the style properties specific to the target element type;
  *                      must not be {@code null}
- * @author FK Kaiser
- * @version 1.1
+ * @author Katrin Kaiser
+ * @version 1.0.1
+ *
  * @see ElementStyleProperties
  * @see StyleTargetTypes
  * @see StyleSheet
@@ -177,21 +184,23 @@ public record ElementStyle(
      *   <li>targetElement must be one of the known types in {@link StyleTargetTypes}</li>
      * </ul>
      *
-     * @throws IllegalArgumentException if any parameter is null, empty, or invalid
+     * @throws IllegalArgumentException if any parameter is  empty or invalid
+     * @throws NullPointerException    if any parameter is {@code null}
      */
+    @PublicAPI
     public ElementStyle {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Element style name cannot be null or empty");
+        Objects.requireNonNull(name, "name must not be null");
+        Objects.requireNonNull(targetElement, "targetElement must not be null");
+        Objects.requireNonNull(properties, "properties must not be null");
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Element style name cannot be empty");
         }
-        if (targetElement == null || targetElement.trim().isEmpty()) {
-            throw new IllegalArgumentException("Target element cannot be null or empty");
-        }
-        if (properties == null) {
-            throw new IllegalArgumentException("Element style properties cannot be null");
+        if (targetElement.trim().isEmpty()) {
+            throw new IllegalArgumentException("Target element cannot be empty");
         }
 
         // Validate that targetElement is a known type
-        if (!isValidTargetElement(targetElement)) {
+        if (isNotValidTargetElement(targetElement)) {
             throw new IllegalArgumentException(
                     String.format("Unknown target element type: '%s'. Must be one of: %s",
                             targetElement, getValidTargetElements())
@@ -203,20 +212,20 @@ public record ElementStyle(
      * Checks if the target element type is valid.
      *
      * @param targetElement the target element type to check
-     * @return {@code true} if valid, {@code false} otherwise
+     * @return {@code true} if invalid, {@code false} otherwise
      */
-    private static boolean isValidTargetElement(String targetElement) {
-        return targetElement.equals(StyleTargetTypes.PARAGRAPH) ||
-                targetElement.equals(StyleTargetTypes.HEADLINE) ||
-                targetElement.equals(StyleTargetTypes.LIST) ||
-                targetElement.equals(StyleTargetTypes.TABLE) ||
-                targetElement.equals(StyleTargetTypes.TABLE_CELL) ||
-                targetElement.equals(StyleTargetTypes.SECTION) ||
-                targetElement.equals(StyleTargetTypes.TEXT_RUN) ||
-                targetElement.equals(StyleTargetTypes.FOOTNOTE) ||
-                targetElement.equals(StyleTargetTypes.BLOCK_IMAGE) ||
-                targetElement.equals(StyleTargetTypes.LAYOUT_TABLE) ||
-                targetElement.equals(StyleTargetTypes.PART);
+    private static boolean isNotValidTargetElement(String targetElement) {
+        return !targetElement.equals(StyleTargetTypes.PARAGRAPH) &&
+                !targetElement.equals(StyleTargetTypes.HEADLINE) &&
+                !targetElement.equals(StyleTargetTypes.LIST) &&
+                !targetElement.equals(StyleTargetTypes.TABLE) &&
+                !targetElement.equals(StyleTargetTypes.TABLE_CELL) &&
+                !targetElement.equals(StyleTargetTypes.SECTION) &&
+                !targetElement.equals(StyleTargetTypes.TEXT_RUN) &&
+                !targetElement.equals(StyleTargetTypes.FOOTNOTE) &&
+                !targetElement.equals(StyleTargetTypes.BLOCK_IMAGE) &&
+                !targetElement.equals(StyleTargetTypes.LAYOUT_TABLE) &&
+                !targetElement.equals(StyleTargetTypes.PART);
     }
 
     /**
@@ -487,4 +496,35 @@ public record ElementStyle(
     public static TextRunStyleBuilder textRunBuilder(String name) {
         return new TextRunStyleBuilder(name);
     }
+
+    @Internal
+    public List<String> validate() {
+        List<String> errors = new ArrayList<>();
+
+        // Validate style name
+        if (name == null || name.trim().isEmpty()) {
+            errors.add("Element style name cannot be null or empty");
+        }
+
+        // Validate target element
+        if (targetElement == null || targetElement.trim().isEmpty()) {
+            errors.add("Target element cannot be null or empty");
+        } else if (isNotValidTargetElement(targetElement)) {
+            errors.add("Unknown target element type: '" + targetElement + "'");
+        }
+
+        // Validate properties
+        if (properties == null) {
+            errors.add("Element style properties cannot be null");
+        } else {
+            List<String> propertyErrors = properties.validate();
+            if (!propertyErrors.isEmpty()) {
+                errors.add("Style '" + name + "' has property errors:");
+                errors.addAll(propertyErrors);
+            }
+        }
+
+        return errors;
+    }
+
 }

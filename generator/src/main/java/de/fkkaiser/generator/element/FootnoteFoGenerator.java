@@ -56,7 +56,7 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
         }
 
         public void applyStyles(StringBuilder builder, ElementBlockStyleProperties style, StyleSheet styleSheet) {
-            super.appendCommonAttributes(builder, style, styleSheet);
+            super.appendBlockAttributes(builder, style, styleSheet);
         }
 
         @Override protected String getRole(TextBlock textBlock) { return null; }

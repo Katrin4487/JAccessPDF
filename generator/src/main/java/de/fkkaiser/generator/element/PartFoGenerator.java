@@ -15,12 +15,14 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.Part;
+import de.fkkaiser.model.style.PageBreakVariant;
 import de.fkkaiser.model.style.PartStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 
@@ -77,5 +79,22 @@ public class PartFoGenerator extends BlockElementFoGenerator {
         mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines, resolver, false);
 
         builder.append("      </fo:block>");
+    }
+
+    private void appendPartSpecificAttributes(StringBuilder builder,PartStyleProperties style){
+        // This method handles properties that only exist in PartStyleProperties.
+        if (style != null) {
+            if (style.getBreakBefore() != null && style.getBreakBefore() != PageBreakVariant.AUTO) {
+                builder.append(" break-before=\"")
+                        .append(GenerateUtils.escapeXml(style.getBreakBefore().getFoValue()))
+                        .append("\"");
+            }
+
+            if (style.getBreakAfter() != null && style.getBreakAfter() != PageBreakVariant.AUTO) {
+                builder.append(" break-after=\"")
+                        .append(GenerateUtils.escapeXml(style.getBreakAfter().getFoValue()))
+                        .append("\"");
+            }
+        }
     }
 }

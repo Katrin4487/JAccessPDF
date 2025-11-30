@@ -106,10 +106,15 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
      * Appends page break attributes (break-before, break-after).
      */
     private void appendPageBreakAttributes(StringBuilder builder, ElementBlockStyleProperties style) {
-        // Note: pageBreakBefore is boolean in ElementBlockStyleProperties
-        // We'll handle it if set to true
-        if (style.isPageBreakBefore()) {
-            builder.append(" break-before=\"page\"");
+        if (style.getBreakBefore() != null) {
+            builder.append(" break-before=\"")
+                    .append(style.getBreakBefore().getFoValue())
+            .append("\"");
+        }
+        if(style.getBreakAfter() != null && style.getBreakAfter() == PageBreakVariant.PAGE) {
+            builder.append(" break-after=\"")
+                    .append(style.getBreakAfter().getFoValue())
+                    .append("\"");
         }
     }
 

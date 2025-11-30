@@ -56,7 +56,7 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
 
         // Use the helper methods inherited from TextBlockFoGenerator
         // to apply all common text and block styles.
-        appendCommonAttributes(builder, style, styleSheet);
+        appendBlockAttributes(builder, style, styleSheet);
         if(style instanceof TextBlockStyleProperties textStyle){
             appendSpecificAttributes(builder, textStyle);
         }

@@ -158,6 +158,7 @@ public record StyleSheet(
             throw new IllegalStateException("No text styles defined in the stylesheet.");
         }
         this.pageMasterStyles.forEach(PageMasterStyle::validate);
+        this.elementStyles.forEach(ElementStyle::validate);
     }
 
 }
