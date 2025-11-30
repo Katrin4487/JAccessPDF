@@ -136,6 +136,7 @@ import java.util.Objects;
  * @see StyleSheet
  * @see TextStyle
  */
+@PublicAPI
 public record ElementStyle(
         @JsonProperty("name") String name,
         @JsonProperty("target-element") String targetElement,
@@ -197,6 +198,344 @@ public record ElementStyle(
         }
     }
 
+    // ==================== Factory Methods ====================
+
+    /**
+     * Creates an ElementStyle for a paragraph with basic text style configuration.
+     * This is a convenience method for creating simple paragraph styles that only
+     * require a text style reference.
+     *
+     * <p>For more complex paragraph styles with additional properties like text-align,
+     * text-indent, spacing, etc., use {@link #paragraphBuilder(String, TextStyle)} instead.</p>
+     *
+     * @param name      the unique identifier for this element style (e.g., "body-paragraph");
+     *                  must not be {@code null} or empty
+     * @param textStyle the TextStyle to apply to the paragraph;
+     *                  must not be {@code null}
+     * @return a new ElementStyle for paragraphs
+     * @throws NullPointerException if name or textStyle is {@code null}
+     */
+    @PublicAPI
+    public static ElementStyle forParagraph(String name, TextStyle textStyle) {
+        Objects.requireNonNull(name, "name must not be null");
+        Objects.requireNonNull(textStyle, "textStyle must not be null");
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+        ParagraphStyleProperties props = new ParagraphStyleProperties();
+        props.setTextStyleName(textStyle.name());
+        return new ElementStyle(name, StyleTargetTypes.PARAGRAPH, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a headline with basic text style configuration.
+     * This is a convenience method for creating simple headline styles that only
+     * require a text style reference.
+     *
+     * <p>For more complex headline styles with additional properties, use
+     * {@link #headlineBuilder(String, TextStyle)} instead.</p>
+     *
+     * @param name      the unique identifier for this element style (e.g., "h1");
+     *                  must not be {@code null} or empty
+     * @param textStyle the TextStyle to apply to the headline;
+     *                  must not be {@code null}
+     * @return a new ElementStyle for headlines
+     * @throws NullPointerException if name or textStyle is {@code null}
+     * @throws IllegalArgumentException if name is empty
+     */
+    @PublicAPI
+    public static ElementStyle forHeadline(String name, TextStyle textStyle) {
+        Objects.requireNonNull(textStyle, "textStyle must not be null");
+        Objects.requireNonNull(name, "name must not be null");
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+
+        HeadlineStyleProperties props = new HeadlineStyleProperties();
+        props.setTextStyleName(textStyle.name());
+        return new ElementStyle(name, StyleTargetTypes.HEADLINE, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a list with basic text style configuration.
+     *
+     * @param name      the unique identifier for this element style (e.g., "bullet-list");
+     *                  must not be {@code null} or empty
+     * @param textStyle the TextStyle to apply to list items;
+     *                  must not be {@code null}
+     * @return a new ElementStyle for lists
+     * @throws NullPointerException if name or textStyle is {@code null}
+     * @throws IllegalArgumentException if name is empty
+     */
+    @PublicAPI
+    public static ElementStyle forList(String name, TextStyle textStyle) {
+        Objects.requireNonNull(textStyle, "textStyle must not be null");
+        Objects.requireNonNull(name, "name must not be null");
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+
+        ListStyleProperties props = new ListStyleProperties();
+        props.setTextStyleName(textStyle.name());
+        return new ElementStyle(name, StyleTargetTypes.LIST, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a table with basic text style configuration.
+     *
+     * @param name      the unique identifier for this element style (e.g., "data-table");
+     *                  must not be {@code null} or empty
+     * @param textStyle the TextStyle to apply to table content;
+     *                  must not be {@code null}
+     * @return a new ElementStyle for tables
+     * @throws NullPointerException if name or textStyle is {@code null}
+     * @throws IllegalArgumentException if name is empty
+     */
+    @PublicAPI
+    public static ElementStyle forTable(String name, TextStyle textStyle) {
+        Objects.requireNonNull(textStyle, "textStyle must not be null");
+        Objects.requireNonNull(name, "name must not be null");
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+
+        TableStyleProperties props = new TableStyleProperties();
+        props.setTextStyleName(textStyle.name());
+        return new ElementStyle(name, StyleTargetTypes.TABLE, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a table cell with basic text style configuration.
+     *
+     * @param name      the unique identifier for this element style (e.g., "header-cell");
+     *                  must not be {@code null} or empty
+     * @param textStyle the TextStyle to apply to cell content;
+     *                  must not be {@code null}
+     * @return a new ElementStyle for table cells
+     * @throws NullPointerException if name or textStyle is {@code null}
+     */
+    @PublicAPI
+    public static ElementStyle forTableCell(String name, TextStyle textStyle) {
+        Objects.requireNonNull(textStyle, "textStyle must not be null");
+        Objects.requireNonNull(name, "name must not be null");
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+
+        TableCellStyleProperties props = new TableCellStyleProperties();
+        props.setTextStyleName(textStyle.name());
+        return new ElementStyle(name, StyleTargetTypes.TABLE_CELL, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a section with basic configuration.
+     *
+     * @param name the unique identifier for this element style (e.g., "chapter-section");
+     *             must not be {@code null} or empty
+     * @return a new ElementStyle for sections
+     * @throws NullPointerException if name is {@code null}
+     */
+    @PublicAPI
+    public static ElementStyle forSection(String name) {
+        Objects.requireNonNull(name, "name must not be null");
+        SectionStyleProperties props = new SectionStyleProperties();
+        return new ElementStyle(name, StyleTargetTypes.SECTION, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a part with basic configuration.
+     * @param name the unique identifier for this element style (e.g., "part-style");
+     *             must not be {@code null} or empty
+     * @return a new ElementStyle for parts
+     */
+    @PublicAPI
+    public static ElementStyle forPart(String name) {
+        PartStyleProperties props = new PartStyleProperties();
+        return new ElementStyle(name, StyleTargetTypes.PART, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a text run (inline text) with basic text style configuration.
+     *
+     * @param name      the unique identifier for this element style (e.g., "bold-text");
+     *                  must not be {@code null} or empty
+     * @param textStyle the TextStyle to apply to the text run;
+     *                  must not be {@code null}
+     * @return a new ElementStyle for text runs
+     * @throws IllegalArgumentException if name or textStyle is {@code null}
+     */
+    @PublicAPI
+    public static ElementStyle forTextRun(String name, TextStyle textStyle) {
+        Objects.requireNonNull(textStyle, "textStyle must not be null");
+        Objects.requireNonNull(name, "name must not be null");
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+        TextRunStyleProperties props = new TextRunStyleProperties();
+        props.setTextStyleName(textStyle.name());
+        return new ElementStyle(name, StyleTargetTypes.TEXT_RUN, props);
+    }
+
+
+    /**
+     * Creates an ElementStyle for a footnote with basic text style configuration.
+     *
+     * @param name      the unique identifier for this element style (e.g., "footnote-text");
+     *                  must not be {@code null} or empty
+     * @param textStyle the TextStyle to apply to footnote content;
+     *                  must not be {@code null}
+     * @return a new ElementStyle for footnotes
+     * @throws IllegalArgumentException if name is empty
+     * @throws NullPointerException if name or textStyle is {@code null}
+     */
+    @PublicAPI
+    public static ElementStyle forFootnote(String name, TextStyle textStyle) {
+        Objects.requireNonNull(textStyle, "textStyle must not be null");
+        Objects.requireNonNull(name, "name must not be null");
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+        FootnoteStyleProperties props = new FootnoteStyleProperties();
+        props.setTextStyleName(textStyle.name());
+        return new ElementStyle(name, StyleTargetTypes.FOOTNOTE, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a block image with basic configuration.
+     *
+     * @param name the unique identifier for this element style (e.g., "centered-image");
+     *             must not be {@code null} or empty
+     * @return a new ElementStyle for block images
+     * @throws NullPointerException if name is {@code null}
+     * @throws IllegalArgumentException if name is empty
+     */
+    @PublicAPI
+    public static ElementStyle forBlockImage(String name) {
+        Objects.requireNonNull(name, "name must not be null");
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+        BlockImageStyleProperties props = new BlockImageStyleProperties();
+        return new ElementStyle(name, StyleTargetTypes.BLOCK_IMAGE, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a layout table with basic configuration.
+     *
+     * @param name the unique identifier for this element style (e.g., "layout-grid");
+     *             must not be {@code null} or empty
+     * @return a new ElementStyle for layout tables
+     * @throws NullPointerException if name is {@code null}
+     * @throws IllegalArgumentException if name is empty
+     */
+    @PublicAPI
+    public static ElementStyle forLayoutTable(String name) {
+        Objects.requireNonNull(name, "name must not be null");
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+        LayoutTableStyleProperties props = new LayoutTableStyleProperties();
+        return new ElementStyle(name, StyleTargetTypes.LAYOUT_TABLE, props);
+    }
+
+    // ==================== Builder Factory Methods ====================
+
+    /**
+     * Creates a builder for constructing a paragraph style with detailed properties.
+     * This builder provides a fluent API for setting multiple paragraph-specific
+     * properties such as text alignment, indentation, spacing, and more.
+     *
+     * <p><b>Usage Example:</b></p>
+     * <pre>{@code
+     * ElementStyle paragraphStyle = ElementStyle.paragraphBuilder("body", normalText)
+     *     .withTextAlign("justify")
+     *     .withTextIndent("1cm")
+     *     .withSpaceBefore("6pt")
+     *     .withSpaceAfter("6pt")
+     *     .withHyphenation(true)
+     *     .build();
+     * }</pre>
+     *
+     * @param name      the unique identifier for this element style (not null or empty)
+     * @param textStyle the TextStyle to apply (not null)
+     * @return a new ParagraphStyleBuilder
+     * @throws NullPointerException    if name or textStyle is {@code null}
+     * @throws IllegalArgumentException if name is empty
+     */
+    @PublicAPI
+    public static ParagraphStyleBuilder paragraphBuilder(String name, TextStyle textStyle) {
+        Objects.requireNonNull(textStyle, "textStyle must not be null");
+        Objects.requireNonNull(name, "name must not be null");
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+        return new ParagraphStyleBuilder(name, textStyle);
+    }
+
+    /**
+     * Creates a builder for constructing a headline style with detailed properties.
+     *
+     * @param name      the unique identifier for this element style
+     * @param textStyle the TextStyle to apply
+     * @return a new HeadlineStyleBuilder
+     */
+    @PublicAPI
+    public static HeadlineStyleBuilder headlineBuilder(String name, TextStyle textStyle) {
+        return new HeadlineStyleBuilder(name, textStyle);
+    }
+
+    /**
+     * Creates a builder for constructing a block image style with detailed properties.
+     *
+     * @param name      the unique identifier for this element style
+     * @return a new BlockImageStyleBuilder
+     */
+    @PublicAPI
+    public static BlockImageStyleBuilder imageBuilder(String name) {
+        return new BlockImageStyleBuilder(name);
+    }
+
+    @PublicAPI
+    public static TextRunStyleBuilder textRunBuilder(String name) {
+        return new TextRunStyleBuilder(name);
+    }
+
+    /**
+     * Validates the ElementStyle instance.
+     * This method checks that all required fields are set and valid.
+     * @return a list of validation error messages; empty if valid
+     */
+    @Internal
+    public List<String> validate() {
+        List<String> errors = new ArrayList<>();
+
+        // Validate style name
+        if (name == null || name.trim().isEmpty()) {
+            errors.add("Element style name cannot be null or empty");
+        }
+
+        // Validate target element
+        if (targetElement == null || targetElement.trim().isEmpty()) {
+            errors.add("Target element cannot be null or empty");
+        } else if (isNotValidTargetElement(targetElement)) {
+            errors.add("Unknown target element type: '" + targetElement + "'");
+        }
+
+        // Validate properties
+        if (properties == null) {
+            errors.add("Element style properties cannot be null");
+        } else {
+            List<String> propertyErrors = properties.validate();
+            if (!propertyErrors.isEmpty()) {
+                errors.add("Style '" + name + "' has property errors:");
+                errors.addAll(propertyErrors);
+            }
+        }
+
+        return errors;
+    }
+
+    // ==================== Helper Methods ====================
     /**
      * Checks if the target element type is valid.
      *
@@ -239,293 +578,5 @@ public record ElementStyle(
         );
     }
 
-    // ==================== Factory Methods ====================
-
-    /**
-     * Creates an ElementStyle for a paragraph with basic text style configuration.
-     * This is a convenience method for creating simple paragraph styles that only
-     * require a text style reference.
-     *
-     * <p>For more complex paragraph styles with additional properties like text-align,
-     * text-indent, spacing, etc., use {@link #paragraphBuilder(String, TextStyle)} instead.</p>
-     *
-     * @param name      the unique identifier for this element style (e.g., "body-paragraph");
-     *                  must not be {@code null} or empty
-     * @param textStyle the TextStyle to apply to the paragraph;
-     *                  must not be {@code null}
-     * @return a new ElementStyle for paragraphs
-     * @throws IllegalArgumentException if name or textStyle is {@code null}
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forParagraph(String name, TextStyle textStyle) {
-        if (textStyle == null) {
-            throw new IllegalArgumentException("TextStyle cannot be null");
-        }
-        ParagraphStyleProperties props = new ParagraphStyleProperties();
-        props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.PARAGRAPH, props);
-    }
-
-    /**
-     * Creates an ElementStyle for a headline with basic text style configuration.
-     * This is a convenience method for creating simple headline styles that only
-     * require a text style reference.
-     *
-     * <p>For more complex headline styles with additional properties, use
-     * {@link #headlineBuilder(String, TextStyle)} instead.</p>
-     *
-     * @param name      the unique identifier for this element style (e.g., "h1");
-     *                  must not be {@code null} or empty
-     * @param textStyle the TextStyle to apply to the headline;
-     *                  must not be {@code null}
-     * @return a new ElementStyle for headlines
-     * @throws IllegalArgumentException if name or textStyle is {@code null}
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forHeadline(String name, TextStyle textStyle) {
-        if (textStyle == null) {
-            throw new IllegalArgumentException("TextStyle cannot be null");
-        }
-        HeadlineStyleProperties props = new HeadlineStyleProperties();
-        props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.HEADLINE, props);
-    }
-
-    /**
-     * Creates an ElementStyle for a list with basic text style configuration.
-     *
-     * @param name      the unique identifier for this element style (e.g., "bullet-list");
-     *                  must not be {@code null} or empty
-     * @param textStyle the TextStyle to apply to list items;
-     *                  must not be {@code null}
-     * @return a new ElementStyle for lists
-     * @throws IllegalArgumentException if name or textStyle is {@code null}
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forList(String name, TextStyle textStyle) {
-        if (textStyle == null) {
-            throw new IllegalArgumentException("TextStyle cannot be null");
-        }
-        ListStyleProperties props = new ListStyleProperties();
-        props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.LIST, props);
-    }
-
-    /**
-     * Creates an ElementStyle for a table with basic text style configuration.
-     *
-     * @param name      the unique identifier for this element style (e.g., "data-table");
-     *                  must not be {@code null} or empty
-     * @param textStyle the TextStyle to apply to table content;
-     *                  must not be {@code null}
-     * @return a new ElementStyle for tables
-     * @throws IllegalArgumentException if name or textStyle is {@code null}
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forTable(String name, TextStyle textStyle) {
-        if (textStyle == null) {
-            throw new IllegalArgumentException("TextStyle cannot be null");
-        }
-        TableStyleProperties props = new TableStyleProperties();
-        props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.TABLE, props);
-    }
-
-    /**
-     * Creates an ElementStyle for a table cell with basic text style configuration.
-     *
-     * @param name      the unique identifier for this element style (e.g., "header-cell");
-     *                  must not be {@code null} or empty
-     * @param textStyle the TextStyle to apply to cell content;
-     *                  must not be {@code null}
-     * @return a new ElementStyle for table cells
-     * @throws IllegalArgumentException if name or textStyle is {@code null}
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forTableCell(String name, TextStyle textStyle) {
-        if (textStyle == null) {
-            throw new IllegalArgumentException("TextStyle cannot be null");
-        }
-        TableCellStyleProperties props = new TableCellStyleProperties();
-        props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.TABLE_CELL, props);
-    }
-
-    /**
-     * Creates an ElementStyle for a section with basic configuration.
-     *
-     * @param name the unique identifier for this element style (e.g., "chapter-section");
-     *             must not be {@code null} or empty
-     * @return a new ElementStyle for sections
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forSection(String name) {
-        SectionStyleProperties props = new SectionStyleProperties();
-        return new ElementStyle(name, StyleTargetTypes.SECTION, props);
-    }
-
-    /**
-     * Creates an ElementStyle for a part with basic configuration.
-     * @param name the unique identifier for this element style (e.g., "part-style");
-     *             must not be {@code null} or empty
-     * @return a new ElementStyle for parts
-     */
-    @PublicAPI
-    public static ElementStyle forPart(String name) {
-        PartStyleProperties props = new PartStyleProperties();
-        return new ElementStyle(name, StyleTargetTypes.PART, props);
-    }
-
-    /**
-     * Creates an ElementStyle for a text run (inline text) with basic text style configuration.
-     *
-     * @param name      the unique identifier for this element style (e.g., "bold-text");
-     *                  must not be {@code null} or empty
-     * @param textStyle the TextStyle to apply to the text run;
-     *                  must not be {@code null}
-     * @return a new ElementStyle for text runs
-     * @throws IllegalArgumentException if name or textStyle is {@code null}
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forTextRun(String name, TextStyle textStyle) {
-        if (textStyle == null) {
-            throw new IllegalArgumentException("TextStyle cannot be null");
-        }
-        TextRunStyleProperties props = new TextRunStyleProperties();
-        props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.TEXT_RUN, props);
-    }
-
-
-    /**
-     * Creates an ElementStyle for a footnote with basic text style configuration.
-     *
-     * @param name      the unique identifier for this element style (e.g., "footnote-text");
-     *                  must not be {@code null} or empty
-     * @param textStyle the TextStyle to apply to footnote content;
-     *                  must not be {@code null}
-     * @return a new ElementStyle for footnotes
-     * @throws IllegalArgumentException if name or textStyle is {@code null}
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forFootnote(String name, TextStyle textStyle) {
-        if (textStyle == null) {
-            throw new IllegalArgumentException("TextStyle cannot be null");
-        }
-        FootnoteStyleProperties props = new FootnoteStyleProperties();
-        props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.FOOTNOTE, props);
-    }
-
-    /**
-     * Creates an ElementStyle for a block image with basic configuration.
-     *
-     * @param name the unique identifier for this element style (e.g., "centered-image");
-     *             must not be {@code null} or empty
-     * @return a new ElementStyle for block images
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forBlockImage(String name) {
-        BlockImageStyleProperties props = new BlockImageStyleProperties();
-        return new ElementStyle(name, StyleTargetTypes.BLOCK_IMAGE, props);
-    }
-
-    /**
-     * Creates an ElementStyle for a layout table with basic configuration.
-     *
-     * @param name the unique identifier for this element style (e.g., "layout-grid");
-     *             must not be {@code null} or empty
-     * @return a new ElementStyle for layout tables
-     */
-    @SuppressWarnings("unused")
-    public static ElementStyle forLayoutTable(String name) {
-        LayoutTableStyleProperties props = new LayoutTableStyleProperties();
-        return new ElementStyle(name, StyleTargetTypes.LAYOUT_TABLE, props);
-    }
-
-    // ==================== Builder Factory Methods ====================
-
-    /**
-     * Creates a builder for constructing a paragraph style with detailed properties.
-     * This builder provides a fluent API for setting multiple paragraph-specific
-     * properties such as text alignment, indentation, spacing, and more.
-     *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * ElementStyle paragraphStyle = ElementStyle.paragraphBuilder("body", normalText)
-     *     .withTextAlign("justify")
-     *     .withTextIndent("1cm")
-     *     .withSpaceBefore("6pt")
-     *     .withSpaceAfter("6pt")
-     *     .withHyphenation(true)
-     *     .build();
-     * }</pre>
-     *
-     * @param name      the unique identifier for this element style
-     * @param textStyle the TextStyle to apply
-     * @return a new ParagraphStyleBuilder
-     */
-    @SuppressWarnings("unused")
-    public static ParagraphStyleBuilder paragraphBuilder(String name, TextStyle textStyle) {
-        return new ParagraphStyleBuilder(name, textStyle);
-    }
-
-    /**
-     * Creates a builder for constructing a headline style with detailed properties.
-     *
-     * @param name      the unique identifier for this element style
-     * @param textStyle the TextStyle to apply
-     * @return a new HeadlineStyleBuilder
-     */
-    @SuppressWarnings("unused")
-    public static HeadlineStyleBuilder headlineBuilder(String name, TextStyle textStyle) {
-        return new HeadlineStyleBuilder(name, textStyle);
-    }
-
-    /**
-     * Creates a builder for constructing a block image style with detailed properties.
-     *
-     * @param name      the unique identifier for this element style
-     * @return a new BlockImageStyleBuilder
-     */
-    @SuppressWarnings("unused")
-    public static BlockImageStyleBuilder imageBuilder(String name) {
-        return new BlockImageStyleBuilder(name);
-    }
-
-    @SuppressWarnings("unused")
-    public static TextRunStyleBuilder textRunBuilder(String name) {
-        return new TextRunStyleBuilder(name);
-    }
-
-    @Internal
-    public List<String> validate() {
-        List<String> errors = new ArrayList<>();
-
-        // Validate style name
-        if (name == null || name.trim().isEmpty()) {
-            errors.add("Element style name cannot be null or empty");
-        }
-
-        // Validate target element
-        if (targetElement == null || targetElement.trim().isEmpty()) {
-            errors.add("Target element cannot be null or empty");
-        } else if (isNotValidTargetElement(targetElement)) {
-            errors.add("Unknown target element type: '" + targetElement + "'");
-        }
-
-        // Validate properties
-        if (properties == null) {
-            errors.add("Element style properties cannot be null");
-        } else {
-            List<String> propertyErrors = properties.validate();
-            if (!propertyErrors.isEmpty()) {
-                errors.add("Style '" + name + "' has property errors:");
-                errors.addAll(propertyErrors);
-            }
-        }
-
-        return errors;
-    }
 
 }
