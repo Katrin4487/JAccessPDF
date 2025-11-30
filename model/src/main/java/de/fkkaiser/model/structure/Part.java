@@ -19,11 +19,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.PartStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -56,6 +58,27 @@ public final class Part implements Element {
         this.styleClass = styleClass;
         this.elements = Objects.requireNonNullElse(elements, List.of());
         this.variant = variant != null ? variant : PartVariant.PART;
+    }
+
+    /**
+     * Creates a Part with the specified style class and elements.
+     * @param styleClass the style class identifier
+     * @param elements the list of child elements contained within the part
+     */
+    @PublicAPI
+    public Part(String styleClass, List<? extends Element> elements) {
+
+        this(styleClass, elements==null ? List.of() : new ArrayList<>(elements), PartVariant.PART);
+    }
+
+    /**
+     * Creates a Part with the specified style class and elements.
+     * @param styleClass the style class identifier
+     * @param elements the list of child elements contained within the part
+     */
+    @PublicAPI
+    public Part(String styleClass, PartVariant variant,List<? extends Element> elements) {
+        this(styleClass, elements==null ? List.of() : new ArrayList<>(elements), variant);
     }
 
     // --- Getters ---

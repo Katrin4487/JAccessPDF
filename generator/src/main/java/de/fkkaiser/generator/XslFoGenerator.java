@@ -46,6 +46,7 @@ public class XslFoGenerator {
         this.blockGeneratorRegistry.put(SimpleList.class, new ListFoGenerator(this));
         this.blockGeneratorRegistry.put(Table.class, new TableFoGenerator(this));
         this.blockGeneratorRegistry.put(Section.class, new SectionFoGenerator(this));
+        this.blockGeneratorRegistry.put(Part.class, new PartFoGenerator(this));
         this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
         this.blockGeneratorRegistry.put(BlockImage.class,new ImageFoGenerator());
         this.blockGeneratorRegistry.put(LayoutTable.class,new LayoutTableFoGenerator(this));
