@@ -75,8 +75,6 @@ public class SectionFoGenerator extends ElementFoGenerator {
         // Add section marker if specified
         if (style != null && style.getSectionMarker() != null && !style.getSectionMarker().isEmpty()) {
             builder.append("<fo:inline");
-            // Optional: Style the marker differently
-            builder.append(" font-weight=\"bold\"");
             builder.append(">");
             builder.append(GenerateUtils.escapeXml(style.getSectionMarker()));
             builder.append(" </fo:inline>");
@@ -126,7 +124,7 @@ public class SectionFoGenerator extends ElementFoGenerator {
                     .append("\"");
         }
 
-        if (style.getBreakAfter() != null && !style.getBreakAfter().equals("auto")) {
+        if (style.getBreakAfter() != null) {
             builder.append(" break-after=\"")
                     .append(GenerateUtils.escapeXml(style.getBreakAfter().getFoValue()))
                     .append("\"");
