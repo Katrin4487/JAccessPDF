@@ -28,11 +28,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Represents a part element in the document structure.
+ * A part typically represents a major division in a document,
+ * such as a book part or volume.
+ *
+ * @author Katrin Kaiser
+ * @version 1.1.0
+ */
 @JsonTypeName(ElementTypes.PART)
 public final class Part implements Element {
 
     private final String styleClass;
     private final List<Element> elements;
+    private final PartVariant variant;
 
     @JsonIgnore
     private PartStyleProperties resolvedStyle;
@@ -40,11 +49,13 @@ public final class Part implements Element {
     @JsonCreator
     public Part(
             @JsonProperty("style-class") String styleClass,
-            @JsonProperty("elements") List<Element> elements
+            @JsonProperty("elements") List<Element> elements,
+            @JsonProperty("variant") PartVariant variant
     ) {
 
         this.styleClass = styleClass;
         this.elements = Objects.requireNonNullElse(elements, List.of());
+        this.variant = variant != null ? variant : PartVariant.PART;
     }
 
     // --- Getters ---
@@ -52,6 +63,7 @@ public final class Part implements Element {
     public String getStyleClass() { return styleClass; }
     public List<Element> getElements() { return elements; }
     public PartStyleProperties getResolvedStyle() { return resolvedStyle; }
+    public PartVariant getVariant() {return variant;}
 
     @Override
     public String getType() {

@@ -17,6 +17,7 @@ package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.fkkaiser.model.style.ElementStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
 
 /**
@@ -169,4 +170,6 @@ public interface Element {
      * @throws NullPointerException if context is {@code null}
      */
     void resolveStyles(StyleResolverContext context);
+
+    ElementStyleProperties getResolvedStyle();
 }
