@@ -21,8 +21,6 @@ import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
