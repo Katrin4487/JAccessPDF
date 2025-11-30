@@ -15,7 +15,6 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.annotation.Internal;
@@ -27,36 +26,33 @@ import de.fkkaiser.model.style.StyleSheet;
 
 import java.util.List;
 
+
 /**
- * Generates XSL-FO for Part elements.
+ * Generates the XSL-FO structure for a Section element.
  *
  * @author Katrin Kaiser
  * @version 1.1.0
  */
 @Internal
-public class PartFoGenerator extends ElementFoGenerator {
-
-    private final XslFoGenerator mainGenerator;
+public class PartFoGenerator extends BlockElementFoGenerator {
 
     /**
      * Constructor for PartFoGenerator.
-     *
      * @param mainGenerator The main XSL-FO generator for delegating content generation.
      */
     @Internal
     public PartFoGenerator(XslFoGenerator mainGenerator) {
-        this.mainGenerator = mainGenerator;
+        super(mainGenerator);
     }
 
     /**
-     * Generates the XSL-FO representation of a Part element.
-     *
-     * @param element             The Part element to be processed.
-     * @param styleSheet          The StyleSheet for style resolution.
-     * @param builder             The StringBuilder to append the generated XSL-FO.
-     * @param headlines           The list of headlines for bookmark generation.
-     * @param resolver            The ImageResolver for handling images.
-     * @param isExternalParagraph Flag indicating if the paragraph is external.
+     * Generates the XSL-FO string for a part element.
+     * @param element The element to be processed.
+     * @param styleSheet The entire StyleSheet for accessing, for example, Font information.
+     * @param builder The StringBuilder to which the generated string is appended.
+     * @param headlines List of headlines for TOC generation.
+     * @param resolver Image resolver for handling images.
+     * @param isExternalParagraph Indicates if the paragraph is external.
      */
     @Internal
     @Override
@@ -69,24 +65,17 @@ public class PartFoGenerator extends ElementFoGenerator {
         Part part = (Part) element;
         PartStyleProperties style = part.getResolvedStyle();
 
-        builder.append("      <fo:block role=\"").append(part.getVariant().getPdfRole()).append("\"");
-        appendPartAttributes(builder, style, styleSheet);
+        builder.append("      <fo:block role=\"")
+                .append(part.getVariant().getPdfRole())
+                .append("\"");
+
+        // Common block attributes from parent class
+        appendBlockAttributes(builder, style, styleSheet);
+
         builder.append(">");
 
         mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines, resolver, false);
 
         builder.append("      </fo:block>");
     }
-
-    private void appendPartAttributes(StringBuilder builder, PartStyleProperties style, StyleSheet styleSheet) {
-        if (style == null) return;
-
-        setFontStyle(styleSheet, style, builder);
-
-
-        if (style.getPageBreakBefore() != null) {
-            builder.append(" break-before=\"").append(GenerateUtils.escapeXml(style.getPageBreakBefore())).append("\"");
-        }
-    }
 }
-

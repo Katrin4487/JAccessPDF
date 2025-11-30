@@ -22,21 +22,23 @@ import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.structure.TextBlock;
-import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TextBlockStyleProperties;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Abstract base class for all block-level text elements (e.g., paragraphs, headlines).
- * It handles the common logic of generating an fo:block and its inline content.
+ * Extends BlockElementFoGenerator to inherit common block properties,
+ * and adds text-specific properties (color, line-height, text-align, etc.).
+ *
+ * @author Katrin Kaiser
+ * @version 1.1.0
  */
-public abstract class TextBlockFoGenerator extends ElementFoGenerator {
-
-    protected final XslFoGenerator mainGenerator;
+public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
 
     protected TextBlockFoGenerator(XslFoGenerator mainGenerator) {
-        this.mainGenerator = mainGenerator;
+        super(mainGenerator);
     }
 
     @Override
@@ -49,19 +51,24 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
         TextBlock textBlock = (TextBlock) element;
         TextBlockStyleProperties style = textBlock.getResolvedStyle();
 
+        // Generate unique ID for headlines
         String headlineId = "";
-        if (element instanceof Headline) {
-            headlineId = " id=\"headline" + headlines.size() + "\"";
-            headlines.add((Headline) element);
+        if (element instanceof Headline headline) {
+            headlineId = " id=\"headline-" + UUID.randomUUID().toString() + "\"";
+            headlines.add(headline);
         }
 
         builder.append("      <fo:block")
                 .append(headlineId)
-                .append(" role=\"").append(getRole(textBlock)
-                ).append("\"");
+                .append(" role=\"").append(getRole(textBlock)).append("\"");
 
-        // Append all style attributes
-        appendCommonAttributes(builder, style, styleSheet);
+        // Append common block attributes (from BlockElementFoGenerator)
+        appendBlockAttributes(builder, style, styleSheet);
+
+        // Append text-specific attributes
+        appendTextBlockAttributes(builder, style);
+
+        // Append element-specific attributes (e.g., headline level-specific styles)
         appendSpecificAttributes(builder, style);
 
         if (isExternalArtefact) {
@@ -70,7 +77,7 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
 
         builder.append(">");
 
-        // Delegate inline content generation to the main generator.
+        // Generate inline content
         if (textBlock.getInlineElements() != null) {
             for (InlineElement inlineElement : textBlock.getInlineElements()) {
                 mainGenerator.generateInlineElement(inlineElement, styleSheet, builder);
@@ -81,60 +88,69 @@ public abstract class TextBlockFoGenerator extends ElementFoGenerator {
     }
 
     /**
-     * Appends common attributes shared by all TextBlock elements.
+     * Appends text-specific attributes that are unique to TextBlock elements.
+     * These properties are in addition to the common block properties.
+     *
+     * @param builder The StringBuilder to append to
+     * @param style   The text block style properties
      */
-    void appendCommonAttributes(StringBuilder builder, ElementBlockStyleProperties style, StyleSheet styleSheet) {
+    protected void appendTextBlockAttributes(StringBuilder builder, TextBlockStyleProperties style) {
         if (style == null) return;
 
-        // Apply font styles
-        setFontStyle(styleSheet, style, builder);
-        // Apply other common text block properties
-        if (style instanceof TextBlockStyleProperties textProps && textProps.getTextColor() != null) {
-            builder.append(" color=\"").append(GenerateUtils.escapeXml(textProps.getTextColor())).append("\"");
-        }
-        if (style instanceof TextBlockStyleProperties textProps && textProps.getLineHeight() != null) {
-            builder.append(" line-height=\"").append(GenerateUtils.escapeXml(textProps.getLineHeight())).append("\"");
-        }
-        if (style instanceof TextBlockStyleProperties textProps && textProps.getTextAlign() != null) {
-            builder.append(" text-align=\"").append(GenerateUtils.escapeXml(textProps.getTextAlign())).append("\"");
-        }
-        if (style.getSpaceAfter() != null) {
-            builder.append(" space-after=\"").append(GenerateUtils.escapeXml(style.getSpaceAfter())).append("\"");
-        }
-        if (style.getSpaceBefore() != null) {
-            builder.append(" space-before=\"").append(GenerateUtils.escapeXml(style.getSpaceBefore())).append("\"");
-        }
-        if (style.getBackgroundColor() != null) {
-            builder.append(" background-color=\"").append(GenerateUtils.escapeXml(style.getBackgroundColor())).append("\"");
-        }
-        if(style.getStartIndent() != null){
-            builder.append(" start-indent=\"").append(GenerateUtils.escapeXml(style.getStartIndent())).append("\"");
-        }
-        if(style.getEndIndent() != null){
-            builder.append(" end-indent=\"").append(GenerateUtils.escapeXml(style.getEndIndent())).append("\"");
-        }
-        if(style instanceof TextBlockStyleProperties textProps){
-            if(textProps.getSpan() != null){
-                builder.append(" span=\"").append(GenerateUtils.escapeXml(textProps.getSpan())).append("\"");
-                builder.append(" space-before.conditionality=\"retain\"");
-                builder.append(" space-after.conditionality=\"retain\"");
-            }
-            if(textProps.getLinefeedTreatment() !=null){
-                builder.append(" linefeed-treatment=\"").append(GenerateUtils.escapeXml(textProps.getLinefeedTreatment())).append("\"");
-            }
+        // Text color
+        if (style.getTextColor() != null) {
+            builder.append(" color=\"")
+                    .append(GenerateUtils.escapeXml(style.getTextColor()))
+                    .append("\"");
         }
 
+        // Line height
+        if (style.getLineHeight() != null) {
+            builder.append(" line-height=\"")
+                    .append(GenerateUtils.escapeXml(style.getLineHeight()))
+                    .append("\"");
+        }
+
+        // Text alignment
+        if (style.getTextAlign() != null) {
+            builder.append(" text-align=\"")
+                    .append(GenerateUtils.escapeXml(style.getTextAlign()))
+                    .append("\"");
+        }
+
+        // Span (for multi-column layouts)
+        if (style.getSpan() != null) {
+            builder.append(" span=\"")
+                    .append(GenerateUtils.escapeXml(style.getSpan()))
+                    .append("\"");
+            builder.append(" space-before.conditionality=\"retain\"");
+            builder.append(" space-after.conditionality=\"retain\"");
+        }
+
+        // Linefeed treatment
+        if (style.getLinefeedTreatment() != null) {
+            builder.append(" linefeed-treatment=\"")
+                    .append(GenerateUtils.escapeXml(style.getLinefeedTreatment()))
+                    .append("\"");
+        }
     }
 
     /**
      * Gets the accessibility role for the specific text block (e.g., "P" or "H1").
      * Must be implemented by subclasses.
+     *
+     * @param textBlock The text block element
+     * @return The PDF/UA role string
      */
     protected abstract String getRole(TextBlock textBlock);
 
     /**
-     * Appends attributes that are specific to the concrete subclass (e.g., headline-specific styles).
+     * Appends attributes that are specific to the concrete subclass
+     * (e.g., headline-specific styles).
      * To be implemented by subclasses.
+     *
+     * @param builder The StringBuilder to append to
+     * @param style   The text block style properties
      */
     protected abstract void appendSpecificAttributes(StringBuilder builder, TextBlockStyleProperties style);
 }

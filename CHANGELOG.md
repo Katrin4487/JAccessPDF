@@ -5,6 +5,8 @@
 ### Changed
 - PageMasterStyle now has sensible defaults (A4 Portrait, 2cm margins)
 - Section can be Note or Aside now (reading chosen variant from the schema)
+- Part can be Part or Article now (reading chosen variant from the schema)
+
 ### Added
 - Copyright headers
 - Checks and normalizers regarding the dimension values in the PageMasterStyle
