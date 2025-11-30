@@ -671,8 +671,8 @@ public class PageMasterStyle {
      */
     private void ensureNoHeaderOverlap() {
         if (headerExtent != null && marginTop != null) {
-            double headerValue = parseValue(headerExtent);
-            double marginValue = parseValue(marginTop);
+            double headerValue = DimensionUtil.toCentimeters(headerExtent);
+            double marginValue = DimensionUtil.toCentimeters(marginTop);
 
             if (marginValue < headerValue) {
                 log.warn("marginTop ({}) is smaller than headerExtent ({}). Adjusting marginTop to avoid overlap.If you want to force this overlap please use forceMarginTop.",
@@ -689,8 +689,8 @@ public class PageMasterStyle {
      */
     private void ensureNoFooterOverlap() {
         if (footerExtent != null && marginBottom != null) {
-            double footerValue = parseValue(footerExtent);
-            double marginValue = parseValue(marginBottom);
+            double footerValue = DimensionUtil.toCentimeters(footerExtent);
+            double marginValue = DimensionUtil.toCentimeters(marginBottom);
 
             if (marginValue < footerValue) {
                 log.warn("marginBottom ({}) is smaller than footerExtent ({}). Adjusting marginBottom to avoid overlap.If you want to force this overlap please use forceMarginBottom.",
@@ -700,26 +700,6 @@ public class PageMasterStyle {
         }
     }
 
-    /**
-     * Parses a dimension string to a double value in cm.
-     * Supports "cm", "mm", "in", "pt" units.
-     */
-    private double parseValue(String dimension) {
-        if (dimension == null) return 0;
-
-        String value = dimension.replaceAll("[^0-9.]", "");
-        String unit = dimension.replaceAll("[0-9.]", "");
-
-        double num = Double.parseDouble(value);
-
-        return switch (unit) {
-            case "cm" -> num;
-            case "mm" -> num / 10.0;
-            case "in" -> num * 2.54;
-            case "pt" -> num * 0.0353;
-            default -> num; // assume cm
-        };
-    }
 
     private void proofGapConsistency() {
         if (columnCount == null) {
