@@ -14,7 +14,11 @@ import java.util.List;
 
 /**
  * Generates the XSL-FO structure for a Section element.
- * A Section is rendered as an fo:block with appropriate PDF/UA role based on its variant.
+ * A Section is rendered as a fo:block with appropriate PDF/UA
+ * role based on its variant.
+ *
+ * @author Katrin Kaiser
+ * @version 1.1.0
  */
 @Internal
 public class SectionFoGenerator extends ElementFoGenerator {
@@ -53,6 +57,16 @@ public class SectionFoGenerator extends ElementFoGenerator {
         appendSectionAttributes(builder, section, style, styleSheet);
         builder.append(">");
 
+        // Add section marker if specified
+        if (style != null && style.getSectionMarker() != null && !style.getSectionMarker().isEmpty()) {
+            builder.append("<fo:inline");
+            // Optional: Style the marker differently
+            builder.append(" font-weight=\"bold\"");
+            builder.append(">");
+            builder.append(GenerateUtils.escapeXml(style.getSectionMarker()));
+            builder.append(" </fo:inline>");
+        }
+
         // Generate child elements
         mainGenerator.generateBlockElements(section.getElements(), styleSheet, builder, headlines, resolver, isExternalArtefact);
 
@@ -86,8 +100,43 @@ public class SectionFoGenerator extends ElementFoGenerator {
         // Add style attributes
         if (style == null) return;
 
+        // Section-specific properties
+        if (Boolean.TRUE.equals(style.getKeepTogether())) {
+            builder.append(" keep-together.within-page=\"always\"");
+        }
+
+        if (style.getBreakBefore() != null) {
+            builder.append(" break-before=\"")
+                    .append(GenerateUtils.escapeXml(style.getBreakBefore().getFoValue()))
+                    .append("\"");
+        }
+
+        if (style.getBreakAfter() != null && !style.getBreakAfter().equals("auto")) {
+            builder.append(" break-after=\"")
+                    .append(GenerateUtils.escapeXml(style.getBreakAfter().getFoValue()))
+                    .append("\"");
+        }
+
+        if (Boolean.TRUE.equals(style.getKeepWithNext())) {
+            builder.append(" keep-with-next.within-page=\"always\"");
+        }
+
+        if (style.getOrphans() != null) {
+            builder.append(" orphans=\"")
+                    .append(style.getOrphans())
+                    .append("\"");
+        }
+
+        if (style.getWidows() != null) {
+            builder.append(" widows=\"")
+                    .append(style.getWidows())
+                    .append("\"");
+        }
+
+        // Font style
         setFontStyle(styleSheet, style, builder);
 
+        // Layout properties
         if (style.getPadding() != null) {
             builder.append(" padding=\"").append(GenerateUtils.escapeXml(style.getPadding())).append("\"");
         }
