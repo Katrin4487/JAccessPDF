@@ -24,9 +24,7 @@ import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.SectionStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Represents a structural section element that acts as a container
@@ -133,9 +131,10 @@ public final class Section implements Element {
      * @param variant optional semantic variant
      * @param elements list of child elements
      */
-    public Section(String styleClass, SectionVariant variant, List<Element> elements) {
-        this(styleClass, variant, null, elements);
+    public Section(String styleClass,SectionVariant variant, List<? extends Element> elements) {
+        this(styleClass, variant, null, elements != null ? new ArrayList<>(elements) : List.of());
     }
+
 
     // --- Getters ---
 
