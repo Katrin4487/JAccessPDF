@@ -15,6 +15,7 @@
 - Enum SectionVariant added (Note, Aside)
 - More parameters for SectionStyle available
 - PageBreakVariant enum added (Always, Avoid, Even, Odd)
+- Checks for border styles and dimensions in Section and Part styles
 
 
 ## [0.9.2] - 2025-11-29

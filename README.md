@@ -11,11 +11,9 @@ This library is functional and being used in production, but:
 - API may change in minor versions (following semantic versioning)
 - Documentation is actively being improved
 
-**Contributions and feedback welcome!**
-
 ## Features
 - ✅ PDF/UA compliance out of the box
-- ✅ Accessible PDFs for banking/finance sector
+- ✅ Accessible PDFs
 - ✅ Simple API and advanced Core Model
 - 🚧 Dynamic content handling (in progress)
 - 🚧 Extended error handling (in progress)
