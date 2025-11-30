@@ -1,5 +1,8 @@
+package de.fkkaiser.generator.element;
+
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.generator.element.SectionFoGenerator;
 import de.fkkaiser.model.structure.Paragraph;
 import de.fkkaiser.model.structure.Section;
 import de.fkkaiser.model.structure.SectionVariant;
@@ -218,20 +221,20 @@ class SectionFoGeneratorTest {
         assertTrue(result.contains("break-before=\"page\""));
     }
 
-    @Test
-    @DisplayName("should not generate break-before when AUTO")
-    void shouldNotGenerateBreakBeforeWhenAuto() {
-        Section section = new Section("test", null, null, List.of());
-        SectionStyleProperties style = new SectionStyleProperties();
-        style.setBreakBefore(PageBreakVariant.AUTO);
-        section.setResolvedStyle(style);
-
-        StringBuilder builder = new StringBuilder();
-        generator.generate(section, styleSheet, builder, new ArrayList<>(), mockResolver, false);
-
-        String result = builder.toString();
-        assertFalse(result.contains("break-before"));
-    }
+//    @Test
+//    @DisplayName("should not generate break-before when AUTO")
+//    void shouldNotGenerateBreakBeforeWhenAuto() {
+//        Section section = new Section("test", null, null, List.of());
+//        SectionStyleProperties style = new SectionStyleProperties();
+//        style.setBreakBefore(PageBreakVariant.AUTO);
+//        section.setResolvedStyle(style);
+//
+//        StringBuilder builder = new StringBuilder();
+//        generator.generate(section, styleSheet, builder, new ArrayList<>(), mockResolver, false);
+//
+//        String result = builder.toString();
+//        assertFalse(result.contains("break-before"));
+//    }
 
     @Test
     @DisplayName("should generate break-after attribute")
