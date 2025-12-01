@@ -142,4 +142,21 @@ public class DimensionUtil {
             default -> value; //cm is default
         };
     }
+
+    public static boolean isValidLineHeight(String val) {
+        if (val == null || val.trim().isEmpty()) return true; // inherit default
+
+        if ("normal".equals(val)) return true;
+
+        // Regex für:
+        // 1. Zahl + Einheit (12pt, 1.5cm)
+        // 2. Prozent (120%)
+        // 3. Reine Zahl (1.5, 2)
+        String pattern = "^\\s*" +
+                "([0-9]+(\\.[0-9]+)?)" +
+                "(pt|px|mm|cm|in|em|%|)" +
+                "\\s*$";
+
+        return val.matches(pattern);
+    }
 }

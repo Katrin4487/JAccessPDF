@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.model.style.builder;
 
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.HeadlineStyleProperties;
 import de.fkkaiser.model.style.StyleTargetTypes;
@@ -22,12 +23,22 @@ import de.fkkaiser.model.style.TextStyle;
 
 /**
  * Fluent builder for creating headline element styles with detailed properties.
+ * @author Katrin Kaiser
+ * @version 1.0.0
  *
  */
+@PublicAPI
 public class HeadlineStyleBuilder {
     private final String name;
     private final HeadlineStyleProperties properties;
 
+    /**
+     * Constructor for HeadlineStyleBuilder.
+     *
+     * @param name      The name of the headline style.
+     * @param textStyle The base text style to be used for this headline.
+     */
+    @PublicAPI
     public HeadlineStyleBuilder(String name, TextStyle textStyle) {
         this.name = name;
         this.properties = new HeadlineStyleProperties();
@@ -41,7 +52,7 @@ public class HeadlineStyleBuilder {
      * @param spaceBefore String with value and unit for space before
      * @return HeadlineStyleBuilder to use this method in a chain
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public HeadlineStyleBuilder withSpaceBefore(String spaceBefore) {
         properties.setSpaceBefore(spaceBefore);
         return this;
@@ -54,7 +65,7 @@ public class HeadlineStyleBuilder {
      * @param spaceAfter String with value and unit for space after
      * @return HeadlineStyleBuilder to use this method in a chain
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public HeadlineStyleBuilder withSpaceAfter(String spaceAfter) {
         properties.setSpaceAfter(spaceAfter);
         return this;
@@ -72,6 +83,7 @@ public class HeadlineStyleBuilder {
      * @param keepWithNext key-value for keept with next
      * @return HeadlineStyleBuilder to use this method in a chain
      */
+    @PublicAPI
     public HeadlineStyleBuilder withKeepWithNext(boolean keepWithNext) {
         properties.setKeepWithNext(keepWithNext);
         return this;
@@ -88,7 +100,7 @@ public class HeadlineStyleBuilder {
      * @param color background color for this headline as string
      * @return HeadlineStyleBuilder to use this method in a chain
      */
-    @SuppressWarnings("unused")
+    @PublicAPI
     public HeadlineStyleBuilder withBackgroundColor(String color) {
         properties.setBackgroundColor(color);
         return this;
@@ -100,6 +112,7 @@ public class HeadlineStyleBuilder {
      *
      * @return ElementStyle of a headline that was created with a HeadlineBuilder chain.
      */
+    @PublicAPI
     public ElementStyle build() {
         return new ElementStyle(name, StyleTargetTypes.HEADLINE, properties);
     }

@@ -17,6 +17,12 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.annotation.Inheritable;
+import de.fkkaiser.model.util.DimensionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract base class for all block-level text elements.
@@ -29,6 +35,8 @@ import de.fkkaiser.model.annotation.Inheritable;
  * @version 1.1.0
  */
 public class TextBlockStyleProperties extends ElementBlockStyleProperties {
+
+    private static final Logger log = LoggerFactory.getLogger(TextBlockStyleProperties.class);
 
     @Inheritable
     @JsonProperty("text-style-name")
@@ -111,7 +119,12 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
      * @param lineHeight the line height to set
      */
     public void setLineHeight(String lineHeight) {
-        this.lineHeight = lineHeight;
+
+        if(DimensionUtil.isValidLineHeight(lineHeight)) {
+            this.lineHeight = lineHeight;
+        }else{
+            log.warn("Invalid line height value: {}. It must be a number, percentage, or 'normal'. Value not set.", lineHeight);
+        }
     }
 
     /**
@@ -197,5 +210,16 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
         TextBlockStyleProperties newInstance = new TextBlockStyleProperties();
         this.applyPropertiesTo(newInstance);
         return newInstance;
+    }
+
+    @Override
+    public List<String> validate() {
+        List<String> errors = new ArrayList<>();
+
+        if (lineHeight != null && !DimensionUtil.isValidLineHeight(lineHeight)) {
+            errors.add("Invalid line height value: " + lineHeight + ". It must be a number, percentage, or 'normal'.");
+        }
+
+        return errors;
     }
 }
