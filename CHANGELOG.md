@@ -1,6 +1,12 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+-- nothing yet --
+### Added
+- -- nothing yet --
+
+## [0.10.0] - 2025-12-01
 
 ### Changed
 - PageMasterStyle now has sensible defaults (A4 Portrait, 2cm margins)
@@ -17,8 +23,9 @@
 - More parameters for SectionStyle available
 - PageBreakVariant enum added (Always, Avoid, Even, Odd)
 - Checks for border styles and dimensions in Section and Part styles
-- New module postprocessor for merging multiple PDF documents into one
-- PDFEncryptor in postprocessor module for adding password protection to PDFs
+- New module postprocessor for merging multiple PDF documents into one (experimental)
+- PDFEncryptor in postprocessor module for adding password protection to PDFs (experimental)
+- PDFFormFiller in postprocessor module for filling PDF forms (experimental)
 
 
 ## [0.9.2] - 2025-11-29

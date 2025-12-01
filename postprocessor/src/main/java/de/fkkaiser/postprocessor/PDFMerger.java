@@ -46,6 +46,7 @@ import java.util.Objects;
  *
  * @author Katrin Kaiser
  * @version 1.0.0
+ * @since 0.10.0
  */
 @PublicAPI(status = PublicAPI.Status.EXPERIMENTAL)
 public class PDFMerger {
