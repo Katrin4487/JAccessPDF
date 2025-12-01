@@ -19,11 +19,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.structure.builder.HeadlineBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a headline element in a PDF document structure.
@@ -155,35 +157,19 @@ public final class Headline extends TextBlock {
     private String id;
 
     /**
-     * Creates a new Headline element with full configuration.
+     * Constructs a Headline with the specified style class, inline elements, and level.
      *
-     * <p>This constructor is the primary constructor used by Jackson during JSON
-     * deserialization. It initializes all properties including those inherited from
-     * parent classes ({@link TextBlock} and {@link AbstractElement}).</p>
-     *
-     * <p><b>Level Validation:</b></p>
-     * If the provided level is {@code null}, a warning is logged and the default
-     * level {@value #DEFAULT_LEVEL} is used. This ensures every headline has a valid
-     * level value, though explicit specification is recommended.
-     *
-     * <p><b>Note:</b> While the level parameter accepts {@code Integer} (nullable)
-     * for JSON compatibility, the resulting headline will always have a non-null
-     * level value due to the default fallback.</p>
-     *
-     * @param styleClass     the CSS-like style class for styling properties; may be {@code null}
-     * @param inlineElements the list of inline elements forming the headline content;
-     *                       may be {@code null} or empty
-     * @param variant        an optional variant identifier for style variations; may be {@code null}
-     * @param level          the headline level (1-6); if {@code null}, defaults to {@value #DEFAULT_LEVEL}
+     * @param styleClass    the CSS-like style class for styling
+     * @param inlineElements the list of inline elements that make up the headline content
+     * @param level         the headline level (1-6); if {@code null}, defaults to {@value #DEFAULT_LEVEL}
      */
     @JsonCreator
     public Headline(
             @JsonProperty("style-class") String styleClass,
             @JsonProperty("inline-elements") List<InlineElement> inlineElements,
-            @JsonProperty("variant") String variant,
             @JsonProperty("level") Integer level
     ) {
-        super(styleClass, inlineElements, variant);
+        super(styleClass, inlineElements);
 
         if (level == null) {
             log.warn("Headline 'level' is not defined. Using default value {}.", DEFAULT_LEVEL);
@@ -194,28 +180,18 @@ public final class Headline extends TextBlock {
     }
 
     /**
-     * Creates a new Headline element with simple text content.
+     * Convenience constructor for creating a simple headline with plain text content.
      *
-     * <p>This convenience constructor simplifies the creation of headlines containing
-     * only plain text. It automatically wraps the provided text in a {@link TextRun}
-     * and constructs a headline without a variant.</p>
+     * <p>This constructor allows quick creation of headlines by providing just
+     * the style class, text content, and level. It internally creates a single
+     * {@link TextRun} inline element to hold the provided text.</p>
      *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * Headline title = new Headline("chapter-title", "Introduction", 1);
-     * Headline subsection = new Headline("subsection", "Background Information", 2);
-     * }</pre>
-     *
-     * <p><b>Note:</b> For headlines with formatted text, mixed styles, or other
-     * inline elements, use the full constructor {@link #Headline(String, List, String, Integer)}
-     * instead.</p>
-     *
-     * @param styleClass the CSS-like style class for styling properties; may be {@code null}
-     * @param text       the plain text content of the headline; may be {@code null}
-     * @param level      the headline level (1-6); if {@code null}, defaults to {@value #DEFAULT_LEVEL}
+     * @param styleClass the CSS-like style class for styling
+     * @param text      the plain text content of the headline
+     * @param level     the headline level (1-6); if {@code null}, defaults to {@value #DEFAULT_LEVEL}
      */
-    public Headline(String styleClass, String text, Integer level) {
-        this(styleClass, Collections.singletonList(new TextRun(text)), null, level);
+    public Headline(String styleClass, String text, int level) {
+        this(styleClass, Collections.singletonList(new TextRun(text)),  level);
     }
 
     /**
@@ -250,5 +226,9 @@ public final class Headline extends TextBlock {
     @Internal
     public void setId(String id) {
         this.id = id;
+    }
+
+    public static HeadlineBuilder builder(String styleClass) {
+        return new HeadlineBuilder(styleClass);
     }
 }

@@ -48,31 +48,16 @@ public abstract class TextBlock extends AbstractElement {
      *
      * @param styleClass     The CSS style class to apply to the text block
      * @param inlineElements A list of InlineElement objects to be included in the text block
-     * @param variant        The variant of the text block
      */
-    public TextBlock(String styleClass,List<InlineElement> inlineElements, String variant) {
+    public TextBlock(String styleClass,List<InlineElement> inlineElements) {
         if(styleClass == null || styleClass.isEmpty()) {
             log.error("styleClass is null or empty");
             throw new IllegalArgumentException("Style class cannot be null or empty");
         }
         this.styleClass = styleClass;
         this.inlineElements = (inlineElements != null) ? inlineElements : List.of();
-        this.variant = variant;
     }
 
-    /**
-     * Constructs a TextBlock with the provided style class and variant.
-     *
-     * @param styleClass The CSS style class to apply to the text block
-     * @param variant    The variant of the text block
-     */
-    public TextBlock(String styleClass, String variant) {
-        this(styleClass,null,variant);
-    }
-
-    public TextBlock(String styleClass, List<InlineElement> inlineElements) {
-        this(styleClass,inlineElements,null);
-    }
 
     /**
      * Constructs a TextBlock with the provided style class.
@@ -80,7 +65,7 @@ public abstract class TextBlock extends AbstractElement {
      * @param styleClass The CSS style class to apply to the text block
      */
     public TextBlock(String styleClass) {
-        this(styleClass,null,null);
+        this(styleClass,null);
     }
 
     // ... Getters for final fields ...
@@ -96,14 +81,12 @@ public abstract class TextBlock extends AbstractElement {
     public void resolveStyles(StyleResolverContext context) {
         ElementBlockStyleProperties baseStyle = context.parentBlockStyle();
 
-        // Start with the SPECIFIC style from the style map (preserves type!)
         TextBlockStyleProperties finalStyle = null;
 
         if (this.styleClass != null) {
             ElementStyle specificElementStyle = context.styleMap().get(this.styleClass);
             if (specificElementStyle != null &&
                     specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
-                // ✅ CRITICAL: Start with a COPY of the specific style (preserves HeadlineStyleProperties, etc.)
                 finalStyle = (TextBlockStyleProperties) specificStyle.copy();
             }
         }

@@ -51,7 +51,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
 
     @Inheritable
     @JsonProperty("linefeed-treatment")
-    private String linefeedTreatment; // The treatment of line feeds (e.g., "preserve").
+    private LinefeedTreatment linefeedTreatment; // The treatment of line feeds (e.g., "preserve").
 
     /**
      * Default constructor to prevent initialization from outside.
@@ -155,7 +155,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
      *
      * @return the linefeed treatment
      */
-    public String getLinefeedTreatment() {
+    public LinefeedTreatment getLinefeedTreatment() {
         return linefeedTreatment;
     }
 
@@ -164,7 +164,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
      *
      * @param linefeedTreatment the linefeed treatment to set
      */
-    public void setLinefeedTreatment(String linefeedTreatment) {
+    public void setLinefeedTreatment(LinefeedTreatment linefeedTreatment) {
         this.linefeedTreatment = linefeedTreatment;
     }
 

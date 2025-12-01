@@ -148,35 +148,13 @@ public class Paragraph extends TextBlock {
      *                       must not be {@code null}
      * @param inlineElements the list of inline elements forming the paragraph's content;
      *                       must not be {@code null} but may be empty
-     * @param variant        an optional semantic variant (e.g., "warning", "note");
      *                       may be {@code null}
      */
     public Paragraph(
             @JsonProperty("style-class") String styleClass,
-            @JsonProperty("inline-elements") List<InlineElement> inlineElements,
-            @JsonProperty("variant") String variant) {
-        super(styleClass, inlineElements, variant);
-    }
-
-    /**
-     * Creates a paragraph with a single text run containing the specified text.
-     * This is a convenience constructor for simple paragraphs with plain text and a variant.
-     *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * Paragraph note = new Paragraph("body-paragraph", "This is a note", "warning");
-     * }</pre>
-     *
-     * @param styleClass     the CSS-like class name for styling;
-     *                       must not be {@code null}
-     * @param standAloneText the text content of the paragraph;
-     *                       must not be {@code null}
-     * @param variant        an optional semantic variant;
-     *                       may be {@code null}
-     */
-    @SuppressWarnings("unused")
-    public Paragraph(String styleClass, String standAloneText, String variant) {
-        super(styleClass, List.of(new TextRun(standAloneText, null , variant)), variant);
+            @JsonProperty("inline-elements") List<InlineElement> inlineElements
+           ) {
+        super(styleClass, inlineElements);
     }
 
     /**
@@ -199,27 +177,6 @@ public class Paragraph extends TextBlock {
     }
 
     /**
-     * Creates a paragraph with a single inline element and an optional variant.
-     *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * TextRun textRun = new TextRun("Formatted text", "bold-text");
-     * Paragraph p = new Paragraph("body-paragraph", textRun, "highlight");
-     * }</pre>
-     *
-     * @param styleClass    the CSS-like class name for styling;
-     *                      must not be {@code null}
-     * @param inlineElement the single inline element to include;
-     *                      must not be {@code null}
-     * @param variant       an optional semantic variant;
-     *                      may be {@code null}
-     */
-    @SuppressWarnings("unused")
-    public Paragraph(String styleClass, InlineElement inlineElement, String variant) {
-        super(styleClass, List.of(inlineElement), variant);
-    }
-
-    /**
      * Creates a paragraph with a single inline element.
      *
      * <p><b>Usage Example:</b></p>
@@ -238,28 +195,6 @@ public class Paragraph extends TextBlock {
         super(styleClass, List.of(inlineElement));
     }
 
-    /**
-     * Creates a paragraph with multiple inline elements.
-     * Use this constructor when you have pre-built inline elements with different formatting.
-     *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * List<InlineElement> elements = List.of(
-     *     new TextRun("Normal ", "normal-text"),
-     *     new TextRun("bold", "bold-text"),
-     *     new TextRun(" text", "normal-text")
-     * );
-     * Paragraph p = new Paragraph("body-paragraph", elements);
-     * }</pre>
-     *
-     * @param styleClass     the CSS-like class name for styling;
-     *                       must not be {@code null}
-     * @param inlineElements the list of inline elements;
-     *                       must not be {@code null} but may be empty
-     */
-    public Paragraph(String styleClass, List<InlineElement> inlineElements) {
-        super(styleClass, inlineElements);
-    }
 
     /**
      * Creates an empty paragraph with only a style class.
@@ -705,7 +640,7 @@ public class Paragraph extends TextBlock {
          * @return a new Paragraph instance with the configured properties
          */
         public Paragraph build() {
-            return new Paragraph(styleClass, inlineElements, variant);
+            return new Paragraph(styleClass, inlineElements);
         }
     }
 }

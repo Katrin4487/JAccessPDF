@@ -3,10 +3,12 @@
 ## [Unreleased]
 ### Changed
 - New Inheritance logic for styles: Only if annotation is set to INHERIT, styles are inherited from parent elements. Otherwise, only the explicitly set style parameters are used.
+- Only LinefeedTreatment is addable with method setLinefeedTreatment now.
 
 ### Added
 - Validation integrated: if a section-marker is set, you have to add a text-style-name (see Fixed)
 - JavaDocs updated and missing comments added (work in progress)
+- Enum LinefeedTreatment added for handling linefeeds in text elements
 
 ### Fixed
 - Section Params are not ignored anymore

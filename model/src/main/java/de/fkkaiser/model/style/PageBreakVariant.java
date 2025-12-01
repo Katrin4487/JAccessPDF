@@ -15,6 +15,8 @@
  */
 package de.fkkaiser.model.style;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 
 /**
@@ -51,5 +53,29 @@ public enum PageBreakVariant {
      */
     public String getFoValue() {
         return foValue;
+    }
+
+    /**
+     * Creates a PageBreakVariant from a string representation.
+     *
+     * @param text the string representation of the page break variant
+     * @return the corresponding PageBreakVariant, or null if not found
+     */
+    @Internal
+    @JsonCreator
+    public static PageBreakVariant fromString(String text) {
+        if (text == null) {
+            return null;
+        }
+
+        for (PageBreakVariant b : PageBreakVariant.values()) {
+            if (b.foValue.equalsIgnoreCase(text)) {
+                return b;
+            }
+            if (b.name().equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null;
     }
 }

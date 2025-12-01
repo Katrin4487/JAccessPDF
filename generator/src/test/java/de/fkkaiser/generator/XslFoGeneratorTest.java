@@ -57,7 +57,7 @@ class XslFoGeneratorTest {
         // Create a headline
         List<InlineElement> headlineElements = new ArrayList<>();
         headlineElements.add(new TextRun("Chapter 1", "default-text", null));
-        Headline headline = new Headline("default-headline",headlineElements, null,1);
+        Headline headline = new Headline("default-headline",headlineElements,1);
 
         // Create the body of the page
         ContentArea body = new ContentArea(List.of(headline,paragraph));
@@ -66,7 +66,7 @@ class XslFoGeneratorTest {
 
         List<InlineElement> headerElements = new ArrayList<>();
         headerElements.add(new PageNumber());
-        Paragraph headerParagraph = new Paragraph("header-style",headerElements,null);
+        Paragraph headerParagraph = new Paragraph("header-style",headerElements);
 
         ContentArea header = new ContentArea(List.of(headerParagraph));
 

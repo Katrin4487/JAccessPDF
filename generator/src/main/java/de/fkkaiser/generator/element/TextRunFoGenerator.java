@@ -103,7 +103,7 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
 
             // Linefeed treatment controls how line breaks are handled
             if (style.getLineFeedTreatment() != null) {
-                builder.append(" linefeed-treatment=\"").append(GenerateUtils.escapeXml(style.getLineFeedTreatment())).append("\"");
+                builder.append(" linefeed-treatment=\"").append(GenerateUtils.escapeXml(style.getLineFeedTreatment().getValue())).append("\"");
             }
         }
 

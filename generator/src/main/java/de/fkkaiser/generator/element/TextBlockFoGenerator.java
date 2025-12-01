@@ -139,7 +139,7 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
         // Linefeed treatment
         if (style.getLinefeedTreatment() != null) {
             builder.append(" linefeed-treatment=\"")
-                    .append(GenerateUtils.escapeXml(style.getLinefeedTreatment()))
+                    .append(GenerateUtils.escapeXml(style.getLinefeedTreatment().getValue()))
                     .append("\"");
         }
     }
