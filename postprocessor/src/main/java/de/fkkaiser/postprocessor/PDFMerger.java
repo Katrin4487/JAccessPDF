@@ -47,7 +47,7 @@ import java.util.Objects;
  * @author Katrin Kaiser
  * @version 1.0.0
  */
-@PublicAPI
+@PublicAPI.Status.EXPERIMENTAL
 public class PDFMerger {
 
     private static final Logger logger = LoggerFactory.getLogger(PDFMerger.class);
@@ -84,7 +84,7 @@ public class PDFMerger {
          * @throws IllegalArgumentException if the file does not exist or is not a valid file
          * @throws NullPointerException if the document is null
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder addDocument(File document) throws IOException {
             Objects.requireNonNull(document, "Document file must not be null");
 
@@ -109,7 +109,7 @@ public class PDFMerger {
          * @throws NullPointerException if the document is null
          *
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder addDocument(Path document) throws IOException {
             Objects.requireNonNull(Objects.requireNonNull(document, "Document file must not be null"));
             return  addDocument(document.toFile());
@@ -122,7 +122,7 @@ public class PDFMerger {
          * @throws IOException if an error occurs while loading the PDF
          * @throws NullPointerException if the documentPath is null
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder addDocument(String documentPath) throws IOException {
             Objects.requireNonNull(documentPath, "Document path must not be null");
             return addDocument(new File(documentPath));
@@ -135,7 +135,7 @@ public class PDFMerger {
          * @throws IOException if an error occurs while reading or loading the PDF
          * @throws NullPointerException if the inputStream is null
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder addDocument(InputStream inputStream) throws IOException {
             Objects.requireNonNull(Objects.requireNonNull(inputStream, "Input stream must not be null"));
 
@@ -151,7 +151,7 @@ public class PDFMerger {
          * @throws IOException if an error occurs while loading the PDF
          * @throws NullPointerException if the pdfBytes is null
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder addDocument(byte[] pdfBytes) throws IOException {
             Objects.requireNonNull(pdfBytes, "Document byte array must not be null");
 
@@ -168,7 +168,7 @@ public class PDFMerger {
          * @throws IOException if an error occurs while reading or loading the PDF
          * @throws NullPointerException if the outputStream is null
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder addDocument(ByteArrayInputStream outputStream) throws IOException {
             Objects.requireNonNull(Objects.requireNonNull(outputStream, "ByteArrayInputStream must not be null"));
             return addDocument(outputStream.readAllBytes());
@@ -180,7 +180,7 @@ public class PDFMerger {
          * @return the builder instance for chaining
          * @throws NullPointerException if the document is null
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder addDocument(PDDocument document) {
             Objects.requireNonNull(document, "PDDocument must not be null");
             this.documents.add(document);
@@ -194,7 +194,7 @@ public class PDFMerger {
          * @throws IOException if an error occurs during the merge process
          * @throws IllegalStateException if less than two documents have been added
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public ByteArrayOutputStream merge() throws IOException {
 
             validate();
@@ -252,7 +252,7 @@ public class PDFMerger {
          * @throws IOException if an error occurs during the merge or file writing process
          * @throws NullPointerException if the outputFilePath is null
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public File mergeToFile(String outputFilePath) throws IOException {
             Objects.requireNonNull(outputFilePath, "Output file path must not be null");
             return mergeToFile(new File(outputFilePath));
@@ -268,7 +268,7 @@ public class PDFMerger {
          * @throws IllegalArgumentException if the resource is not found
          * @throws NullPointerException     if the resourceProvider or resourceName is null
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder addDocument(EResourceProvider resourceProvider, String resourceName) throws IOException {
             Objects.requireNonNull(resourceProvider, "resourceProvider must not be null");
             Objects.requireNonNull(resourceName, "resourceName must not be null");

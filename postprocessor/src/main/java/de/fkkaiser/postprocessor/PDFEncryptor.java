@@ -79,7 +79,7 @@ import java.util.Objects;
  * @version 1.0.0
  * @since 0.9.3
  */
-@PublicAPI
+@PublicAPI.Status.EXPERIMENTAL
 public class PDFEncryptor {
 
     private static final Logger logger = LoggerFactory.getLogger(PDFEncryptor.class);
@@ -96,7 +96,7 @@ public class PDFEncryptor {
      *
      * @return a new Builder instance
      */
-    @PublicAPI
+    @PublicAPI.Status.EXPERIMENTAL
     public static Builder builder() {
         return new Builder();
     }
@@ -104,7 +104,7 @@ public class PDFEncryptor {
     /**
      * Builder for configuring PDF encryption operations.
      */
-    @PublicAPI
+    @PublicAPI.Status.EXPERIMENTAL
     public static class Builder {
         private String userPassword;
         private String ownerPassword;
@@ -130,7 +130,7 @@ public class PDFEncryptor {
          * @throws NullPointerException if password is {@code null}
          * @throws IllegalArgumentException if password is empty
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder withUserPassword(String password) {
             Objects.requireNonNull(password, "userPassword must not be null");
             if (password.trim().isEmpty()) {
@@ -150,7 +150,7 @@ public class PDFEncryptor {
          * @throws NullPointerException if password is {@code null}
          * @throws IllegalArgumentException if password is empty
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder withOwnerPassword(String password) {
             Objects.requireNonNull(password, "ownerPassword must not be null");
             if (password.trim().isEmpty()) {
@@ -169,7 +169,7 @@ public class PDFEncryptor {
          * @return this builder for method chaining
          * @throws IllegalArgumentException if keyLength is not 40, 128, or 256
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder withKeyLength(int keyLength) {
             if (keyLength != 40 && keyLength != 128 && keyLength != 256) {
                 throw new IllegalArgumentException(
@@ -188,7 +188,7 @@ public class PDFEncryptor {
          * @param allow {@code true} to allow printing
          * @return this builder for method chaining
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder allowPrinting(boolean allow) {
             this.allowPrinting = allow;
             return this;
@@ -201,7 +201,7 @@ public class PDFEncryptor {
          * @param allow {@code true} to allow modification
          * @return this builder for method chaining
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder allowModification(boolean allow) {
             this.allowModification = allow;
             return this;
@@ -214,7 +214,7 @@ public class PDFEncryptor {
          * @param allow {@code true} to allow copying
          * @return this builder for method chaining
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder allowCopying(boolean allow) {
             this.allowCopying = allow;
             return this;
@@ -227,7 +227,7 @@ public class PDFEncryptor {
          * @param allow {@code true} to allow annotations
          * @return this builder for method chaining
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder allowAnnotations(boolean allow) {
             this.allowAnnotations = allow;
             return this;
@@ -240,7 +240,7 @@ public class PDFEncryptor {
          * @param allow {@code true} to allow form filling
          * @return this builder for method chaining
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder allowFormFilling(boolean allow) {
             this.allowFormFilling = allow;
             return this;
@@ -267,7 +267,7 @@ public class PDFEncryptor {
          * @param allow {@code true} to allow assembly
          * @return this builder for method chaining
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder allowAssembly(boolean allow) {
             this.allowAssembly = allow;
             return this;
@@ -300,7 +300,7 @@ public class PDFEncryptor {
          *
          * @return this builder for method chaining
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public Builder denyAll() {
             this.allowPrinting = false;
             this.allowModification = false;
@@ -362,7 +362,7 @@ public class PDFEncryptor {
          * @throws IllegalStateException if no user password is set
          * @throws IOException if an I/O error occurs during encryption
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public ByteArrayOutputStream encrypt(String inputPath) throws IOException {
             Objects.requireNonNull(inputPath, "inputPath must not be null");
             return encrypt(new File(inputPath));
@@ -378,7 +378,7 @@ public class PDFEncryptor {
          * @throws IllegalStateException if no user password is set
          * @throws IOException if an I/O error occurs during encryption
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public ByteArrayOutputStream encrypt(InputStream inputStream) throws IOException {
             Objects.requireNonNull(inputStream, "inputStream must not be null");
 
@@ -396,7 +396,7 @@ public class PDFEncryptor {
          * @throws IllegalStateException if no user password is set
          * @throws IOException if an I/O error occurs during encryption
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public ByteArrayOutputStream encrypt(byte[] pdfBytes) throws IOException {
             Objects.requireNonNull(pdfBytes, "pdfBytes must not be null");
 
@@ -414,7 +414,7 @@ public class PDFEncryptor {
          * @throws IllegalStateException if no user password is set
          * @throws IOException if an I/O error occurs during encryption
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public ByteArrayOutputStream encrypt(ByteArrayOutputStream outputStream) throws IOException {
             Objects.requireNonNull(outputStream, "outputStream must not be null");
             return encrypt(outputStream.toByteArray());
@@ -429,7 +429,7 @@ public class PDFEncryptor {
          * @throws IllegalStateException if no user password is set
          * @throws IOException if an I/O error occurs during encryption
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public ByteArrayOutputStream encrypt(URL url) throws IOException {
             Objects.requireNonNull(url, "url must not be null");
 
@@ -449,7 +449,7 @@ public class PDFEncryptor {
          * @throws IllegalStateException if no user password is set
          * @throws IOException if an I/O error occurs during encryption
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public ByteArrayOutputStream encrypt(EResourceProvider resourceProvider, String resourceName) throws IOException {
             Objects.requireNonNull(resourceProvider, "resourceProvider must not be null");
             Objects.requireNonNull(resourceName, "resourceName must not be null");
@@ -474,7 +474,7 @@ public class PDFEncryptor {
          * @throws IllegalStateException if no user password is set
          * @throws IOException if an I/O error occurs during encryption or writing
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public File encryptToFile(File inputFile, File outputFile) throws IOException {
             Objects.requireNonNull(outputFile, "outputFile must not be null");
 
@@ -500,7 +500,7 @@ public class PDFEncryptor {
          * @throws IllegalStateException if no user password is set
          * @throws IOException if an I/O error occurs during encryption or writing
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public File encryptToFile(Path inputPath, Path outputPath) throws IOException {
             Objects.requireNonNull(inputPath, "inputPath must not be null");
             Objects.requireNonNull(outputPath, "outputPath must not be null");
@@ -517,7 +517,7 @@ public class PDFEncryptor {
          * @throws IllegalStateException if no user password is set
          * @throws IOException if an I/O error occurs during encryption or writing
          */
-        @PublicAPI
+        @PublicAPI.Status.EXPERIMENTAL
         public File encryptToFile(String inputPath, String outputPath) throws IOException {
             Objects.requireNonNull(inputPath, "inputPath must not be null");
             Objects.requireNonNull(outputPath, "outputPath must not be null");
