@@ -18,6 +18,7 @@
 - PageBreakVariant enum added (Always, Avoid, Even, Odd)
 - Checks for border styles and dimensions in Section and Part styles
 - New module postprocessor for merging multiple PDF documents into one
+- PDFEncryptor in postprocessor module for adding password protection to PDFs
 
 
 ## [0.9.2] - 2025-11-29

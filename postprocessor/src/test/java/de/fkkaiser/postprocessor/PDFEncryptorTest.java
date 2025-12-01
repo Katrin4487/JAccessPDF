@@ -1,3 +1,18 @@
+/*
+ * Copyright 2025 Katrin Kaiser
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.fkkaiser.postprocessor;
 
 import org.apache.pdfbox.Loader;
@@ -32,7 +47,7 @@ class PDFEncryptorTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        testPdf = createTestPdf("Test Content");
+        testPdf = createTestPdf();
     }
 
     @Test
@@ -119,11 +134,11 @@ class PDFEncryptorTest {
 
         try (PDDocument doc = Loader.loadPDF(encrypted.toByteArray(), USER_PASSWORD)) {
             AccessPermission permissions = doc.getCurrentAccessPermission();
-            assertFalse(permissions.canPrint());
-            assertFalse(permissions.canExtractContent());
-            assertFalse(permissions.canModify());
+            assertFalse(permissions.canPrint()," Printing should be denied");
+            assertFalse(permissions.canExtractContent()," Content extraction should be denied");
+            assertFalse(permissions.canModify()," Modification should be denied");
             // Accessibility should still be allowed
-            assertTrue(permissions.canExtractForAccessibility());
+            assertTrue(permissions.canExtractForAccessibility()," Accessibility extraction should be allowed");
         }
     }
 
@@ -211,7 +226,7 @@ class PDFEncryptorTest {
 
     // Helper methods
 
-    private File createTestPdf(String text) throws IOException {
+    private File createTestPdf() throws IOException {
         File file = tempDir.resolve("test-" + System.nanoTime() + ".pdf").toFile();
 
         try (PDDocument document = new PDDocument()) {
@@ -222,7 +237,7 @@ class PDFEncryptorTest {
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
                 contentStream.newLineAtOffset(100, 700);
-                contentStream.showText(text);
+                contentStream.showText("Test Content");
                 contentStream.endText();
             }
 
