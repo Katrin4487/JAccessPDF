@@ -38,7 +38,7 @@ import java.util.Optional;
  * properties and behaviors.
  *
  * @author Katrin Kaiser
- * @version 1.2.0
+ * @version 1.2.1
  */
 @Internal
 public class SectionFoGenerator extends BlockElementFoGenerator {
@@ -82,8 +82,11 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
         appendSectionAttributes(builder, section, style, styleSheet);
         builder.append(">");
 
-        // Section marker
-        if (style.getSectionMarker() != null && style.getTextStyleName() != null && !style.getSectionMarker().isEmpty()) {
+        // Section marker (only if style is not null)
+        if (style != null &&
+                style.getSectionMarker() != null &&
+                style.getTextStyleName() != null &&
+                !style.getSectionMarker().isEmpty()) {
 
             Optional<TextStyle> textStyleOpt = styleSheet.findFontStyleByName(style.getTextStyleName());
 

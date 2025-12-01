@@ -15,7 +15,18 @@
  */
 package de.fkkaiser.model.style;
 
+import de.fkkaiser.model.annotation.Internal;
+
+/**
+ * A class representing properties of table styles
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
+ */
+@Internal
 public class LayoutTableStyleProperties extends ElementBlockStyleProperties{
+
+    @Internal
     @Override
     public void mergeWith(ElementStyleProperties elemBase) {
 

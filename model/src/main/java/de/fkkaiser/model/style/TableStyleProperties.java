@@ -19,48 +19,72 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Concrete style properties for a table element (fo:table).
+ * Represents the style properties for a table element (`fo:table`).
+ * <p>
+ * This class extends `TextBlockStyleProperties` and provides additional
+ * properties specific to tables, such as border collapse and width.
+ * It supports copying of properties to create new instances with the same styles.
+ *
+ * @version 1.1.0
  */
 @JsonTypeName(StyleTargetTypes.TABLE)
 public class TableStyleProperties extends TextBlockStyleProperties {
 
     /**
-     * Defines the table's border model.
-     * Typically, "collapse".
+     * Specifies the border model for the table.
+     * Common values include "collapse".
      */
     @JsonProperty("border-collapse")
     private String borderCollapse;
 
     /**
-     * Defines the total width of the table, e.g., "100%" or "15cm".
+     * Specifies the total width of the table.
+     * Examples of valid values include "100%" or "15cm".
      */
     @JsonProperty("width")
     private String width;
 
     // --- Getters and Setters ---
+
+    /**
+     * Gets the border collapse property of the table.
+     *
+     * @return the border collapse property as a `String`
+     */
     public String getBorderCollapse() { return borderCollapse; }
+
+    /**
+     * Sets the border collapse property of the table.
+     *
+     * @param borderCollapse the border collapse property to set
+     */
     public void setBorderCollapse(String borderCollapse) { this.borderCollapse = borderCollapse; }
+
+    /**
+     * Gets the width of the table.
+     *
+     * @return the width of the table as a `String`
+     */
     public String getWidth() { return width; }
+
+    /**
+     * Sets the width of the table.
+     *
+     * @param width the width of the table to set
+     */
     public void setWidth(String width) { this.width = width; }
 
-    // --- Overrides ---
-
-    public void mergeWith(TextBlockStyleProperties base) {
-         super.mergeWith(base);
-         if (base instanceof TableStyleProperties baseTable) {
-            if (this.borderCollapse == null) {
-                this.borderCollapse = baseTable.getBorderCollapse();
-            }
-            if (this.width == null) {
-                this.width = baseTable.getWidth();
-            }
-        }
-    }
-
+    /**
+     * Creates a copy of the current `TableStyleProperties` object.
+     * <p>
+     * This method copies all properties of the current object to a new instance.
+     *
+     * @return a new `TableStyleProperties` instance with the same properties
+     */
     @Override
     public TableStyleProperties copy() {
         TableStyleProperties newInstance = new TableStyleProperties();
-         applyPropertiesTo(newInstance);
+        applyPropertiesTo(newInstance);
         newInstance.setBorderCollapse(this.borderCollapse);
         newInstance.setWidth(this.width);
         return newInstance;

@@ -92,31 +92,36 @@ public abstract class TextBlock extends AbstractElement {
     }
 
 
-    @Override
+   @Override
     public void resolveStyles(StyleResolverContext context) {
         ElementBlockStyleProperties baseStyle = context.parentBlockStyle();
-        if (baseStyle == null) {
-            baseStyle = new de.fkkaiser.model.style.ParagraphStyleProperties();
-        }
 
-        TextBlockStyleProperties finalStyle = new TextBlockStyleProperties();
+        // Start with the SPECIFIC style from the style map (preserves type!)
+        TextBlockStyleProperties finalStyle = null;
 
-        if(baseStyle instanceof TextBlockStyleProperties) {
-            finalStyle = (TextBlockStyleProperties) baseStyle.copy();
-        }
-
-            if (this.styleClass != null) {
-                ElementStyle specificElementStyle = context.styleMap().get(this.styleClass);
-                if (specificElementStyle != null && specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
-                    // The specific style's properties are merged into our final style.
-                    finalStyle.mergeWith(specificStyle);
-                }
+        if (this.styleClass != null) {
+            ElementStyle specificElementStyle = context.styleMap().get(this.styleClass);
+            if (specificElementStyle != null &&
+                    specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
+                // ✅ CRITICAL: Start with a COPY of the specific style (preserves HeadlineStyleProperties, etc.)
+                finalStyle = (TextBlockStyleProperties) specificStyle.copy();
             }
+        }
 
-            this.resolvedStyle = finalStyle;
+        // If no specific style found, create a default
+        if (finalStyle == null) {
+            finalStyle = new TextBlockStyleProperties();
+        }
 
+        // Now merge with parent (if parent is a TextBlockStyleProperties)
+        if (baseStyle instanceof TextBlockStyleProperties parentTextStyle) {
 
-        // Delegate to inline elements with the newly resolved context.
+            finalStyle.mergeWith(parentTextStyle);
+        }
+
+        this.resolvedStyle = finalStyle;
+
+        // Delegate to inline elements with the newly resolved context
         StyleResolverContext childContext = context.createChildContext(this.resolvedStyle);
         for (InlineElement inlineElement : this.inlineElements) {
             inlineElement.resolveStyles(childContext);

@@ -18,6 +18,9 @@ package de.fkkaiser.model.style;
 /**
  * Defines the available 'target-element' constants for style definitions.
  * Using these constants prevents typos in the style JSON configuration.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
 public final class StyleTargetTypes {
 

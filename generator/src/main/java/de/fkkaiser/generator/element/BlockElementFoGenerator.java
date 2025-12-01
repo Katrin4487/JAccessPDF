@@ -33,7 +33,7 @@ import de.fkkaiser.model.style.StyleSheet;
  */
 public abstract class BlockElementFoGenerator extends ElementFoGenerator {
 
-    protected final XslFoGenerator mainGenerator;
+     protected final XslFoGenerator mainGenerator;
 
     protected BlockElementFoGenerator(XslFoGenerator mainGenerator) {
         this.mainGenerator = mainGenerator;
@@ -51,6 +51,7 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
     protected void appendBlockAttributes(StringBuilder builder,
                                          ElementBlockStyleProperties style,
                                          StyleSheet styleSheet) {
+
         if (style == null) return;
 
         // Font style

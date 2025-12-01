@@ -25,16 +25,22 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import de.fkkaiser.model.annotation.Inheritable;
 
 /**
- * Represents a set of style properties that can be applied to an element.
+ * Represents a set of style properties that can be applied to block elements.
  * This abstract class provides common properties related to spacing, indentation, padding,
  * and borders.
+ *
+ * <p>Properties are selectively inheritable based on the {@link Inheritable} annotation.
+ * For example, colors typically inherit from parent elements, while layout properties
+ * like page breaks do not.</p>
  *
  * @author Katrin Kaiser
  * @version 1.1.0
  */
+@Internal
 public class ElementBlockStyleProperties extends ElementStyleProperties {
 
     private static final Logger log = LoggerFactory.getLogger(ElementBlockStyleProperties.class);
@@ -57,6 +63,8 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
         // prevent initializing
     }
 
+    // === Spacing Properties (generally NOT inherited) ===
+
     @JsonProperty("space-before")
     private String spaceBefore;
 
@@ -68,6 +76,8 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
 
     @JsonProperty("end-indent")
     private String endIndent;
+
+    // === Padding Properties (generally NOT inherited) ===
 
     @JsonProperty("padding")
     private String padding;
@@ -84,6 +94,8 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
     @JsonProperty("padding-bottom")
     private String paddingBottom;
 
+    // === Border Properties (generally NOT inherited) ===
+
     @JsonProperty("border")
     private String border;
 
@@ -99,53 +111,44 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
     @JsonProperty("border-bottom")
     private String borderBottom;
 
+    // === Layout Control Properties (NOT inherited) ===
+
     @JsonProperty("keep-with-next")
-    private Boolean keepWithNext; //keep-with-next.within-page,within-column,always="always"
+    private Boolean keepWithNext;
 
     @JsonProperty("break-before")
     private PageBreakVariant breakBefore;
+
     @JsonProperty("break-after")
     private PageBreakVariant breakAfter;
 
+    // === Color Properties (typically inherited) ===
+
+    /**
+     * Background color for the element.
+     * This property is inheritable by default but can be overridden in subclasses
+     * by removing the @Inheritable annotation.
+     */
+    @Inheritable
     @JsonProperty("background-color")
     private String backgroundColor;
 
-
     /**
-     * Merges the properties from a base style into this style.
-     * Typically, properties from the base style are only applied if they are
-     * not already set in this style.
+     * Merges properties from a base style into this style.
+     * Uses reflection-based merging from the parent class, which only merges
+     * properties marked with {@link Inheritable}.
+     *
+     * <p>Note: This implementation now relies on the annotation-based system.
+     * The manual merging code has been removed in favor of the generic approach.</p>
      *
      * @param elemBase The base style to inherit from. Can be null.
      */
     @Internal
-     @Override
+    @Override
     public void mergeWith(ElementStyleProperties elemBase){
-        if(!(elemBase instanceof ElementBlockStyleProperties base)) {
-            log.info("Attempted to merge with an incompatible style type: {}. Merge will be skipped.",
-                    elemBase==null ? "null" :elemBase.getClass().getName());
-            return;
-        }
-        this.spaceAfter = Optional.ofNullable(this.spaceAfter).orElse(base.spaceAfter);
-        this.spaceBefore = Optional.ofNullable(this.spaceBefore).orElse(base.spaceBefore);
-        this.startIndent = Optional.ofNullable(this.startIndent).orElse(base.startIndent);
-        this.endIndent = Optional.ofNullable(this.endIndent).orElse(base.endIndent);
-        this.padding = Optional.ofNullable(this.padding).orElse(base.getPadding());
-        this.paddingLeft = Optional.ofNullable(this.paddingLeft).orElse(base.getPaddingLeft());
-        this.paddingRight = Optional.ofNullable(this.paddingRight).orElse(base.getPaddingRight());
-        this.paddingTop = Optional.ofNullable(this.paddingTop).orElse(base.getPaddingTop());
-        this.paddingBottom = Optional.ofNullable(this.paddingBottom).orElse(base.getPaddingBottom());
-        this.border = Optional.ofNullable(this.border).orElse(base.getBorder());
-        this.borderLeft = Optional.ofNullable(this.borderLeft).orElse(base.getBorderLeft());
-        this.borderRight = Optional.ofNullable(this.borderRight).orElse(base.getBorderRight());
-        this.borderTop = Optional.ofNullable(this.borderTop).orElse(base.getBorderTop());
-        this.borderBottom = Optional.ofNullable(this.borderBottom).orElse(base.getBorderBottom());
-        this.keepWithNext = Optional.ofNullable(this.keepWithNext).orElse(base.keepWithNext);
-        this.backgroundColor = Optional.ofNullable(this.backgroundColor).orElse(base.backgroundColor);
-        this.breakBefore = Optional.ofNullable(this.breakBefore).orElse(base.breakBefore);
-        this.breakAfter = Optional.ofNullable(this.breakAfter).orElse(base.breakAfter);
+        // Use parent's reflection-based merging
+        super.mergeWith(elemBase);
     }
-
 
     // --- Getter & Setter ---
 
@@ -450,14 +453,24 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
     public void setBreakAfter(PageBreakVariant breakAfter){
         this.breakAfter = breakAfter;}
 
+    /**
+     * Gets the background color.
+     * @return The background color.
+     */
     public String getBackgroundColor() {
-         return backgroundColor;
+        return backgroundColor;
     }
 
+    /**
+     * Sets the background color.
+     * @param backgroundColor The background color.
+     */
     public void setBackgroundColor(String backgroundColor) {
-         this.backgroundColor = backgroundColor;
+        this.backgroundColor = backgroundColor;
     }
+
     //  --- Other methods ---
+
     /**
      * Helper method to apply all properties from this object to another.
      * Used by the copy() method in concrete subclasses.
@@ -483,7 +496,6 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
         target.setBreakBefore(breakBefore);
         target.setBreakAfter(breakAfter);
         target.setBackgroundColor(backgroundColor);
-
     }
 
     /**
@@ -493,19 +505,12 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      *
      * @return A new instance with the same property values as this object.
      */
+    @Override
     public ElementBlockStyleProperties copy(){
-        ElementBlockStyleProperties copy = new ElementBlockStyleProperties() {
-            @Override
-            public ElementBlockStyleProperties copy() {
-                ElementBlockStyleProperties copy = new ElementBlockStyleProperties();
-                copy.mergeWith(this);
-                return copy;
-            }
-        };
-        copy.mergeWith(this);
+        ElementBlockStyleProperties copy = new ElementBlockStyleProperties();
+        applyPropertiesTo(copy);
         return copy;
     }
-
 
     // === private methods ===
 
@@ -524,5 +529,4 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
     public List<String> validate() {
         return new ArrayList<>();
     }
-
 }

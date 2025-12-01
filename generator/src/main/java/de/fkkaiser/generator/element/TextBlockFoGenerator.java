@@ -24,6 +24,9 @@ import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.structure.TextBlock;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TextBlockStyleProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -37,6 +40,7 @@ import java.util.UUID;
  */
 public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
 
+    private static final Logger log = LoggerFactory.getLogger(TextBlockFoGenerator.class);
     protected TextBlockFoGenerator(XslFoGenerator mainGenerator) {
         super(mainGenerator);
     }
@@ -54,13 +58,16 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
         // Generate unique ID for headlines
         String headlineId = "";
         if (element instanceof Headline headline) {
+            log.debug("Adding headline {}",style);
             headlineId = " id=\"headline-" + UUID.randomUUID().toString() + "\"";
             headlines.add(headline);
+
         }
 
         builder.append("      <fo:block")
                 .append(headlineId)
                 .append(" role=\"").append(getRole(textBlock)).append("\"");
+
 
         // Append common block attributes (from BlockElementFoGenerator)
         appendBlockAttributes(builder, style, styleSheet);

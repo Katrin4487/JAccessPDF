@@ -16,32 +16,41 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 
 /**
  * Concrete style properties for the body of a footnote element.
  * It inherits all properties from TextBlockStyleProperties.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
+@PublicAPI
 @JsonTypeName(StyleTargetTypes.FOOTNOTE) // You'll need to add FOOTNOTE to StyleTargetTypes
 public class FootnoteStyleProperties extends TextBlockStyleProperties {
 
-    // This class could have footnote-specific properties in the future.
-    // For now, it just provides a concrete implementation for styling.
 
+    /**
+     * Merges the current style properties with the provided base properties.
+     * @param base the base style properties to merge with
+     */
+    @Internal
     @Override
     public void mergeWith(ElementStyleProperties base) {
-        // First, let the parent class merge all common properties.
         super.mergeWith(base);
 
-        // Then, merge properties specific to this class (if any are added later).
-        if (base instanceof FootnoteStyleProperties /* baseFootnote */) {
-            // No specific properties to merge yet.
-        }
+        // No specific properties to merge yet.
     }
 
+    /**
+     * Creates a copy of the current FootnoteStyleProperties instance.
+     * @return a new FootnoteStyleProperties instance with the same properties
+     */
+    @Internal
     @Override
     public FootnoteStyleProperties copy() {
         FootnoteStyleProperties newInstance = new FootnoteStyleProperties();
-        // Use the helper method from the abstract parent to copy all properties.
         applyPropertiesTo(newInstance);
         return newInstance;
     }

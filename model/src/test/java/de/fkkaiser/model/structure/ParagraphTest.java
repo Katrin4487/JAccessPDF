@@ -40,7 +40,7 @@ public class ParagraphTest {
                 .build();
 
         assertEquals(2,paragraph.inlineElements.size(),"Should contains all inline elements");
-        assertEquals(paragraph.inlineElements.getFirst().getStyleClass(), REGULAR_STYLE
+        assertEquals(REGULAR_STYLE, paragraph.inlineElements.getFirst().getStyleClass()
                 ,"Inline elements have the correct style class");
 
     }

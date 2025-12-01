@@ -15,176 +15,310 @@
  */
 package de.fkkaiser.model.style;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SectionStylePropertiesTest {
 
-    @Test
-    void shouldMergeSectionSpecificProperties() {
-        SectionStyleProperties base = new SectionStyleProperties();
-        base.setSectionMarker("§");
-        base.setKeepTogether(true);
-        base.setBreakBefore(PageBreakVariant.PAGE);
-        base.setBreakAfter(PageBreakVariant.COLUMN);
-        base.setKeepWithNext(true);
-        base.setOrphans(2);
-        base.setWidows(2);
-        base.setPadding("1cm");
+    @Nested
+    @DisplayName("mergeWith Tests - Annotation-Based Inheritance")
+    class MergeWithTests {
 
-        SectionStyleProperties child = new SectionStyleProperties();
-        child.setPadding("2cm"); // Override
-        // All section-specific properties remain null
+        @Test
+        @DisplayName("Should inherit section-specific properties from SectionStyleProperties")
+        void shouldInheritSectionProperties() {
+            SectionStyleProperties base = new SectionStyleProperties();
+            base.setSectionMarker("§");
+            base.setKeepTogether(true);
+            base.setOrphans(2);
+            base.setWidows(3);
+            base.setTextStyleName("marker-style");
 
-        child.mergeWith(base);
+            SectionStyleProperties child = new SectionStyleProperties();
+            // All section properties are null
 
-        // Section-specific properties should be inherited
-        assertEquals("§", child.getSectionMarker());
-        assertTrue(child.getKeepTogether());
-        assertEquals(PageBreakVariant.PAGE, child.getBreakBefore());
-        assertEquals("column", child.getBreakAfter().getFoValue());
-        assertTrue(child.getKeepWithNext());
-        assertEquals(2, child.getOrphans());
-        assertEquals(2, child.getWidows());
+            child.mergeWith(base);
 
-        // Overridden property should keep its value
-        assertEquals("2cm", child.getPadding());
+            // Section-specific properties WITHOUT @Inheritable should still be inherited
+            // because they're manually merged in the overridden mergeWith() method
+            assertEquals("§", child.getSectionMarker());
+            assertTrue(child.getKeepTogether());
+            assertEquals(2, child.getOrphans());
+            assertEquals(3, child.getWidows());
+            assertEquals("marker-style", child.getTextStyleName());
+        }
+
+        @Test
+        @DisplayName("Should NOT override non-null section properties")
+        void shouldNotOverrideNonNullProperties() {
+            SectionStyleProperties base = new SectionStyleProperties();
+            base.setSectionMarker("§");
+            base.setKeepTogether(true);
+            base.setOrphans(2);
+            base.setWidows(2);
+
+            SectionStyleProperties child = new SectionStyleProperties();
+            child.setSectionMarker("⚠️"); // Already set
+            child.setKeepTogether(false); // Already set
+            child.setOrphans(5); // Already set
+            child.setWidows(5); // Already set
+
+            child.mergeWith(base);
+
+            // Should keep child's values
+            assertEquals("⚠️", child.getSectionMarker());
+            assertFalse(child.getKeepTogether());
+            assertEquals(5, child.getOrphans());
+            assertEquals(5, child.getWidows());
+        }
+
+        @Test
+        @DisplayName("Should inherit backgroundColor from parent (@Inheritable)")
+        void shouldInheritInheritableProperties() {
+            SectionStyleProperties base = new SectionStyleProperties();
+            base.setBackgroundColor("#ff0000");
+
+            SectionStyleProperties child = new SectionStyleProperties();
+            // backgroundColor is null
+
+            child.mergeWith(base);
+
+            // backgroundColor has @Inheritable annotation -> should be inherited
+            assertEquals("#ff0000", child.getBackgroundColor());
+        }
+
+        @Test
+        @DisplayName("Should NOT inherit padding/border from parent (no @Inheritable)")
+        void shouldNotInheritNonInheritableProperties() {
+            SectionStyleProperties base = new SectionStyleProperties();
+            base.setPadding("1cm");
+            base.setBorder("1pt solid black");
+            base.setSpaceBefore("2cm");
+            base.setBreakBefore(PageBreakVariant.PAGE);
+
+            SectionStyleProperties child = new SectionStyleProperties();
+            // All properties are null
+
+            child.mergeWith(base);
+
+            // These properties have NO @Inheritable annotation -> should NOT be inherited
+            assertNull(child.getPadding());
+            assertNull(child.getBorder());
+            assertNull(child.getSpaceBefore());
+            assertNull(child.getBreakBefore());
+        }
+
+        @Test
+        @DisplayName("Should NOT inherit from incompatible type (ElementBlockStyleProperties)")
+        void shouldNotInheritFromDifferentType() {
+            ElementBlockStyleProperties base = new ElementBlockStyleProperties();
+            base.setPadding("1cm");
+            base.setBorder("1pt solid black");
+            base.setBackgroundColor("#ff0000");
+
+            SectionStyleProperties child = new SectionStyleProperties();
+            child.setBackgroundColor(null); // Explicitly null
+
+            child.mergeWith(base);
+
+            // Different class types -> mergeWith() should skip
+            // (class equality check in ElementStyleProperties.mergeWith())
+            assertNull(child.getBackgroundColor());
+            assertNull(child.getPadding());
+            assertNull(child.getBorder());
+
+            // Section-specific properties should remain null
+            assertNull(child.getSectionMarker());
+            assertNull(child.getKeepTogether());
+        }
+
+        @Test
+        @DisplayName("Should handle partial merge correctly")
+        void shouldHandlePartialMerge() {
+            SectionStyleProperties base = new SectionStyleProperties();
+            base.setSectionMarker("§");
+            base.setOrphans(2);
+            base.setBackgroundColor("#efefef");
+            // Other properties null
+
+            SectionStyleProperties child = new SectionStyleProperties();
+            child.setKeepTogether(true);
+            child.setWidows(3);
+            // Other properties null
+
+            child.mergeWith(base);
+
+            // Should have combination
+            assertEquals("§", child.getSectionMarker()); // from base (manual merge)
+            assertTrue(child.getKeepTogether()); // from child (kept)
+            assertEquals(2, child.getOrphans()); // from base (manual merge)
+            assertEquals(3, child.getWidows()); // from child (kept)
+            assertEquals("#efefef", child.getBackgroundColor()); // from base (@Inheritable)
+            assertNull(child.getBreakBefore()); // still null
+        }
     }
 
-    @Test
-    void shouldNotOverrideNonNullProperties() {
-        SectionStyleProperties base = new SectionStyleProperties();
-        base.setSectionMarker("§");
-        base.setKeepTogether(true);
+    @Nested
+    @DisplayName("Copy Functionality Tests")
+    class CopyTests {
 
-        SectionStyleProperties child = new SectionStyleProperties();
-        child.setSectionMarker("⚠️"); // Already set
-        child.setKeepTogether(false); // Already set
+        @Test
+        @DisplayName("Should create deep copy with all properties")
+        void shouldCreateDeepCopy() {
+            SectionStyleProperties original = new SectionStyleProperties();
+            original.setSectionMarker("⚠️");
+            original.setTextStyleName("warning-marker");
+            original.setKeepTogether(true);
+            original.setBreakBefore(PageBreakVariant.EVEN_PAGE);
+            original.setBreakAfter(PageBreakVariant.ODD_PAGE);
+            original.setKeepWithNext(false);
+            original.setOrphans(3);
+            original.setWidows(3);
+            original.setPadding("1.5cm");
+            original.setBorder("2pt solid red");
+            original.setBackgroundColor("#fff3cd");
 
-        child.mergeWith(base);
+            SectionStyleProperties copy = original.copy();
 
-        // Should keep child's values
-        assertEquals("⚠️", child.getSectionMarker());
-        assertFalse(child.getKeepTogether());
+            // Verify all properties are copied
+            assertEquals(original.getSectionMarker(), copy.getSectionMarker());
+            assertEquals(original.getTextStyleName(), copy.getTextStyleName());
+            assertEquals(original.getKeepTogether(), copy.getKeepTogether());
+            assertEquals(original.getBreakBefore(), copy.getBreakBefore());
+            assertEquals(original.getBreakAfter(), copy.getBreakAfter());
+            assertEquals(original.getKeepWithNext(), copy.getKeepWithNext());
+            assertEquals(original.getOrphans(), copy.getOrphans());
+            assertEquals(original.getWidows(), copy.getWidows());
+            assertEquals(original.getPadding(), copy.getPadding());
+            assertEquals(original.getBorder(), copy.getBorder());
+            assertEquals(original.getBackgroundColor(), copy.getBackgroundColor());
+
+            // Verify it's a different instance
+            assertNotSame(original, copy);
+
+            // Modify copy
+            copy.setSectionMarker("►");
+            copy.setKeepTogether(false);
+            copy.setOrphans(5);
+            copy.setPadding("3cm");
+            copy.setBackgroundColor("#000000");
+
+            // Original should remain unchanged
+            assertEquals("⚠️", original.getSectionMarker());
+            assertTrue(original.getKeepTogether());
+            assertEquals(3, original.getOrphans());
+            assertEquals("1.5cm", original.getPadding());
+            assertEquals("#fff3cd", original.getBackgroundColor());
+        }
+
+        @Test
+        @DisplayName("Should copy null properties correctly")
+        void shouldCopyNullProperties() {
+            SectionStyleProperties original = new SectionStyleProperties();
+            // All properties are null
+
+            SectionStyleProperties copy = original.copy();
+
+            assertNull(copy.getSectionMarker());
+            assertNull(copy.getTextStyleName());
+            assertNull(copy.getKeepTogether());
+            assertNull(copy.getBreakBefore());
+            assertNull(copy.getBreakAfter());
+            assertNull(copy.getKeepWithNext());
+            assertNull(copy.getOrphans());
+            assertNull(copy.getWidows());
+            assertNull(copy.getPadding());
+            assertNull(copy.getBorder());
+            assertNull(copy.getBackgroundColor());
+        }
     }
 
-    @Test
-    void shouldMergeWithNonSectionStyleProperties() {
-        ElementBlockStyleProperties base = new ElementBlockStyleProperties();
-        base.setPadding("1cm");
-        base.setBorder("1pt solid black");
+    @Nested
+    @DisplayName("Property Getter/Setter Tests")
+    class PropertyTests {
 
-        SectionStyleProperties child = new SectionStyleProperties();
-        child.setBackgroundColor("#fff");
+        @Test
+        @DisplayName("Should set and get all properties correctly")
+        void shouldSetAndGetAllProperties() {
+            SectionStyleProperties style = new SectionStyleProperties();
 
-        child.mergeWith(base);
+            style.setSectionMarker("•");
+            style.setTextStyleName("bullet-style");
+            style.setKeepTogether(true);
+            style.setBreakBefore(PageBreakVariant.ODD_PAGE);
+            style.setBreakAfter(PageBreakVariant.AUTO);
+            style.setKeepWithNext(false);
+            style.setOrphans(4);
+            style.setWidows(4);
+            style.setBackgroundColor("#f0f0f0");
 
-        // Should inherit from ElementBlockStyleProperties
-        assertEquals("1cm", child.getPadding());
-        assertEquals("1pt solid black", child.getBorder());
-        assertEquals("#fff", child.getBackgroundColor());
-
-        // Section-specific properties should remain null (no merge from non-SectionStyleProperties)
-        assertNull(child.getSectionMarker());
-        assertNull(child.getKeepTogether());
+            assertEquals("•", style.getSectionMarker());
+            assertEquals("bullet-style", style.getTextStyleName());
+            assertTrue(style.getKeepTogether());
+            assertEquals(PageBreakVariant.ODD_PAGE, style.getBreakBefore());
+            assertEquals("auto", style.getBreakAfter().getFoValue());
+            assertFalse(style.getKeepWithNext());
+            assertEquals(4, style.getOrphans());
+            assertEquals(4, style.getWidows());
+            assertEquals("#f0f0f0", style.getBackgroundColor());
+        }
     }
 
-    @Test
-    void shouldCreateDeepCopy() {
-        SectionStyleProperties original = new SectionStyleProperties();
-        original.setSectionMarker("⚠️");
-        original.setKeepTogether(true);
-        original.setBreakBefore(PageBreakVariant.EVEN_PAGE);
-        original.setBreakAfter(PageBreakVariant.ODD_PAGE);
-        original.setKeepWithNext(false);
-        original.setOrphans(3);
-        original.setWidows(3);
-        original.setPadding("1.5cm");
-        original.setBorder("2pt solid red");
+    @Nested
+    @DisplayName("Validation Tests")
+    class ValidationTests {
 
-        SectionStyleProperties copy = original.copy();
+        @Test
+        @DisplayName("Should return error when section marker is set without text style")
+        void shouldReturnErrorForMarkerWithoutTextStyle() {
+            SectionStyleProperties style = new SectionStyleProperties();
+            style.setSectionMarker("§");
+            // textStyleName is null
 
-        // All properties should be copied
-        assertEquals(original.getSectionMarker(), copy.getSectionMarker());
-        assertEquals(original.getKeepTogether(), copy.getKeepTogether());
-        assertEquals(original.getBreakBefore(), copy.getBreakBefore());
-        assertEquals(original.getBreakAfter(), copy.getBreakAfter());
-        assertEquals(original.getKeepWithNext(), copy.getKeepWithNext());
-        assertEquals(original.getOrphans(), copy.getOrphans());
-        assertEquals(original.getWidows(), copy.getWidows());
-        assertEquals(original.getPadding(), copy.getPadding());
-        assertEquals(original.getBorder(), copy.getBorder());
+            List<String> errors = style.validate();
 
-        // Modify copy
-        copy.setSectionMarker("►");
-        copy.setKeepTogether(false);
-        copy.setOrphans(5);
-        copy.setPadding("3cm");
+            assertFalse(errors.isEmpty());
+            assertTrue(errors.get(0).contains("Section marker is set without setting text style name"));
+        }
 
-        // Original should remain unchanged
-        assertEquals("⚠️", original.getSectionMarker());
-        assertTrue(original.getKeepTogether());
-        assertEquals(3, original.getOrphans());
-        assertEquals("1.5cm", original.getPadding());
-    }
+        @Test
+        @DisplayName("Should pass validation when section marker has text style")
+        void shouldPassValidationWithMarkerAndTextStyle() {
+            SectionStyleProperties style = new SectionStyleProperties();
+            style.setSectionMarker("§");
+            style.setTextStyleName("marker-style");
 
-    @Test
-    void shouldCopyNullProperties() {
-        SectionStyleProperties original = new SectionStyleProperties();
-        // All properties are null
+            List<String> errors = style.validate();
 
-        SectionStyleProperties copy = original.copy();
+            assertTrue(errors.isEmpty());
+        }
 
-        assertNull(copy.getSectionMarker());
-        assertNull(copy.getKeepTogether());
-        assertNull(copy.getBreakBefore());
-        assertNull(copy.getBreakAfter());
-        assertNull(copy.getKeepWithNext());
-        assertNull(copy.getOrphans());
-        assertNull(copy.getWidows());
-    }
+        @Test
+        @DisplayName("Should pass validation when section marker is not set")
+        void shouldPassValidationWithoutMarker() {
+            SectionStyleProperties style = new SectionStyleProperties();
+            // sectionMarker is null
+            style.setKeepTogether(true);
 
-    @Test
-    void shouldHandlePartialMerge() {
-        SectionStyleProperties base = new SectionStyleProperties();
-        base.setSectionMarker("§");
-        base.setOrphans(2);
-        // Other properties null
+            List<String> errors = style.validate();
 
-        SectionStyleProperties child = new SectionStyleProperties();
-        child.setKeepTogether(true);
-        child.setWidows(3);
-        // Other properties null
+            assertTrue(errors.isEmpty());
+        }
 
-        child.mergeWith(base);
+        @Test
+        @DisplayName("Should pass validation when all properties are null")
+        void shouldPassValidationWithAllNull() {
+            SectionStyleProperties style = new SectionStyleProperties();
+            // All properties null
 
-        // Should have combination
-        assertEquals("§", child.getSectionMarker()); // from base
-        assertTrue(child.getKeepTogether()); // from child
-        assertEquals(2, child.getOrphans()); // from base
-        assertEquals(3, child.getWidows()); // from child
-        assertNull(child.getBreakBefore()); // still null
-    }
+            List<String> errors = style.validate();
 
-    @Test
-    void shouldSetAndGetAllProperties() {
-        SectionStyleProperties style = new SectionStyleProperties();
-
-        style.setSectionMarker("•");
-        style.setKeepTogether(true);
-        style.setBreakBefore(PageBreakVariant.ODD_PAGE);
-        style.setBreakAfter(PageBreakVariant.AUTO);
-        style.setKeepWithNext(false);
-        style.setOrphans(4);
-        style.setWidows(4);
-
-        assertEquals("•", style.getSectionMarker());
-        assertTrue(style.getKeepTogether());
-        assertEquals(PageBreakVariant.ODD_PAGE, style.getBreakBefore());
-        assertEquals("auto", style.getBreakAfter().getFoValue());
-        assertFalse(style.getKeepWithNext());
-        assertEquals(4, style.getOrphans());
-        assertEquals(4, style.getWidows());
+            assertTrue(errors.isEmpty());
+        }
     }
 }

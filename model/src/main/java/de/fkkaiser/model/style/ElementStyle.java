@@ -153,6 +153,7 @@ public record ElementStyle(
                 @JsonSubTypes.Type(value = TableStyleProperties.class, name = StyleTargetTypes.TABLE),
                 @JsonSubTypes.Type(value = TableCellStyleProperties.class, name = StyleTargetTypes.TABLE_CELL),
                 @JsonSubTypes.Type(value = SectionStyleProperties.class, name = StyleTargetTypes.SECTION),
+                @JsonSubTypes.Type(value = PartStyleProperties.class, name = StyleTargetTypes.PART),
                 @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = StyleTargetTypes.TEXT_RUN),
                 @JsonSubTypes.Type(value = FootnoteStyleProperties.class, name = StyleTargetTypes.FOOTNOTE),
                 @JsonSubTypes.Type(value = BlockImageStyleProperties.class, name = StyleTargetTypes.BLOCK_IMAGE),

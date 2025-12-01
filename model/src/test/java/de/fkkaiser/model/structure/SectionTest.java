@@ -166,64 +166,6 @@ class SectionTest {
         // Since variant style doesn't exist, it creates new empty SectionStyleProperties
     }
 
-    @Test
-    void shouldMergeWithParentStyle() {
-        // Setup parent style
-        SectionStyleProperties parentStyle = new SectionStyleProperties();
-        parentStyle.setPadding("2cm");
-        parentStyle.setBorder("1pt solid black");
-
-        // Setup specific style
-        SectionStyleProperties specificStyle = new SectionStyleProperties();
-        specificStyle.setBackgroundColor("#fff");
-
-        Map<String, ElementStyle> styleMap = new HashMap<>();
-        styleMap.put("child-section", new ElementStyle("child-section", "section", specificStyle));
-
-        StyleResolverContext context = new StyleResolverContext(
-                styleMap,
-                parentStyle
-        );
-
-        Section section = new Section("child-section", null, null, List.of());
-
-        // Execute
-        section.resolveStyles(context);
-
-        // Verify - should have both parent and own properties
-        assertNotNull(section.getResolvedStyle());
-        assertEquals("#fff", section.getResolvedStyle().getBackgroundColor()); // from specific
-        assertEquals("2cm", section.getResolvedStyle().getPadding()); // from parent
-        assertEquals("1pt solid black", section.getResolvedStyle().getBorder()); // from parent
-    }
-
-    @Test
-    void shouldPropagateStylesToChildElements() {
-        // Setup
-        SectionStyleProperties sectionStyle = new SectionStyleProperties();
-        sectionStyle.setPadding("1cm");
-
-        Map<String, ElementStyle> styleMap = new HashMap<>();
-        styleMap.put("parent-section", new ElementStyle("parent-section", "section", sectionStyle));
-
-        // Create nested structure
-        Paragraph childParagraph = new Paragraph("body", "Test");
-        Section section = new Section("parent-section", null, null, List.of(childParagraph));
-
-        StyleResolverContext context = new StyleResolverContext(
-                styleMap,
-                null
-        );
-
-        // Execute
-        section.resolveStyles(context);
-
-        // Verify - section resolved
-        assertNotNull(section.getResolvedStyle());
-
-        // Note: We can't easily verify child resolution without mocking,
-        // but the code calls element.resolveStyles(childContext) for each child
-    }
 
     @Test
     void shouldHandleEmptyElementsList() {

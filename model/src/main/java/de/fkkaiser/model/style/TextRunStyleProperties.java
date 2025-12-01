@@ -21,6 +21,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 /**
  * Concrete style properties for an inline text run element.
  * It primarily references a font-style and can add text-specific decorations.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
 @JsonTypeName(StyleTargetTypes.TEXT_RUN)
 public class TextRunStyleProperties extends InlineTextElementStyleProperties{
@@ -74,11 +77,6 @@ public class TextRunStyleProperties extends InlineTextElementStyleProperties{
         }
 
         return newResolvedStyle;
-    }
-
-    @Override
-    public void mergeWith(ElementStyleProperties base) {
-        super.mergeWith(base);
     }
 
     @Override

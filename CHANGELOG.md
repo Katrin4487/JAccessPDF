@@ -2,10 +2,11 @@
 
 ## [Unreleased]
 ### Changed
--- nothing yet --
+- New Inheritance logic for styles: Only if annotation is set to INHERIT, styles are inherited from parent elements. Otherwise, only the explicitly set style parameters are used.
 
 ### Added
-- Validation integrated: if a section-marker is set, yo have to add a text-style-name (see Fixed)
+- Validation integrated: if a section-marker is set, you have to add a text-style-name (see Fixed)
+- JavaDocs updated and missing comments added (work in progress)
 
 ### Fixed
 - Section Params are not ignored anymore

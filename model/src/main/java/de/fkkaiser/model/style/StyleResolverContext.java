@@ -22,6 +22,8 @@ import java.util.Map;
  * It is immutable; a new context is created for each level of the element tree.
  *
  * @param parentBlockStyle Holds the style of the direct parent element. Can be null for top-level elements.
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
 public record StyleResolverContext(Map<String, ElementStyle> styleMap, ElementBlockStyleProperties parentBlockStyle) {
 

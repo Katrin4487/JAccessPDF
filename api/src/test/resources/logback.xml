@@ -10,6 +10,9 @@
     <logger name="de.fkkaiser.model.structure" level="DEBUG"/>
     <logger name="de.fkkaiser.model.style" level="DEBUG"/>
 
+    <logger name="org.apache.fop" level="WARN" />
+    <logger name="org.apache.xmlgraphics" level="WARN" />
+
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />
     </root>

@@ -27,24 +27,12 @@ import java.util.function.Consumer;
  * such as a book part or volume.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.0.1
  */
 @PublicAPI
 @JsonTypeName(StyleTargetTypes.PART)
 public class PartStyleProperties extends ElementBlockStyleProperties {
 
-
-
-    // --- Overrides ---
-
-    /**
-     * Merges the current style properties with the provided base properties.
-     * @param base the base style properties to merge with
-     */
-    @Internal
-    public void mergeWith(ElementBlockStyleProperties base) {
-        super.mergeWith(base);
-    }
 
     /**
      * Creates a copy of the current PartStyleProperties instance.

@@ -28,6 +28,10 @@ import java.util.Optional;
 /**
  * Represents the root stylesheet, containing font definitions, font styles,
  * element styles, and page layouts. This class is immutable.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
+ *
  */
 public record StyleSheet(
         @JsonProperty("text-styles") List<TextStyle> textStyles,

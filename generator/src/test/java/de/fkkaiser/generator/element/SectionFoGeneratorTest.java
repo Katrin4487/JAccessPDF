@@ -164,6 +164,7 @@ class SectionFoGeneratorTest {
     void shouldGenerateSectionMarker() {
         Section section = new Section("test", null, null, List.of());
         SectionStyleProperties style = new SectionStyleProperties();
+        style.setTextStyleName("test-marker-style");
         style.setSectionMarker("⚠️");
         section.setResolvedStyle(style);
 

@@ -17,6 +17,7 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.Inheritable;
 
 import java.util.Objects;
 
@@ -34,6 +35,9 @@ import java.util.Objects;
  * on the list-style-position property, while still allowing power users to
  * override these values explicitly.
  *
+ * @author Katrin Kaiser
+ * @version 1.0.0
+ *
  */
 @JsonTypeName(StyleTargetTypes.LIST)
 public class ListStyleProperties extends TextBlockStyleProperties {
@@ -48,9 +52,11 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      */
     public static final String DEFAULT_LABEL_SEPARATION = "0.5em";
 
+    @Inheritable
     @JsonProperty("provisional-distance-between-starts")
     private String provDistBetweenStarts;
 
+    @Inheritable
     @JsonProperty("provisional-label-separation")
     private String provLabelSeparation;
 
@@ -64,6 +70,7 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      * </ul>
      * </p>
      */
+    @Inheritable
     @JsonProperty("list-style-type")
     private String listStyleType;
 
@@ -73,6 +80,7 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      * Expects a URL to the image. When set, this takes precedence over list-style-type.
      * </p>
      */
+    @Inheritable
     @JsonProperty("list-style-image")
     private String listStyleImage;
 
@@ -86,6 +94,7 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      * </ul>
      * </p>
      */
+    @Inheritable
     @JsonProperty("list-style-position")
     private String listStylePosition;
 
@@ -108,18 +117,15 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      * @return the provisional distance between list item starts
      */
     public String getProvDistBetweenStarts() {
-        // PRIORITY 1: A specific value was set (power user override)
-        // This value comes either directly or through the mergeWith() logic
+
         if (this.isProvDistBetweenStartsManuallySet()) {
             return this.provDistBetweenStarts;
         }
 
-        // PRIORITY 2: User has specified "inside" positioning
         if ("inside".equalsIgnoreCase(this.listStylePosition)) {
             return "0pt";
         }
 
-        // PRIORITY 3: Standard behavior ("outside" or null)
         return DEFAULT_OUTSIDE_DISTANCE;
     }
 
@@ -175,35 +181,6 @@ public class ListStyleProperties extends TextBlockStyleProperties {
     }
 
     // --- Overrides ---
-
-    /**
-     * Merges this style properties object with a base style.
-     * <p>
-     * Properties that are null in this instance will be inherited from the base
-     * style. This allows for cascading style inheritance where specific properties
-     * can override base values while inheriting unspecified ones.
-     * </p>
-     *
-     * @param base the base style properties to merge with
-     */
-    @Override
-    public void mergeWith(ElementStyleProperties base) {
-        super.mergeWith(base);
-        if (base instanceof ListStyleProperties baseList) {
-            if (this.provDistBetweenStarts == null) {
-                this.provDistBetweenStarts = baseList.getProvDistBetweenStarts();
-            }
-            if (this.provLabelSeparation == null) {
-                this.provLabelSeparation = baseList.getProvLabelSeparation();
-            }
-            if (this.listStyleType == null) {
-                this.listStyleType = baseList.getListStyleType();
-            }
-            if (this.listStyleImage == null) {
-                this.listStyleImage = baseList.getListStyleImage();
-            }
-        }
-    }
 
     /**
      * Checks if provisional-distance-between-starts was explicitly set.

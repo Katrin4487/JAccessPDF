@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ElementBlockStylePropertiesTest {
 
-
     private ElementBlockStyleProperties specificStyle;
     private ElementBlockStyleProperties baseStyle;
 
@@ -36,105 +35,326 @@ class ElementBlockStylePropertiesTest {
     }
 
     @Nested
-    @DisplayName("mergeWith Tests")
+    @DisplayName("mergeWith Tests - Annotation-Based Inheritance")
     class MergeWithTests {
 
-        @Test
-        @DisplayName("Should inherit property if specific is null")
-        void shouldInheritNullProperties() {
+        @Nested
+        @DisplayName("Inheritable Properties (@Inheritable)")
+        class InheritablePropertiesTests {
 
-            specificStyle.setSpaceBefore(null);
-            baseStyle.setSpaceBefore("10pt");
+            @Test
+            @DisplayName("Should inherit backgroundColor if specific is null")
+            void shouldInheritBackgroundColor() {
+                // backgroundColor has @Inheritable annotation
+                specificStyle.setBackgroundColor(null);
+                baseStyle.setBackgroundColor("#ff0000");
 
-            // Action
-            specificStyle.mergeWith(baseStyle);
+                specificStyle.mergeWith(baseStyle);
 
-            // Assertion: The value should be inherited from the base style
-            assertEquals("10pt", specificStyle.getSpaceBefore());
+                assertEquals("#ff0000", specificStyle.getBackgroundColor(),
+                        "backgroundColor should be inherited (has @Inheritable)");
+            }
+
+            @Test
+            @DisplayName("Should NOT override existing backgroundColor")
+            void shouldNotOverrideExistingBackgroundColor() {
+                specificStyle.setBackgroundColor("#00ff00");
+                baseStyle.setBackgroundColor("#ff0000");
+
+                specificStyle.mergeWith(baseStyle);
+
+                assertEquals("#00ff00", specificStyle.getBackgroundColor(),
+                        "Existing value should not be overridden");
+            }
         }
 
-        @Test
-        @DisplayName("Should NOT override existing property")
-        void shouldNotOverrideExistingProperties() {
-            specificStyle.setSpaceAfter("20pt");
-            baseStyle.setSpaceAfter("12pt");
+        @Nested
+        @DisplayName("Non-Inheritable Properties (no @Inheritable)")
+        class NonInheritablePropertiesTests {
 
-            specificStyle.mergeWith(baseStyle);
-            assertEquals("20pt", specificStyle.getSpaceAfter());
-        }
+            @Test
+            @DisplayName("Should NOT inherit spaceBefore (no @Inheritable)")
+            void shouldNotInheritSpaceBefore() {
+                // spaceBefore has NO @Inheritable annotation
+                specificStyle.setSpaceBefore(null);
+                baseStyle.setSpaceBefore("10pt");
 
-        @Test
-        @DisplayName("Should correctly merge boolean properties")
-        void shouldMergeBooleanProperties() {
-            specificStyle.setKeepWithNext(null);
-            baseStyle.setKeepWithNext(true);
-            specificStyle.mergeWith(baseStyle);
-            assertTrue(specificStyle.getKeepWithNext());
+                specificStyle.mergeWith(baseStyle);
+
+                assertNull(specificStyle.getSpaceBefore(),
+                        "spaceBefore should NOT be inherited (no @Inheritable annotation)");
+            }
+
+            @Test
+            @DisplayName("Should NOT inherit spaceAfter (no @Inheritable)")
+            void shouldNotInheritSpaceAfter() {
+                specificStyle.setSpaceAfter(null);
+                baseStyle.setSpaceAfter("20pt");
+
+                specificStyle.mergeWith(baseStyle);
+
+                assertNull(specificStyle.getSpaceAfter(),
+                        "spaceAfter should NOT be inherited (no @Inheritable annotation)");
+            }
+
+            @Test
+            @DisplayName("Should NOT inherit padding properties (no @Inheritable)")
+            void shouldNotInheritPadding() {
+                specificStyle.setPadding(null);
+                specificStyle.setPaddingLeft(null);
+                baseStyle.setPadding("10pt");
+                baseStyle.setPaddingLeft("5pt");
+
+                specificStyle.mergeWith(baseStyle);
+
+                assertNull(specificStyle.getPadding(),
+                        "padding should NOT be inherited (no @Inheritable annotation)");
+                assertNull(specificStyle.getPaddingLeft(),
+                        "paddingLeft should NOT be inherited (no @Inheritable annotation)");
+            }
+
+            @Test
+            @DisplayName("Should NOT inherit border properties (no @Inheritable)")
+            void shouldNotInheritBorder() {
+                specificStyle.setBorder(null);
+                baseStyle.setBorder("1px solid black");
+
+                specificStyle.mergeWith(baseStyle);
+
+                assertNull(specificStyle.getBorder(),
+                        "border should NOT be inherited (no @Inheritable annotation)");
+            }
+
+            @Test
+            @DisplayName("Should NOT inherit layout control properties (no @Inheritable)")
+            void shouldNotInheritLayoutControls() {
+                specificStyle.setKeepWithNext(null);
+                specificStyle.setBreakBefore(null);
+                specificStyle.setBreakAfter(null);
+
+                baseStyle.setKeepWithNext(true);
+                baseStyle.setBreakBefore(PageBreakVariant.PAGE);
+                baseStyle.setBreakAfter(PageBreakVariant.COLUMN);
+
+                specificStyle.mergeWith(baseStyle);
+
+                assertNull(specificStyle.getKeepWithNext(),
+                        "keepWithNext should NOT be inherited (no @Inheritable annotation)");
+                assertNull(specificStyle.getBreakBefore(),
+                        "breakBefore should NOT be inherited (no @Inheritable annotation)");
+                assertNull(specificStyle.getBreakAfter(),
+                        "breakAfter should NOT be inherited (no @Inheritable annotation)");
+            }
+
+            @Test
+            @DisplayName("Should NOT inherit indent properties (no @Inheritable)")
+            void shouldNotInheritIndent() {
+                specificStyle.setStartIndent(null);
+                specificStyle.setEndIndent(null);
+                baseStyle.setStartIndent("2em");
+                baseStyle.setEndIndent("1em");
+
+                specificStyle.mergeWith(baseStyle);
+
+                assertNull(specificStyle.getStartIndent(),
+                        "startIndent should NOT be inherited (no @Inheritable annotation)");
+                assertNull(specificStyle.getEndIndent(),
+                        "endIndent should NOT be inherited (no @Inheritable annotation)");
+            }
         }
 
         @Test
         @DisplayName("Should remain null if both properties are null")
         void shouldRemainNullWhenBothAreNull() {
-            specificStyle.setBorder(null);
-            baseStyle.setBorder(null);
+            specificStyle.setBackgroundColor(null);
+            baseStyle.setBackgroundColor(null);
+
             specificStyle.mergeWith(baseStyle);
-            assertNull(specificStyle.getBorder());
+
+            assertNull(specificStyle.getBackgroundColor());
         }
 
         @Test
         @DisplayName("Should not merge from incompatible type")
         void shouldNotMergeFromIncompatibleType() {
+            // Create incompatible type
             ElementStyleProperties incompatibleBase = new ElementStyleProperties() {
-                @Override
-                public void mergeWith(ElementStyleProperties elemBase) {
-
-                }
-
                 @Override
                 public ElementStyleProperties copy() {
                     return null;
                 }
-                // Anonymous empty class
             };
-            specificStyle.setPadding("5px");
 
+            specificStyle.setBackgroundColor("#123456");
+
+            // Merge should be skipped for incompatible types
             specificStyle.mergeWith(incompatibleBase);
 
-            assertEquals("5px", specificStyle.getPadding());
+            // Original value should remain unchanged
+            assertEquals("#123456", specificStyle.getBackgroundColor());
+        }
+
+        @Test
+        @DisplayName("Should handle null base style gracefully")
+        void shouldHandleNullBaseStyle() {
+            specificStyle.setBackgroundColor("#abcdef");
+
+            // Should not throw exception
+            assertDoesNotThrow(() -> specificStyle.mergeWith(null));
+
+            // Original value should remain unchanged
+            assertEquals("#abcdef", specificStyle.getBackgroundColor());
         }
     }
 
-    @Test
-    @DisplayName("applyPropertiesTo should copy all properties to target")
-    void shouldApplyAllPropertiesToTarget() {
-        specificStyle.setSpaceBefore("10pt");
-        specificStyle.setPadding("5px");
-        specificStyle.setBorder("1px solid green");
-        specificStyle.setKeepWithNext(true);
+    @Nested
+    @DisplayName("Copy Functionality Tests")
+    class CopyTests {
 
-        specificStyle.applyPropertiesTo(baseStyle);
+        @Test
+        @DisplayName("applyPropertiesTo should copy all properties to target")
+        void shouldApplyAllPropertiesToTarget() {
+            specificStyle.setSpaceBefore("10pt");
+            specificStyle.setPadding("5px");
+            specificStyle.setBorder("1px solid green");
+            specificStyle.setKeepWithNext(true);
+            specificStyle.setBackgroundColor("#efefef");
+            specificStyle.setBreakBefore(PageBreakVariant.PAGE);
 
-        assertEquals("10pt", baseStyle.getSpaceBefore());
-        assertEquals("5px", baseStyle.getPadding());
-        assertEquals("1px solid green", baseStyle.getBorder());
-        assertTrue(baseStyle.getKeepWithNext());
+            specificStyle.applyPropertiesTo(baseStyle);
+
+            assertEquals("10pt", baseStyle.getSpaceBefore());
+            assertEquals("5px", baseStyle.getPadding());
+            assertEquals("1px solid green", baseStyle.getBorder());
+            assertTrue(baseStyle.getKeepWithNext());
+            assertEquals("#efefef", baseStyle.getBackgroundColor());
+            assertEquals(PageBreakVariant.PAGE, baseStyle.getBreakBefore());
+        }
+
+        @Test
+        @DisplayName("copy should create a new instance with identical values")
+        void shouldCreateDeepCopy() {
+            specificStyle.setSpaceBefore("15pt");
+            specificStyle.setBackgroundColor("#efefef");
+            specificStyle.setKeepWithNext(true);
+            specificStyle.setBorder("2px solid blue");
+
+            ElementBlockStyleProperties copiedStyle = specificStyle.copy();
+
+            // Verify it's a different instance
+            assertNotSame(specificStyle, copiedStyle,
+                    "Copy should be a new instance");
+
+            // Verify all values are copied
+            assertEquals("15pt", copiedStyle.getSpaceBefore());
+            assertEquals("#efefef", copiedStyle.getBackgroundColor());
+            assertTrue(copiedStyle.getKeepWithNext());
+            assertEquals("2px solid blue", copiedStyle.getBorder());
+
+            // Verify deep copy (modifications don't affect original)
+            copiedStyle.setSpaceBefore("99pt");
+            copiedStyle.setBackgroundColor("#ffffff");
+
+            assertEquals("15pt", specificStyle.getSpaceBefore(),
+                    "Original spaceBefore should not be modified");
+            assertEquals("#efefef", specificStyle.getBackgroundColor(),
+                    "Original backgroundColor should not be modified");
+        }
+
+        @Test
+        @DisplayName("copy should handle null properties correctly")
+        void shouldCopyWithNullProperties() {
+            // Set only some properties, leave others null
+            specificStyle.setSpaceBefore("10pt");
+            // backgroundColor, padding, etc. remain null
+
+            ElementBlockStyleProperties copiedStyle = specificStyle.copy();
+
+            assertEquals("10pt", copiedStyle.getSpaceBefore());
+            assertNull(copiedStyle.getBackgroundColor());
+            assertNull(copiedStyle.getPadding());
+        }
     }
 
-    @Test
-    @DisplayName("copy should create a new instance with identical values")
-    void shouldCreateDeepCopy() {
-        specificStyle.setSpaceBefore("15pt");
-        specificStyle.setBackgroundColor("#efefef");
+    @Nested
+    @DisplayName("Validation Tests")
+    class ValidationTests {
 
-        ElementBlockStyleProperties copiedStyle = (ElementBlockStyleProperties) specificStyle.copy();
+        @Test
+        @DisplayName("validate should return empty list for valid properties")
+        void shouldReturnEmptyValidationList() {
+            specificStyle.setSpaceBefore("10pt");
+            specificStyle.setBackgroundColor("#ff0000");
 
-        assertNotSame(specificStyle, copiedStyle, "Copy should be a new instance.");
+            var validationErrors = specificStyle.validate();
 
-        assertEquals("15pt", copiedStyle.getSpaceBefore());
-        assertEquals("#efefef", copiedStyle.getBackgroundColor());
-
-        copiedStyle.setSpaceBefore("99pt");
-        assertEquals("15pt", specificStyle.getSpaceBefore(), "Original should not be modified.");
+            assertNotNull(validationErrors);
+            assertTrue(validationErrors.isEmpty());
+        }
     }
 
+    @Nested
+    @DisplayName("Dimension Validation Tests")
+    class DimensionValidationTests {
+
+        @Test
+        @DisplayName("Should accept valid dimension values")
+        void shouldAcceptValidDimensions() {
+            assertDoesNotThrow(() -> {
+                specificStyle.setSpaceBefore("10pt");
+                specificStyle.setSpaceAfter("2cm");
+                specificStyle.setPadding("5mm");
+                specificStyle.setStartIndent("1in");
+            });
+
+            assertEquals("10pt", specificStyle.getSpaceBefore());
+            assertEquals("2cm", specificStyle.getSpaceAfter());
+            assertEquals("5mm", specificStyle.getPadding());
+            assertEquals("1in", specificStyle.getStartIndent());
+        }
+
+        @Test
+        @DisplayName("Should handle null dimension values")
+        void shouldHandleNullDimensions() {
+            specificStyle.setSpaceBefore(null);
+            specificStyle.setPadding(null);
+
+            assertNull(specificStyle.getSpaceBefore());
+            assertNull(specificStyle.getPadding());
+        }
+    }
+
+    @Nested
+    @DisplayName("Border Validation Tests")
+    class BorderValidationTests {
+
+        @Test
+        @DisplayName("Should accept valid border values")
+        void shouldAcceptValidBorders() {
+            specificStyle.setBorder("1px solid black");
+            specificStyle.setBorderTop("2pt dashed red");
+
+            assertEquals("1px solid black", specificStyle.getBorder());
+            assertEquals("2pt dashed red", specificStyle.getBorderTop());
+        }
+
+        @Test
+        @DisplayName("Should reject invalid border and set to null")
+        void shouldRejectInvalidBorder() {
+            specificStyle.setBorder("invalid-border");
+
+            assertNull(specificStyle.getBorder(),
+                    "Invalid border should be set to null");
+        }
+
+        @Test
+        @DisplayName("Should handle null border values")
+        void shouldHandleNullBorders() {
+            specificStyle.setBorder(null);
+            specificStyle.setBorderLeft(null);
+
+            assertNull(specificStyle.getBorder());
+            assertNull(specificStyle.getBorderLeft());
+        }
+    }
 }

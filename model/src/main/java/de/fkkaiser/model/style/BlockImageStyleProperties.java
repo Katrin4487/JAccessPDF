@@ -17,71 +17,24 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-
-import java.util.function.Consumer;
+import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.annotation.Inheritable;
 
 /**
- * Style properties for block-level images in PDF documents.
- * This class defines formatting and layout properties for images that appear as
- * standalone block elements (as opposed to inline images within text).
+ * Concrete style properties for a block image element.
+ * This class defines styling options specific to block-level images
+ * within a document, such as width, scaling, and alignment.
  *
- * <p><b>Purpose:</b></p>
- * Block images are independent visual elements that exist outside the normal text flow.
- * They can be sized, scaled, and aligned independently, making them ideal for diagrams,
- * photos, illustrations, or any visual content that requires standalone presentation.
+ * <p><b>Inheritance Behavior:</b></p>
+ * Image-specific properties (content-width, scaling, alignment) are NOT inherited
+ * from parent elements, as each image typically needs its own dimensions.
+ * Only properties marked with {@link Inheritable} in parent classes
+ * (like background-color) may be inherited.
  *
- * <p><b>XSL-FO Mapping:</b></p>
- * This class maps to XSL-FO's {@code <fo:external-graphic>} element properties:
- * <ul>
- *   <li>{@link #contentWidth} → {@code content-width}: Controls the display width of the image content</li>
- *   <li>{@link #blockWidth} → {@code inline-progression-dimension}: Controls the width of the containing block</li>
- *   <li>{@link #scaling} → {@code scaling}: Defines how the image is scaled to fit</li>
- *   <li>{@link #alignment} → {@code text-align}: Controls horizontal alignment within the block</li>
- * </ul>
- *
- * <p><b>Common Use Cases:</b></p>
- * <pre>{@code
- * // Example 1: Full-width image
- * BlockImageStyleProperties fullWidth = new BlockImageStyleProperties();
- * fullWidth.setContentWidth("100%");
- * fullWidth.setScaling("uniform");
- * fullWidth.setAlignment("center");
- *
- * // Example 2: Fixed-size centered image
- * BlockImageStyleProperties centered = new BlockImageStyleProperties();
- * centered.setContentWidth("10cm");
- * centered.setScaling("uniform");
- * centered.setAlignment("center");
- *
- * // Example 3: Left-aligned thumbnail
- * BlockImageStyleProperties thumbnail = new BlockImageStyleProperties();
- * thumbnail.setContentWidth("3cm");
- * thumbnail.setScaling("uniform");
- * thumbnail.setAlignment("left");
- * }</pre>
- *
- * <p><b>Inheritance:</b></p>
- * This class extends {@link ElementBlockStyleProperties}, inheriting common block-level
- * properties such as margins, padding, borders, and background colors.
- *
- * <p><b>JSON Serialization:</b></p>
- * <pre>{@code
- * {
- *   "target-element": "block-image",
- *   "content-width": "15cm",
- *   "scaling": "uniform",
- *   "alignment": "center",
- *   "space-before": "12pt",
- *   "space-after": "12pt"
- * }
- * }</pre>
- *
- * @author FK Kaiser
- * @version 1.0
- * @see ElementBlockStyleProperties
- * @see ElementStyle
- * @since 1.0
+ * @author Katrin Kaiser
+ * @version 1.1.0
  */
+@PublicAPI(status = PublicAPI.Status.EXPERIMENTAL)
 @JsonTypeName(StyleTargetTypes.BLOCK_IMAGE)
 public class BlockImageStyleProperties extends ElementBlockStyleProperties {
 
@@ -244,17 +197,6 @@ public class BlockImageStyleProperties extends ElementBlockStyleProperties {
     }
 
     /**
-     * Gets the scaling method for the image.
-     *
-     * @return the scaling method (e.g., {@code "uniform"}, {@code "non-uniform"}),
-     *         or {@code null} if not set
-     * @see #scaling
-     */
-    public String getScaling() {
-        return scaling;
-    }
-
-    /**
      * Sets the display width of the image content.
      *
      * @param contentWidth the content width to set (e.g., {@code "10cm"}, {@code "100%"}, {@code "auto"});
@@ -263,6 +205,17 @@ public class BlockImageStyleProperties extends ElementBlockStyleProperties {
      */
     public void setContentWidth(String contentWidth) {
         this.contentWidth = contentWidth;
+    }
+
+    /**
+     * Gets the scaling method for the image.
+     *
+     * @return the scaling method (e.g., {@code "uniform"}, {@code "non-uniform"}),
+     *         or {@code null} if not set
+     * @see #scaling
+     */
+    public String getScaling() {
+        return scaling;
     }
 
     /**
@@ -322,27 +275,6 @@ public class BlockImageStyleProperties extends ElementBlockStyleProperties {
     // --- Overrides ---
 
     /**
-     * Merges properties from a base style into this style.
-     * Properties in this style take precedence; only {@code null} properties
-     * are filled in from the base style.
-     *
-     * <p>This method enables style inheritance, where a derived style can
-     * override specific properties while inheriting others from a parent style.</p>
-     *
-     * @param base the base style to merge from; if not a {@link BlockImageStyleProperties},
-     *             only common block properties are merged
-     */
-    public void mergeWith(ElementBlockStyleProperties base) {
-        super.mergeWith(base);
-        if (base instanceof BlockImageStyleProperties basePart) {
-            mergeProperty(this.contentWidth, basePart.contentWidth, this::setContentWidth);
-            mergeProperty(this.scaling, basePart.scaling, this::setScaling);
-            mergeProperty(this.alignment, basePart.alignment, this::setAlignment);
-            mergeProperty(this.blockWidth, basePart.blockWidth, this::setBlockWidth);
-        }
-    }
-
-    /**
      * Creates a deep copy of this style properties object.
      * All properties are copied to a new instance.
      *
@@ -363,28 +295,13 @@ public class BlockImageStyleProperties extends ElementBlockStyleProperties {
      *               {@link BlockImageStyleProperties}, only common block properties are applied
      */
     @Override
-    public void applyPropertiesTo(ElementBlockStyleProperties target) {
+    protected void applyPropertiesTo(ElementBlockStyleProperties target) {
         super.applyPropertiesTo(target);
         if (target instanceof BlockImageStyleProperties partTarget) {
             partTarget.setContentWidth(contentWidth);
             partTarget.setScaling(scaling);
             partTarget.setAlignment(alignment);
             partTarget.setBlockWidth(blockWidth);
-        }
-    }
-
-    /**
-     * Helper method for property merging.
-     * If the current property is {@code null}, sets it to the base value.
-     *
-     * @param current the current property value
-     * @param base    the base property value to use if current is {@code null}
-     * @param setter  the setter method to call if merging is needed
-     * @param <T>     the type of the property
-     */
-    private <T> void mergeProperty(T current, T base, Consumer<T> setter) {
-        if (current == null) {
-            setter.accept(base);
         }
     }
 }

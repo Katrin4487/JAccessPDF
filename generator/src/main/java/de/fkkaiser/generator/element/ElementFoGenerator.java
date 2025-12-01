@@ -22,10 +22,16 @@ import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.style.ElementStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TextBlockStyleProperties;
+import de.fkkaiser.model.style.TextStyle;
+
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The abstract class for generating XSL-FO strings for specific elements.
+ *
+ * @author Katrin Kaiser
+ * @version 1.1.0
  */
 public abstract class ElementFoGenerator {
 
@@ -52,8 +58,10 @@ public abstract class ElementFoGenerator {
      * @param builder The StringBuilder to append the font style attributes to.
      */
     protected void setFontStyle(StyleSheet styleSheet, ElementStyleProperties style, StringBuilder builder) {
+
         if (style instanceof TextBlockStyleProperties textStyle) {
-            styleSheet.findFontStyleByName(textStyle.getTextStyleName()).ifPresent(fs -> builder.append(" font-family=\"").append(GenerateUtils.escapeXml(fs.fontFamilyName())).append("\""));
+            Optional<TextStyle> textStyleOptional = styleSheet.textStyles().stream().filter(ts -> ts.name().equals(textStyle.getTextStyleName())).findAny();
+            textStyleOptional.ifPresent(value -> GenerateUtils.appendTextStyleTags(builder, value));
         }
     }
 

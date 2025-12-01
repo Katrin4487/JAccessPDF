@@ -15,21 +15,27 @@
  */
 package de.fkkaiser.model.style;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.Internal;
 
 /**
  * Concrete style properties for a headline element.
+ * A headline typically represents a title or heading in a document.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
+@Internal
 @JsonTypeName(StyleTargetTypes.HEADLINE)
 public class HeadlineStyleProperties extends TextBlockStyleProperties {
 
 
     // --- Overrides ---
 
-    @Override
-    public void mergeWith(ElementStyleProperties base) {
-        super.mergeWith(base);
-    }
-
+    /**
+     * Creates a copy of the current HeadlineStyleProperties instance.
+     * @return a new HeadlineStyleProperties instance with the same properties
+     */
+    @Internal
     @Override
     public HeadlineStyleProperties copy() {
         HeadlineStyleProperties newInstance = new HeadlineStyleProperties();

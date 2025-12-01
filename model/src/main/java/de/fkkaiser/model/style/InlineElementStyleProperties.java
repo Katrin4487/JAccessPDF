@@ -16,6 +16,9 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.annotation.Inheritable;
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,40 +28,45 @@ import java.util.Optional;
  * A class representing style properties for inline elements.
  * Extends ElementStyleProperties.
  * This class provides properties specific to inline elements like background color.
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
 public class InlineElementStyleProperties extends ElementStyleProperties {
 
-    private static final Logger log = LoggerFactory.getLogger(InlineElementStyleProperties.class);
-
+    @Inheritable
     @JsonProperty("background-color")
     private String backgroundColor;
 
     // --- Constructor ---
 
+    /**
+     * Default constructor.
+     * Prevents initialization from outside the class.
+     */
     InlineElementStyleProperties(){
         //preventing initialization from outside
     }
 
 
     // --- Getter and Setter ---
+    /**
+     * Gets the background color of the inline element.
+     * @return the background color as a String
+     */
+    @Internal
     public String getBackgroundColor() {
         return backgroundColor;
     }
+    /**
+     * Sets the background color of the inline element.
+     * @param backgroundColor the background color to set
+     */
+     @PublicAPI
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
 
 
-    @Override
-    public void mergeWith(ElementStyleProperties elemBase) {
-
-        if(elemBase instanceof ElementBlockStyleProperties blockBase){
-            this.backgroundColor = Optional.ofNullable(this.backgroundColor).orElse(blockBase.getBackgroundColor());
-        }else{
-            log.warn("Attempted to merge with an incompatible style type: {}. Merge will be skipped.",
-                    elemBase==null ? "null" :elemBase.getClass().getName());
-        }
-    }
 
 
     @Override

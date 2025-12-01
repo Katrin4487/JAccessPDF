@@ -16,6 +16,8 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.annotation.Inheritable;
+import de.fkkaiser.model.annotation.Internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,12 +87,11 @@ import java.util.Optional;
  * }
  * }</pre>
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see InlineElementStyleProperties
  * @see TextStyle
  * @see TextBlockStyleProperties
- * @since 1.0
  */
 public abstract class InlineTextElementStyleProperties extends InlineElementStyleProperties {
 
@@ -126,6 +127,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
      * @see #setTextStyleName(String)
      * @see TextStyle
      */
+    @Inheritable
     @JsonProperty("text-style-name")
     private String textStyleName;
 
@@ -167,6 +169,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
      *
      * @see #setTextDecoration(String)
      */
+    @Inheritable
     @JsonProperty("text-decoration")
     private String textDecoration;
 
@@ -211,6 +214,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
      *
      * @see #setTextColor(String)
      */
+    @Inheritable
     @JsonProperty("text-color")
     private String textColor;
 
@@ -260,50 +264,6 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
     @JsonProperty("linefeed-treatment")
     private String lineFeedTreatment;
 
-    /**
-     * Merges properties from a base style into this style.
-     * This method implements property inheritance from parent block elements.
-     *
-     * <p><b>Inheritance Logic:</b></p>
-     * Properties that are {@code null} in this inline style are filled in with
-     * values from the parent block style (if it's a {@link TextBlockStyleProperties}).
-     * This allows inline elements to inherit text styling from their container.
-     *
-     * <p><b>Inherited Properties:</b></p>
-     * <ul>
-     *   <li>{@link #textStyleName} - Inherits font definition</li>
-     *   <li>{@link #textColor} - Inherits text color</li>
-     *   <li>{@link #lineFeedTreatment} - Inherits line break handling</li>
-     * </ul>
-     *
-     * <p><b>Example Scenario:</b></p>
-     * <pre>{@code
-     * // Paragraph style defines default text properties
-     * ParagraphStyleProperties paraProps = new ParagraphStyleProperties();
-     * paraProps.setTextStyleName("body-text");
-     * paraProps.setTextColor("#000000");
-     *
-     * // Inline element inherits color but overrides text style
-     * InlineTextElementStyleProperties inlineProps = new TextRunStyleProperties();
-     * inlineProps.setTextStyleName("bold-text"); // Override
-     * // textColor is null, will be inherited from paragraph
-     *
-     * inlineProps.mergeWith(paraProps);
-     * // Result: textStyleName = "bold-text", textColor = "#000000"
-     * }</pre>
-     *
-     * @param elemBase the base style to inherit from; only {@link TextBlockStyleProperties}
-     *                 instances are processed for property inheritance
-     */
-    @Override
-    public void mergeWith(ElementStyleProperties elemBase) {
-        if (elemBase instanceof TextBlockStyleProperties textBase) {
-            logger.debug("Merging inline text properties with block style. Current textStyleName: {}", textStyleName);
-            this.textStyleName = Optional.ofNullable(this.textStyleName).orElse(textBase.getTextStyleName());
-            this.textColor = Optional.ofNullable(this.textColor).orElse(textBase.getTextColor());
-            this.lineFeedTreatment = Optional.ofNullable(this.lineFeedTreatment).orElse(textBase.getLinefeedTreatment());
-        }
-    }
 
     /**
      * Creates a deep copy of this style properties object.
@@ -315,6 +275,7 @@ public abstract class InlineTextElementStyleProperties extends InlineElementStyl
      *
      * @return a new style properties instance with identical values
      */
+    @Internal
     @Override
     public ElementStyleProperties copy() {
         InlineElementStyleProperties copy = new InlineElementStyleProperties();
