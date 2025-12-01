@@ -18,6 +18,7 @@ package de.fkkaiser.model.structure;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.Internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,6 +152,8 @@ public final class Headline extends TextBlock {
      */
     private final int level;
 
+    private String id;
+
     /**
      * Creates a new Headline element with full configuration.
      *
@@ -237,5 +240,15 @@ public final class Headline extends TextBlock {
      */
     public int getLevel() {
         return level;
+    }
+
+    @Internal
+    public String getId() {
+        return id;
+    }
+
+    @Internal
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -46,7 +46,7 @@ public class BookmarkGenerator {
         for (int i = 0; i < headlines.size(); i++) {
             Headline headline = headlines.get(i);
             int currentLevel = headline.getLevel();
-            String id = "headline" + i;
+            String id = headline.getId();
             String title = getTitleFrom(headline);
 
             // Before opening a new bookmark, close the previous one(s) if necessary.

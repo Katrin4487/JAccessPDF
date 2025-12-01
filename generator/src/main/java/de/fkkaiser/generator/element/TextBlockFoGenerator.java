@@ -58,8 +58,10 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
         // Generate unique ID for headlines
         String headlineId = "";
         if (element instanceof Headline headline) {
-            log.debug("Adding headline {}",style);
-            headlineId = " id=\"headline-" + UUID.randomUUID().toString() + "\"";
+
+            String theId =  "headline-" + UUID.randomUUID().toString();
+            headlineId = " id=\"" + theId + "\"";
+            headline.setId(theId);
             headlines.add(headline);
 
         }
