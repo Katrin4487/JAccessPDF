@@ -6,6 +6,7 @@
 - PageMasterStyle now has sensible defaults (A4 Portrait, 2cm margins)
 - Section can be Note or Aside now (reading chosen variant from the schema)
 - Part can be Part or Article now (reading chosen variant from the schema)
+- Part can be used as top-level container now
 - heading ids are unique now (based on the document structure)
 
 ### Added
@@ -16,6 +17,7 @@
 - More parameters for SectionStyle available
 - PageBreakVariant enum added (Always, Avoid, Even, Odd)
 - Checks for border styles and dimensions in Section and Part styles
+- New module postprocessor for merging multiple PDF documents into one
 
 
 ## [0.9.2] - 2025-11-29

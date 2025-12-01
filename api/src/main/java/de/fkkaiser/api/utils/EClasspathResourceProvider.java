@@ -15,6 +15,8 @@
  */
 package de.fkkaiser.api.utils;
 
+import de.fkkaiser.model.annotation.PublicAPI;
+
 import java.net.URL;
 
 /**
@@ -49,6 +51,7 @@ import java.net.URL;
  * @version 1.0.0
  * @see EResourceProvider
  */
+@PublicAPI
 public class EClasspathResourceProvider implements EResourceProvider {
 
     /**

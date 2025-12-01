@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module model {
-    exports de.fkkaiser.model.structure;
-    exports de.fkkaiser.model.structure.builder;
-    exports de.fkkaiser.model.font;
-    exports de.fkkaiser.model.style;
-    exports de.fkkaiser.model.style.builder;
-    exports de.fkkaiser.model.annotation;
+module postprocessor {
 
-    requires com.fasterxml.jackson.annotation;
-    requires com.fasterxml.jackson.databind;
     requires org.slf4j;
 
-    opens de.fkkaiser.model.structure to com.fasterxml.jackson.databind;
-    opens de.fkkaiser.model.style to com.fasterxml.jackson.databind;
-    opens de.fkkaiser.model.font to com.fasterxml.jackson.databind;
+    requires org.apache.pdfbox;
+    requires api;
+
+    exports de.fkkaiser.postprocessor;
 
 }

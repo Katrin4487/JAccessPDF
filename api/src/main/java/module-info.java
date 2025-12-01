@@ -21,9 +21,9 @@ module api {
     requires org.apache.xmlgraphics.fop.core;
     requires org.slf4j;
 
-    requires processor;
-    requires generator;
-    requires model;
+    requires transitive model;
+    requires transitive processor;
+    requires transitive generator;
 
     exports de.fkkaiser.api.simplelayer;
     exports de.fkkaiser.api.utils;
