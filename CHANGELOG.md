@@ -11,6 +11,7 @@
 ### Fixed
 - Section Params are not ignored anymore
 - section-marker needs a text style: You can add a text-style-name to section now.
+- Bookmark generation fixed: Bookmarks are generated correctly now
 
 
 ## [0.10.0] - 2025-12-01
