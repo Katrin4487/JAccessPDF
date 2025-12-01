@@ -15,8 +15,33 @@
  */
 package de.fkkaiser.generator;
 
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.style.TextStyle;
+
+/**
+ * Different Util methods to generate FOP XML.
+ *
+ * @author Katrin Kaiser
+ * @version 1.1.0
+ *
+ */
+@Internal
 public class GenerateUtils {
 
+    /**
+     * Escapes special XML characters in the given text.
+     * <p>
+     * This method replaces the following characters with their corresponding XML entities:
+     * - `&` with `&amp;`
+     * - `<` with `&lt;`
+     * - `>` with `&gt;`
+     * - `"` with `&quot;`
+     * - `'` with `&apos;`
+     *
+     * @param text the input string to escape; if null, an empty string is returned
+     * @return the escaped string, or an empty string if the input is null
+     */
+    @Internal
     public static String escapeXml(String text) {
         if (text == null) return "";
         return text.replace("&", "&amp;")
@@ -24,5 +49,31 @@ public class GenerateUtils {
                 .replace(">", "&gt;")
                 .replace("\"", "&quot;")
                 .replace("'", "&apos;");
+    }
+
+    /**
+     * Appends XML tags for font declaration based on the provided `TextStyle` object.
+     * <p>
+     * This method generates and appends XML attributes for font-family, font-size, font-weight,
+     * and font-style to the given `StringBuilder`. Each attribute is escaped using `escapeXml`
+     * to ensure XML safety.
+     *
+     * @param builder the `StringBuilder` to append the tags to
+     * @param ts      the `TextStyle` object containing font information; attributes are appended only if not null
+     */
+    @Internal
+    public static void appendTextStyleTags(StringBuilder builder, TextStyle ts) {
+        if (ts.fontFamilyName() != null) {
+            builder.append(" font-family=\"").append(GenerateUtils.escapeXml(ts.fontFamilyName())).append("\"");
+        }
+        if (ts.fontSize() != null) {
+            builder.append(" font-size=\"").append(GenerateUtils.escapeXml(ts.fontSize())).append("\"");
+        }
+        if (ts.fontWeight() != null) {
+            builder.append(" font-weight=\"").append(GenerateUtils.escapeXml(ts.fontWeight())).append("\"");
+        }
+        if (ts.fontStyle() != null) {
+            builder.append(" font-style=\"").append(GenerateUtils.escapeXml(ts.fontStyle().toLowerCase())).append("\"");
+        }
     }
 }

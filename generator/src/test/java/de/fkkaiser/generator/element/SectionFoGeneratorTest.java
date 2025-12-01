@@ -336,6 +336,7 @@ class SectionFoGeneratorTest {
         assertTrue(result.contains("end-indent=\"2cm\""));
         assertTrue(result.contains("space-before=\"0.5cm\""));
         assertTrue(result.contains("space-after=\"0.5cm\""));
+
     }
 
     @Test

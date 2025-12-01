@@ -334,6 +334,9 @@ public final class PdfGenerationFacade {
 
     }
 
+
+    // ========== PRIVATE HELPER METHODS ==========
+
     /**
      * Validates that all text styles in the style sheet have corresponding font variants
      * in the font family list. This ensures that Apache FOP can find the correct font files

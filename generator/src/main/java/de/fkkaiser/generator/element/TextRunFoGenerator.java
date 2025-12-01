@@ -31,6 +31,10 @@ import java.util.Optional;
  * and applies font properties, colors, decorations, and baseline shifts as needed.
  * For unstyled text runs, it outputs plain text without wrapper elements.
  * </p>
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
+ *
  */
 public class TextRunFoGenerator extends InlineElementFoGenerator {
 
@@ -82,20 +86,7 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
 
         if (hasStyling) {
             // Apply font properties from the resolved text style
-            textStyleOpt.ifPresent(ts -> {
-                if (ts.fontFamilyName() != null) {
-                    builder.append(" font-family=\"").append(GenerateUtils.escapeXml(ts.fontFamilyName())).append("\"");
-                }
-                if (ts.fontSize() != null) {
-                    builder.append(" font-size=\"").append(GenerateUtils.escapeXml(ts.fontSize())).append("\"");
-                }
-                if (ts.fontWeight() != null) {
-                    builder.append(" font-weight=\"").append(GenerateUtils.escapeXml(ts.fontWeight())).append("\"");
-                }
-                if (ts.fontStyle() != null) {
-                    builder.append(" font-style=\"").append(GenerateUtils.escapeXml(ts.fontStyle().toLowerCase())).append("\"");
-                }
-            });
+            textStyleOpt.ifPresent(ts -> GenerateUtils.appendTextStyleTags(builder,ts));
 
             // Apply direct style properties
             if (style.getTextColor() != null) {

@@ -3,8 +3,14 @@
 ## [Unreleased]
 ### Changed
 -- nothing yet --
+
 ### Added
-- -- nothing yet --
+- Validation integrated: if a section-marker is set, yo have to add a text-style-name (see Fixed)
+
+### Fixed
+- Section Params are not ignored anymore
+- section-marker needs a text style: You can add a text-style-name to section now.
+
 
 ## [0.10.0] - 2025-12-01
 

@@ -18,6 +18,7 @@ module generator {
     requires java.compiler;
     requires model;
     requires org.apache.xmlgraphics.commons;
+    requires org.apache.commons.logging;
 
     exports de.fkkaiser.generator;
 }

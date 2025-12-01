@@ -25,11 +25,17 @@ import de.fkkaiser.model.structure.Section;
 import de.fkkaiser.model.structure.SectionVariant;
 import de.fkkaiser.model.style.SectionStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
-
+import de.fkkaiser.model.style.TextStyle;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Generates the XSL-FO structure for a Section element.
+ * <p>
+ * This class is responsible for creating the XSL-FO representation of a Section,
+ * including its attributes, styles, and child elements.
+ * It extends the functionality of `BlockElementFoGenerator` to handle section-specific
+ * properties and behaviors.
  *
  * @author Katrin Kaiser
  * @version 1.2.0
@@ -37,11 +43,31 @@ import java.util.List;
 @Internal
 public class SectionFoGenerator extends BlockElementFoGenerator {
 
+    /**
+     * Constructs a new `SectionFoGenerator` instance.
+     *
+     * @param mainGenerator the main `XslFoGenerator` instance used for generating block elements
+     */
     @Internal
     public SectionFoGenerator(XslFoGenerator mainGenerator) {
         super(mainGenerator);
     }
 
+
+    /**
+     * Generates the XSL-FO structure for the given `Section` element.
+     * <p>
+     * This method appends the XSL-FO representation of the section to the provided
+     * `StringBuilder`. It includes section attributes, markers, and child elements.
+     *
+     * @param element            the `Element` to generate (expected to be a `Section`)
+     * @param styleSheet         the `StyleSheet` containing style definitions
+     * @param builder            the `StringBuilder` to append the generated XSL-FO to
+     * @param headlines          a list of `Headline` elements for the document
+     * @param resolver           the `ImageResolver` for resolving image paths
+     * @param isExternalArtefact a flag indicating if the section is part of an external artefact
+     */
+    @Internal
     @Override
     public void generate(Element element,
                          StyleSheet styleSheet,
@@ -57,8 +83,14 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
         builder.append(">");
 
         // Section marker
-        if (style != null && style.getSectionMarker() != null && !style.getSectionMarker().isEmpty()) {
-            builder.append("<fo:inline>");
+        if (style.getSectionMarker() != null && style.getTextStyleName() != null && !style.getSectionMarker().isEmpty()) {
+
+            Optional<TextStyle> textStyleOpt = styleSheet.findFontStyleByName(style.getTextStyleName());
+
+            builder.append("<fo:inline");
+            textStyleOpt.ifPresent(ts -> GenerateUtils.appendTextStyleTags(builder, ts));
+            builder.append(">");
+
             builder.append(GenerateUtils.escapeXml(style.getSectionMarker()));
             builder.append(" </fo:inline>");
         }
@@ -106,5 +138,6 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
         if (style.getWidows() != null) {
             builder.append(" widows=\"").append(style.getWidows()).append("\"");
         }
+
     }
 }

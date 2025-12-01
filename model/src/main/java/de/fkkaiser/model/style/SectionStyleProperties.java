@@ -20,6 +20,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Style properties for section elements.
  *
@@ -48,7 +51,7 @@ import de.fkkaiser.model.annotation.PublicAPI;
  * <pre>{@code
  * {
  *   "name": "warning-box",
- *   "target": "section",
+ *   "target-element": "section",
  *   "properties": {
  *     "section-marker": "⚠️",
  *     "padding": "1cm",
@@ -71,18 +74,14 @@ import de.fkkaiser.model.annotation.PublicAPI;
 public class SectionStyleProperties extends ElementBlockStyleProperties {
 
     /**
-     * Symbol or text to display before the section content.
-     * <p>Common examples:</p>
-     * <ul>
-     *   <li>"§" - for legal paragraphs</li>
-     *   <li>"►" - for emphasized sections</li>
-     *   <li>"⚠️" - for warnings</li>
-     *   <li>"ℹ️" - for information boxes</li>
-     *   <li>"•" - for bullet-style sections</li>
-     * </ul>
+     * Symbol or text to display before the section content (e.g. "§" for paragraphs)
+     * Please note, that you have to set a text-style-name if you use a section marker!
      */
     @JsonProperty("section-marker")
     private String sectionMarker;
+
+    @JsonProperty("text-style-name")
+    private String textStyleName;
 
     /**
      * If true, prevents the section from breaking across pages.
@@ -119,9 +118,14 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
      *
      * @return the section marker
      */
-    @PublicAPI
+    @Internal
     public String getSectionMarker() {
         return sectionMarker;
+    }
+
+    @Internal
+    public String getTextStyleName() {
+        return textStyleName;
     }
 
     /**
@@ -134,6 +138,10 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
         this.sectionMarker = sectionMarker;
     }
 
+    @PublicAPI
+    public  void setTextStyleName(String textStyleName) {
+        this.textStyleName = textStyleName;
+    }
     /**
      * Gets whether to keep the section together on one page.
      *
@@ -220,6 +228,9 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
             if (this.widows == null) {
                 this.widows = sectionBase.widows;
             }
+            if(this.textStyleName == null) {
+                this.textStyleName = sectionBase.textStyleName;
+            }
         }
     }
 
@@ -247,8 +258,26 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
         super.applyPropertiesTo(newInstance);
 
         newInstance.sectionMarker = this.sectionMarker;
+        newInstance.textStyleName = this.textStyleName;
         newInstance.keepTogether = this.keepTogether;
         newInstance.orphans = this.orphans;
         newInstance.widows = this.widows;
+    }
+
+    /**
+     * Validates the parameters
+     * @return an empty list if no error was found, else a list of error strings.
+     */
+    @Internal
+    @Override
+    public List<String> validate(){
+
+        List<String> errors = new ArrayList<>();
+
+        if(this.sectionMarker != null && this.textStyleName==null) {
+            errors.add("Section marker is set without setting text style name.");
+        }
+
+        return  errors;
     }
 }
