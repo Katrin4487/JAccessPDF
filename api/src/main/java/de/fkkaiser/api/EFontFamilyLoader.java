@@ -64,10 +64,12 @@ record EFontFamilyLoader(EResourceProvider resourceProvider, FontFamilyList font
     private static final String ATTR_NAME = "name";
     private static final String ATTR_STYLE = "style";
     private static final String ATTR_WEIGHT = "weight";
+    private static final String ATTR_EMBEDDING_MODE = "embedding-mode";
 
     // Configuration constants
-    private static final String KERNING_ENABLED = "false";
+    private static final String KERNING_ENABLED = "true";
     private static final String EMPTY_FONTS_XML = "<fonts/>";
+    private static final String FULL_EMBEDDING_MODE = "full";
 
     /**
      * Constructs a new EFontFamilyLoader with the specified resource provider and font family list.
@@ -181,6 +183,8 @@ record EFontFamilyLoader(EResourceProvider resourceProvider, FontFamilyList font
                 .append(GenerateUtils.escapeXml(fontUrl.toExternalForm()))
                 .append("\" ").append(ATTR_KERNING).append("=\"")
                 .append(KERNING_ENABLED)
+                .append("\" ").append(ATTR_EMBEDDING_MODE).append("=\"")
+                .append(FULL_EMBEDDING_MODE)
                 .append("\">");
 
         // Build font-triplet element
@@ -195,6 +199,12 @@ record EFontFamilyLoader(EResourceProvider resourceProvider, FontFamilyList font
 
         // Close font element
         xmlBuilder.append("</").append(XML_FONT).append(">");
+
+        log.debug("Registered font: family='{}', style='{}', weight='{}', path='{}'",
+                fontFamilyName, style, weight, fontFilePath);
+        log.debug("===== Font XML Element =====");
+        log.debug(xmlBuilder.toString());
+        log.debug("============================");
     }
 
 }

@@ -13,7 +13,8 @@
 -- nothing yet --
 
 ### Fixed
--- nothing yet --
+- Better title handling in metadata -> title is set as title with default language (so that veraPDF check not fails)
+- to prevent errors because of subsetting -> activated subsetting always for fonts
 
 ## [0.10.1] - 2025-12-02
 ### Changed

@@ -223,7 +223,14 @@ public class XslFoGenerator {
                 .append("<x:xmpmeta>")
                 .append("<rdf:RDF>")
                 .append("<rdf:Description rdf:about=\"\">")
-                .append("<dc:title>").append(GenerateUtils.escapeXml(metadata.getTitle())).append("</dc:title>");
+                .append("<dc:title>")
+                .append("<rdf:Alt>")
+                .append("<rdf:li xml:lang=\"x-default\">")
+                .append(GenerateUtils.escapeXml(metadata.getTitle()))
+                .append("</rdf:li>")
+                .append("</rdf:Alt>")
+                .append("</dc:title>")
+        ;
 
         if (metadata.getAuthor() != null) {
             foBuilder.append("<dc:creator>").append(GenerateUtils.escapeXml(metadata.getAuthor())).append("</dc:creator>");
