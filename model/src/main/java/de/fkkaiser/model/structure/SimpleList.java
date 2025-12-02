@@ -19,7 +19,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.annotation.VisibleForTesting;
+import de.fkkaiser.model.structure.builder.SimpleListBuilder;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.ListStyleProperties;
@@ -27,13 +30,17 @@ import de.fkkaiser.model.style.StyleResolverContext;
 
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
  * Represents a list element in a document with a specific style class,
  * ordering, and list items.
+ *
+ * @author Katrin Kaiser
+ * @version 1.1.0
  */
-@JsonTypeName("list")
+@JsonTypeName(ElementTypes.LIST)
 public final class SimpleList implements Element {
 
     private final String styleClass;
@@ -43,30 +50,75 @@ public final class SimpleList implements Element {
     @JsonIgnore
     private ListStyleProperties resolvedStyle;
 
+    /**
+     * Constructs a SimpleList with the specified style class, ordering, and items.
+     *
+     * @param styleClass The style class of the list (can be null).
+     * @param ordering   The ordering of the list (defaults to UNORDERED if null).
+     * @param items      The list items (must not be null or empty).
+     * @throws NullPointerException     if items is null.
+     * @throws IllegalArgumentException if items is empty.
+     */
+    @PublicAPI
     @JsonCreator
     public SimpleList(
             @JsonProperty("style-class") String styleClass,
             @JsonProperty("ordering") ListOrdering ordering,
             @JsonProperty("items") List<ListItem> items
     ) {
+
+        Objects.requireNonNull(items, "List items cannot be null");
+        if(items.isEmpty()) {
+            throw new IllegalArgumentException("List must contain at least one item");
+        }
         this.styleClass = styleClass;
-        this.ordering = ordering;
+        this.ordering = ordering != null ? ordering : ListOrdering.UNORDERED;
         this.items = items;
     }
 
+    /**
+     * Returns the type of the element.
+     *
+     * @return The element type as a string.
+     */
+    @Internal
     @Override
     public String getType() {
-        return "list";
+        return ElementTypes.LIST;
     }
 
+    /**
+     * Returns the style class of the list
+     * @return The style class as a string.
+     */
+    @Internal
     @Override
     public String getStyleClass() {
         return styleClass;
     }
 
-    // Getter...
+
+    /**
+     * Returns the ordering of the list.
+     *
+     * @return The list ordering.
+     */
+    @Internal
     public ListOrdering getOrdering() { return ordering; }
+    /**
+     * Returns the list items.
+     *
+     * @return The list of ListItem objects.
+     */
+    @Internal
     public List<ListItem> getItems() { return items; }
+
+    /**
+     * Returns the resolved style properties for the list.
+     *
+     * @return The resolved ListStyleProperties.
+     */
+    @Internal
     public ListStyleProperties getResolvedStyle() { return resolvedStyle; }
 
 
@@ -78,10 +130,10 @@ public final class SimpleList implements Element {
                 .map(ElementStyle::properties)
                 .filter(ListStyleProperties.class::isInstance)
                 .map(ListStyleProperties.class::cast)
-                .orElse(new ListStyleProperties()); // Leeres Objekt, falls kein Stil definiert ist.
+                .orElse(new ListStyleProperties());
 
          ListStyleProperties finalStyle = specificStyle.copy();
-        finalStyle.mergeWith(parentStyle); // Vererbung vom Parent
+        finalStyle.mergeWith(parentStyle);
 
          this.resolvedStyle = finalStyle;
 
@@ -89,10 +141,13 @@ public final class SimpleList implements Element {
 
         if (items != null) {
             for (ListItem item : items) {
-                // Pass the new, more specific context to the children.
                 item.resolveStyles(childContext);
             }
         }
+    }
+
+    public static SimpleListBuilder builder() {
+        return new SimpleListBuilder();
     }
 
     @VisibleForTesting

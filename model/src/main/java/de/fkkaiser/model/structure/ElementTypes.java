@@ -84,4 +84,7 @@ public final class ElementTypes {
     /** Type identifier for layout table elements. @see LayoutTable */
     @PublicAPI
     public static final String LAYOUT_TABLE = "layout-table";
+
+    @PublicAPI
+    public static final String LIST_ITEM = "list-item";
 }

@@ -22,22 +22,10 @@ import de.fkkaiser.model.annotation.Inheritable;
 import java.util.Objects;
 
 /**
- * Style properties for list elements.
- * <p>
- * This class defines visual and layout properties for lists, including:
- * <ul>
- *   <li>List item marker types (bullets, numbers, letters)</li>
- *   <li>Custom list item images</li>
- *   <li>List marker positioning (inside/outside)</li>
- *   <li>Spacing between list markers and content</li>
- * </ul>
- * The class provides intelligent defaults for list spacing that adapt based
- * on the list-style-position property, while still allowing power users to
- * override these values explicitly.
+ * Style properties specific to list elements.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
- *
+ * @version 1.1.0
  */
 @JsonTypeName(StyleTargetTypes.LIST)
 public class ListStyleProperties extends TextBlockStyleProperties {
@@ -84,19 +72,6 @@ public class ListStyleProperties extends TextBlockStyleProperties {
     @JsonProperty("list-style-image")
     private String listStyleImage;
 
-    /**
-     * Defines the position of the list item marker relative to the list item's principal block box.
-     * <p>
-     * Valid values:
-     * <ul>
-     *   <li>"outside" (default): marker is positioned outside the content box</li>
-     *   <li>"inside": marker is positioned inside the content box, as if it were part of the content</li>
-     * </ul>
-     * </p>
-     */
-    @Inheritable
-    @JsonProperty("list-style-position")
-    private String listStylePosition;
 
     // --- Getters and Setters ---
 
@@ -117,35 +92,33 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      * @return the provisional distance between list item starts
      */
     public String getProvDistBetweenStarts() {
-
         if (this.isProvDistBetweenStartsManuallySet()) {
             return this.provDistBetweenStarts;
-        }
-
-        if ("inside".equalsIgnoreCase(this.listStylePosition)) {
-            return "0pt";
         }
 
         return DEFAULT_OUTSIDE_DISTANCE;
     }
 
-    /**
-     * Sets the provisional distance between the start of list item labels.
-     *
-     * @param provDistBetweenStarts the distance value (e.g., "1.5em", "20pt")
-     */
-    public void setProvDistBetweenStarts(String provDistBetweenStarts) {
-        this.provDistBetweenStarts = provDistBetweenStarts;
-    }
-
-    /**
-     * Returns the provisional separation between the list label and the content.
-     *
-     * @return the label separation distance, or {@link #DEFAULT_LABEL_SEPARATION} if not set
-     */
     public String getProvLabelSeparation() {
         return Objects.requireNonNullElse(this.provLabelSeparation, DEFAULT_LABEL_SEPARATION);
     }
+
+    public void setProvDistBetweenStarts(String provDistBetweenStarts) {
+        if (this.provLabelSeparation != null && provDistBetweenStarts != null) {
+
+            double dist = parseLength(provDistBetweenStarts);
+            double sep = parseLength(this.provLabelSeparation);
+
+            if (dist < sep) {
+
+                System.err.println("Warning: provisional-distance-between-starts (" +
+                        provDistBetweenStarts + ") is smaller than provisional-label-separation (" +
+                        this.provLabelSeparation + "). This may cause label-content overlap.");
+            }
+        }
+        this.provDistBetweenStarts = provDistBetweenStarts;
+    }
+
 
     /**
      * Sets the provisional separation between the list label and the content.
@@ -172,13 +145,6 @@ public class ListStyleProperties extends TextBlockStyleProperties {
         this.listStyleImage = listStyleImage;
     }
 
-    public String getListStylePosition() {
-        return listStylePosition;
-    }
-
-    public void setListStylePosition(String listStylePosition) {
-        this.listStylePosition = listStylePosition;
-    }
 
     // --- Overrides ---
 
@@ -210,7 +176,16 @@ public class ListStyleProperties extends TextBlockStyleProperties {
         newInstance.setProvLabelSeparation(this.provLabelSeparation);
         newInstance.setListStyleType(this.listStyleType);
         newInstance.setListStyleImage(this.listStyleImage);
-        newInstance.setListStylePosition(this.listStylePosition);
         return newInstance;
+    }
+
+    private double parseLength(String length) {
+        if (length == null || length.isEmpty()) return 0;
+        try {
+            String numPart = length.replaceAll("[^0-9.-]", "");
+            return Double.parseDouble(numPart);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }

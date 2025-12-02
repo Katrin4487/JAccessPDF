@@ -19,26 +19,24 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
 import de.fkkaiser.model.style.TextBlockStyleProperties;
-import de.fkkaiser.model.style.ElementBlockStyleProperties;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.TextBlockStyleProperties;
-
 import java.util.List;
 
 /**
  * Represents a list item, which can function as a standard list item
  * or as an entry in a definition list with a label and a body.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
 @JsonTypeName("list-item")
 public final class ListItem implements Element {
 
     private final String styleClass;
-    private final String variant;
 
     // The label of the list item (e.g., a term in a definition list).
     // Can contain rich inline content.
@@ -51,33 +49,74 @@ public final class ListItem implements Element {
     @JsonIgnore
     private ElementBlockStyleProperties resolvedStyle;
 
+    /**
+     * Constructs a ListItem with the specified style class, label, and elements.
+     * @param styleClass style class
+     * @param label label of the list item
+     * @param elements body elements of the list item
+     */
     @JsonCreator
     public ListItem(
             @JsonProperty("style-class") String styleClass,
-            @JsonProperty("variant") String variant,
-            @JsonProperty("label") List<InlineElement> label, // NEU
+            @JsonProperty("label") List<InlineElement> label,
             @JsonProperty("elements") List<Element> elements
     ) {
         this.styleClass = styleClass;
-        this.variant = variant;
         this.label = label;
         this.elements = elements;
     }
 
     // --- Getters ---
+    /**
+     * Returns the style class of the list item.
+     * @return style class name of the style class
+     */
+    @Internal
     @Override
     public String getStyleClass() { return styleClass; }
-    public String getVariant() { return variant; }
-    public List<InlineElement> getLabel() { return label; } // NEU
+
+    /**
+     * Returns the label of the list item.
+     * @return label of the list item
+     */
+    @Internal
+    public List<InlineElement> getLabel() { return label; }
+    /**
+     * Returns the body elements of the list item.
+     * @return body elements of the list item
+     */
+    @Internal
     public List<Element> getElements() { return elements; }
+    /**
+     * Returns the resolved style properties for the list item.
+     * @return resolved style properties
+     */
+    @Internal
     public ElementBlockStyleProperties getResolvedStyle() { return resolvedStyle; }
+    /**
+     * Sets the resolved style properties for the list item.
+     * @param resolvedStyle resolved style properties
+     */
+    @Internal
     public void setResolvedStyle(ElementBlockStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
 
+    /**
+     * Returns the element type identifier.
+     * @return the constant {@link ElementTypes#LIST_ITEM}
+     */
+    @Internal
     @Override
     public String getType() {
-        return "list-item";
+        return ElementTypes.LIST_ITEM;
     }
 
+    /**
+     * Resolves the styles for the list item and its child elements
+     * based on the provided style resolver context.
+     *
+     * @param context the style resolver context
+     */
+    @Internal
     @Override
     public void resolveStyles(StyleResolverContext context) {
         // Resolve the style for the list item container itself

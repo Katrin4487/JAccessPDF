@@ -15,6 +15,8 @@
  */
 package de.fkkaiser.model.style;
 
+import org.slf4j.helpers.NOP_FallbackServiceProvider;
+
 /**
  * Defines the available 'target-element' constants for style definitions.
  * Using these constants prevents typos in the style JSON configuration.
@@ -38,5 +40,6 @@ public final class StyleTargetTypes {
     public static final String PART = "part";
     public static final String BLOCK_IMAGE = "block-image";
     public static final String LAYOUT_TABLE = "layout-table";
+    public static final String LIST_ITEM = "list-item";
 }
 

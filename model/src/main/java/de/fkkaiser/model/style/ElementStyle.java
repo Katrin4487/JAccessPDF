@@ -157,7 +157,8 @@ public record ElementStyle(
                 @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = StyleTargetTypes.TEXT_RUN),
                 @JsonSubTypes.Type(value = FootnoteStyleProperties.class, name = StyleTargetTypes.FOOTNOTE),
                 @JsonSubTypes.Type(value = BlockImageStyleProperties.class, name = StyleTargetTypes.BLOCK_IMAGE),
-                @JsonSubTypes.Type(value = LayoutTableStyleProperties.class, name = StyleTargetTypes.LAYOUT_TABLE)
+                @JsonSubTypes.Type(value = LayoutTableStyleProperties.class, name = StyleTargetTypes.LAYOUT_TABLE),
+                @JsonSubTypes.Type(value = ListItemStyleProperties.class, name = StyleTargetTypes.LIST_ITEM)
         })
         ElementStyleProperties properties
 ) {
@@ -547,6 +548,7 @@ public record ElementStyle(
         return !targetElement.equals(StyleTargetTypes.PARAGRAPH) &&
                 !targetElement.equals(StyleTargetTypes.HEADLINE) &&
                 !targetElement.equals(StyleTargetTypes.LIST) &&
+                !targetElement.equals(StyleTargetTypes.LIST_ITEM) &&
                 !targetElement.equals(StyleTargetTypes.TABLE) &&
                 !targetElement.equals(StyleTargetTypes.TABLE_CELL) &&
                 !targetElement.equals(StyleTargetTypes.SECTION) &&

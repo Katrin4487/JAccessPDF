@@ -39,7 +39,7 @@ class ListFoGeneratorTest {
         SimpleList list = new SimpleList(
                 "test-style",
                 ListOrdering.ORDERED,
-                List.of(new ListItem(null, null,null,new ArrayList<>()), new ListItem(null, null,null,new ArrayList<>()))
+                List.of(new ListItem(null, null,new ArrayList<>()), new ListItem(null, null,new ArrayList<>()))
         );
         ListStyleProperties styleProperties = new ListStyleProperties();
         list.setResolvedStyle(styleProperties);
@@ -70,7 +70,7 @@ class ListFoGeneratorTest {
         SimpleList list = new SimpleList(
                 "test-style",
                 ListOrdering.UNORDERED,
-                List.of(new ListItem(null, null,null,new ArrayList<>()), new ListItem(null, null,null,new ArrayList<>()))
+                List.of(new ListItem(null, null,new ArrayList<>()), new ListItem(null, null,new ArrayList<>()))
         );
         ListStyleProperties styleProperties = new ListStyleProperties();
         styleProperties.setListStyleType("circle");
@@ -100,7 +100,7 @@ class ListFoGeneratorTest {
         SimpleList list = new SimpleList(
                 "test-style",
                 ListOrdering.UNORDERED,
-                List.of(new ListItem(null, null,null,new ArrayList<>()))
+                List.of(new ListItem(null, null,new ArrayList<>()))
         );
         ListStyleProperties styleProperties = new ListStyleProperties();
         list.setResolvedStyle(styleProperties);

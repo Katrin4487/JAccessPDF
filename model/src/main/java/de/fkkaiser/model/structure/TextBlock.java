@@ -57,9 +57,8 @@ public abstract class TextBlock extends AbstractElement {
      * @throws NullPointerException     if styleClass is null
      */
     public TextBlock(String styleClass,List<InlineElement> inlineElements) {
-        Objects.requireNonNull(styleClass, "styleClass must not be null");
-        if(styleClass.isEmpty()) {
-            log.error("styleClass is null or empty");
+        if(styleClass != null && styleClass.isEmpty()) {
+            log.error("styleClass must not be  empty");
             throw new IllegalArgumentException("Style class must not be empty");
         }
         this.styleClass = styleClass;

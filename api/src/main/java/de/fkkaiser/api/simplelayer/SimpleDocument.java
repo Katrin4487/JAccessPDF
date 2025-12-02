@@ -218,7 +218,7 @@ public class SimpleDocument {
             List<ListItem> listItems = new ArrayList<>();
             for (String item : items) {
                 Paragraph paragraph = new Paragraph(PARAGRAPH_STYLE_NAME, item);
-                ListItem listItem = new ListItem(null, null, null, Collections.singletonList(paragraph));
+                ListItem listItem = new ListItem(null, null, Collections.singletonList(paragraph));
                 listItems.add(listItem);
             }
             return new SimpleList(styleName, ordering, listItems);

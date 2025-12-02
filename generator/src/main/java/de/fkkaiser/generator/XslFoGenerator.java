@@ -49,8 +49,8 @@ public class XslFoGenerator {
         this.blockGeneratorRegistry.put(Part.class, new PartFoGenerator(this));
         this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
         this.blockGeneratorRegistry.put(BlockImage.class,new ImageFoGenerator());
-        this.blockGeneratorRegistry.put(LayoutTable.class,new LayoutTableFoGenerator(this));
-        this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());
+        this.blockGeneratorRegistry.put(LayoutTable.class,new LayoutTableFoGenerator(this)); this.blockGeneratorRegistry.put(LayoutTable.class,new LayoutTableFoGenerator(this));
+         this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());
         this.inlineGeneratorRegistry.put(PageNumber.class, new PageNumberFoGenerator());
         this.inlineGeneratorRegistry.put(Hyperlink.class, new HyperlinkFoGenerator());
         this.inlineGeneratorRegistry.put(Footnote.class, new FootnoteFoGenerator(this));

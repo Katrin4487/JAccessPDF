@@ -55,7 +55,7 @@ public class ParagraphBuilder {
      */
     @Internal
     public ParagraphBuilder(String styleClass) {
-        if (styleClass == null || styleClass.trim().isEmpty()) {
+        if (styleClass != null && styleClass.trim().isEmpty()) {
             throw new IllegalArgumentException("Style class cannot be null or empty");
         }
         this.styleClass = styleClass;
