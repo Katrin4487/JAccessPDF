@@ -1,10 +1,13 @@
 # Changelog
 
 ## [Unreleased]
+
 ### Changed
--- nothing yet --
+- ParagraphBuilder has its own class now
+
 ### Added
 -- nothing yet --
+
 ### Fixed
 -- nothing yet --
 
