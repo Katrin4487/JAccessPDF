@@ -26,10 +26,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Abstract class representing a block of text elements.
  * Inherits from Element interface. Implements methods to resolve styles and manage inline elements.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
 public abstract class TextBlock extends AbstractElement {
 
@@ -48,11 +52,15 @@ public abstract class TextBlock extends AbstractElement {
      *
      * @param styleClass     The CSS style class to apply to the text block
      * @param inlineElements A list of InlineElement objects to be included in the text block
+     *
+     * @throws IllegalArgumentException if styleClass is empty
+     * @throws NullPointerException     if styleClass is null
      */
     public TextBlock(String styleClass,List<InlineElement> inlineElements) {
-        if(styleClass == null || styleClass.isEmpty()) {
+        Objects.requireNonNull(styleClass, "styleClass must not be null");
+        if(styleClass.isEmpty()) {
             log.error("styleClass is null or empty");
-            throw new IllegalArgumentException("Style class cannot be null or empty");
+            throw new IllegalArgumentException("Style class must not be empty");
         }
         this.styleClass = styleClass;
         this.inlineElements = (inlineElements != null) ? inlineElements : List.of();
