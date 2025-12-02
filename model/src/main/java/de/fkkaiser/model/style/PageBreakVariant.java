@@ -30,14 +30,33 @@ import de.fkkaiser.model.annotation.PublicAPI;
  *   <li>"ODD_PAGE" - Start section on an odd-numbered page</li>
  * </ul>
  *
+ * @author Katrin Kaiser
+ * @version 1.0.0
+ *
  */
 @PublicAPI
 public enum PageBreakVariant {
 
+
+    /**
+     * No forced break (default)
+     */
     AUTO("auto"),
+    /**
+     * Start section on a new page
+     */
     PAGE("page"),
+    /**
+     * Start section in a new column
+     */
     COLUMN("column"),
+    /**
+     * Start section on an even-numbered page
+     */
     EVEN_PAGE("even-page"),
+    /**
+     * Start section on an odd-numbered page
+     */
     ODD_PAGE("odd-page");
 
     private final String foValue;

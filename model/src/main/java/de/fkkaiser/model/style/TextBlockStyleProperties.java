@@ -55,7 +55,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
     private TextAlign textAlign; // The alignment of the text (e.g., start, center, end, justify).
 
     @Inheritable
-    private String span; // The span property for the text block.
+    private Span span; // The span property for the text block.
 
     @Inheritable
     @JsonProperty("linefeed-treatment")
@@ -150,7 +150,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
      *
      * @return the span property
      */
-    public String getSpan() {
+    public Span getSpan() {
         return span;
     }
 
@@ -159,7 +159,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
      *
      * @param span the span property to set
      */
-    public void setSpan(String span) {
+    public void setSpan(Span span) {
         this.span = span;
     }
 

@@ -127,7 +127,7 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
         // Span (for multi-column layouts)
         if (style.getSpan() != null) {
             builder.append(" span=\"")
-                    .append(GenerateUtils.escapeXml(style.getSpan()))
+                    .append(GenerateUtils.escapeXml(style.getSpan().getValue()))
                     .append("\"");
             builder.append(" space-before.conditionality=\"retain\"");
             builder.append(" space-after.conditionality=\"retain\"");
