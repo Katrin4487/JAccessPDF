@@ -19,124 +19,21 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.structure.builder.HeadlineBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * Represents a headline element in a PDF document structure.
+ * Represents a headline element in a document structure.
  *
- * <p>Headlines are specialized text blocks that provide hierarchical structure and
- * visual emphasis in documents. They function similarly to HTML heading tags (h1-h6),
- * with numeric levels indicating their position in the document hierarchy. Headlines
- * typically receive distinct styling (larger font size, bold weight, increased spacing)
- * to make them stand out from regular body text.</p>
- *
- * <p><b>Purpose in PDF Generation:</b></p>
- * During PDF rendering, headlines serve multiple purposes:
- * <ul>
- *   <li><b>Visual Structure:</b> Provide visual hierarchy through distinct styling</li>
- *   <li><b>Document Outline:</b> Can be used to generate PDF bookmarks and table of contents</li>
- *   <li><b>Accessibility:</b> Enable screen readers to navigate document structure (PDF/UA)</li>
- *   <li><b>Semantic Markup:</b> Tag content with semantic meaning for tagged PDFs</li>
- * </ul>
- *
- * <p><b>Hierarchy Levels:</b></p>
- * Headlines support six hierarchical levels (1-6), following the HTML heading convention:
- * <ul>
- *   <li><b>Level 1:</b> Top-level headlines (e.g., document title, major sections)</li>
- *   <li><b>Level 2:</b> Major subsections</li>
- *   <li><b>Level 3:</b> Sub-subsections</li>
- *   <li><b>Levels 4-6:</b> Finer-grained hierarchical divisions</li>
- * </ul>
- *
- * <p>Lower numbers indicate higher importance in the hierarchy. A well-structured document
- * typically uses levels sequentially without skipping (e.g., h1 → h2 → h3, not h1 → h3).</p>
- *
- * <p><b>Inheritance from TextBlock:</b></p>
- * Headline extends {@link TextBlock}, inheriting its ability to contain inline elements
- * and participate in style resolution. This means headlines can contain formatted text,
- * inline images, or other inline elements, not just plain text. The TextBlock foundation
- * provides the underlying text handling and style resolution mechanisms.
- *
- * <p><b>JSON Representation:</b></p>
- * <pre>{@code
- * {
- *   "type": "headline",
- *   "level": 1,
- *   "style-class": "section-title",
- *   "variant": "primary",
- *   "inline-elements": [
- *     {
- *       "type": "text-run",
- *       "text": "Chapter 1: Introduction"
- *     }
- *   ]
- * }
- * }</pre>
- *
- * <p><b>Default Level Handling:</b></p>
- * If no level is specified in the JSON or {@code null} is provided, the headline
- * defaults to level {@value #DEFAULT_LEVEL}. This ensures that every headline has
- * a valid level, though a warning is logged to alert developers of the missing value.
- * It is recommended to always specify the level explicitly for clarity and proper
- * document structure.
- *
- * <p><b>Usage Example 1 - JSON Deserialization:</b></p>
- * <pre>{@code
- * // JSON is automatically deserialized to a Headline via Jackson
- * {
- *   "type": "headline",
- *   "level": 2,
- *   "style-class": "subsection",
- *   "inline-elements": [
- *     { "type": "text-run", "text": "Background" }
- *   ]
- * }
- * }</pre>
- *
- * <p><b>Usage Example 2 - Programmatic Construction:</b></p>
- * <pre>{@code
- * // Using the convenience constructor for simple text headlines
- * Headline title = new Headline("chapter-title", "Chapter 1: Introduction", 1);
- *
- * // Using the full constructor with formatted content
- * TextRun bold = new TextRun("Important", "emphasis", null);
- * TextRun regular = new TextRun(" Section", null, null);
- * Headline heading = new Headline(
- *     "subsection",
- *     List.of(bold, regular),
- *     "warning",
- *     2
- * );
- * }</pre>
- *
- * <p><b>Style Resolution:</b></p>
- * Headline inherits style resolution from {@link TextBlock}. During resolution,
- * the headline's styleClass is used to look up specific styling properties that
- * define its appearance (font, size, weight, color, spacing). These styles are
- * typically configured to visually distinguish headlines from body text based
- * on their level.
- *
- * <p><b>Best Practices:</b></p>
- * <ul>
- *   <li>Always specify explicit level values for clarity</li>
- *   <li>Use levels sequentially to maintain proper hierarchy</li>
- *   <li>Define distinct styles for different headline levels</li>
- *   <li>Use descriptive styleClass names that indicate purpose (e.g., "chapter-title", "subsection-header")</li>
- *   <li>Consider accessibility when structuring document hierarchy</li>
- * </ul>
- *
- * @author FK Kaiser
- * @version 1.0
- * @see TextBlock
- * @see InlineElement
- * @see ElementTypes
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
+@PublicAPI
 @JsonTypeName(ElementTypes.HEADLINE)
 public final class Headline extends TextBlock {
 
@@ -159,9 +56,9 @@ public final class Headline extends TextBlock {
     /**
      * Constructs a Headline with the specified style class, inline elements, and level.
      *
-     * @param styleClass    the CSS-like style class for styling
+     * @param styleClass     the CSS-like style class for styling
      * @param inlineElements the list of inline elements that make up the headline content
-     * @param level         the headline level (1-6); if {@code null}, defaults to {@value #DEFAULT_LEVEL}
+     * @param level          the headline level (1-6); if {@code null}, defaults to {@value #DEFAULT_LEVEL}
      */
     @JsonCreator
     public Headline(
@@ -173,6 +70,9 @@ public final class Headline extends TextBlock {
 
         if (level == null) {
             log.warn("Headline 'level' is not defined. Using default value {}.", DEFAULT_LEVEL);
+            this.level = DEFAULT_LEVEL;
+        } else if (level < 1 || level > 6) {
+            log.warn("Headline 'level' is out of bounds ({}). It must be between 1 and 6. Using default value {}.", level, DEFAULT_LEVEL);
             this.level = DEFAULT_LEVEL;
         } else {
             this.level = level;
@@ -187,11 +87,11 @@ public final class Headline extends TextBlock {
      * {@link TextRun} inline element to hold the provided text.</p>
      *
      * @param styleClass the CSS-like style class for styling
-     * @param text      the plain text content of the headline
-     * @param level     the headline level (1-6); if {@code null}, defaults to {@value #DEFAULT_LEVEL}
+     * @param text       the plain text content of the headline
+     * @param level      the headline level (1-6); if {@code null}, defaults to {@value #DEFAULT_LEVEL}
      */
     public Headline(String styleClass, String text, int level) {
-        this(styleClass, Collections.singletonList(new TextRun(text)),  level);
+        this(styleClass, Collections.singletonList(new TextRun(text)), level);
     }
 
     /**
@@ -218,16 +118,35 @@ public final class Headline extends TextBlock {
         return level;
     }
 
+    /**
+     * Returns the unique identifier of the headline.
+     * Please note that this value shall be set during generation
+     * and may be {@code null} beforehand.
+     * @return the headline ID, or {@code null} if not set
+     */
     @Internal
     public String getId() {
         return id;
     }
 
+    /**
+     * Sets the unique identifier of the headline.
+     * This method is intended for internal use during generation.
+     *
+     * @param id the headline ID to set
+     */
     @Internal
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Creates a new {@link HeadlineBuilder} for constructing Headline instances.
+     *
+     * @param styleClass The style class to be applied to the headline.
+     * @return A new HeadlineBuilder instance.
+     */
+    @PublicAPI
     public static HeadlineBuilder builder(String styleClass) {
         return new HeadlineBuilder(styleClass);
     }
