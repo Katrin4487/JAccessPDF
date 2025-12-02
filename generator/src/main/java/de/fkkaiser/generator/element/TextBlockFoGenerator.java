@@ -24,8 +24,6 @@ import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.structure.TextBlock;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TextBlockStyleProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +38,6 @@ import java.util.UUID;
  */
 public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
 
-    private static final Logger log = LoggerFactory.getLogger(TextBlockFoGenerator.class);
     protected TextBlockFoGenerator(XslFoGenerator mainGenerator) {
         super(mainGenerator);
     }
@@ -59,7 +56,7 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
         String headlineId = "";
         if (element instanceof Headline headline) {
 
-            String theId =  "headline-" + UUID.randomUUID().toString();
+            String theId =  "headline-" + UUID.randomUUID();
             headlineId = " id=\"" + theId + "\"";
             headline.setId(theId);
             headlines.add(headline);
@@ -123,7 +120,7 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
         // Text alignment
         if (style.getTextAlign() != null) {
             builder.append(" text-align=\"")
-                    .append(GenerateUtils.escapeXml(style.getTextAlign()))
+                    .append(GenerateUtils.escapeXml(style.getTextAlign().getValue()))
                     .append("\"");
         }
 

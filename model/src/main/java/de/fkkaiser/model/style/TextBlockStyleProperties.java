@@ -52,7 +52,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
 
     @Inheritable
     @JsonProperty("text-align")
-    private String textAlign; // The alignment of the text (e.g., start, center, end, justify).
+    private TextAlign textAlign; // The alignment of the text (e.g., start, center, end, justify).
 
     @Inheritable
     private String span; // The span property for the text block.
@@ -132,7 +132,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
      *
      * @return the text alignment
      */
-    public String getTextAlign() {
+    public TextAlign getTextAlign() {
         return textAlign;
     }
 
@@ -141,7 +141,7 @@ public class TextBlockStyleProperties extends ElementBlockStyleProperties {
      *
      * @param textAlign the text alignment to set
      */
-    public void setTextAlign(String textAlign) {
+    public void setTextAlign(TextAlign textAlign) {
         this.textAlign = textAlign;
     }
 

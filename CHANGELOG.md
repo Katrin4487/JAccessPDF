@@ -4,6 +4,7 @@
 
 ### Changed
 - ParagraphBuilder has its own class now
+- TextAlign is now an enum instead of a string
 
 ### Added
 -- nothing yet --

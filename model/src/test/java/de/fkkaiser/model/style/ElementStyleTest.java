@@ -93,21 +93,21 @@ class ElementStyleTest {
         TextStyle.TextStyleFactory factory = new TextStyle.TextStyleFactory("Open Sans");
         TextStyle aStyle = factory.normal("normal-font",12);
         ElementStyle style = ElementStyle.paragraphBuilder("aName",aStyle)
-                .withTextAlign("start")
+                .withTextAlign(TextAlign.START)
                 .withBackgroundColor("green")
                 .withLanguage("en-US")
                 .withSpaceBefore("5cm")
                 .withSpaceAfter("6cm")
                 .build();
 
-        assertEquals(style.targetElement(),StyleTargetTypes.PARAGRAPH,"Should create style with target type paragraph");
+        assertEquals(StyleTargetTypes.PARAGRAPH, style.targetElement(),"Should create style with target type paragraph");
 
         ParagraphStyleProperties properties = (ParagraphStyleProperties) style.properties();
-        assertEquals(properties.getTextAlign(),"start", "Should create style with set alignment");
-        assertEquals(properties.getBackgroundColor(),"green", "Should create style with set background color");
-        assertEquals(properties.getLanguage(),"en-US", "Should create style with set language");
-        assertEquals(properties.getSpaceBefore(),"5cm", "Should create style with space before 5");
-        assertEquals(properties.getSpaceAfter(),"6cm", "Should create style with space after 6");
+        assertEquals(TextAlign.START, properties.getTextAlign(), "Should create style with set alignment");
+        assertEquals("green", properties.getBackgroundColor(), "Should create style with set background color");
+        assertEquals("en-US", properties.getLanguage(), "Should create style with set language");
+        assertEquals("5cm", properties.getSpaceBefore(), "Should create style with space before 5");
+        assertEquals("6cm", properties.getSpaceAfter(), "Should create style with space after 6");
     }
 
     @Test
@@ -123,10 +123,10 @@ class ElementStyleTest {
                 .withKeepWithNext(true)
                 .build();
 
-        assertEquals(style.targetElement(),StyleTargetTypes.HEADLINE,"Should create style with target type headline");
+        assertEquals(StyleTargetTypes.HEADLINE, style.targetElement(),"Should create style with target type headline");
         HeadlineStyleProperties properties = (HeadlineStyleProperties) style.properties();
-        assertEquals(properties.getSpaceAfter(),"1cm", "Should create style with set alignment");
-        assertEquals(properties.getBackgroundColor(),"#F0F0F0", "Should create style with set background color");
+        assertEquals("1cm", properties.getSpaceAfter(), "Should create style with set alignment");
+        assertEquals("#F0F0F0", properties.getBackgroundColor(), "Should create style with set background color");
         assertTrue(properties.getKeepWithNext());
     }
 
@@ -138,11 +138,11 @@ class ElementStyleTest {
                 .withAlignment("right")
                 .withScaling("uniform")
                 .build();
-        assertEquals(elementStyle.targetElement(),StyleTargetTypes.BLOCK_IMAGE, "should have the correct target type");
+        assertEquals(StyleTargetTypes.BLOCK_IMAGE, elementStyle.targetElement(), "should have the correct target type");
 
         BlockImageStyleProperties properties = (BlockImageStyleProperties) elementStyle.properties();
-        assertEquals(properties.getContentWidth(),"auto", "Should create style with set alignment");
-        assertEquals(properties.getAlignment(),"right", "Should create style with set alignment");
-        assertEquals(properties.getScaling(),"uniform", "Should create style with set scaling");
+        assertEquals("auto", properties.getContentWidth(), "Should create style with set alignment");
+        assertEquals("right", properties.getAlignment(), "Should create style with set alignment");
+        assertEquals("uniform", properties.getScaling(), "Should create style with set scaling");
     }
 }

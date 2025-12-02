@@ -16,10 +16,7 @@
 package de.fkkaiser.model.style.builder;
 
 import de.fkkaiser.model.annotation.PublicAPI;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.ParagraphStyleProperties;
-import de.fkkaiser.model.style.StyleTargetTypes;
-import de.fkkaiser.model.style.TextStyle;
+import de.fkkaiser.model.style.*;
 
 /**
  * Fluent builder for creating paragraph element styles with detailed properties.
@@ -80,7 +77,7 @@ public class ParagraphStyleBuilder {
      * @return this builder instance for method chaining
      */
     @PublicAPI
-    public ParagraphStyleBuilder withTextAlign(String textAlign) {
+    public ParagraphStyleBuilder withTextAlign(TextAlign textAlign) {
         properties.setTextAlign(textAlign);
         return this;
     }

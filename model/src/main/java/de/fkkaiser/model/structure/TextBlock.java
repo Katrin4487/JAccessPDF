@@ -95,7 +95,7 @@ public abstract class TextBlock extends AbstractElement {
             ElementStyle specificElementStyle = context.styleMap().get(this.styleClass);
             if (specificElementStyle != null &&
                     specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
-                finalStyle = (TextBlockStyleProperties) specificStyle.copy();
+                finalStyle = specificStyle.copy();
             }
         }
 

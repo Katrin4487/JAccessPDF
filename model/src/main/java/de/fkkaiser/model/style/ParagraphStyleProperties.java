@@ -44,7 +44,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
 
     @Inheritable
     @JsonProperty("text-align")
-    private String textAlign; //justify..
+    private TextAlign textAlign; //justify..
 
     @Inheritable
     @JsonProperty("text-align-last")
@@ -108,27 +108,6 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
         this.widows = widows;
     }
 
-    /**
-     * Gets the text alignment for the paragraph.
-     *
-     * @return the text alignment as a `String`
-     */
-    @Internal
-    @Override
-    public String getTextAlign() {
-        return textAlign;
-    }
-
-    /**
-     * Sets the text alignment for the paragraph.
-     *
-     * @param textAlign the text alignment to set
-     */
-    @PublicAPI
-    @Override
-    public void setTextAlign(String textAlign) {
-        this.textAlign = textAlign;
-    }
 
     /**
      * Gets the alignment of the last line of the paragraph.
