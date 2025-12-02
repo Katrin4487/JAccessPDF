@@ -43,12 +43,8 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
     private String textIndent;
 
     @Inheritable
-    @JsonProperty("text-align")
-    private TextAlign textAlign; //justify..
-
-    @Inheritable
     @JsonProperty("text-align-last")
-    private String textAlignLast; //start, end...
+    private TextAlign textAlignLast; //start, end...
 
     @Inheritable
     @JsonProperty("hyphenate")
@@ -60,11 +56,11 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
 
     @Inheritable
     @JsonProperty("orphans")
-    private boolean orphans;
+    private Integer orphans;
 
     @Inheritable
     @JsonProperty("widows")
-    private boolean widows;
+    private Integer widows;
 
     // --- Getters and Setters ---
 
@@ -93,7 +89,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
      * @return `true` if widows are enabled, otherwise `false`
      */
     @Internal
-    public boolean isWidows() {
+    public Integer getWidows() {
         return widows;
     }
 
@@ -104,7 +100,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
      * @param widows the widows property to set
      */
     @PublicAPI
-    public void setWidows(boolean widows) {
+    public void setWidows(Integer widows) {
         this.widows = widows;
     }
 
@@ -115,7 +111,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
      * @return the alignment of the last line as a `String`
      */
     @Internal
-    public String getTextAlignLast() {
+    public TextAlign getTextAlignLast() {
         return textAlignLast;
     }
 
@@ -125,7 +121,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
      * @param textAlignLast the alignment to set
      */
     @PublicAPI
-    public void setTextAlignLast(String textAlignLast) {
+    public void setTextAlignLast(TextAlign textAlignLast) {
         this.textAlignLast = textAlignLast;
     }
 
@@ -170,12 +166,12 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
     }
 
     /**
-     * Checks if orphans are enabled for the paragraph.
+     * Returns the orphans property for the paragraph.
      *
-     * @return `true` if orphans are enabled, otherwise `false`
+     * @return integer value of orphans if set, otherwise null
      */
     @Internal
-    public boolean isOrphans() {
+    public Integer getOrphans() {
         return orphans;
     }
 
@@ -186,7 +182,7 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
      * @param orphans the orphans property to set
      */
     @PublicAPI
-    public void setOrphans(boolean orphans) {
+    public void setOrphans(Integer orphans) {
         this.orphans = orphans;
     }
 
@@ -220,7 +216,6 @@ public class ParagraphStyleProperties extends TextBlockStyleProperties {
         super.applyPropertiesTo(target);
         if (target instanceof ParagraphStyleProperties paragraphTarget) {
             paragraphTarget.textIndent = this.textIndent;
-            paragraphTarget.textAlign = this.textAlign;
             paragraphTarget.textAlignLast = this.textAlignLast;
             paragraphTarget.hyphenate = this.hyphenate;
             paragraphTarget.language = this.language;

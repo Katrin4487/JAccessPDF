@@ -6,6 +6,8 @@
 - ParagraphBuilder has its own class now
 - TextAlign is now an enum instead of a string
 - Span is now an enum instead of a string
+- Widows and Orphans are integers in Paragraphs now (no booleans)
+- TextAlignLast in Paragraph can be used with TextAlign enum now
 
 ### Added
 -- nothing yet --

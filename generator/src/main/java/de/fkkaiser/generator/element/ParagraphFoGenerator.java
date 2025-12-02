@@ -17,19 +17,24 @@ package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.TextBlock;
 import de.fkkaiser.model.style.ParagraphStyleProperties;
 import de.fkkaiser.model.style.TextBlockStyleProperties;
 
 /**
  * Generates XSL-FO representation for Paragraph elements.
+ * @author Katrin Kaiser
+ * @version 1.1.0
  */
+@Internal
 public class ParagraphFoGenerator extends TextBlockFoGenerator {
 
     /**
      * Constructor for ParagraphFoGenerator.
      * @param mainGenerator The main generator for delegation.
      */
+    @Internal
     public ParagraphFoGenerator(XslFoGenerator mainGenerator) {
         super(mainGenerator);
     }
@@ -39,6 +44,7 @@ public class ParagraphFoGenerator extends TextBlockFoGenerator {
      * @param textBlock The paragraph element.
      * @return The role string "P".
      */
+    @Internal
     @Override
     protected String getRole(TextBlock textBlock) {
         return "P";
@@ -49,6 +55,7 @@ public class ParagraphFoGenerator extends TextBlockFoGenerator {
      * @param builder The StringBuilder to append to.
      * @param style The resolved style properties.
      */
+    @Internal
     @Override
     protected void appendSpecificAttributes(StringBuilder builder, TextBlockStyleProperties style) {
         // This method handles properties that only exist in ParagraphStyleProperties.
@@ -57,7 +64,7 @@ public class ParagraphFoGenerator extends TextBlockFoGenerator {
                 builder.append(" text-indent=\"").append(GenerateUtils.escapeXml(pStyle.getTextIndent())).append("\"");
             }
             if (pStyle.getTextAlignLast() != null) {
-                builder.append(" text-align-last=\"").append(GenerateUtils.escapeXml(pStyle.getTextAlignLast())).append("\"");
+                builder.append(" text-align-last=\"").append(GenerateUtils.escapeXml(pStyle.getTextAlignLast().getValue())).append("\"");
             }
             if (pStyle.isHyphenate()) {
                 builder.append(" hyphenate=\"true\"");
@@ -67,11 +74,11 @@ public class ParagraphFoGenerator extends TextBlockFoGenerator {
             }
             // The 'orphans' and 'widows' properties control the minimum number of lines
             // of a paragraph to be left at the top or bottom of a page.
-            if (pStyle.isOrphans()) {
-                builder.append(" orphans=\"2\""); // Default to 2 if true
+            if (pStyle.getOrphans() != null) {
+                builder.append(" orphans=\"").append(pStyle.getOrphans()).append("\""); // Default to 2 if true
             }
-            if (pStyle.isWidows()) {
-                builder.append(" widows=\"2\""); // Default to 2 if true
+            if (pStyle.getWidows() != null) {
+                builder.append(" widows=\"").append(pStyle.getWidows()).append("\""); // Default to 2 if true
             }
         }
     }
