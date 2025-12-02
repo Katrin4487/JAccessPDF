@@ -26,8 +26,12 @@ import de.fkkaiser.model.structure.SectionVariant;
 import de.fkkaiser.model.style.SectionStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TextStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Generates the XSL-FO structure for a Section element.
@@ -43,6 +47,8 @@ import java.util.Optional;
 @Internal
 public class SectionFoGenerator extends BlockElementFoGenerator {
 
+    private static final Logger log = LoggerFactory.getLogger(SectionFoGenerator.class);
+
     /**
      * Constructs a new `SectionFoGenerator` instance.
      *
@@ -52,7 +58,6 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
     public SectionFoGenerator(XslFoGenerator mainGenerator) {
         super(mainGenerator);
     }
-
 
     /**
      * Generates the XSL-FO structure for the given `Section` element.
@@ -109,7 +114,17 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
         String role = section.getVariant() != null
                 ? section.getVariant().getPdfRole()
                 : SectionVariant.SECTION.getPdfRole();
-        builder.append(" role=\"").append(role).append("\"");
+
+        if(role.equals(SectionVariant.NOTE.getPdfRole())){
+            // Needs unique ID for accessibility
+            builder.append(" role=\"").append("Div").append("\"");
+            builder.append(" id=\"note-").append(UUID.randomUUID()).append("\"");
+
+            log.warn("Section with variant NOTE detected. Note is not correctly written in Structure Tree with FOP.Using DIV instead");
+        }else{
+            builder.append(" role=\"").append(role).append("\"");
+        }
+
 
         // Alt-text
         if (section.getAltText() != null && !section.getAltText().isEmpty()) {

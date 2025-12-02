@@ -74,7 +74,7 @@ class SectionFoGeneratorTest {
     }
 
     @Test
-    @DisplayName("should generate section with Note role for NOTE variant")
+    @DisplayName("should generate section with Div role for NOTE variant")
     void shouldGenerateSectionWithNoteRole() {
         Section section = new Section("warning", SectionVariant.NOTE, null, List.of());
         SectionStyleProperties style = new SectionStyleProperties();
@@ -84,7 +84,7 @@ class SectionFoGeneratorTest {
         generator.generate(section, styleSheet, builder, new ArrayList<>(), mockResolver, false);
 
         String result = builder.toString();
-        assertTrue(result.contains("role=\"Note\""));
+        assertTrue(result.contains("role=\"Div\""));
     }
 
     @Test

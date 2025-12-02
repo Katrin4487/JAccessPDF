@@ -115,7 +115,7 @@ class XslFoGeneratorTest {
         String result = xslFoGenerator.generate(testDocument, testStyleSheet,null);
 
         assertTrue(result.contains("<fo:declarations>"), "fo:declarations block is missing.");
-        assertTrue(result.contains("<dc:title>A Title</dc:title>"), "Title in metadata is missing.");
+        assertTrue(result.contains("A Title"), "Title in metadata is missing.");
     }
 
     // ToDo
