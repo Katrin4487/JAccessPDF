@@ -10,7 +10,7 @@
 - TextAlignLast in Paragraph can be used with TextAlign enum now
 
 ### Added
--- nothing yet --
+- SimpleListBuilder for easier creation of SimpleLists
 
 ### Fixed
 - Better title handling in metadata -> title is set as title with default language (so that veraPDF check not fails)
