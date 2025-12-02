@@ -20,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.style.ElementStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.StyleResolverContext;
-
 /**
  * An empty "marker" element
  * (XSL-FO page number)
@@ -31,18 +29,16 @@ public class PageNumber extends AbstractInlineElement {
 
     @JsonCreator
     public PageNumber(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("variant") String variant) {
-        super(styleClass, variant);
+            @JsonProperty("style-class") String styleClass
+           ) {
+        super(styleClass);
     }
 
     public PageNumber(){
-        this(null, null);
+        this(null);
     }
 
-    public PageNumber(String styleClass){
-        this(styleClass, null);
-    }
+
 
     @Override
     public String getType() {

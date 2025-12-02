@@ -77,7 +77,7 @@ public class HeadlineBuilder {
     @PublicAPI
     public HeadlineBuilder addText(String text) {
         Objects.requireNonNull(text, "Text for TextRun cannot be null.");
-        this.inlineElements.add(new TextRun(text, null, null));
+        this.inlineElements.add(new TextRun(text, null));
         return this;
     }
 

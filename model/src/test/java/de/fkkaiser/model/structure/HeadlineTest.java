@@ -37,7 +37,7 @@ class HeadlineTest {
     @DisplayName("should use the explicitly provided level")
     void shouldUseExplicitlyProvidedLevel() {
         // Act
-        Headline headline = new Headline("h3-style", null, 3);
+        Headline headline = new Headline("h3-style", "A text", 3);
 
         // Assert
         assertEquals(3, headline.getLevel(), "The explicit level 3 should be used.");

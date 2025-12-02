@@ -91,7 +91,7 @@ class TextRunFoGeneratorTest {
     @Test
     @DisplayName("Should apply styles from a matched TextStyle in the StyleSheet")
     void shouldApplyStylesFromMatchedTextStyle() {
-        TextRun textRun = new TextRun("Bold text","text-run-style",null);
+        TextRun textRun = new TextRun("Bold text","text-run-style");
         textRun.resolveStyles(context);
 
         generator.generate(textRun, styleSheet, builder);
@@ -109,7 +109,7 @@ class TextRunFoGeneratorTest {
     @DisplayName("Should apply direct styles from TextRunStyleProperties")
     void generate_withDirectStyles_shouldApplyDirectStyles() {
 
-        TextRun textRun = new TextRun("Red underlined text","text-run-style-2",null);
+        TextRun textRun = new TextRun("Red underlined text","text-run-style-2");
         textRun.resolveStyles(context);
         generator.generate(textRun, styleSheet, builder);
         String result = builder.toString();

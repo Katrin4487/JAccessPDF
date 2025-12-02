@@ -51,7 +51,7 @@ public class TextRunTest {
     @Test
     @DisplayName("should resolve styles gracefully when style class is not found")
     void shouldResolveGracefullyWhenStyleNotFound() {
-        TextRun textRun = new TextRun("Some text", "non-existent-style", null);
+        TextRun textRun = new TextRun("Some text", "non-existent-style");
         when(mockStyleMap.get("non-existent-style")).thenReturn(null);
         textRun.resolveStyles(mockContext);
         assertNotNull(textRun.getResolvedStyle());
@@ -60,7 +60,7 @@ public class TextRunTest {
     @Test
     @DisplayName("should resolve styles when style class is found")
     void shouldResolveWithSpecificStyle() {
-        TextRun textRun = new TextRun("Some text", "found-style", null);
+        TextRun textRun = new TextRun("Some text", "found-style");
         ElementStyle elementStyle = new ElementStyle("found-style", StyleTargetTypes.TEXT_RUN, mockSpecificStyle);
         when(mockStyleMap.get("found-style")).thenReturn(elementStyle);
         textRun.resolveStyles(mockContext);

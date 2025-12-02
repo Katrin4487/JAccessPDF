@@ -49,14 +49,14 @@ class XslFoGeneratorTest {
         Metadata metadata = Metadata.builder("A Title").author("An author").build();
 
         List<InlineElement> elements = new ArrayList<>();
-        elements.add(new TextRun("Hello World!", "default-text",null));
+        elements.add(new TextRun("Hello World!", "default-text"));
         Paragraph paragraph = new Paragraph("default-paragraph",elements);
 
 
 
         // Create a headline
         List<InlineElement> headlineElements = new ArrayList<>();
-        headlineElements.add(new TextRun("Chapter 1", "default-text", null));
+        headlineElements.add(new TextRun("Chapter 1", "default-text"));
         Headline headline = new Headline("default-headline",headlineElements,1);
 
         // Create the body of the page
@@ -72,7 +72,7 @@ class XslFoGeneratorTest {
 
 
         List<InlineElement> footerElements = new ArrayList<>();
-        footerElements.add(new TextRun("Copyright © 2025", "default-text",null));
+        footerElements.add(new TextRun("Copyright © 2025", "default-text"));
         Paragraph footerParagraph = new Paragraph("footer-style",footerElements);
         ContentArea footer = new ContentArea(List.of(footerParagraph));
 

@@ -59,7 +59,7 @@ public class Paragraph extends TextBlock {
      */
     @PublicAPI
     public Paragraph(String styleClass, String standAloneText) {
-        super(styleClass, List.of(new TextRun(standAloneText, null, null)));
+        super(styleClass, List.of(new TextRun(standAloneText, null)));
     }
 
 

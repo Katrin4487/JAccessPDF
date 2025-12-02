@@ -21,50 +21,16 @@ import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.StyleResolverContext;
 
 /**
- * Abstract base class providing common functionality for all {@link Element} implementations.
- *
- * <p>This class implements shared properties that are common to most document elements,
- * reducing code duplication in concrete element classes. It serves as the foundation
- * for block-level elements in the document structure.</p>
- *
- * <p><b>Common Properties:</b></p>
- * <ul>
- *   <li><b>styleClass:</b> A reference to an {@link de.fkkaiser.model.style.ElementStyle}
- *       that defines how the element should be rendered</li>
- *   <li><b>variant:</b> An optional semantic modifier (e.g., "warning", "highlight")
- *       that can alter the element's appearance or behavior</li>
- * </ul>
- *
- * <p><b>Usage Pattern:</b></p>
- * Concrete element classes (like {@link Paragraph}, {@link Headline}, {@link Section})
- * extend this class and add their specific properties and behavior while inheriting
- * the common style class and variant handling.
- *
- * <p><b>Style Resolution:</b></p>
- * Subclasses must implement the {@link #resolveStyles(StyleResolverContext)} method
- * to define how styles are computed and applied to the element. The resolved style
- * properties are typically stored in a subclass-specific field.
- *
- * <p><b>Design Note:</b></p>
- * The {@code resolvedStyle} field is intentionally left to concrete subclasses
- * because different element types require different style property classes
- * (e.g., {@link de.fkkaiser.model.style.TextBlockStyleProperties} for text blocks,
- * {@link de.fkkaiser.model.style.TableStyleProperties} for tables).
+ * Abstract element class.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
- * @see Element
- * @see AbstractInlineElement
- * @see TextBlock
+ * @version 1.0.1
  */
 @Internal
 public abstract class AbstractElement implements Element {
 
     @JsonProperty("style-class")
     protected String styleClass;
-
-    @JsonProperty("variant")
-    protected String variant;
 
     /**
      * No-argument constructor required for Jackson deserialization.
@@ -78,17 +44,13 @@ public abstract class AbstractElement implements Element {
     }
 
     /**
-     * Creates a new AbstractElement with the specified style class and variant.
-     *
-     * @param styleClass the CSS-like style class name for styling;
-     *                   may be {@code null} if no specific styling is needed
-     * @param variant    the semantic variant identifier (e.g., "warning", "note");
-     *                   may be {@code null} if no variant is needed
+     * Constructor for an abstract element
+     * @param styleClass style class name of the element
      */
-    @PublicAPI
-    public AbstractElement(String styleClass, String variant) {
+    @Internal
+    public AbstractElement(String styleClass) {
         this.styleClass = styleClass;
-        this.variant = variant;
+
     }
 
     /**
@@ -117,18 +79,6 @@ public abstract class AbstractElement implements Element {
         return this.styleClass;
     }
 
-    /**
-     * Returns the semantic variant identifier for this element.
-     *
-     * <p>Variants are optional modifiers that can alter the element's appearance
-     * or behavior without requiring a separate style class. Common variants include
-     * "warning", "note", "highlight", etc.</p>
-     *
-     * @return the variant identifier, or {@code null} if no variant is set
-     */
-    public String getVariant() {
-        return this.variant;
-    }
 
     /**
      * Resolves the styles for this element using the provided style resolver context.

@@ -154,10 +154,9 @@ public final class Footnote extends AbstractInlineElement {
     public Footnote(
             @JsonProperty("index") String index,
             @JsonProperty("style-class") String styleClass,
-            @JsonProperty("variant") String variant,
             @JsonProperty("inline-elements") List<InlineElement> inlineElements
     ) {
-        super(styleClass, variant);
+        super(styleClass);
         this.id = "footnote-" + UUID.randomUUID();
         if (index == null || index.isEmpty()) {
             log.warn("index is null or empty. Set default one {}", DEFAULT_INDEX);

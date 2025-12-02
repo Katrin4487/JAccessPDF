@@ -41,8 +41,8 @@ class FootnoteTest {
     @Test
     @DisplayName("should generate a unique ID on creation")
     void shouldGenerateUniqueId() {
-        Footnote footnote1 = new Footnote(null, null, null, null);
-        Footnote footnote2 = new Footnote(null, null, null, null);
+        Footnote footnote1 = new Footnote(null, null, null);
+        Footnote footnote2 = new Footnote(null, null, null);
 
         assertNotNull(footnote1.getId());
         assertNotEquals(footnote1.getId(), footnote2.getId());
@@ -51,14 +51,14 @@ class FootnoteTest {
     @Test
     @DisplayName("should apply default index when provided index is null")
     void shouldApplyDefaultIndexWhenNull() {
-        Footnote footnote = new Footnote(null, null, null, null);
+        Footnote footnote = new Footnote(null, null, null);
         assertEquals("*", footnote.getIndex());
     }
 
     @Test
     @DisplayName("should apply default index when provided index is empty")
     void shouldApplyDefaultIndexWhenEmpty() {
-        Footnote footnote = new Footnote("", null, null, null);
+        Footnote footnote = new Footnote("", null, null);
         assertEquals("*", footnote.getIndex());
     }
 }

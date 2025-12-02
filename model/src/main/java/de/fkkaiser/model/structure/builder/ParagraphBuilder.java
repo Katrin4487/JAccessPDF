@@ -150,7 +150,7 @@ public class ParagraphBuilder {
         if (inlineText == null) {
             throw new IllegalArgumentException("Inline text cannot be null");
         }
-        InlineElement inlineElement = new TextRun(inlineText, styleClassRegular,null);
+        InlineElement inlineElement = new TextRun(inlineText, styleClassRegular);
         this.inlineElements.add(inlineElement);
         return this;
     }
@@ -178,9 +178,9 @@ public class ParagraphBuilder {
         if (styleClassBold == null) {
             log.warn("No style class for bold defined: using normal style class for text '{}'",
                     inlineText);
-            inlineElement = new TextRun(inlineText, styleClass,null);
+            inlineElement = new TextRun(inlineText, styleClass);
         } else {
-            inlineElement = new TextRun(inlineText, styleClassBold,null);
+            inlineElement = new TextRun(inlineText, styleClassBold);
         }
         this.inlineElements.add(inlineElement);
         return this;
@@ -207,9 +207,9 @@ public class ParagraphBuilder {
         if (styleClassItalic == null) {
             log.warn("No style class for italic defined: using normal style class for text '{}'",
                     inlineText);
-            inlineElement = new TextRun(inlineText, styleClass,null);
+            inlineElement = new TextRun(inlineText, styleClass);
         } else {
-            inlineElement = new TextRun(inlineText, styleClassItalic,null);
+            inlineElement = new TextRun(inlineText, styleClassItalic);
         }
 
         this.inlineElements.add(inlineElement);

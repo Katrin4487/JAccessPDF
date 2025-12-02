@@ -149,52 +149,15 @@ public class Hyperlink extends TextRun {
     private final String href;
     private final String altText;
 
-    /**
-     * Creates a Hyperlink element with full configuration.
-     *
-     * <p>This constructor is the primary constructor used by Jackson during JSON
-     * deserialization. It provides complete control over all hyperlink properties
-     * including the optional variant and alternative text.</p>
-     *
-     * <p><b>Parameter Validation:</b></p>
-     * The constructor performs validation and applies fallback values:
-     * <ul>
-     *   <li><b>text:</b> If {@code null} or blank, logs info message. The href may
-     *       be used as display text during rendering (implementation-dependent).</li>
-     *   <li><b>href:</b> If {@code null} or blank, logs warning and assigns empty
-     *       string. The hyperlink will not function without a valid destination.</li>
-     *   <li><b>altText:</b> If {@code null} or blank, logs info message and uses
-     *       the text parameter as fallback for accessibility.</li>
-     * </ul>
-     *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * Hyperlink link = new Hyperlink(
-     *     "Download PDF",
-     *     "download-link",
-     *     "primary",
-     *     "https://example.com/document.pdf",
-     *     "Link to download the user manual in PDF format"
-     * );
-     * }</pre>
-     *
-     * @param text       the visible text content of the hyperlink; may be {@code null} or blank
-     * @param styleClass the CSS-like style class for styling properties; may be {@code null}
-     * @param variant    an optional variant identifier for style variations; may be {@code null}
-     * @param href       the URL or destination of the hyperlink; if {@code null} or blank,
-     *                   an empty string is assigned and a warning is logged
-     * @param altText    the alternative text for accessibility; if {@code null} or blank,
-     *                   the text parameter is used as fallback
-     */
+
     @JsonCreator
     public Hyperlink(
             @JsonProperty("text") String text,
             @JsonProperty("style-class") String styleClass,
-            @JsonProperty("variant") String variant,
             @JsonProperty("href") String href,
             @JsonProperty("alt-text") String altText
     ) {
-        super(text, styleClass, variant);
+        super(text, styleClass);
 
         if (text == null || text.isBlank()) {
             log.info("text is null; Setting href as text");
@@ -213,66 +176,14 @@ public class Hyperlink extends TextRun {
         }
     }
 
-    /**
-     * Creates a Hyperlink with text, style class, and destination URL.
-     *
-     * <p>This convenience constructor is suitable for most common hyperlink scenarios
-     * where variant and explicit alternative text are not needed. The variant is set
-     * to {@code null}, and the alternative text defaults to the visible text content.</p>
-     *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * Hyperlink simpleLink = new Hyperlink(
-     *     "Visit our website",
-     *     "external-link",
-     *     "https://example.com"
-     * );
-     * }</pre>
-     *
-     * <p>This is the most commonly used constructor for straightforward hyperlinks
-     * that don't require additional configuration.</p>
-     *
-     * @param text       the visible text content of the hyperlink; may be {@code null} or blank
-     * @param styleClass the CSS-like style class for styling properties; may be {@code null}
-     * @param href       the URL or destination of the hyperlink; if {@code null} or blank,
-     *                   an empty string is assigned and a warning is logged
-     */
-    public Hyperlink(String text, String styleClass, String href) {
-        this(text, styleClass, null, href, null);
+    public Hyperlink(String href, String styleClass) {
+        this(href, styleClass, href, null);
     }
 
-    /**
-     * Creates a Hyperlink with text, style class, destination URL, and alternative text.
-     *
-     * <p>This constructor is useful when you need to provide explicit alternative text
-     * for accessibility purposes but don't need to specify a variant. The variant is
-     * set to {@code null}.</p>
-     *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * Hyperlink accessibleLink = new Hyperlink(
-     *     "Download",
-     *     "download-link",
-     *     "https://example.com/manual.pdf",
-     *     "Download the complete user manual in PDF format (2.3 MB)"
-     * );
-     * }</pre>
-     *
-     * <p>Use this constructor when the alternative text should provide more context
-     * than the visible text alone, such as file sizes, format information, or
-     * detailed descriptions of the link destination.</p>
-     *
-     * @param text       the visible text content of the hyperlink; may be {@code null} or blank
-     * @param styleClass the CSS-like style class for styling properties; may be {@code null}
-     * @param href       the URL or destination of the hyperlink; if {@code null} or blank,
-     *                   an empty string is assigned and a warning is logged
-     * @param altText    the alternative text for accessibility; if {@code null} or blank,
-     *                   the text parameter is used as fallback
-     */
-    @SuppressWarnings("unused")
-    public Hyperlink(String text, String styleClass, String href, String altText) {
-        this(text, styleClass, null, href, altText);
+    public Hyperlink(String href, String styleClass,String altText) {
+        this(href, styleClass, href, altText);
     }
+
 
     /**
      * Returns the URL or destination of this hyperlink.

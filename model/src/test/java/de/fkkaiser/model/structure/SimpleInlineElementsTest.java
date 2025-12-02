@@ -26,10 +26,10 @@ class SimpleInlineElementsTest {
     @DisplayName("Hyperlink should hold all its properties")
     void hyperlinkShouldHoldAllProperties() {
         // Act
-        Hyperlink hyperlink = new Hyperlink("Click here", "link-style", "external", "https://example.com",null);
+        Hyperlink hyperlink = new Hyperlink("Click here", "link-style" ,"https://example.com",null);
 
         // Assert
-        assertEquals("Click here", hyperlink.getText());
+        assertEquals("Click here", hyperlink.getText(),"Text should be correct");
         assertEquals("link-style", hyperlink.getStyleClass());
         assertEquals("https://example.com", hyperlink.getHref());
     }
@@ -37,10 +37,9 @@ class SimpleInlineElementsTest {
     @Test
     @DisplayName("PageNumber should be created correctly")
     void pageNumberShouldBeCreated() {
-        PageNumber pageNumber = new PageNumber("page-num-style", "default");
+        PageNumber pageNumber = new PageNumber("page-num-style");
 
         // Assert
         assertEquals("page-num-style", pageNumber.getStyleClass());
-        assertEquals("default", pageNumber.getVariant());
     }
 }
