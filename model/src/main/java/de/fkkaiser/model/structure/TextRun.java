@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
@@ -26,9 +28,13 @@ import de.fkkaiser.model.style.TextRunStyleProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 /**
  * Represents an inline element for displaying text within a document.
- * This class implements the {@link InlineElement} interface.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
 @JsonTypeName("text-run")
 public class TextRun extends AbstractInlineElement {
@@ -41,35 +47,57 @@ public class TextRun extends AbstractInlineElement {
     @JsonIgnore
     private TextRunStyleProperties resolvedStyle;
 
+    /**
+     * Construtor for text-run
+     * @param text text content for this text-run
+     * @param styleClass name of the style-class (can be null)
+     * @throws NullPointerException if text is null
+     */
     @JsonCreator
     public TextRun(
             @JsonProperty("text") String text,
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("variant") String variant
+            @JsonProperty("style-class") String styleClass
     ) {
-        super(styleClass, variant);
-        log.debug("Creating TextRun with text {} and style-class {}", text,styleClass);
+        super(styleClass);
+        Objects.requireNonNull(text,"text must not be null");
         this.text = text;
     }
 
+    /**
+     * Contstructor for a Text-Run with no specific style class.
+     * A Text-Run can inherit styles from its parent
+     * @param text text content of the text-run (should not be {@code null})
+     * @throws NullPointerException if text is {@code null}
+     */
+    @PublicAPI
     public TextRun(String text){
-        this(text, null, null);
+        this(text, null);
     }
 
-    public TextRun(String text,String variant){
-        this(text, variant, null);
-    }
-
+    /**
+     * Returns the type of this Element.
+     * @return "text-run"
+     */
+    @Internal
     @Override
     public String getType() {
         return InlineElementTypes.TEXT_RUN;
     }
 
-
+    /**
+     * Returns the resolved style of this element
+     * @return TextRunStyleProperty of this element
+     */
+    @Internal
     public TextRunStyleProperties getResolvedStyle() {
         return resolvedStyle;
     }
 
+    /**
+     * Retuns the text-content of this text run
+     * @return text content
+     */
+    @Internal
     public String getText() {
         return text;
     }
