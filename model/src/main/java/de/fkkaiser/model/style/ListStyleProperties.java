@@ -17,6 +17,7 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Inheritable;
 
 import java.util.Objects;
@@ -25,7 +26,7 @@ import java.util.Objects;
  * Style properties specific to list elements.
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @JsonTypeName(StyleTargetTypes.LIST)
 public class ListStyleProperties extends TextBlockStyleProperties {
@@ -41,11 +42,11 @@ public class ListStyleProperties extends TextBlockStyleProperties {
     public static final String DEFAULT_LABEL_SEPARATION = "0.5em";
 
     @Inheritable
-    @JsonProperty("provisional-distance-between-starts")
+    @JsonProperty(JsonPropertyName.PROVISIONAL_DISTANCE_BETWEEN_STARTS)
     private String provDistBetweenStarts;
 
     @Inheritable
-    @JsonProperty("provisional-label-separation")
+    @JsonProperty(JsonPropertyName.PROVISIONAL_LABEL_SEPARATION)
     private String provLabelSeparation;
 
     /**
@@ -59,7 +60,7 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      * </p>
      */
     @Inheritable
-    @JsonProperty("list-style-type")
+    @JsonProperty(JsonPropertyName.LIST_STYLE_TYPE)
     private String listStyleType;
 
     /**
@@ -69,7 +70,7 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      * </p>
      */
     @Inheritable
-    @JsonProperty("list-style-image")
+    @JsonProperty(JsonPropertyName.LIST_STYLE_IMAGE)
     private String listStyleImage;
 
 

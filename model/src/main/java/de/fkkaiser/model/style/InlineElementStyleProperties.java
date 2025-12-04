@@ -16,6 +16,7 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Inheritable;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
@@ -34,7 +35,7 @@ import java.util.Optional;
 public class InlineElementStyleProperties extends ElementStyleProperties {
 
     @Inheritable
-    @JsonProperty("background-color")
+    @JsonProperty(JsonPropertyName.BACKGROUND_COLOR)
     private String backgroundColor;
 
     // --- Constructor ---

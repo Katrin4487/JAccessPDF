@@ -36,18 +36,20 @@ import java.util.Objects;
  * Represents an ElementStyle.
  *
  * @param name name of the style
- * @param targetElement
- * @param properties
+ * @param targetElement type of element this style targets
+ * @param properties style properties specific to the target element
+ * @author Katrin Kaiser
+ * @version 1.3.0
  */
 @PublicAPI
 public record ElementStyle(
-        @JsonProperty("name") String name,
-        @JsonProperty("target-element") ElementTargetType targetElement,
-        @JsonProperty("properties")
+        @JsonProperty(JsonPropertyName.NAME) String name,
+        @JsonProperty(JsonPropertyName.TARGET_ELEMENT) ElementTargetType targetElement,
+        @JsonProperty(JsonPropertyName.PROPERTIES)
         @JsonTypeInfo(
                 use = JsonTypeInfo.Id.NAME,
                 include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
-                property = "target-element"
+                property = JsonPropertyName.TARGET_ELEMENT
         )
         @JsonSubTypes({
                 @JsonSubTypes.Type(value = ParagraphStyleProperties.class, name = JsonPropertyName.PARAGRAPH),

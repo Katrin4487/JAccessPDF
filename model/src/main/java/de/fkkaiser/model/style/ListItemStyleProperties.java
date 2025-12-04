@@ -17,19 +17,20 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Inheritable;
 
 @JsonTypeName(StyleTargetTypes.LIST_ITEM)
 public class ListItemStyleProperties extends TextBlockStyleProperties{
 
     @Inheritable
-    @JsonProperty("list-style-type")
+    @JsonProperty(JsonPropertyName.LIST_STYLE_TYPE)
     private String listStyleType;
 
-    @JsonProperty("space-before")
+    @JsonProperty(JsonPropertyName.SPACE_BEFORE)
     private String spaceBefore;
 
-    @JsonProperty("space-after")
+    @JsonProperty(JsonPropertyName.SPACE_AFTER)
     private String spaceAfter;
 
     public ListItemStyleProperties() {

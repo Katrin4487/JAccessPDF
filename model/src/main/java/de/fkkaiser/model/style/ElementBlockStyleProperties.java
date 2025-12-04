@@ -16,6 +16,7 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.util.BorderUtil;
@@ -38,23 +39,12 @@ import de.fkkaiser.model.annotation.Inheritable;
  * like page breaks do not.</p>
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @Internal
 public class ElementBlockStyleProperties extends ElementStyleProperties {
 
     private static final Logger log = LoggerFactory.getLogger(ElementBlockStyleProperties.class);
-
-    //for validation
-    private static final String PARAM_SPACE_BEFORE = "space-before";
-    private static final String PARAM_SPACE_AFTER = "space-after";
-    private static final String PARAM_START_INDENT = "start-indent";
-    private static final String PARAM_END_INDENT = "end-indent";
-    private static final String PARAM_PADDING = "padding";
-    private static final String PARAM_PADDING_LEFT = "padding-left";
-    private static final String PARAM_PADDING_RIGHT = "padding-right";
-    private static final String PARAM_PADDING_TOP = "padding-top";
-    private static final String PARAM_PADDING_BOTTOM = "padding-bottom";
 
     /**
      * Constructor to prevent direct instantiation.
@@ -79,47 +69,47 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
 
     // === Padding Properties (generally NOT inherited) ===
 
-    @JsonProperty("padding")
+    @JsonProperty(JsonPropertyName.PADDING)
     private String padding;
 
-    @JsonProperty("padding-left")
+    @JsonProperty(JsonPropertyName.PADDING_LEFT)
     private String paddingLeft;
 
-    @JsonProperty("padding-right")
+    @JsonProperty(JsonPropertyName.PADDING_RIGHT)
     private String paddingRight;
 
-    @JsonProperty("padding-top")
+    @JsonProperty(JsonPropertyName.PADDING_TOP)
     private String paddingTop;
 
-    @JsonProperty("padding-bottom")
+    @JsonProperty(JsonPropertyName.PADDING_BOTTOM)
     private String paddingBottom;
 
     // === Border Properties (generally NOT inherited) ===
 
-    @JsonProperty("border")
+    @JsonProperty(JsonPropertyName.BORDER)
     private String border;
 
-    @JsonProperty("border-left")
+    @JsonProperty(JsonPropertyName.BORDER_LEFT)
     private String borderLeft;
 
-    @JsonProperty("border-right")
+    @JsonProperty(JsonPropertyName.BORDER_RIGHT)
     private String borderRight;
 
-    @JsonProperty("border-top")
+    @JsonProperty(JsonPropertyName.BORDER_TOP)
     private String borderTop;
 
-    @JsonProperty("border-bottom")
+    @JsonProperty(JsonPropertyName.BORDER_BOTTOM)
     private String borderBottom;
 
     // === Layout Control Properties (NOT inherited) ===
 
-    @JsonProperty("keep-with-next")
+    @JsonProperty(JsonPropertyName.KEEP_WITH_NEXT)
     private Boolean keepWithNext;
 
-    @JsonProperty("break-before")
+    @JsonProperty(JsonPropertyName.BREAK_BEFORE)
     private PageBreakVariant breakBefore;
 
-    @JsonProperty("break-after")
+    @JsonProperty(JsonPropertyName.BREAK_AFTER)
     private PageBreakVariant breakAfter;
 
     // === Color Properties (typically inherited) ===
@@ -130,7 +120,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      * by removing the @Inheritable annotation.
      */
     @Inheritable
-    @JsonProperty("background-color")
+    @JsonProperty(JsonPropertyName.BACKGROUND_COLOR)
     private String backgroundColor;
 
     /**
@@ -168,7 +158,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      */
     @PublicAPI
     public void setSpaceBefore(String spaceBefore) {
-        this.spaceBefore = validatedDimension(spaceBefore,PARAM_SPACE_BEFORE);
+        this.spaceBefore = validatedDimension(spaceBefore,JsonPropertyName.SPACE_BEFORE);
     }
 
     /**
@@ -185,7 +175,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      * @param spaceAfter The space after the element.
      */
     public void setSpaceAfter(String spaceAfter) {
-        this.spaceAfter = validatedDimension(spaceAfter,PARAM_SPACE_AFTER);
+        this.spaceAfter = validatedDimension(spaceAfter,JsonPropertyName.SPACE_AFTER);
     }
 
     /**
@@ -201,7 +191,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      * @param startIndent The start indent.
      */
     public void setStartIndent(String startIndent) {
-        this.startIndent = validatedDimension(startIndent,PARAM_START_INDENT);
+        this.startIndent = validatedDimension(startIndent,JsonPropertyName.START_INDENT);
     }
 
     /**
@@ -217,7 +207,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      * @param endIndent The end indent.
      */
     public void setEndIndent(String endIndent) {
-        this.endIndent = validatedDimension(endIndent,PARAM_END_INDENT);
+        this.endIndent = validatedDimension(endIndent,JsonPropertyName.END_INDENT);
     }
 
     /**
@@ -233,7 +223,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      * @param padding The padding.
      */
     public void setPadding(String padding) {
-        this.padding = validatedDimension(padding,PARAM_PADDING);
+        this.padding = validatedDimension(padding,JsonPropertyName.PADDING);
     }
 
     /**
@@ -249,7 +239,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      * @param paddingLeft The left padding.
      */
     public void setPaddingLeft(String paddingLeft) {
-        this.paddingLeft = validatedDimension(paddingLeft,PARAM_PADDING_LEFT);
+        this.paddingLeft = validatedDimension(paddingLeft,JsonPropertyName.PADDING_LEFT);
     }
 
     /**
@@ -265,7 +255,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      * @param paddingRight The right padding.
      */
     public void setPaddingRight(String paddingRight) {
-        this.paddingRight = validatedDimension(paddingRight,PARAM_PADDING_RIGHT);
+        this.paddingRight = validatedDimension(paddingRight,JsonPropertyName.PADDING_RIGHT);
     }
 
     /**
@@ -281,7 +271,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      * @param paddingTop The top padding.
      */
     public void setPaddingTop(String paddingTop) {
-        this.paddingTop = validatedDimension(paddingTop,PARAM_PADDING_TOP);
+        this.paddingTop = validatedDimension(paddingTop,JsonPropertyName.PADDING_TOP);
     }
 
     /**
@@ -297,7 +287,7 @@ public class ElementBlockStyleProperties extends ElementStyleProperties {
      * @param paddingBottom The bottom padding.
      */
     public void setPaddingBottom(String paddingBottom) {
-        this.paddingBottom = validatedDimension(paddingBottom,PARAM_PADDING_BOTTOM);
+        this.paddingBottom = validatedDimension(paddingBottom,JsonPropertyName.PADDING_BOTTOM);
     }
 
     /**

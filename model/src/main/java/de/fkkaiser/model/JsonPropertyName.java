@@ -223,4 +223,117 @@ public class JsonPropertyName {
      * Property name for footer content area
      */
     public static final String FOOTER = "footer";
+
+    // === Element style
+    /**
+     * Property name for style name
+     */
+    public static final String NAME = "name";
+    /**
+     * Property name for target element type
+     */
+    public static final String TARGET_ELEMENT = "target-element";
+    /**
+     * Property name for style properties
+     */
+    public static final String PROPERTIES = "properties";
+    /**
+     * Property name for text style name
+     */
+    public static final String TEXT_STYLE_NAME = "text-style-name";
+    /**
+     * Property name for text decoration
+     */
+    public static final String TEXT_DECORATION = "text-decoration";
+    /**
+     * Property name for text color
+     */
+    public static final String TEXT_COLOR = "text-color";
+    /**
+     * Property name for linefeed treatment
+     */
+    public static final String LINEFEED_TREATMENT = "linefeed-treatment";
+
+    /**
+     * Property name for list style type
+     */
+    public static final String LIST_STYLE_TYPE = "list-style-type";
+
+    /**
+     * Property name for provisional distance between starts
+     */
+    public static final String PROVISIONAL_DISTANCE_BETWEEN_STARTS = "provisional-distance-between-starts";
+    /**
+     * Property name for provisional label separation
+     */
+    public static final String PROVISIONAL_LABEL_SEPARATION = "provisional-label-separation";
+    /**
+     * Property name for list style image
+     */
+    public static final String LIST_STYLE_IMAGE = "list-style-image";
+
+    // === Style properties
+    /**
+     * Property name for content width
+     */
+    public static final String CONTENT_WIDTH = "content-width";
+    /**
+     * Property name for block width
+     */
+    public static final String BLOCK_WIDTH = "block-width";
+    /**
+     * Property name for scaling
+     */
+    public static final String SCALING = "scaling";
+    /**
+     * Property name for alignment
+     */
+    public static final String ALIGNMENT = "alignment";
+
+    /**
+     * Property name for space before an element
+     */
+    public static final String PADDING = "padding";
+    /**
+     * Property name for space before an element
+     */
+    public static final String SPACE_BEFORE = "space-before";
+    /**
+     * Property name for space after an element
+     */
+    public static final String SPACE_AFTER = "space-after";
+    /**
+     * Property name for start indent of an element
+     */
+    public static final String START_INDENT = "start-indent";
+    /**
+     * Property name for end indent of an element
+     */
+    public static final String END_INDENT = "end-indent";
+    /**
+     * Property name for left padding of an element
+     */
+    public static final String PADDING_LEFT = "padding-left";
+    /**
+     * Property name for right padding of an element
+     */
+    public static final String PADDING_RIGHT = "padding-right";
+    /**
+     * Property name for top padding of an element
+     */
+    public static final String PADDING_TOP = "padding-top";
+    /**
+     * Property name for bottom padding of an element
+     */
+    public static final String PADDING_BOTTOM = "padding-bottom";
+
+    public static final String BORDER = "border";
+    public static final String BORDER_LEFT = "border-left";
+    public static final String BORDER_RIGHT = "border-right";
+    public static final String BORDER_TOP = "border-top";
+    public static final String BORDER_BOTTOM = "border-bottom";
+    public static final String KEEP_WITH_NEXT = "keep-with-next";
+    public static final String BREAK_BEFORE = "break-before";
+    public static final String BREAK_AFTER = "break-after";
+    public static final String BACKGROUND_COLOR = "background-color";
 }

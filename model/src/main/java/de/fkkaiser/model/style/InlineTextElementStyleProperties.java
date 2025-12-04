@@ -16,6 +16,7 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Inheritable;
 import de.fkkaiser.model.annotation.Internal;
 import org.slf4j.Logger;
@@ -32,20 +33,20 @@ import java.util.Optional;
 public abstract class InlineTextElementStyleProperties extends InlineElementStyleProperties {
 
     @Inheritable
-    @JsonProperty("text-style-name")
+    @JsonProperty(JsonPropertyName.TEXT_STYLE_NAME)
     private String textStyleName;
 
     @Inheritable
-    @JsonProperty("text-decoration")
+    @JsonProperty(JsonPropertyName.TEXT_DECORATION)
     private String textDecoration;
 
 
     @Inheritable
-    @JsonProperty("text-color")
+    @JsonProperty(JsonPropertyName.TEXT_COLOR)
     private String textColor;
 
     @Inheritable
-    @JsonProperty("linefeed-treatment")
+    @JsonProperty(JsonPropertyName.LINEFEED_TREATMENT)
     private LinefeedTreatment lineFeedTreatment;
 
 
