@@ -16,6 +16,7 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 
@@ -30,7 +31,7 @@ import java.util.function.Consumer;
  * @version 1.0.1
  */
 @PublicAPI
-@JsonTypeName(StyleTargetTypes.PART)
+@JsonTypeName(JsonPropertyName.PART)
 public class PartStyleProperties extends ElementBlockStyleProperties {
 
 

@@ -17,6 +17,7 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 
 /**
  * Represents the style properties for a table element (`fo:table`).
@@ -25,16 +26,17 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * properties specific to tables, such as border collapse and width.
  * It supports copying of properties to create new instances with the same styles.
  *
- * @version 1.1.0
+ * @author Katrin Kaiser
+ * @version 1.1.1
  */
-@JsonTypeName(StyleTargetTypes.TABLE)
+@JsonTypeName(JsonPropertyName.TABLE)
 public class TableStyleProperties extends TextBlockStyleProperties {
 
     /**
      * Specifies the border model for the table.
      * Common values include "collapse".
      */
-    @JsonProperty("border-collapse")
+    @JsonProperty(JsonPropertyName.BORDER_COLLAPSE)
     private String borderCollapse;
 
     /**

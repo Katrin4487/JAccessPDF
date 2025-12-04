@@ -69,20 +69,10 @@ public record ElementStyle(
 ) {
 
     /**
-     * Compact constructor that validates all ElementStyle parameters.
-     * This constructor is automatically called whenever an ElementStyle is created,
-     * ensuring that all instances are valid.
-     *
-     * <p><b>Validation Rules:</b></p>
-     * <ul>
-     *   <li>name must not be null or empty (after trimming)</li>
-     *   <li>targetElement must not be null or empty (after trimming)</li>
-     *   <li>properties must not be null</li>
-     *   <li>targetElement must be one of the known types in {@link StyleTargetTypes}</li>
-     * </ul>
-     *
-     * @throws IllegalArgumentException if any parameter is  empty or invalid
-     * @throws NullPointerException    if any parameter is {@code null}
+     * Constructor validation
+     * @param name name of the style
+     * @param targetElement type of element this style targets
+     * @param properties properties style properties specific to the target element
      */
     @PublicAPI
     public ElementStyle {

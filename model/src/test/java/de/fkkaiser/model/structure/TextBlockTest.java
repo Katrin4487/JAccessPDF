@@ -17,7 +17,6 @@ package de.fkkaiser.model.structure;
 
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.StyleTargetTypes;
 import de.fkkaiser.model.style.TextBlockStyleProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

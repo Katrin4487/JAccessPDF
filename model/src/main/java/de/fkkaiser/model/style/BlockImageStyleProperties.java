@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.structure.ElementTargetType;
 
 /**
  * Style properties specific to block-level image elements.
@@ -29,7 +30,7 @@ import de.fkkaiser.model.annotation.PublicAPI;
  * @version 1.1.1
  */
 @PublicAPI(status = PublicAPI.Status.EXPERIMENTAL)
-@JsonTypeName(StyleTargetTypes.BLOCK_IMAGE)
+@JsonTypeName(JsonPropertyName.BLOCK_IMAGE)
 public class BlockImageStyleProperties extends ElementBlockStyleProperties {
 
 

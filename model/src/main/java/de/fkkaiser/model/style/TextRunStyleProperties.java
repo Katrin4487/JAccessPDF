@@ -17,6 +17,7 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 
 /**
  * Concrete style properties for an inline text run element.
@@ -25,10 +26,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * @author Katrin Kaiser
  * @version 1.0.0
  */
-@JsonTypeName(StyleTargetTypes.TEXT_RUN)
+@JsonTypeName(JsonPropertyName.TEXT_RUN)
 public class TextRunStyleProperties extends InlineTextElementStyleProperties{
 
-     @JsonProperty("baseline-shift")
+     @JsonProperty(JsonPropertyName.BASELINE_SHIFT)
     private String baselineShift; //super
 
     public String getBaselineShift() {

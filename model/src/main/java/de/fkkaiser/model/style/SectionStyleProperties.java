@@ -17,6 +17,7 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 
@@ -24,63 +25,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Style properties for section elements.
- *
- * <p>A section is a structural container that groups related content and can apply
- * consistent styling (background, borders, padding, spacing) to multiple child elements.</p>
- *
- * <p><b>Inherited Properties from {@link ElementBlockStyleProperties}:</b></p>
- * <ul>
- *   <li>Font properties (family, size, weight, style, color)</li>
- *   <li>Padding (all sides, individual sides)</li>
- *   <li>Border</li>
- *   <li>Background color</li>
- *   <li>Indentation (start, end)</li>
- *   <li>Spacing (before, after)</li>
- * </ul>
- *
- * <p><b>Section-Specific Properties:</b></p>
- * <ul>
- *   <li>{@link #sectionMarker} - Symbol or text displayed before the section</li>
- *   <li>{@link #keepTogether} - Prevents page breaks within the section</li>
- *   <li>{@link #orphans} - Minimum lines at bottom of page</li>
- *   <li>{@link #widows} - Minimum lines at top of page</li>
- * </ul>
- *
- * <p><b>Example JSON:</b></p>
- * <pre>{@code
- * {
- *   "name": "warning-box",
- *   "target-element": "section",
- *   "properties": {
- *     "section-marker": "⚠️",
- *     "padding": "1cm",
- *     "border": "2pt solid #ff6b6b",
- *     "background-color": "#fff3cd",
- *     "keep-together": true,
- *     "space-before": "0.5cm",
- *     "space-after": "0.5cm"
- *   }
- * }
- * }</pre>
- *
- * @see ElementBlockStyleProperties
- * @see de.fkkaiser.model.structure.Section
+ * Concrete style properties for a section element.
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @PublicAPI
-@JsonTypeName(StyleTargetTypes.SECTION)
+@JsonTypeName(JsonPropertyName.SECTION)
 public class SectionStyleProperties extends ElementBlockStyleProperties {
 
     /**
      * Symbol or text to display before the section content (e.g. "§" for paragraphs)
      * Please note, that you have to set a text-style-name if you use a section marker!
      */
-    @JsonProperty("section-marker")
+    @JsonProperty(JsonPropertyName.SECTION_MARKER)
     private String sectionMarker;
 
-    @JsonProperty("text-style-name")
+    @JsonProperty(JsonPropertyName.TEXT_STYLE_NAME)
     private String textStyleName;
 
     /**
@@ -89,7 +49,7 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
      * <p><b>Note:</b> Only works if the section fits on a single page.</p>
      * <p>Maps to XSL-FO: {@code keep-together.within-page="always"}</p>
      */
-    @JsonProperty("keep-together")
+    @JsonProperty(JsonPropertyName.KEEP_TOGETHER)
     private Boolean keepTogether;
 
 
@@ -99,7 +59,7 @@ public class SectionStyleProperties extends ElementBlockStyleProperties {
      * <p>Typical value: 2</p>
      * <p>Maps to XSL-FO: {@code orphans}</p>
      */
-    @JsonProperty("orphans")
+    @JsonProperty(JsonPropertyName.ORPHANS)
     private Integer orphans;
 
     /**

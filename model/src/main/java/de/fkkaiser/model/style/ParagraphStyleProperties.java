@@ -17,6 +17,7 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Inheritable;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
@@ -32,34 +33,34 @@ import de.fkkaiser.model.annotation.PublicAPI;
  * applying them to other style objects.
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 @Internal
-@JsonTypeName(StyleTargetTypes.PARAGRAPH)
+@JsonTypeName(JsonPropertyName.PARAGRAPH)
 public class ParagraphStyleProperties extends TextBlockStyleProperties {
 
     @Inheritable
-    @JsonProperty("text-indent")
+    @JsonProperty(JsonPropertyName.TEXT_INDENT)
     private String textIndent;
 
     @Inheritable
-    @JsonProperty("text-align-last")
+    @JsonProperty(JsonPropertyName.TEXT_ALIGN_LAST)
     private TextAlign textAlignLast; //start, end...
 
     @Inheritable
-    @JsonProperty("hyphenate")
+    @JsonProperty(JsonPropertyName.HYPHENATE)
     private boolean hyphenate;
 
     @Inheritable
-    @JsonProperty("language")
+    @JsonProperty(JsonPropertyName.LANGUAGE)
     private String language;
 
     @Inheritable
-    @JsonProperty("orphans")
+    @JsonProperty(JsonPropertyName.ORPHANS)
     private Integer orphans;
 
     @Inheritable
-    @JsonProperty("widows")
+    @JsonProperty(JsonPropertyName.WIDOWS)
     private Integer widows;
 
     // --- Getters and Setters ---

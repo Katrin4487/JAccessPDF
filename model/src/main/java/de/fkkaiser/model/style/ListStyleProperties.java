@@ -28,7 +28,7 @@ import java.util.Objects;
  * @author Katrin Kaiser
  * @version 1.1.1
  */
-@JsonTypeName(StyleTargetTypes.LIST)
+@JsonTypeName(JsonPropertyName.LIST)
 public class ListStyleProperties extends TextBlockStyleProperties {
 
     /**

@@ -16,6 +16,7 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +31,13 @@ import java.util.Optional;
  * element styles, and page layouts. This class is immutable.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.0.1
  *
  */
 public record StyleSheet(
-        @JsonProperty("text-styles") List<TextStyle> textStyles,
-        @JsonProperty("element-styles") List<ElementStyle> elementStyles,
-        @JsonProperty("page-master-styles") List<PageMasterStyle> pageMasterStyles
+        @JsonProperty(JsonPropertyName.TEXT_STYLES) List<TextStyle> textStyles,
+        @JsonProperty(JsonPropertyName.ELEMENT_STYLES) List<ElementStyle> elementStyles,
+        @JsonProperty(JsonPropertyName.PAGE_MASTER_STYLES) List<PageMasterStyle> pageMasterStyles
 ) {
 
     private static final Logger log = LoggerFactory.getLogger(StyleSheet.class);

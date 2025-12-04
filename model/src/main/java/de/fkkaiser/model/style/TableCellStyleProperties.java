@@ -17,6 +17,7 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Inheritable;
 import de.fkkaiser.model.annotation.Internal;
 
@@ -30,21 +31,21 @@ import de.fkkaiser.model.annotation.Internal;
  * The class also includes methods for copying and applying properties to other
  * `TableCellStyleProperties` instances.
  *
- * @version 1.1.0
+ * @version 1.1.1
  */
-@JsonTypeName(StyleTargetTypes.TABLE_CELL)
+@JsonTypeName(JsonPropertyName.TABLE_CELL)
 public class TableCellStyleProperties extends TextBlockStyleProperties {
 
     @Inheritable
-    @JsonProperty("border")
+    @JsonProperty(JsonPropertyName.BORDER)
     private String border; // The border style of the table cell (e.g., "1pt solid black").
 
     @Inheritable
-    @JsonProperty("padding")
+    @JsonProperty(JsonPropertyName.PADDING)
     private String padding; // The padding inside the table cell (e.g., "5pt").
 
     @Inheritable
-    @JsonProperty("background-color")
+    @JsonProperty(JsonPropertyName.BACKGROUND_COLOR)
     private String backgroundColor; // The background color of the table cell.
 
     /**
@@ -52,7 +53,7 @@ public class TableCellStyleProperties extends TextBlockStyleProperties {
      * Possible values include "top", "middle", and "bottom".
      */
     @Inheritable
-    @JsonProperty("vertical-align")
+    @JsonProperty(JsonPropertyName.VERTICAL_ALIGN)
     private String verticalAlign;
 
     // --- Getters and Setters ---

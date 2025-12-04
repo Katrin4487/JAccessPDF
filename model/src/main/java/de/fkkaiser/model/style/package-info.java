@@ -27,7 +27,6 @@
  * <b>Layout Definitions:</b>
  * <ul>
  * <li>{@link de.fkkaiser.model.style.PageMasterStyle}: Defines the layout of a single page (size, margins, header/footer areas).</li>
- * <li>{@link de.fkkaiser.model.style.PageSequenceMaster}: Defines the sequence of page layouts (e.g., for the first page, even/odd pages).</li>
  * </ul>
  * </li>
  * <li>

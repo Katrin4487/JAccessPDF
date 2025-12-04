@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Inheritable;
 
-@JsonTypeName(StyleTargetTypes.LIST_ITEM)
+@JsonTypeName(JsonPropertyName.LIST_ITEM)
 public class ListItemStyleProperties extends TextBlockStyleProperties{
 
     @Inheritable

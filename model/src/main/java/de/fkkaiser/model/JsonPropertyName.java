@@ -22,11 +22,14 @@ import de.fkkaiser.model.annotation.Internal;
  * Contains JSON property names used in the model.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.0.1
  */
 @Internal
 public class JsonPropertyName {
 
+    private JsonPropertyName() {
+        // private constructor to prevent instantiation
+    }
 
     // === Identifier for TargetTypes
 
@@ -327,6 +330,15 @@ public class JsonPropertyName {
      */
     public static final String PADDING_BOTTOM = "padding-bottom";
 
+    public static final String TEXT_INDENT = "text-indent";
+    public static final String ORPHANS = "orphans";
+    public static final String WIDOWS = "widows";
+    public static final String HYPHENATE = "hyphenate";
+    public static final String LINE_HEIGHT = "line-height";
+    public static final String TEXT_ALIGN_LAST = "text-align-last";
+    public static final String SECTION_MARKER = "section-marker";
+    public static final String KEEP_TOGETHER = "keep-together";
+
     public static final String BORDER = "border";
     public static final String BORDER_LEFT = "border-left";
     public static final String BORDER_RIGHT = "border-right";
@@ -336,4 +348,26 @@ public class JsonPropertyName {
     public static final String BREAK_BEFORE = "break-before";
     public static final String BREAK_AFTER = "break-after";
     public static final String BACKGROUND_COLOR = "background-color";
+    
+    // === Page master
+    public static final String PAGE_HEIGHT = "page-height";
+    public static final String PAGE_WIDTH = "page-width";
+    public static final String MARGIN_TOP = "margin-top";
+    public static final String MARGIN_BOTTOM = "margin-bottom";
+    public static final String HEADER_EXTENT = "header-extent";
+    public static final String FOOTER_EXTENT = "footer-extent";
+    public static final String COLUMN_GAP = "column-gap";
+    public static final String COLUMN_COUNT = "column-count";
+    public static final String MARGIN = "margin";
+    public static final String MARGIN_LEFT = "margin-left";
+    public static final String MARGIN_RIGHT = "margin-right";
+    public static final String AUTO_ADJUST_MARGINS = "auto-adjust-margins";
+    public static final String VERTICAL_ALIGN = "vertical-align";
+    public static final String BORDER_COLLAPSE = "border-collapse";
+    public static final String BASELINE_SHIFT = "baseline-shift";
+
+    // === StyleSheet Properties
+    public static final String TEXT_STYLES = "text-styles";
+    public static final String ELEMENT_STYLES = "element-styles";
+    public static final String PAGE_MASTER_STYLES = "page-master-styles";
 }

@@ -16,6 +16,7 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 
@@ -27,7 +28,7 @@ import de.fkkaiser.model.annotation.PublicAPI;
  * @version 1.0.0
  */
 @PublicAPI
-@JsonTypeName(StyleTargetTypes.FOOTNOTE) // You'll need to add FOOTNOTE to StyleTargetTypes
+@JsonTypeName(JsonPropertyName.FOOTNOTE) // You'll need to add FOOTNOTE to StyleTargetTypes
 public class FootnoteStyleProperties extends TextBlockStyleProperties {
 
 

@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.model.style;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 
 /**
@@ -25,7 +26,7 @@ import de.fkkaiser.model.annotation.Internal;
  * @version 1.0.1
  */
 @Internal
-@JsonTypeName(StyleTargetTypes.HEADLINE)
+@JsonTypeName(JsonPropertyName.HEADLINE)
 public class HeadlineStyleProperties extends TextBlockStyleProperties {
 
 
