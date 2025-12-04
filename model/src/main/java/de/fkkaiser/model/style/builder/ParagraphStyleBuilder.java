@@ -23,7 +23,7 @@ import de.fkkaiser.model.style.*;
  * This builder allows setting all paragraph-specific properties in a readable,
  * chainable manner.
  *
- * @author FK Kaiser
+ * @author Katrin Kaiser
  * @version 1.0.0
  */
 @PublicAPI
@@ -58,22 +58,9 @@ public class ParagraphStyleBuilder {
     }
 
     /**
-     * Sets the text alignment. The following alignments are available:
-     * <ul>
-     *     <li><strong>start:</strong> Aligns the text at the start edge. In LTR languages this is
-     *     equal to left, in RTL languages this is equal to right.</li>
-     *     <li><strong>end:</strong> Aligns the text at the end edge. In LTR languages this is equal
-     *     to right, in RTL languages this is equal to left.</li>
-     *     <li><strong>left:</strong> Aligns the text at the left edge.</li>
-     *     <li><strong>right:</strong> Aligns the text at the right edge.</li>
-     *     <li><strong>center:</strong> Centers the text.</li>
-     *     <li><strong>justify:</strong> Creates justified text. The text (except the last line) is
-     *     adjusted to align flush with both the left and right margins.</li>
-     *     <li><strong>Character alignment:</strong> Aligns text on a specific character. This is often
-     *     used in tables to align numbers by the decimal separator (e.g., text-align=".").</li>
-     * </ul>
+     * Defines the text alignment for this paragraph.
      *
-     * @param textAlign alignment keyword (start, end, left, right, center, justify)
+     * @param textAlign the text alignment to set
      * @return this builder instance for method chaining
      */
     @PublicAPI
