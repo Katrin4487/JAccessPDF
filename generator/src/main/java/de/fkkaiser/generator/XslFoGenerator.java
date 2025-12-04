@@ -31,10 +31,38 @@ import java.util.Map;
  * Refactored to avoid placeholders by buffering page content.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.1.0
  */
 @Internal
 public class XslFoGenerator {
+
+    // Fo Tags
+    private static final String STATIC_CONTENT_TAG = "static-content";
+    private static final String FLOW_TAG = "flow";
+    private static final String PAGE_SEQUENCE = "page-sequence";
+    private static final String LAYOUT_MASTER_SET = "layout-master-set";
+    private static final String SIMPLE_PAGE_MASTER = "simple-page-master";
+    private static final String REGION_BODY = "region-body";
+    private static final String REGION_BEFORE = "region-before";
+    private static final String REGION_AFTER = "region-after";
+
+    //Values for Attributes
+    private static final String XSL_REGION_BODY = "xsl-region-body";
+    private static final String XSL_REGION_BEFORE = "xsl-region-before";
+    private static final String XSL_REGION_AFTER = "xsl-region-after";
+    private static final String MASTER_REFERENCE = "master-reference";
+    private static final String MASTER_NAME = "master-name";
+    private static final String MARGIN_LEFT = "margin-left";
+    private static final String MARGIN_RIGHT = "margin-right";
+    private static final String MARGIN_BOTTOM = "margin-bottom";
+    private static final String MARGIN_TOP = "margin-top";
+    private static final String MARGIN = "margin";
+    private static final String PAGE_HEIGHT = "page-height";
+    private static final String PAGE_WIDTH = "page-width";
+    private static final String COLUMN_COUNT = "column-count";
+    private static final String COLUMN_GAP = "column-gap";
+    private static final String REGION_NAME = "region-name";
+    private static final String EXTENT = "extent";
 
     private static final Logger log = LoggerFactory.getLogger(XslFoGenerator.class);
     private final Map<Class<? extends Element>, ElementFoGenerator> blockGeneratorRegistry = new HashMap<>();
@@ -49,7 +77,7 @@ public class XslFoGenerator {
         this.blockGeneratorRegistry.put(Part.class, new PartFoGenerator(this));
         this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
         this.blockGeneratorRegistry.put(BlockImage.class,new ImageFoGenerator());
-        this.blockGeneratorRegistry.put(LayoutTable.class,new LayoutTableFoGenerator(this)); this.blockGeneratorRegistry.put(LayoutTable.class,new LayoutTableFoGenerator(this));
+        this.blockGeneratorRegistry.put(LayoutTable.class,new LayoutTableFoGenerator(this));
          this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());
         this.inlineGeneratorRegistry.put(PageNumber.class, new PageNumberFoGenerator());
         this.inlineGeneratorRegistry.put(Hyperlink.class, new HyperlinkFoGenerator());
@@ -112,11 +140,12 @@ public class XslFoGenerator {
 
     /**
      * Generates multiple block-level elements.
-     * @param elements List of {@link Element} to generate
-     * @param styleSheet {@link StyleSheet} for styling
-     * @param builder StringBuilder to append generated FO
-     * @param headlines List of headlines for bookmarks
-     * @param resolver {@link ImageResolver} for image handling
+     *
+     * @param elements           List of {@link Element} to generate
+     * @param styleSheet         {@link StyleSheet} for styling
+     * @param builder            StringBuilder to append generated FO
+     * @param headlines          List of headlines for bookmarks
+     * @param resolver           {@link ImageResolver} for image handling
      * @param isExternalArtefact indicates if the elements are part of an external artefact (e.g., header/footer)
      */
     @Internal
@@ -147,36 +176,43 @@ public class XslFoGenerator {
 
     // --- Private Generation Steps ---
 
+    /**
+     * Generates the page sequences for the document.
+     * @param builder StringBuilder to append generated FO
+     * @param document {@link Document} representing the content structure
+     * @param styleSheet {@link StyleSheet} defining styles
+     * @param headlines List of headlines for bookmarks
+     * @param resolver {@link ImageResolver} for image handling
+     */
     @Internal
-     private void generatePageSequences(StringBuilder builder, Document document, StyleSheet styleSheet, List<Headline> headlines, ImageResolver resolver) {
+    private void generatePageSequences(StringBuilder builder, Document document, StyleSheet styleSheet, List<Headline> headlines, ImageResolver resolver) {
         for (PageSequence sequence : document.pageSequences()) {
-
             log.debug("Generating page-sequence with master-reference '{}'.", sequence.styleClass());
 
-            builder.append("  <fo:page-sequence master-reference=\"").append(GenerateUtils.escapeXml(sequence.styleClass())).append("\">");
+            GenerateUtils.TagBuilder pageSeq = GenerateUtils.tagBuilder(PAGE_SEQUENCE)
+                    .addAttribute(MASTER_REFERENCE, sequence.styleClass());
 
+            // Header
             if (sequence.header() != null) {
-
-                log.debug("Generating headline with master-reference '{}'.", sequence.header());
-
-                builder.append("    <fo:static-content flow-name=\"xsl-region-before\">");
-                generateBlockElements(sequence.header().elements(), styleSheet, builder, headlines, resolver, true);
-                builder.append("    </fo:static-content>");
+                pageSeq.addChild(
+                        createStaticContent(XSL_REGION_BEFORE, sequence.header().elements(),
+                                styleSheet, headlines, resolver)
+                );
             }
+
+            // Footer
             if (sequence.footer() != null) {
-
-                log.debug("Generating footer with master-reference '{}'.", sequence.footer());
-
-                builder.append("    <fo:static-content flow-name=\"xsl-region-after\">");
-                generateBlockElements(sequence.footer().elements(), styleSheet, builder, headlines, resolver, true);
-                builder.append("    </fo:static-content>");
+                pageSeq.addChild(
+                        createStaticContent(XSL_REGION_AFTER, sequence.footer().elements(),
+                                styleSheet, headlines, resolver)
+                );
             }
-
-            builder.append("    <fo:flow flow-name=\"xsl-region-body\">");
-            generateBlockElements(sequence.body().elements(), styleSheet, builder, headlines, resolver, false);
-            builder.append("    </fo:flow>");
-
-            builder.append("  </fo:page-sequence>");
+            // Body
+            pageSeq.addChild(
+                    createFlow(sequence.body().elements(),
+                            styleSheet, headlines, resolver)
+            );
+            pageSeq.buildInto(builder);
         }
     }
 
@@ -185,10 +221,8 @@ public class XslFoGenerator {
         if (headlines == null || headlines.isEmpty()) {
             return;
         }
-
         BookmarkGenerator generator = new BookmarkGenerator();
         String bookmarkTreeXml = generator.generateBookmarkTree(headlines);
-
         foBuilder.append(bookmarkTreeXml);
     }
 
@@ -219,86 +253,118 @@ public class XslFoGenerator {
 
         log.debug("Generating XMP metadata for PDF/UA-1 compliance.");
 
-        foBuilder.append("<fo:declarations>")
-                .append("<x:xmpmeta>")
-                .append("<rdf:RDF>")
-                .append("<rdf:Description rdf:about=\"\">")
-                .append("<dc:title>")
-                .append("<rdf:Alt>")
-                .append("<rdf:li xml:lang=\"x-default\">")
-                .append(GenerateUtils.escapeXml(metadata.getTitle()))
-                .append("</rdf:li>")
-                .append("</rdf:Alt>")
-                .append("</dc:title>")
-        ;
+        GenerateUtils.TagBuilder title = GenerateUtils.tagBuilder("title")
+                .withPrefix("dc:")
+                .addChild(
+                        GenerateUtils.tagBuilder("Alt")
+                                .withPrefix("rdf:")
+                                .addChild(
+                                        GenerateUtils.tagBuilder("li")
+                                                .withPrefix("rdf:")
+                                                .addAttribute("xml:lang", "x-default")
+                                                .addContent(metadata.getTitle())
+                                )
+                );
+
+        GenerateUtils.TagBuilder description = GenerateUtils.tagBuilder("Description")
+                .withPrefix("rdf:")
+                .addAttribute("rdf:about", "")
+                .addChild(title);
 
         if (metadata.getAuthor() != null) {
-            foBuilder.append("<dc:creator>").append(GenerateUtils.escapeXml(metadata.getAuthor())).append("</dc:creator>");
-        }
-        if (metadata.getSubject() != null) {
-            foBuilder.append("<dc:description>").append(GenerateUtils.escapeXml(metadata.getSubject())).append("</dc:description>");
+            description.addChild(
+                    GenerateUtils.tagBuilder("creator")
+                            .withPrefix("dc:")
+                            .addContent(metadata.getAuthor())
+            );
         }
 
-        foBuilder.append("</rdf:Description>")
-                .append("</rdf:RDF>")
-                .append("</x:xmpmeta>")
-                .append("</fo:declarations>");
+        if (metadata.getSubject() != null) {
+            description.addChild(
+                    GenerateUtils.tagBuilder("description")
+                            .withPrefix("dc:")
+                            .addContent(metadata.getSubject())
+            );
+        }
+
+        GenerateUtils.tagBuilder("declarations")
+                .addChild(
+                        GenerateUtils.tagBuilder("xmpmeta")
+                                .withPrefix("x:")
+                                .addChild(
+                                        GenerateUtils.tagBuilder("RDF")
+                                                .withPrefix("rdf:")
+                                                .addChild(description)
+                                )
+                )
+                .buildInto(foBuilder);
     }
 
     private void generateLayoutMasterSet(StringBuilder foBuilder, StyleSheet styleSheet) {
+        GenerateUtils.TagBuilder layoutMasterSet = GenerateUtils.tagBuilder(LAYOUT_MASTER_SET);
 
-        foBuilder.append("<fo:layout-master-set>");
         if (styleSheet.pageMasterStyles() != null) {
             for (PageMasterStyle pageStyle : styleSheet.pageMasterStyles()) {
-                foBuilder.append("<fo:simple-page-master master-name=\"").append(GenerateUtils.escapeXml(pageStyle.getName())).append("\"")
-                        .append(" page-height=\"").append(GenerateUtils.escapeXml(pageStyle.getPageHeight())).append("\"")
-                        .append(" page-width=\"").append(GenerateUtils.escapeXml(pageStyle.getPageWidth())).append("\"");
+                GenerateUtils.TagBuilder simpleMaster = GenerateUtils.tagBuilder(SIMPLE_PAGE_MASTER)
+                        .addAttribute(MASTER_NAME, pageStyle.getName())
+                        .addAttribute(PAGE_HEIGHT, pageStyle.getPageHeight())
+                        .addAttribute(PAGE_WIDTH, pageStyle.getPageWidth());
 
+                // Margin handling
                 if (pageStyle.getMargin() != null && !pageStyle.getMargin().isEmpty()) {
-                    foBuilder.append(" margin=\"").append(GenerateUtils.escapeXml(pageStyle.getMargin())).append("\"");
+                    simpleMaster.addAttribute(MARGIN, pageStyle.getMargin());
                 } else {
-                    foBuilder.append(" margin-top=\"").append(GenerateUtils.escapeXml(pageStyle.getMarginTop())).append("\"")
-                            .append(" margin-bottom=\"").append(GenerateUtils.escapeXml(pageStyle.getMarginBottom())).append("\"")
-                            .append(" margin-left=\"").append(GenerateUtils.escapeXml(pageStyle.getMarginLeft())).append("\"")
-                            .append(" margin-right=\"").append(GenerateUtils.escapeXml(pageStyle.getMarginRight())).append("\"");
+                    simpleMaster
+                            .addAttribute(MARGIN_TOP, pageStyle.getMarginTop())
+                            .addAttribute(MARGIN_BOTTOM, pageStyle.getMarginBottom())
+                            .addAttribute(MARGIN_LEFT, pageStyle.getMarginLeft())
+                            .addAttribute(MARGIN_RIGHT, pageStyle.getMarginRight());
                 }
-                foBuilder.append(">");
 
-                foBuilder.append("      <fo:region-body");
-                if (pageStyle.getHeaderExtent() != null) {
-                    foBuilder.append(" margin-top=\"").append(GenerateUtils.escapeXml(pageStyle.getHeaderExtent())).append("\"");
-                }
-                if (pageStyle.getFooterExtent() != null) {
-                    foBuilder.append(" margin-bottom=\"").append(GenerateUtils.escapeXml(pageStyle.getFooterExtent())).append("\"");
-                }
-                if(pageStyle.getColumnCount() != null) {
-                    foBuilder.append(" column-count=\"").append(GenerateUtils.escapeXml(pageStyle.getColumnCount())).append("\"");
-                }
-                if (pageStyle.getColumnGap() != null){
-                    foBuilder.append(" column-gap=\"").append(GenerateUtils.escapeXml(pageStyle.getColumnGap())).append("\"");
-                }
-                foBuilder.append("/>");
+                // Region body
+                GenerateUtils.TagBuilder regionBody = GenerateUtils.tagBuilder(REGION_BODY)
+                        .addAttribute(MARGIN_TOP, pageStyle.getHeaderExtent())
+                        .addAttribute(MARGIN_BOTTOM, pageStyle.getFooterExtent())
+                        .addAttribute(COLUMN_COUNT, pageStyle.getColumnCount())
+                        .addAttribute(COLUMN_GAP, pageStyle.getColumnGap());
 
+                simpleMaster.addChild(regionBody);
+
+                // Region before (header)
                 if (pageStyle.getHeaderExtent() != null) {
-                    foBuilder.append("<fo:region-before region-name=\"xsl-region-before\" extent=\"")
-                            .append(GenerateUtils.escapeXml(pageStyle.getHeaderExtent()))
-                            .append("\"/>");
+                    simpleMaster.addChild(
+                            GenerateUtils.tagBuilder(REGION_BEFORE)
+                                    .addAttribute(REGION_NAME, XSL_REGION_BEFORE)
+                                    .addAttribute(EXTENT, pageStyle.getHeaderExtent())
+                    );
                 }
+
+                // Region after (footer)
                 if (pageStyle.getFooterExtent() != null) {
-                    foBuilder.append("<fo:region-after region-name=\"xsl-region-after\" extent=\"")
-                            .append(GenerateUtils.escapeXml(pageStyle.getFooterExtent()))
-                            .append("\"/>");
+                    simpleMaster.addChild(
+                            GenerateUtils.tagBuilder(REGION_AFTER)
+                                    .addAttribute(REGION_NAME, XSL_REGION_AFTER)
+                                    .addAttribute(EXTENT, pageStyle.getFooterExtent())
+                    );
                 }
-                foBuilder.append("</fo:simple-page-master>");
+
+                layoutMasterSet.addChild(simpleMaster);
             }
         }
-        foBuilder.append("</fo:layout-master-set>");
+
+        layoutMasterSet.buildInto(foBuilder);
     }
 
     private void generateRootEnd(StringBuilder foBuilder) {
         foBuilder.append("</fo:root>");
     }
 
+    /**
+     * Find the default-text-style if set. This text-style would be set als
+     * default for the hole document
+     * @param styleSheet StyleSheet of this document
+     * @return identifier of the default font-family if default text style is set, null otherwise
+     */
     private String findDefaultFontFamily(StyleSheet styleSheet) {
         if (styleSheet == null || styleSheet.elementStyles() == null) {
             return null;
@@ -312,6 +378,46 @@ public class XslFoGenerator {
                 .flatMap(styleSheet::findFontStyleByName)
                 .map(TextStyle::fontFamilyName)
                 .orElse(null);
+    }
+
+
+    /**
+     * TagBuilder to create a static-content for header or footer of the document
+     * @param flowName name of the flow
+     * @param elements List of elements to place in the document
+     * @param styleSheet {@link StyleSheet} of the document
+     * @param headlines List of {@link Headline} elements (for bookmark generation)
+     * @param resolver {@link ImageResolver} to find image resources
+     * @return TagBuilder to build the tag
+     */
+    private GenerateUtils.TagBuilder createStaticContent(String flowName, List<Element> elements,
+                                                         StyleSheet styleSheet, List<Headline> headlines,
+                                                         ImageResolver resolver) {
+        StringBuilder content = new StringBuilder();
+        generateBlockElements(elements, styleSheet, content, headlines, resolver, true);
+
+        return GenerateUtils.tagBuilder(STATIC_CONTENT_TAG)
+                .addAttribute(GenerateConst.FLOW_NAME, flowName)
+                .addNestedContent(content.toString());
+    }
+
+    /**
+     * Generates an flow tag (used for the body)
+     * @param elements list of elements that should be added to the flox
+     * @param styleSheet {@link StyleSheet} used in the document
+     * @param headlines List of {@link Headline} in this document for bookmark tree
+     * @param resolver {@link ImageResolver} to find image resources
+     * @return {@link GenerateUtils.TagBuilder} to create the flow tag
+     */
+    private GenerateUtils.TagBuilder createFlow(List<Element> elements,
+                                                StyleSheet styleSheet, List<Headline> headlines,
+                                                ImageResolver resolver) {
+        StringBuilder content = new StringBuilder();
+        generateBlockElements(elements, styleSheet, content, headlines, resolver, false);
+
+        return GenerateUtils.tagBuilder(FLOW_TAG)
+                .addAttribute(GenerateConst.FLOW_NAME, XSL_REGION_BODY)
+                .addNestedContent(content.toString());
     }
 
 }

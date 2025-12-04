@@ -122,12 +122,10 @@ class XslFoGeneratorTest {
 
 
     @Test
-    @DisplayName("Should generate bookmarks for headlines and replace the placeholder")
+    @DisplayName("Should generate bookmarks for headlines")
     void generate_withHeadlines_shouldGenerateBookmarks() {
         String result = xslFoGenerator.generate(testDocument, testStyleSheet,null);
 
-        // Checks if the placeholder is gone and bookmark code has been inserted
-        assertFalse(result.contains("<§§BOOKMARK_TREE§§>"), "The bookmark placeholder was not replaced.");
         assertTrue(result.contains("<fo:bookmark-tree>"), "The fo:bookmark-tree is missing.");
         assertTrue(result.contains("<fo:bookmark-title>Chapter 1</fo:bookmark-title>"), "The title of the bookmark is missing.");
     }

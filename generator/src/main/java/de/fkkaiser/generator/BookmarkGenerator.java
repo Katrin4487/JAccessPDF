@@ -24,9 +24,17 @@ import java.util.List;
  * Generates the fo:bookmark-tree XML structure for a list of headlines.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.1.0
  */
 public class BookmarkGenerator {
+
+
+    private static final String OPEN_BOOKMARK_TREE = "<fo:bookmark-tree>";
+    private static final String CLOSE_BOOKMARK_TREE = "</fo:bookmark-tree>";
+    private static final String OPEN_BOOKMARK = "<fo:bookmark";
+    private static final String CLOSE_BOOKMARK = "</fo:bookmark>";
+    private static final String INTERNAL_DESTINATION = "internal-destination";
+    private static final String BOOKMARK_TITLE_TAG = "bookmark-title";
 
     /**
      * Generates the complete fo:bookmark-tree from a list of headlines.
@@ -40,7 +48,7 @@ public class BookmarkGenerator {
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append("<fo:bookmark-tree>\n");
+        builder.append(OPEN_BOOKMARK_TREE);
 
         int lastLevel = 0;
         for (int i = 0; i < headlines.size(); i++) {
@@ -49,33 +57,32 @@ public class BookmarkGenerator {
             String id = headline.getId();
             String title = getTitleFrom(headline);
 
-            // Before opening a new bookmark, close the previous one(s) if necessary.
             if (i > 0) {
                 if (currentLevel == lastLevel) {
                     // Sibling element, close the previous one.
-                    builder.append("  ".repeat(lastLevel + 2)).append("</fo:bookmark>");
+                    builder.append(GenerateConst.SPACE.repeat(lastLevel + 2)).append(CLOSE_BOOKMARK);
                 } else if(currentLevel < lastLevel) { // currentLevel < lastLevel
                     // Moving up, close all necessary levels.
                     int levelsToClose = lastLevel - currentLevel + 1;
                     for (int j = 0; j < levelsToClose; j++) {
-                        builder.append("  ".repeat(lastLevel - j + 2)).append("</fo:bookmark>");
+                        builder.append(GenerateConst.SPACE.repeat(lastLevel - j + 2)).append(CLOSE_BOOKMARK);
                     }
                 }
             }
 
             // Open the current bookmark.
-            builder.append("  ".repeat(currentLevel + 1)).append("<fo:bookmark internal-destination=\"").append(GenerateUtils.escapeXml(id)).append("\">");
-            builder.append("  ".repeat(currentLevel + 2)).append("<fo:bookmark-title>").append(GenerateUtils.escapeXml(title)).append("</fo:bookmark-title>");
+            builder.append(GenerateConst.SPACE.repeat(currentLevel + 1)).append(getBookmarkOpener(id));
+            builder.append(GenerateConst.SPACE.repeat(currentLevel + 2)).append(getBookmarkTitle(title));
 
             lastLevel = currentLevel;
         }
 
         // Close all remaining open tags after the loop.
         for (int level = lastLevel; level > 0; level--) {
-            builder.append("  ".repeat(level + 1)).append("</fo:bookmark>\n");
+            builder.append(GenerateConst.SPACE.repeat(level + 1)).append(CLOSE_BOOKMARK);
         }
 
-        builder.append("</fo:bookmark-tree>\n");
+        builder.append(CLOSE_BOOKMARK_TREE);
         return builder.toString();
     }
 
@@ -97,5 +104,34 @@ public class BookmarkGenerator {
             }
         }
         return titleBuilder.toString();
+    }
+
+    /**
+     * Constructs the opening tag for a bookmark with the given ID.
+     *
+     * @param id The ID of the bookmark.
+     * @return The opening tag string.
+     */
+    private String getBookmarkOpener(String id) {
+        return OPEN_BOOKMARK +
+                GenerateConst.SPACE +
+                INTERNAL_DESTINATION +
+                GenerateConst.EQUALS +
+                GenerateConst.GQQ +
+                GenerateUtils.escapeXml(id) +
+                GenerateConst.GQQ +
+                GenerateConst.CLOSER;
+    }
+
+    /**
+     * Constructs the bookmark title XML element.
+     *
+     * @param title The title text.
+     * @return The bookmark title XML string.
+     */
+    private String getBookmarkTitle(String title) {
+        return GenerateUtils.tagBuilder(BOOKMARK_TITLE_TAG)
+                .addContent(title)
+                .build();
     }
 }

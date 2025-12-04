@@ -18,6 +18,9 @@ package de.fkkaiser.generator;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.style.TextStyle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Different Util methods to generate FOP XML.
  *
@@ -74,6 +77,86 @@ public class GenerateUtils {
         }
         if (ts.fontStyle() != null) {
             builder.append(" font-style=\"").append(GenerateUtils.escapeXml(ts.fontStyle().toLowerCase())).append("\"");
+        }
+    }
+
+    static TagBuilder tagBuilder(String tagName) {
+        return new TagBuilder(tagName);
+    }
+
+    @Internal
+    static class TagBuilder {
+        private final StringBuilder builder;
+        private String attributes = "";
+        private final String tagName;
+        private final List<Object> contentParts = new ArrayList<>();
+        private String tagPrefix = "fo:";
+
+        public TagBuilder(String tagName) {
+            this.builder = new StringBuilder();
+            this.tagName = tagName;
+        }
+
+        public TagBuilder addAttribute(String name, String value) {
+            if (value != null) {
+                attributes += GenerateConst.SPACE
+                        + name + GenerateConst.EQUALS
+                        + GenerateConst.GQQ
+                        + GenerateUtils.escapeXml(value)
+                        + GenerateConst.GQQ;
+            }
+            return this;
+        }
+
+        public TagBuilder addContent(String content) {
+            contentParts.add(GenerateUtils.escapeXml(content));
+            return this;
+        }
+
+        public TagBuilder addNestedContent(String content) {
+            contentParts.add(content);
+            return this;
+        }
+
+        public TagBuilder addChild(TagBuilder childBuilder) {
+            contentParts.add(childBuilder);
+            return this;
+        }
+
+        public TagBuilder withPrefix(String tagPrefix) {
+            this.tagPrefix = tagPrefix;
+            return this;
+        }
+
+
+        public String build() {
+            builder.append(GenerateConst.OPENER_OPEN_TAG)
+                    .append(tagPrefix)
+                    .append(tagName);
+            if (!attributes.isBlank()) {
+                builder.append(attributes);
+            }
+            builder.append(GenerateConst.CLOSER);
+
+
+            for (Object part : contentParts) {
+                if (part instanceof TagBuilder) {
+                    builder.append(((TagBuilder) part).build());
+                } else {
+                    builder.append(part.toString());
+                }
+            }
+
+            builder.append(GenerateConst.OPENER_CLOSE_TAG)
+                    .append(tagPrefix)
+                    .append(tagName)
+                    .append(GenerateConst.CLOSER);
+
+            return builder.toString();
+        }
+
+        public void buildInto(StringBuilder target) {
+            target.append(build());
         }
     }
 }
