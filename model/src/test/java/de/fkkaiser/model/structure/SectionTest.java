@@ -82,7 +82,7 @@ class SectionTest {
     void shouldReturnCorrectType() {
         Section section = new Section("test", null, List.of());
 
-        assertEquals(ElementTypes.SECTION, section.getType());
+        assertEquals(ElementTargetType.SECTION, section.getType());
     }
 
     @Test
@@ -91,7 +91,7 @@ class SectionTest {
         SectionStyleProperties sectionStyle = new SectionStyleProperties();
         sectionStyle.setPadding("1cm");
 
-        ElementStyle elementStyle = new ElementStyle("base-section", "section", sectionStyle);
+        ElementStyle elementStyle = new ElementStyle("base-section", ElementTargetType.SECTION, sectionStyle);
 
         Map<String, ElementStyle> styleMap = new HashMap<>();
         styleMap.put("base-section", elementStyle);
@@ -122,8 +122,8 @@ class SectionTest {
         variantStyle.setBackgroundColor("#fff3cd");
 
         Map<String, ElementStyle> styleMap = new HashMap<>();
-        styleMap.put("notice-box", new ElementStyle("notice-box", "section", baseStyle));
-        styleMap.put("notice-box.note", new ElementStyle("notice-box.note", "section", variantStyle));
+        styleMap.put("notice-box", new ElementStyle("notice-box", ElementTargetType.SECTION, baseStyle));
+        styleMap.put("notice-box.note", new ElementStyle("notice-box.note", ElementTargetType.SECTION, variantStyle));
 
         StyleResolverContext context = new StyleResolverContext(
                 styleMap,
@@ -148,7 +148,7 @@ class SectionTest {
         baseStyle.setPadding("1cm");
 
         Map<String, ElementStyle> styleMap = new HashMap<>();
-        styleMap.put("notice-box", new ElementStyle("notice-box", "section", baseStyle));
+        styleMap.put("notice-box", new ElementStyle("notice-box", ElementTargetType.SECTION, baseStyle));
         // notice-box.note does NOT exist
 
         StyleResolverContext context = new StyleResolverContext(
@@ -173,7 +173,7 @@ class SectionTest {
 
         SectionStyleProperties style = new SectionStyleProperties();
         Map<String, ElementStyle> styleMap = new HashMap<>();
-        styleMap.put("test", new ElementStyle("test", "section", style));
+        styleMap.put("test", new ElementStyle("test", ElementTargetType.SECTION, style));
 
         StyleResolverContext context = new StyleResolverContext(styleMap, null);
 

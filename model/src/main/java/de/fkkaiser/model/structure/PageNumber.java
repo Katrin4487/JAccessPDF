@@ -18,13 +18,15 @@ package de.fkkaiser.model.structure;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.ElementStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
 /**
- * An empty "marker" element
- * (XSL-FO page number)
+ * Represents a page number inline element in the document structure.
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
-@JsonTypeName("page-number")
+@JsonTypeName(JsonPropertyName.PAGE_NUMBER)
 public class PageNumber extends AbstractInlineElement {
 
     @JsonCreator
@@ -41,14 +43,13 @@ public class PageNumber extends AbstractInlineElement {
 
 
     @Override
-    public String getType() {
-        return InlineElementTypes.PAGE_NUMBER;
+    public ElementTargetType getType() {
+        return ElementTargetType.PAGE_NUMBER;
     }
 
     @Override
     public void resolveStyles(StyleResolverContext context) {
-        // PageNumber hat typischerweise keinen eigenen Stil,
-        // erbt aber den Kontext. Wenn doch, könnte hier Logik stehen.
+       //nothing here...
     }
 
     @Override

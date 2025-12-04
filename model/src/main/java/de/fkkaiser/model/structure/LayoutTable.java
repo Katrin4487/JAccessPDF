@@ -63,8 +63,8 @@ public class LayoutTable implements Element{
     }
 
     @Override
-    public String getType() {
-        return ElementTypes.LAYOUT_TABLE;
+    public ElementTargetType getType() {
+        return ElementTargetType.LAYOUT_TABLE;
     }
 
     @Override

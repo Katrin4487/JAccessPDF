@@ -8,6 +8,7 @@
 - Span is now an enum instead of a string
 - Widows and Orphans are integers in Paragraphs now (no booleans)
 - TextAlignLast in Paragraph can be used with TextAlign enum now
+- ElementTypes are now enums instead of strings
 
 ### Added
 - SimpleListBuilder for easier creation of SimpleLists

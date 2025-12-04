@@ -61,7 +61,7 @@ public class TextRunTest {
     @DisplayName("should resolve styles when style class is found")
     void shouldResolveWithSpecificStyle() {
         TextRun textRun = new TextRun("Some text", "found-style");
-        ElementStyle elementStyle = new ElementStyle("found-style", StyleTargetTypes.TEXT_RUN, mockSpecificStyle);
+        ElementStyle elementStyle = new ElementStyle("found-style", ElementTargetType.TEXT_RUN, mockSpecificStyle);
         when(mockStyleMap.get("found-style")).thenReturn(elementStyle);
         textRun.resolveStyles(mockContext);
         assertNotNull(textRun.getResolvedStyle());

@@ -17,6 +17,7 @@ package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.structure.builder.ParagraphBuilder;
 import java.util.List;
@@ -26,10 +27,10 @@ import java.util.List;
  * Represents a paragraph element in a document structure.
  *
  * @author Katrin Kaiser
- * @version 1.0.3
+ * @version 1.1.0
  */
 @PublicAPI
-@JsonTypeName(ElementTypes.PARAGRAPH)
+@JsonTypeName(JsonPropertyName.PARAGRAPH)
 public class Paragraph extends TextBlock {
 
    /**
@@ -79,14 +80,12 @@ public class Paragraph extends TextBlock {
     // ==================== Overrides ====================
 
     /**
-     * Returns the type identifier for this element.
-     * This is used for JSON serialization and element type identification.
-     *
-     * @return the string constant {@link ElementTypes#PARAGRAPH}
+     * Returns the type of this element as PARAGRAPH.
+     * @return ElementTargetType.PARAGRAPH
      */
     @Override
-    public String getType() {
-        return ElementTypes.PARAGRAPH;
+    public ElementTargetType getType() {
+        return ElementTargetType.PARAGRAPH;
     }
 
     /**
@@ -94,10 +93,9 @@ public class Paragraph extends TextBlock {
      * with the specified style class.
      *
      * @param styleClass the CSS-like class name for styling;
-     *                   must not be {@code null} or empty
+     *                   must not be empty
      * @return a new ParagraphBuilder instance
-     * @throws IllegalArgumentException if styleClass is {@code null} or empty
-     *
+     * @throws IllegalArgumentException if styleClass is empty
      *
      */
     @PublicAPI

@@ -19,8 +19,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.builder.BlockImageStyleBuilder;
 import de.fkkaiser.model.style.builder.HeadlineStyleBuilder;
 import de.fkkaiser.model.style.builder.ParagraphStyleBuilder;
@@ -31,115 +33,16 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents a single, named style definition in the stylesheet.
- * An ElementStyle connects a style name (e.g., "important-paragraph") to a set of
- * properties, targeting a specific element type (paragraph, headline, list, etc.).
+ * Represents an ElementStyle.
  *
- * <p><b>Purpose:</b></p>
- * Element styles serve as reusable style templates that can be applied to document
- * elements. Instead of defining formatting properties inline for each element, you
- * define named styles once and reference them by name throughout the document.
- *
- * <p><b>Polymorphic Design:</b></p>
- * This class uses Jackson's polymorphic deserialization to automatically map different
- * property types based on the {@code target-element} field:
- * <ul>
- *   <li>"paragraph" → {@link ParagraphStyleProperties}</li>
- *   <li>"headline" → {@link HeadlineStyleProperties}</li>
- *   <li>"list" → {@link ListStyleProperties}</li>
- *   <li>"table" → {@link TableStyleProperties}</li>
- *   <li>"table-cell" → {@link TableCellStyleProperties}</li>
- *   <li>"section" → {@link SectionStyleProperties}</li>
- *   <li>"part" → {@link PartStyleProperties}</li>
- *   <li>"text-run" → {@link TextRunStyleProperties}</li>
- *   <li>"footnote" → {@link FootnoteStyleProperties}</li>
- *   <li>"block-image" → {@link BlockImageStyleProperties}</li>
- *   <li>"layout-table" → {@link LayoutTableStyleProperties}</li>
- * </ul>
- *
- * <p><b>JSON Representation:</b></p>
- * <pre>{@code
- * {
- *   "name": "body-paragraph",
- *   "target-element": "paragraph",
- *   "properties": {
- *     "text-style-name": "normal-text",
- *     "text-align": "justify",
- *     "text-indent": "1cm",
- *     "space-before": "6pt",
- *     "space-after": "6pt"
- *   }
- * }
- * }</pre>
- *
- * <p><b>Usage Example 1 - Direct Construction:</b></p>
- * <pre>{@code
- * // Create properties
- * ParagraphStyleProperties props = new ParagraphStyleProperties();
- * props.setTextStyleName("body-text");
- * props.setTextAlign("justify");
- * props.setTextIndent("1cm");
- *
- * // Create element style
- * ElementStyle paragraphStyle = new ElementStyle(
- *     "body-paragraph",
- *     StyleTargetTypes.PARAGRAPH,
- *     props
- * );
- * }</pre>
- *
- * <p><b>Usage Example 2 - Using Factory Methods (Recommended):</b></p>
- * <pre>{@code
- * // Simple factory for basic styles
- * TextStyle normalText = factory.normal("body-text", 12);
- * ElementStyle paragraph = ElementStyle.forParagraph("body-paragraph", normalText);
- * ElementStyle headline = ElementStyle.forHeadline("h1", boldText);
- *
- * // Advanced factory with builder for complex styles
- * ElementStyle advancedParagraph = ElementStyle.paragraphBuilder("body-paragraph")
- *     .withTextStyle(normalText)
- *     .withTextAlign("justify")
- *     .withTextIndent("1cm")
- *     .withSpaceBefore("6pt")
- *     .withSpaceAfter("6pt")
- *     .build();
- * }</pre>
- *
- * <p><b>Usage Example 3 - In a StyleSheet:</b></p>
- * <pre>{@code
- * StyleSheet styleSheet = StyleSheet.builder()
- *     .addTextStyle(normalText)
- *     .addTextStyle(boldText)
- *     .addElementStyle(ElementStyle.forParagraph("body", normalText))
- *     .addElementStyle(ElementStyle.forHeadline("h1", boldText))
- *     .addElementStyle(ElementStyle.forList("bullet-list", normalText))
- *     .build();
- * }</pre>
- *
- * <p><b>Style Inheritance:</b></p>
- * Element styles support inheritance through the {@link ElementStyleProperties#mergeWith(ElementStyleProperties)}
- * mechanism. Child elements can inherit and override properties from parent elements.
- *
- *
- * @param name          the unique identifier for this style (e.g., "body-paragraph");
- *                      must not be {@code null} or empty
- * @param targetElement the type of element this style applies to (e.g., "paragraph");
- *                      must be one of {@link StyleTargetTypes};
- *                      must not be {@code null} or empty
- * @param properties    the style properties specific to the target element type;
- *                      must not be {@code null}
- * @author Katrin Kaiser
- * @version 1.1.0
- *
- * @see ElementStyleProperties
- * @see StyleTargetTypes
- * @see StyleSheet
- * @see TextStyle
+ * @param name name of the style
+ * @param targetElement
+ * @param properties
  */
 @PublicAPI
 public record ElementStyle(
         @JsonProperty("name") String name,
-        @JsonProperty("target-element") String targetElement,
+        @JsonProperty("target-element") ElementTargetType targetElement,
         @JsonProperty("properties")
         @JsonTypeInfo(
                 use = JsonTypeInfo.Id.NAME,
@@ -147,18 +50,18 @@ public record ElementStyle(
                 property = "target-element"
         )
         @JsonSubTypes({
-                @JsonSubTypes.Type(value = ParagraphStyleProperties.class, name = StyleTargetTypes.PARAGRAPH),
-                @JsonSubTypes.Type(value = HeadlineStyleProperties.class, name = StyleTargetTypes.HEADLINE),
-                @JsonSubTypes.Type(value = ListStyleProperties.class, name = StyleTargetTypes.LIST),
-                @JsonSubTypes.Type(value = TableStyleProperties.class, name = StyleTargetTypes.TABLE),
-                @JsonSubTypes.Type(value = TableCellStyleProperties.class, name = StyleTargetTypes.TABLE_CELL),
-                @JsonSubTypes.Type(value = SectionStyleProperties.class, name = StyleTargetTypes.SECTION),
-                @JsonSubTypes.Type(value = PartStyleProperties.class, name = StyleTargetTypes.PART),
-                @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = StyleTargetTypes.TEXT_RUN),
-                @JsonSubTypes.Type(value = FootnoteStyleProperties.class, name = StyleTargetTypes.FOOTNOTE),
-                @JsonSubTypes.Type(value = BlockImageStyleProperties.class, name = StyleTargetTypes.BLOCK_IMAGE),
-                @JsonSubTypes.Type(value = LayoutTableStyleProperties.class, name = StyleTargetTypes.LAYOUT_TABLE),
-                @JsonSubTypes.Type(value = ListItemStyleProperties.class, name = StyleTargetTypes.LIST_ITEM)
+                @JsonSubTypes.Type(value = ParagraphStyleProperties.class, name = JsonPropertyName.PARAGRAPH),
+                @JsonSubTypes.Type(value = HeadlineStyleProperties.class, name = JsonPropertyName.HEADLINE),
+                @JsonSubTypes.Type(value = ListStyleProperties.class, name = JsonPropertyName.LIST),
+                @JsonSubTypes.Type(value = TableStyleProperties.class, name = JsonPropertyName.TABLE),
+                @JsonSubTypes.Type(value = TableCellStyleProperties.class, name = JsonPropertyName.TABLE_CELL),
+                @JsonSubTypes.Type(value = SectionStyleProperties.class, name = JsonPropertyName.SECTION),
+                @JsonSubTypes.Type(value = PartStyleProperties.class, name = JsonPropertyName.PART),
+                @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = JsonPropertyName.TEXT_RUN),
+                @JsonSubTypes.Type(value = FootnoteStyleProperties.class, name = JsonPropertyName.FOOTNOTE),
+                @JsonSubTypes.Type(value = BlockImageStyleProperties.class, name = JsonPropertyName.BLOCK_IMAGE),
+                @JsonSubTypes.Type(value = LayoutTableStyleProperties.class, name = JsonPropertyName.LAYOUT_TABLE),
+                @JsonSubTypes.Type(value = ListItemStyleProperties.class, name = JsonPropertyName.LIST_ITEM)
         })
         ElementStyleProperties properties
 ) {
@@ -187,46 +90,45 @@ public record ElementStyle(
         if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("Element style name cannot be empty");
         }
-        if (targetElement.trim().isEmpty()) {
-            throw new IllegalArgumentException("Target element cannot be empty");
-        }
-
-        // Validate that targetElement is a known type
-        if (isNotValidTargetElement(targetElement)) {
-            throw new IllegalArgumentException(
-                    String.format("Unknown target element type: '%s'. Must be one of: %s",
-                            targetElement, getValidTargetElements())
-            );
-        }
     }
 
     // ==================== Factory Methods ====================
 
     /**
      * Creates an ElementStyle for a paragraph with basic text style configuration.
-     * This is a convenience method for creating simple paragraph styles that only
-     * require a text style reference.
-     *
-     * <p>For more complex paragraph styles with additional properties like text-align,
-     * text-indent, spacing, etc., use {@link #paragraphBuilder(String, TextStyle)} instead.</p>
-     *
-     * @param name      the unique identifier for this element style (e.g., "body-paragraph");
-     *                  must not be {@code null} or empty
+     * @param name the unique identifier for this element style (e.g., "body-paragraph");
      * @param textStyle the TextStyle to apply to the paragraph;
-     *                  must not be {@code null}
      * @return a new ElementStyle for paragraphs
-     * @throws NullPointerException if name or textStyle is {@code null}
+     * @throws NullPointerException if name is {@code null}
+     * @throws IllegalArgumentException if name is empty
      */
     @PublicAPI
     public static ElementStyle forParagraph(String name, TextStyle textStyle) {
         Objects.requireNonNull(name, "name must not be null");
-        Objects.requireNonNull(textStyle, "textStyle must not be null");
         if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("null cannot be an empty string");
         }
         ParagraphStyleProperties props = new ParagraphStyleProperties();
-        props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.PARAGRAPH, props);
+        if(textStyle != null) {
+            props.setTextStyleName(textStyle.name());
+        }
+        return new ElementStyle(name, ElementTargetType.PARAGRAPH, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a paragraph with specified paragraph style properties.
+     * @param name the unique identifier for this element style (e.g., "body-paragraph");
+     * @param paragraphStyleProperties the ParagraphStyleProperties to apply;
+     * @return a new ElementStyle for paragraphs
+     */
+    @PublicAPI
+    public static ElementStyle forParagraph(String name,ParagraphStyleProperties paragraphStyleProperties) {
+        Objects.requireNonNull(name, "name must not be null");
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+        ParagraphStyleProperties finalProps = Objects.requireNonNullElse(paragraphStyleProperties, new ParagraphStyleProperties());
+        return new ElementStyle(name, ElementTargetType.PARAGRAPH, finalProps);
     }
 
     /**
@@ -255,7 +157,28 @@ public record ElementStyle(
 
         HeadlineStyleProperties props = new HeadlineStyleProperties();
         props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.HEADLINE, props);
+        return new ElementStyle(name, ElementTargetType.HEADLINE, props);
+    }
+
+    /**
+     * Creates an ElementStyle for a headline with specified headline style properties.
+     *
+     * @param name                     the unique identifier for this element style (e.g., "h1");
+     *                                 must not be {@code null} or empty
+     * @param headlineStyleProperties  the HeadlineStyleProperties to apply;
+     *                                 if {@code null}, default properties will be used
+     * @return a new ElementStyle for headlines
+     * @throws NullPointerException if name is {@code null}
+     * @throws IllegalArgumentException if name is empty
+     */
+    @PublicAPI
+    public static ElementStyle forHeadline(String name, HeadlineStyleProperties headlineStyleProperties) {
+        Objects.requireNonNull(name, "name must not be null");
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("null cannot be an empty string");
+        }
+        HeadlineStyleProperties finalProps = Objects.requireNonNullElse(headlineStyleProperties, new HeadlineStyleProperties());
+        return new ElementStyle(name, ElementTargetType.HEADLINE, finalProps);
     }
 
     /**
@@ -279,7 +202,7 @@ public record ElementStyle(
 
         ListStyleProperties props = new ListStyleProperties();
         props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.LIST, props);
+        return new ElementStyle(name, ElementTargetType.LIST, props);
     }
 
     /**
@@ -303,7 +226,7 @@ public record ElementStyle(
 
         TableStyleProperties props = new TableStyleProperties();
         props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.TABLE, props);
+        return new ElementStyle(name, ElementTargetType.TABLE, props);
     }
 
     /**
@@ -326,7 +249,7 @@ public record ElementStyle(
 
         TableCellStyleProperties props = new TableCellStyleProperties();
         props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.TABLE_CELL, props);
+        return new ElementStyle(name, ElementTargetType.TABLE_CELL, props);
     }
 
     /**
@@ -341,7 +264,7 @@ public record ElementStyle(
     public static ElementStyle forSection(String name) {
         Objects.requireNonNull(name, "name must not be null");
         SectionStyleProperties props = new SectionStyleProperties();
-        return new ElementStyle(name, StyleTargetTypes.SECTION, props);
+        return new ElementStyle(name, ElementTargetType.SECTION, props);
     }
 
     /**
@@ -353,7 +276,7 @@ public record ElementStyle(
     @PublicAPI
     public static ElementStyle forPart(String name) {
         PartStyleProperties props = new PartStyleProperties();
-        return new ElementStyle(name, StyleTargetTypes.PART, props);
+        return new ElementStyle(name, ElementTargetType.PART, props);
     }
 
     /**
@@ -375,7 +298,7 @@ public record ElementStyle(
         }
         TextRunStyleProperties props = new TextRunStyleProperties();
         props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.TEXT_RUN, props);
+        return new ElementStyle(name, ElementTargetType.TEXT_RUN, props);
     }
 
 
@@ -399,7 +322,7 @@ public record ElementStyle(
         }
         FootnoteStyleProperties props = new FootnoteStyleProperties();
         props.setTextStyleName(textStyle.name());
-        return new ElementStyle(name, StyleTargetTypes.FOOTNOTE, props);
+        return new ElementStyle(name, ElementTargetType.FOOTNOTE, props);
     }
 
     /**
@@ -418,7 +341,7 @@ public record ElementStyle(
             throw new IllegalArgumentException("null cannot be an empty string");
         }
         BlockImageStyleProperties props = new BlockImageStyleProperties();
-        return new ElementStyle(name, StyleTargetTypes.BLOCK_IMAGE, props);
+        return new ElementStyle(name, ElementTargetType.BLOCK_IMAGE, props);
     }
 
     /**
@@ -437,7 +360,7 @@ public record ElementStyle(
             throw new IllegalArgumentException("null cannot be an empty string");
         }
         LayoutTableStyleProperties props = new LayoutTableStyleProperties();
-        return new ElementStyle(name, StyleTargetTypes.LAYOUT_TABLE, props);
+        return new ElementStyle(name, ElementTargetType.LAYOUT_TABLE, props);
     }
 
     // ==================== Builder Factory Methods ====================
@@ -517,11 +440,7 @@ public record ElementStyle(
         }
 
         // Validate target element
-        if (targetElement == null || targetElement.trim().isEmpty()) {
-            errors.add("Target element cannot be null or empty");
-        } else if (isNotValidTargetElement(targetElement)) {
-            errors.add("Unknown target element type: '" + targetElement + "'");
-        }
+        Objects.requireNonNull(targetElement, "targetElement must not be null");
 
         // Validate properties
         if (properties == null) {
@@ -535,50 +454,6 @@ public record ElementStyle(
         }
 
         return errors;
-    }
-
-    // ==================== Helper Methods ====================
-    /**
-     * Checks if the target element type is valid.
-     *
-     * @param targetElement the target element type to check
-     * @return {@code true} if invalid, {@code false} otherwise
-     */
-    private static boolean isNotValidTargetElement(String targetElement) {
-        return !targetElement.equals(StyleTargetTypes.PARAGRAPH) &&
-                !targetElement.equals(StyleTargetTypes.HEADLINE) &&
-                !targetElement.equals(StyleTargetTypes.LIST) &&
-                !targetElement.equals(StyleTargetTypes.LIST_ITEM) &&
-                !targetElement.equals(StyleTargetTypes.TABLE) &&
-                !targetElement.equals(StyleTargetTypes.TABLE_CELL) &&
-                !targetElement.equals(StyleTargetTypes.SECTION) &&
-                !targetElement.equals(StyleTargetTypes.TEXT_RUN) &&
-                !targetElement.equals(StyleTargetTypes.FOOTNOTE) &&
-                !targetElement.equals(StyleTargetTypes.BLOCK_IMAGE) &&
-                !targetElement.equals(StyleTargetTypes.LAYOUT_TABLE) &&
-                !targetElement.equals(StyleTargetTypes.PART);
-    }
-
-    /**
-     * Returns a comma-separated string of all valid target element types.
-     * Used for error messages.
-     *
-     * @return a string listing all valid target elements
-     */
-    private static String getValidTargetElements() {
-        return String.join(", ",
-                StyleTargetTypes.PARAGRAPH,
-                StyleTargetTypes.HEADLINE,
-                StyleTargetTypes.LIST,
-                StyleTargetTypes.TABLE,
-                StyleTargetTypes.TABLE_CELL,
-                StyleTargetTypes.SECTION,
-                StyleTargetTypes.TEXT_RUN,
-                StyleTargetTypes.FOOTNOTE,
-                StyleTargetTypes.BLOCK_IMAGE,
-                StyleTargetTypes.LAYOUT_TABLE,
-                StyleTargetTypes.PART
-        );
     }
 
 

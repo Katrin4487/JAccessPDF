@@ -29,12 +29,12 @@ import java.util.Objects;
  * Fluent builder for creating Headline elements with inline content and level.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.0.1
  */
 @PublicAPI
 public class HeadlineBuilder {
 
-    private List<InlineElement> inlineElements = new ArrayList<InlineElement>();
+    private final List<InlineElement> inlineElements;
     private int level;
     private final String styleClass;
 
@@ -75,7 +75,7 @@ public class HeadlineBuilder {
      * @throws NullPointerException if the text is null.
      */
     @PublicAPI
-    public HeadlineBuilder addText(String text) {
+    public HeadlineBuilder addInlineText(String text) {
         Objects.requireNonNull(text, "Text for TextRun cannot be null.");
         this.inlineElements.add(new TextRun(text, null));
         return this;

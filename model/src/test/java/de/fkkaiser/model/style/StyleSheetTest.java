@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.model.style;
 
+import de.fkkaiser.model.structure.ElementTargetType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -72,7 +73,7 @@ public class StyleSheetTest {
         ElementStyleProperties elementStyleProperties = new ElementBlockStyleProperties();
         StyleSheet styleSheet = StyleSheet.builder()
                 .addTextStyle(new TextStyle("default-text-style", "12pt", "Arial", "700", "normal"))
-                .addElementStyle(new ElementStyle("default-element-style", StyleTargetTypes.PARAGRAPH, elementStyleProperties))
+                .addElementStyle(new ElementStyle("default-element-style", ElementTargetType.PARAGRAPH, elementStyleProperties))
                 .addPageMasterStyle(new PageMasterStyle())
                 .build();
 

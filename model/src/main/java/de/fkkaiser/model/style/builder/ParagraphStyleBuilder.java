@@ -16,6 +16,7 @@
 package de.fkkaiser.model.style.builder;
 
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.*;
 
 /**
@@ -159,6 +160,6 @@ public class ParagraphStyleBuilder {
      */
     @PublicAPI
     public ElementStyle build() {
-        return new ElementStyle(name, StyleTargetTypes.PARAGRAPH, properties);
+        return new ElementStyle(name, ElementTargetType.PARAGRAPH, properties);
     }
 }

@@ -57,14 +57,9 @@ public abstract class AbstractElement implements Element {
      * Returns the type identifier for this element.
      * This is used for JSON serialization and element type identification.
      *
-     * <p>The type corresponds to the {@code type} field in the JSON structure
-     * and must match one of the constants defined in {@link ElementTypes} or
-     * {@link InlineElementTypes}.</p>
-     *
-     * @return the type identifier string (e.g., "paragraph", "headline")
      */
     @Override
-    public abstract String getType();
+    public abstract ElementTargetType getType();
 
     /**
      * Returns the style class name for this element.

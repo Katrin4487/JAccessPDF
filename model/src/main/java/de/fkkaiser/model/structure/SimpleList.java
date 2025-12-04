@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.annotation.VisibleForTesting;
@@ -40,7 +41,7 @@ import java.util.Optional;
  * @author Katrin Kaiser
  * @version 1.1.0
  */
-@JsonTypeName(ElementTypes.LIST)
+@JsonTypeName(JsonPropertyName.LIST)
 public final class SimpleList implements Element {
 
     private final String styleClass;
@@ -79,12 +80,12 @@ public final class SimpleList implements Element {
     /**
      * Returns the type of the element.
      *
-     * @return The element type as a string.
+     * @return The ElementTargetType representing a list.
      */
     @Internal
     @Override
-    public String getType() {
-        return ElementTypes.LIST;
+    public ElementTargetType getType() {
+        return ElementTargetType.LIST;
     }
 
     /**

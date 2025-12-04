@@ -72,8 +72,8 @@ import java.util.List;
  * @param elements the list of block-level elements to be contained in this area;
  *                 if {@code null}, an empty mutable list is created
  *
- * @author FK Kaiser
- * @version 1.0
+ * @author Katrin Kaiser
+ * @version 1.0.0
  * @see PageSequence
  * @see Element
  */

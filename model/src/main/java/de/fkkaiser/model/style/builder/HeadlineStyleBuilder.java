@@ -16,15 +16,15 @@
 package de.fkkaiser.model.style.builder;
 
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.HeadlineStyleProperties;
-import de.fkkaiser.model.style.StyleTargetTypes;
 import de.fkkaiser.model.style.TextStyle;
 
 /**
  * Fluent builder for creating headline element styles with detailed properties.
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.0.1
  *
  */
 @PublicAPI
@@ -80,6 +80,7 @@ public class HeadlineStyleBuilder {
      *     <li>auto: (default): sets strength to 0</li>
      *     <li>always: is equivalent to the highest possible strength (like infinity)</li>
      * </ul>
+     *
      * @param keepWithNext key-value for keept with next
      * @return HeadlineStyleBuilder to use this method in a chain
      */
@@ -114,6 +115,6 @@ public class HeadlineStyleBuilder {
      */
     @PublicAPI
     public ElementStyle build() {
-        return new ElementStyle(name, StyleTargetTypes.HEADLINE, properties);
+        return new ElementStyle(name, ElementTargetType.HEADLINE, properties);
     }
 }

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.BlockImageStyleProperties;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
@@ -29,59 +30,15 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Represents a block-level image element in a PDF document.
- *
- * <p>BlockImage enables embedding images as standalone block elements with configurable
- * styles and accessibility features. Unlike inline images, block images occupy their own
- * space in the document flow and can be styled with margins, alignment, and sizing properties.</p>
- *
- * <p><b>Purpose in PDF Generation:</b></p>
- * Block images are rendered as separate blocks in the document, similar to how HTML treats
- * images within block-level containers. This allows for precise control over image placement,
- * sizing, and spacing within the document structure.
- *
- * <p><b>Image Path Resolution:</b></p>
- * The image path can be specified as either relative or absolute. During rendering, the path
- * is resolved to locate the actual image file that will be embedded in the PDF.
- *
- * <p><b>Accessibility:</b></p>
- * The altText property provides alternative text for accessibility compliance (PDF/UA).
- * This text is used by screen readers and ensures that visually impaired users can
- * understand the content and purpose of the image.
- *
- * <p><b>JSON Representation:</b></p>
- * <pre>{@code
- * {
- *   "type": "block-image",
- *   "style-class": "company-logo",
- *   "path": "images/logo.png",
- *   "alt-text": "Company logo showing a blue mountain"
- * }
- * }</pre>
- *
- * <p><b>Style Resolution:</b></p>
- * Block images support a comprehensive style system that merges element-specific styles
- * with inherited parent styles. The resolution process follows these steps:
- * <ol>
- *   <li>Look up element-specific styles from the style map using the styleClass</li>
- *   <li>Create a copy of the specific styles (if found) or use defaults</li>
- *   <li>Merge with parent block styles to inherit properties like margins or alignment</li>
- *   <li>Store the final resolved styles for rendering</li>
- * </ol>
- *
- * <p><b>Immutability Note:</b></p>
- * While the class itself is final and its fields are final, the resolvedStyle field
- * is mutable by design. This field is populated during the style resolution phase
- * and is not part of the element's initial construction or JSON deserialization.
+ * Represents a block image element in a document with associated
+ * styling and accessibility properties.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
- * @see BlockImageStyleProperties
- * @see Element
- * @see ElementTypes
+ * @version 1.1.0
+ *
  */
 @PublicAPI
-@JsonTypeName(ElementTypes.BLOCK_IMAGE)
+@JsonTypeName(JsonPropertyName.BLOCK_IMAGE)
 public final class BlockImage implements Element {
 
     private final String styleClass;
@@ -159,13 +116,13 @@ public final class BlockImage implements Element {
     }
 
     /**
-     * Returns the element type identifier.
+     * Returns the type identifier for this element.
      *
-     * @return the constant {@link ElementTypes#BLOCK_IMAGE}
+     * @return The ElementTargetType representing a block image.
      */
     @Override
-    public String getType() {
-        return ElementTypes.BLOCK_IMAGE;
+    public ElementTargetType getType() {
+        return ElementTargetType.BLOCK_IMAGE;
     }
 
     /**

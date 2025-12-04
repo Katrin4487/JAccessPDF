@@ -75,13 +75,13 @@ public class TextRun extends AbstractInlineElement {
     }
 
     /**
-     * Returns the type of this Element.
-     * @return "text-run"
+     * Returns the type of this element
+     * @return ElementTargetType.TEXT_RUN
      */
     @Internal
     @Override
-    public String getType() {
-        return InlineElementTypes.TEXT_RUN;
+    public ElementTargetType getType() {
+        return ElementTargetType.TEXT_RUN;
     }
 
     /**

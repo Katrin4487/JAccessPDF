@@ -28,14 +28,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 /**
  * Fluent builder for creating Paragraph elements with inline content.
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 @PublicAPI
 public class ParagraphBuilder {
@@ -53,11 +52,14 @@ public class ParagraphBuilder {
     /**
      * Paragraph builder constructor.
      * @param styleClass the CSS-like class name for styling;
+     *                   must not be empty
+     * @throws IllegalArgumentException if styleClass is empty
      */
     @Internal
     public ParagraphBuilder(String styleClass) {
-        if (styleClass.trim().isEmpty()) {
-            throw new IllegalArgumentException("Style class cannot be null or empty");
+
+        if (styleClass != null && styleClass.trim().isEmpty()) {
+            throw new IllegalArgumentException("Style class cannot be empty");
         }
         this.styleClass = styleClass;
         this.inlineElements = new ArrayList<>();

@@ -53,7 +53,7 @@ class TextBlockTest {
     void setUp() {
         parentStyle = new TextBlockStyleProperties();
         TextBlockStyleProperties specificStyle = new TextBlockStyleProperties();
-        specificElementStyle = new ElementStyle("specific", StyleTargetTypes.PARAGRAPH, specificStyle);
+        specificElementStyle = new ElementStyle("specific", ElementTargetType.PARAGRAPH, specificStyle);
 
         when(mockContext.styleMap()).thenReturn(mockStyleMap);
         when(mockContext.createChildContext(any())).thenReturn(mockContext);

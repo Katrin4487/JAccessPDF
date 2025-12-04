@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
@@ -31,9 +32,9 @@ import java.util.List;
  * or as an entry in a definition list with a label and a body.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.1.0
  */
-@JsonTypeName("list-item")
+@JsonTypeName(JsonPropertyName.LIST_ITEM)
 public final class ListItem implements Element {
 
     private final String styleClass;
@@ -101,13 +102,13 @@ public final class ListItem implements Element {
     public void setResolvedStyle(ElementBlockStyleProperties resolvedStyle) { this.resolvedStyle = resolvedStyle; }
 
     /**
-     * Returns the element type identifier.
-     * @return the constant {@link ElementTypes#LIST_ITEM}
+     * Returns the type of the element.
+     * @return ElementTargetType representing a list item
      */
     @Internal
     @Override
-    public String getType() {
-        return ElementTypes.LIST_ITEM;
+    public ElementTargetType getType() {
+        return ElementTargetType.LIST_ITEM;
     }
 
     /**

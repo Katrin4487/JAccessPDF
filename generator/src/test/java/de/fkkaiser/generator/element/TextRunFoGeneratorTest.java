@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.structure.TextRun;
 import de.fkkaiser.model.style.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,8 +54,8 @@ class TextRunFoGeneratorTest {
 
         TextRunStyleProperties textRunStyleProps = new TextRunStyleProperties();
         textRunStyleProps.setTextStyleName("bold-font");
-        ElementStyle paragraphStyle = new ElementStyle("paragraph-style", StyleTargetTypes.PARAGRAPH,paragraphStyleProps);
-        ElementStyle textRunStyle = new ElementStyle("text-run-style",StyleTargetTypes.TEXT_RUN,textRunStyleProps);
+        ElementStyle paragraphStyle = new ElementStyle("paragraph-style", ElementTargetType.PARAGRAPH,paragraphStyleProps);
+        ElementStyle textRunStyle = new ElementStyle("text-run-style",ElementTargetType.TEXT_RUN,textRunStyleProps);
 
 
         TextRunStyleProperties textRunStyleProps2 = new TextRunStyleProperties();
@@ -62,7 +63,7 @@ class TextRunFoGeneratorTest {
         textRunStyleProps2.setTextDecoration("underline");
         textRunStyleProps2.setBaselineShift("super");
 
-        ElementStyle textRunStyle2 = new ElementStyle("text-run-style-2",StyleTargetTypes.TEXT_RUN,textRunStyleProps2);
+        ElementStyle textRunStyle2 = new ElementStyle("text-run-style-2",ElementTargetType.TEXT_RUN,textRunStyleProps2);
 
         styleSheet = new StyleSheet(List.of(boldStyle, italicStyle), List.of(paragraphStyle,textRunStyle,textRunStyle2), Collections.emptyList());
 

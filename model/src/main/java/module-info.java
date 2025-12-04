@@ -25,9 +25,10 @@ module model {
     requires com.fasterxml.jackson.databind;
     requires org.slf4j;
 
-
     opens de.fkkaiser.model.structure to com.fasterxml.jackson.databind;
     opens de.fkkaiser.model.style to com.fasterxml.jackson.databind;
     opens de.fkkaiser.model.font to com.fasterxml.jackson.databind;
+    exports de.fkkaiser.model;
+    opens de.fkkaiser.model to com.fasterxml.jackson.databind;
 
 }

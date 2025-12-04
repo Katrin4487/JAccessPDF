@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
@@ -36,9 +37,9 @@ import java.util.Optional;
  * such as a book part or volume.
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.2.0
  */
-@JsonTypeName(ElementTypes.PART)
+@JsonTypeName(JsonPropertyName.PART)
 public final class Part implements Element {
 
     private final String styleClass;
@@ -89,8 +90,8 @@ public final class Part implements Element {
     public PartVariant getVariant() {return variant;}
 
     @Override
-    public String getType() {
-        return ElementTypes.PART;
+    public ElementTargetType getType() {
+        return ElementTargetType.PART;
     }
 
     @Override

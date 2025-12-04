@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
@@ -29,7 +30,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@JsonTypeName(ElementTypes.TABLE)
+@JsonTypeName(JsonPropertyName.TABLE)
 public final class Table implements Element {
 
     private final String styleClass;
@@ -66,8 +67,8 @@ public final class Table implements Element {
     public TableStyleProperties getResolvedStyle() { return resolvedStyle; }
 
     @Override
-    public String getType() {
-        return ElementTypes.TABLE;
+    public ElementTargetType getType() {
+        return ElementTargetType.TABLE;
     }
 
     /**

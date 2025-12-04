@@ -21,126 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Represents a hyperlink element that can be embedded within text content.
- *
- * <p>Hyperlink extends {@link TextRun} to provide clickable text elements that navigate
- * to specified URLs or document destinations. In rendered PDFs, hyperlinks appear as
- * interactive elements that can be clicked to open web pages, email clients, or jump
- * to specific locations within the document.</p>
- *
- * <p><b>Purpose in PDF Generation:</b></p>
- * During PDF rendering, hyperlinks are converted to PDF annotations that provide
- * interactive functionality:
- * <ul>
- *   <li><b>External Links:</b> URLs starting with http://, https://, or mailto:</li>
- *   <li><b>Internal Links:</b> References to document destinations or named anchors</li>
- *   <li><b>Visual Styling:</b> Typically rendered with distinct styling (color, underline)</li>
- *   <li><b>Accessibility:</b> Tagged with alternative text for screen readers</li>
- * </ul>
- *
- * <p><b>Inheritance from TextRun:</b></p>
- * By extending {@link TextRun}, Hyperlink inherits all text content and styling
- * capabilities while adding link-specific functionality. This means hyperlinks
- * participate in the standard inline element system, support style resolution,
- * and can be mixed with other inline elements in paragraphs and text blocks.
- *
- * <p><b>Link Target (href):</b></p>
- * The href property specifies the link destination and supports various formats:
- * <ul>
- *   <li><b>HTTP/HTTPS URLs:</b> {@code https://example.com}</li>
- *   <li><b>Email addresses:</b> {@code mailto:info@example.com}</li>
- *   <li><b>Internal references:</b> {@code #section-1} (implementation-dependent)</li>
- * </ul>
- *
- * <p>If href is {@code null} or blank, an empty string is used and a warning is logged.
- * This ensures the hyperlink object is valid even without a destination, though such
- * links will not function as expected in the rendered PDF.</p>
- *
- * <p><b>Accessibility with Alternative Text:</b></p>
- * The altText property provides alternative text for accessibility compliance.
- * This text is used by screen readers when the link is encountered, helping
- * visually impaired users understand the link's purpose. If no alternative text
- * is provided, the visible text content is used as fallback, ensuring every
- * hyperlink has accessible text.
- *
- * <p><b>Text Content Handling:</b></p>
- * If the text content is {@code null} or blank, the href value can be displayed
- * as fallback text (implementation-dependent). This is common for "naked URLs"
- * where the URL itself serves as both the destination and visible text.
- *
- * <p><b>JSON Representation:</b></p>
- * <pre>{@code
- * {
- *   "type": "hyperlink",
- *   "text": "Visit our website",
- *   "href": "https://example.com",
- *   "alt-text": "Link to Example Company homepage",
- *   "style-class": "external-link",
- *   "variant": "primary"
- * }
- * }</pre>
- *
- * <p><b>Usage Example 1 - External Web Link:</b></p>
- * <pre>{@code
- * // Simple three-parameter constructor
- * Hyperlink websiteLink = new Hyperlink(
- *     "Visit Example.com",
- *     "external-link",
- *     "https://example.com"
- * );
- * }</pre>
- *
- * <p><b>Usage Example 2 - Email Link with Accessibility:</b></p>
- * <pre>{@code
- * // Constructor with alternative text for accessibility
- * Hyperlink emailLink = new Hyperlink(
- *     "Contact Us",
- *     "email-link",
- *     "mailto:support@example.com",
- *     "Send email to customer support"
- * );
- * }</pre>
- *
- * <p><b>Usage Example 3 - Full Configuration:</b></p>
- * <pre>{@code
- * // Complete constructor with all parameters including variant
- * Hyperlink advancedLink = new Hyperlink(
- *     "Read Documentation",
- *     "doc-link",
- *     "technical",
- *     "https://docs.example.com/guide",
- *     "Link to technical documentation and setup guide"
- * );
- * }</pre>
- *
- * <p><b>Validation and Logging:</b></p>
- * The constructor performs validation and logging for edge cases:
- * <ul>
- *   <li>Null/blank text → Info log, href may be used as display text</li>
- *   <li>Null/blank href → Warning log, empty string assigned</li>
- *   <li>Null/blank altText → Info log, text content used as fallback</li>
- * </ul>
- *
- * <p><b>Style Resolution:</b></p>
- * Hyperlink inherits style resolution from {@link TextRun}. Link-specific styling
- * (such as color, text decoration, or hover effects in interactive PDFs) can be
- * configured through the styleClass. Common styling includes blue or underlined
- * text to visually distinguish links from regular text.
- *
- * <p><b>Best Practices:</b></p>
- * <ul>
- *   <li>Always provide meaningful text content that describes the link destination</li>
- *   <li>Use descriptive alternative text for accessibility</li>
- *   <li>Validate href values to ensure they are well-formed URLs</li>
- *   <li>Use consistent styling for similar link types (external, internal, email)</li>
- *   <li>Consider mobile/tablet viewing when sizing clickable areas</li>
- * </ul>
- *
- * @author FK Kaiser
- * @version 1.0
- * @see TextRun
- * @see InlineElement
- * @see InlineElementTypes
+ * Represents a hyperlink inline element with text, style, href, and alt text.
+ * @author Katrin Kaiser
+ * @version 1.1.0
  */
 public class Hyperlink extends TextRun {
 
@@ -213,12 +96,11 @@ public class Hyperlink extends TextRun {
     }
 
     /**
-     * Returns the element type identifier.
-     *
-     * @return the constant {@link InlineElementTypes#HYPERLINK}
+     * Returns the type of this element as HYPERLINK.
+     * @return the element type HYPERLINK
      */
     @Override
-    public String getType() {
-        return InlineElementTypes.HYPERLINK;
+    public ElementTargetType getType() {
+        return ElementTargetType.HYPERLINK;
     }
 }

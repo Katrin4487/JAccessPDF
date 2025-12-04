@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.model.style.builder;
 
+import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.BlockImageStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleTargetTypes;
@@ -77,6 +78,6 @@ public class BlockImageStyleBuilder {
     }
 
     public ElementStyle build() {
-        return new ElementStyle(this.name, StyleTargetTypes.BLOCK_IMAGE, this.properties);
+        return new ElementStyle(this.name, ElementTargetType.BLOCK_IMAGE, this.properties);
     }
 }

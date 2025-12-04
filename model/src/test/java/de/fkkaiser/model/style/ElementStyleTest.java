@@ -16,6 +16,7 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fkkaiser.model.structure.ElementTargetType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class ElementStyleTest {
     void shouldSerializeAndDeserializeParagraphStyle() throws Exception {
 
         ParagraphStyleProperties properties = new ParagraphStyleProperties();
-        ElementStyle originalStyle = new ElementStyle("important-paragraph", StyleTargetTypes.PARAGRAPH, properties);
+        ElementStyle originalStyle = new ElementStyle("important-paragraph", ElementTargetType.PARAGRAPH, properties);
 
         String json = objectMapper.writeValueAsString(originalStyle);
 
@@ -55,7 +56,7 @@ class ElementStyleTest {
     void shouldSerializeAndDeserializeHeadlineStyle() throws Exception {
 
         HeadlineStyleProperties properties = new HeadlineStyleProperties();
-        ElementStyle originalStyle = new ElementStyle("main-headline", StyleTargetTypes.HEADLINE, properties);
+        ElementStyle originalStyle = new ElementStyle("main-headline", ElementTargetType.HEADLINE, properties);
 
         String json = objectMapper.writeValueAsString(originalStyle);
 
@@ -73,7 +74,7 @@ class ElementStyleTest {
     void shouldSerializeAndDeserializeTextRunStyle() throws Exception {
 
         TextRunStyleProperties properties = new TextRunStyleProperties();
-        ElementStyle originalStyle = new ElementStyle("bold-text", StyleTargetTypes.TEXT_RUN, properties);
+        ElementStyle originalStyle = new ElementStyle("bold-text", ElementTargetType.TEXT_RUN, properties);
 
         String json = objectMapper.writeValueAsString(originalStyle);
 
@@ -100,7 +101,7 @@ class ElementStyleTest {
                 .withSpaceAfter("6cm")
                 .build();
 
-        assertEquals(StyleTargetTypes.PARAGRAPH, style.targetElement(),"Should create style with target type paragraph");
+        assertEquals(ElementTargetType.PARAGRAPH, style.targetElement(),"Should create style with target type paragraph");
 
         ParagraphStyleProperties properties = (ParagraphStyleProperties) style.properties();
         assertEquals(TextAlign.START, properties.getTextAlign(), "Should create style with set alignment");
@@ -123,7 +124,7 @@ class ElementStyleTest {
                 .withKeepWithNext(true)
                 .build();
 
-        assertEquals(StyleTargetTypes.HEADLINE, style.targetElement(),"Should create style with target type headline");
+        assertEquals(ElementTargetType.HEADLINE, style.targetElement(),"Should create style with target type headline");
         HeadlineStyleProperties properties = (HeadlineStyleProperties) style.properties();
         assertEquals("1cm", properties.getSpaceAfter(), "Should create style with set alignment");
         assertEquals("#F0F0F0", properties.getBackgroundColor(), "Should create style with set background color");
@@ -138,7 +139,7 @@ class ElementStyleTest {
                 .withAlignment("right")
                 .withScaling("uniform")
                 .build();
-        assertEquals(StyleTargetTypes.BLOCK_IMAGE, elementStyle.targetElement(), "should have the correct target type");
+        assertEquals(ElementTargetType.BLOCK_IMAGE, elementStyle.targetElement(), "should have the correct target type");
 
         BlockImageStyleProperties properties = (BlockImageStyleProperties) elementStyle.properties();
         assertEquals("auto", properties.getContentWidth(), "Should create style with set alignment");

@@ -18,6 +18,7 @@ package de.fkkaiser.model.structure;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.structure.builder.HeadlineBuilder;
@@ -34,7 +35,7 @@ import java.util.List;
  * @version 1.0.1
  */
 @PublicAPI
-@JsonTypeName(ElementTypes.HEADLINE)
+@JsonTypeName(JsonPropertyName.HEADLINE)
 public final class Headline extends TextBlock {
 
     private static final Logger log = LoggerFactory.getLogger(Headline.class);
@@ -95,13 +96,12 @@ public final class Headline extends TextBlock {
     }
 
     /**
-     * Returns the element type identifier.
-     *
-     * @return the constant {@link ElementTypes#HEADLINE}
+     * Returns the type of this element, which is {@link ElementTargetType#HEADLINE}.
+     * @return the element type HEADLINE
      */
     @Override
-    public String getType() {
-        return ElementTypes.HEADLINE;
+    public ElementTargetType getType() {
+        return ElementTargetType.HEADLINE;
     }
 
     /**

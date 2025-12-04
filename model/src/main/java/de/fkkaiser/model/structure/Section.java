@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.SectionStyleProperties;
@@ -27,72 +28,14 @@ import de.fkkaiser.model.style.StyleResolverContext;
 import java.util.*;
 
 /**
- * Represents a structural section element that acts as a container
- * for other block-level elements.
+ * Represents a section element in the document structure.
+ * A section is a block-level container that can hold other elements
+ * and may have a semantic variant (e.g., introduction, conclusion).
  *
- * <p>Sections are useful for:</p>
- * <ul>
- *   <li>Grouping related content</li>
- *   <li>Applying consistent styling (background, borders, padding) to multiple elements</li>
- *   <li>Creating semantic sections (warnings, notes, examples)</li>
- *   <li>Improving document accessibility through proper PDF/UA structure</li>
- * </ul>
- *
- * <p><b>Section Variants:</b></p>
- * Sections support three semantic variants via {@link SectionVariant}:
- * <ul>
- *   <li>{@link SectionVariant#SECTION SECTION} - Standard section (role="Sect")</li>
- *   <li>{@link SectionVariant#NOTE NOTE} - Important notices, warnings (role="Note")</li>
- *   <li>{@link SectionVariant#ASIDE ASIDE} - Examples, supplementary content (role="Aside")</li>
- * </ul>
- *
- * <p><b>Style Resolution:</b></p>
- * When a variant is specified, the style key is constructed as {@code styleClass.variant}.
- * For example:
- * <pre>
- * styleClass="notice-box", variant=NOTE → looks up "notice-box.note"
- * </pre>
- *
- * <p><b>Example Usage:</b></p>
- * <pre>{@code
- * // Warning section
- * Section warning = new Section(
- *     "notice-box",
- *     SectionVariant.NOTE,
- *     "This section contains important safety information",
- *     List.of(
- *         new Headline("h3", "⚠️ Warning", 3),
- *         new Paragraph("body-text", "Please read carefully!")
- *     )
- * );
- *
- * // Example section
- * Section example = new Section(
- *     "example-box",
- *     SectionVariant.ASIDE,
- *     "Code example demonstrating the concept",
- *     List.of(
- *         new Headline("h4", "Example", 4),
- *         new Paragraph("code", "int x = 42;")
- *     )
- * );
- *
- * // Standard section (no variant)
- * Section standard = new Section(
- *     "content-section",
- *     null,
- *     null,
- *     List.of(
- *         new Paragraph("body", "Regular content...")
- *     )
- * );
- * }</pre>
- *
- * @see SectionVariant
- * @see SectionStyleProperties
- * @see ElementBlockStyleProperties
+ * @author Katrin Kaiser
+ * @version 1.2.0
  */
-@JsonTypeName(ElementTypes.SECTION)
+@JsonTypeName(JsonPropertyName.SECTION)
 public final class Section implements Element {
 
     private final String styleClass;
@@ -193,8 +136,8 @@ public final class Section implements Element {
     }
 
     @Override
-    public String getType() {
-        return ElementTypes.SECTION;
+    public ElementTargetType getType() {
+        return ElementTargetType.SECTION;
     }
 
     @Override

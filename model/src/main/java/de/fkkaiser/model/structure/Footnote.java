@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.FootnoteStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
@@ -29,89 +30,20 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Represents a footnote element that can be embedded within text content.
+ * Represents a footnote element within a document.
  *
- * <p>Footnotes provide additional information or citations without disrupting the main
- * text flow. Each footnote consists of a reference marker (index) in the text and
- * corresponding footnote content that typically appears at the bottom of the page or
- * at the end of the document.</p>
+ * <p>A footnote consists of a visible index marker and a collection of inline
+ * elements that form the footnote content. The footnote is linked to its
+ * reference in the main text via a unique identifier.</p>
  *
- * <p><b>Purpose in PDF Generation:</b></p>
- * During PDF rendering, footnotes are processed in two parts:
- * <ul>
- *   <li><b>Reference:</b> The index appears as a superscript marker in the main text</li>
- *   <li><b>Content:</b> The footnote text is placed in a designated footnote area</li>
- * </ul>
- * The footnote system ensures that references and their corresponding content are
- * correctly linked, even across page breaks.
+ * <p>Footnotes are typically rendered at the bottom of the page or section
+ * where they are referenced, with their content styled according to the
+ * resolved footnote style properties.</p>
  *
- * <p><b>Unique Identification:</b></p>
- * Each footnote is assigned a unique UUID-based identifier upon creation. This ID
- * is used internally to link footnote references with their content during rendering,
- * regardless of the visible index value. The ID is not serialized to JSON and is
- * regenerated on deserialization.
- *
- * <p><b>Index Handling:</b></p>
- * The index is the visible marker that appears in the document (e.g., "1", "2", "*", "†").
- * If no index is provided or an empty string is given, a default asterisk ({@value #DEFAULT_INDEX})
- * is used. Common index formats include:
- * <ul>
- *   <li>Numeric: "1", "2", "3", ...</li>
- *   <li>Symbolic: "*", "†", "‡", "§"</li>
- *   <li>Alphabetic: "a", "b", "c", ...</li>
- * </ul>
- *
- * <p><b>JSON Representation:</b></p>
- * <pre>{@code
- * {
- *   "type": "footnote",
- *   "index": "1",
- *   "style-class": "citation",
- *   "variant": "academic",
- *   "inline-elements": [
- *     {
- *       "type": "text-segment",
- *       "text": "Smith, John. \"Example Article.\" Journal, 2024."
- *     }
- *   ]
- * }
- * }</pre>
- *
- * <p><b>Style Resolution:</b></p>
- * Footnote style resolution follows a two-phase process:
- * <ol>
- *   <li><b>Footnote Body Resolution:</b> The footnote's own styles are resolved by
- *       merging element-specific styles (from styleClass) with parent block styles.
- *       This determines the appearance of the footnote content area.</li>
- *   <li><b>Child Element Resolution:</b> A new child context is created using the
- *       footnote's resolved styles as the parent. All inline elements within the
- *       footnote then resolve their styles against this context, inheriting
- *       properties like font, color, and size from the footnote.</li>
- * </ol>
- *
- * <p>This cascading approach ensures that inline elements within footnotes can have
- * different styling than the main text while maintaining consistency within the
- * footnote itself.</p>
- *
- * <p><b>Container Semantics:</b></p>
- * Footnotes act as style containers for their child inline elements. The footnote's
- * resolved style becomes the parent style for all contained elements, similar to how
- * a {@link Paragraph} or {@link Section} provides context for its children.
- *
- * <p><b>Inheritance Hierarchy:</b></p>
- * Footnote extends {@link AbstractInlineElement}, inheriting common inline element
- * functionality such as styleClass and variant support. This allows footnotes to
- * participate in the standard inline element system while adding footnote-specific
- * behavior.
- *
- * @author FK Kaiser
- * @version 1.0
- * @see FootnoteStyleProperties
- * @see AbstractInlineElement
- * @see InlineElement
- * @see InlineElementTypes
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
-@JsonTypeName("footnote")
+@JsonTypeName(JsonPropertyName.FOOTNOTE)
 public final class Footnote extends AbstractInlineElement {
 
     private static final Logger log = LoggerFactory.getLogger(Footnote.class);
@@ -146,7 +78,6 @@ public final class Footnote extends AbstractInlineElement {
      * @param index          the visible footnote marker (e.g., "1", "*", "a");
      *                       if {@code null} or empty, defaults to "{@value #DEFAULT_INDEX}"
      * @param styleClass     the CSS-like style class for styling properties; may be {@code null}
-     * @param variant        an optional variant identifier for style variations; may be {@code null}
      * @param inlineElements the list of inline elements forming the footnote content;
      *                       may be {@code null} or empty for footnotes without content
      */
@@ -236,13 +167,13 @@ public final class Footnote extends AbstractInlineElement {
     }
 
     /**
-     * Returns the element type identifier.
+     * Returns the type identifier for this element.
      *
-     * @return the constant {@link InlineElementTypes#FOOTNOTE}
+     * @return the element's target type FOOTNOTE
      */
     @Override
-    public String getType() {
-        return InlineElementTypes.FOOTNOTE;
+    public ElementTargetType getType() {
+        return ElementTargetType.FOOTNOTE;
     }
 
     /**

@@ -15,10 +15,18 @@
  */
 package de.fkkaiser.model.style.builder;
 
+import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.StyleTargetTypes;
 import de.fkkaiser.model.style.TextRunStyleProperties;
 
+/**
+ * Fluent builder for creating text run element styles with detailed properties.
+ * This builder allows setting all text run-specific properties in a readable,
+ * chainable manner.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
+ */
 public class TextRunStyleBuilder {
 
     private final String name;
@@ -83,6 +91,6 @@ public class TextRunStyleBuilder {
     }
 
     public ElementStyle build(){
-        return new ElementStyle(this.name, StyleTargetTypes.TEXT_RUN,this.properties);
+        return new ElementStyle(this.name, ElementTargetType.TEXT_RUN,this.properties);
     }
 }

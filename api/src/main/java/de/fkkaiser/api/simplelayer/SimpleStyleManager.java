@@ -16,6 +16,7 @@
 package de.fkkaiser.api.simplelayer;
 
 import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.*;
 import de.fkkaiser.model.style.builder.ParagraphStyleBuilder;
 
@@ -126,7 +127,7 @@ class SimpleStyleManager {
         defaultProps.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
         elementStyles.add(new ElementStyle(
                 PARAGRAPH_STYLE_NAME,
-                StyleTargetTypes.PARAGRAPH,
+                ElementTargetType.PARAGRAPH,
                 defaultProps
         ));
 
@@ -137,7 +138,7 @@ class SimpleStyleManager {
             headingProps.setSpaceBefore("1.5em");
             elementStyles.add(new ElementStyle(
                     PREFIX_HEADINGS_STYLE_NAME + level,
-                    StyleTargetTypes.HEADLINE,
+                    ElementTargetType.HEADLINE,
                     headingProps
             ));
         }
@@ -148,7 +149,7 @@ class SimpleStyleManager {
         listPropsUnordered.setListStyleType("disc");
         elementStyles.add(new ElementStyle(
                 UNORDERED_LIST_STYLE_NAME,
-                StyleTargetTypes.LIST,
+                ElementTargetType.LIST,
                 listPropsUnordered
         ));
 
@@ -158,7 +159,7 @@ class SimpleStyleManager {
         listPropsOrdered.setListStyleType("decimal");
         elementStyles.add(new ElementStyle(
                 ORDERED_LIST_STYLE_NAME,
-                StyleTargetTypes.LIST,
+                ElementTargetType.LIST,
                 listPropsOrdered
         ));
 
@@ -169,7 +170,7 @@ class SimpleStyleManager {
         imagePropsDefault.setContentWidth("auto");
         elementStyles.add(new ElementStyle(
                 IMAGE_STYLE_NAME,
-                StyleTargetTypes.BLOCK_IMAGE,
+                ElementTargetType.BLOCK_IMAGE,
                 imagePropsDefault
         ));
 
@@ -178,7 +179,7 @@ class SimpleStyleManager {
         tableProp.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
         elementStyles.add(new ElementStyle(
                 TABLE_STYLE_NAME,
-                StyleTargetTypes.TABLE,
+                ElementTargetType.TABLE,
                 tableProp
         ));
 
@@ -187,7 +188,7 @@ class SimpleStyleManager {
         tableHeaderCellStyleProperties.setTextStyleName(BOLD_PARAGRAPH_TEXT);
         elementStyles.add(new ElementStyle(
                 TABLE_HEADER_CELL_STYLE_NAME,
-                StyleTargetTypes.TABLE_CELL,
+                ElementTargetType.TABLE_CELL,
                 tableHeaderCellStyleProperties
         ));
 
@@ -195,7 +196,7 @@ class SimpleStyleManager {
         TableCellStyleProperties tableCellStyleProperties = new TableCellStyleProperties();
         elementStyles.add(new ElementStyle(
                 TABLE_CELL_STYLE_NAME,
-                StyleTargetTypes.TABLE_CELL,
+                ElementTargetType.TABLE_CELL,
                 tableCellStyleProperties
         ));
 

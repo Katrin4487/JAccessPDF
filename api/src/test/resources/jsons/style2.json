@@ -148,7 +148,6 @@
       "target-element": "list",
       "properties": {
         "provisional-distance-between-starts" :  "0.5cm",
-        "list-style-position" : "outside",
         "text-style-name": "bold-text",
         "space-before": "0.2cm"
       }
