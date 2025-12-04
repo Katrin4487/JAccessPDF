@@ -17,6 +17,7 @@ package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.StyleResolverContext;
 import de.fkkaiser.model.style.StyleResolverContext;
 
@@ -25,11 +26,13 @@ import java.util.Objects;
 
 /**
  * Represents a section of a table (header or body), containing multiple rows.
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
 public record TableSection(List<TableRow> rows) {
 
     @JsonCreator
-    public TableSection(@JsonProperty("rows") List<TableRow> rows) {
+    public TableSection(@JsonProperty(JsonPropertyName.ROWS) List<TableRow> rows) {
         this.rows = Objects.requireNonNullElse(rows, List.of());
     }
 

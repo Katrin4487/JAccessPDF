@@ -16,6 +16,7 @@
 package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.StyleResolverContext;
@@ -24,12 +25,12 @@ import de.fkkaiser.model.style.StyleResolverContext;
  * Abstract element class.
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 @Internal
 public abstract class AbstractElement implements Element {
 
-    @JsonProperty("style-class")
+    @JsonProperty(JsonPropertyName.STYLE_CLASS)
     protected String styleClass;
 
     /**
@@ -39,7 +40,7 @@ public abstract class AbstractElement implements Element {
      * before populating its fields via reflection. This constructor should
      * not be used directly in application code.</p>
      */
-    @PublicAPI
+    @Internal
     public AbstractElement() {
     }
 
@@ -76,20 +77,15 @@ public abstract class AbstractElement implements Element {
 
 
     /**
-     * Resolves the styles for this element using the provided style resolver context.
+     * Resolves and applies styles for this element using the provided context.
      *
-     * <p>This method must be implemented by all concrete subclasses to define how
-     * styles are computed and applied. The implementation typically:</p>
-     * <ol>
-     *   <li>Retrieves the specific style from the style map using {@link #getStyleClass()}</li>
-     *   <li>Merges it with the parent style from the context</li>
-     *   <li>Stores the result in a subclass-specific resolved style field</li>
-     *   <li>Recursively resolves styles for child elements</li>
-     * </ol>
+     * <p>Concrete subclasses must implement this method to perform style
+     * resolution based on their specific style properties and the given
+     * {@link StyleResolverContext}.</p>
      *
-     * @param context the style resolver context containing the style map and parent style;
-     *                must not be {@code null}
+     * @param context the style resolver context containing style information
      */
+    @Internal
     @Override
     public abstract void resolveStyles(StyleResolverContext context);
 }

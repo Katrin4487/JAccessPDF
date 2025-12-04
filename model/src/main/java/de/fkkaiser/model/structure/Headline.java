@@ -63,9 +63,9 @@ public final class Headline extends TextBlock {
      */
     @JsonCreator
     public Headline(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("inline-elements") List<InlineElement> inlineElements,
-            @JsonProperty("level") Integer level
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.INLINE_ELEMENTS) List<InlineElement> inlineElements,
+            @JsonProperty(JsonPropertyName.LEVEL) Integer level
     ) {
         super(styleClass, inlineElements);
 

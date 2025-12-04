@@ -51,9 +51,9 @@ public final class Part implements Element {
 
     @JsonCreator
     public Part(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("elements") List<Element> elements,
-            @JsonProperty("variant") PartVariant variant
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.ELEMENTS) List<Element> elements,
+            @JsonProperty(JsonPropertyName.VARIANT) PartVariant variant
     ) {
 
         this.styleClass = styleClass;

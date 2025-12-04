@@ -63,9 +63,9 @@ public final class SimpleList implements Element {
     @PublicAPI
     @JsonCreator
     public SimpleList(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("ordering") ListOrdering ordering,
-            @JsonProperty("items") List<ListItem> items
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.ORDERING) ListOrdering ordering,
+            @JsonProperty(JsonPropertyName.ITEMS) List<ListItem> items
     ) {
 
         Objects.requireNonNull(items, "List items cannot be null");

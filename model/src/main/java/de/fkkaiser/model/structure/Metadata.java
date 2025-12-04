@@ -16,7 +16,10 @@
 package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.annotation.VisibleForTesting;
 import de.fkkaiser.model.structure.builder.MetadataBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,152 +29,17 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents metadata for a PDF document conforming to PDF/A and accessibility standards.
+ * Represents the metadata of a PDF document.
  *
- * <p>Metadata provides descriptive information about the document that is embedded in the
- * generated PDF file. This information is used by PDF readers, search engines, and
- * accessibility tools to provide better user experience and document management.</p>
+ * <p>This class encapsulates various metadata properties that can be associated
+ * with a PDF document, such as title, author, subject, keywords, language,
+ * producer, creation date, and display options.</p>
  *
- * <p><b>PDF/A Compliance:</b></p>
- * For PDF/A compliance, at minimum the {@code title} should be provided. Other fields
- * enhance document discoverability and accessibility but are optional.
+ * <p>Metadata can be specified using multiple constructors for convenience,
+ * or via the {@link MetadataBuilder} for a fluent API.</p>
  *
- * <p><b>Mutability:</b></p>
- * This class is intentionally mutable to support both JSON deserialization and programmatic
- * configuration. All fields can be modified after construction through setter methods or
- * during JSON deserialization via Jackson.
- *
- * <p><b>Required vs. Optional Fields:</b></p>
- * <table>
- *   <caption>Metadata Field Requirements</caption>
- *   <tr>
- *     <th>Field</th>
- *     <th>Required</th>
- *     <th>Default Value</th>
- *     <th>Description</th>
- *   </tr>
- *   <tr>
- *     <td>title</td>
- *     <td>Yes</td>
- *     <td>"PDF Dokument"</td>
- *     <td>Document title (accessibility requirement)</td>
- *   </tr>
- *   <tr>
- *     <td>language</td>
- *     <td>Recommended</td>
- *     <td>"de-DE"</td>
- *     <td>Document language (ISO 639-1 format)</td>
- *   </tr>
- *   <tr>
- *     <td>author</td>
- *     <td>No</td>
- *     <td>null</td>
- *     <td>Document author or creator</td>
- *   </tr>
- *   <tr>
- *     <td>subject</td>
- *     <td>No</td>
- *     <td>null</td>
- *     <td>Document subject or topic</td>
- *   </tr>
- *   <tr>
- *     <td>keywords</td>
- *     <td>No</td>
- *     <td>Empty list</td>
- *     <td>Search keywords</td>
- *   </tr>
- *   <tr>
- *     <td>creationDate</td>
- *     <td>No</td>
- *     <td>Current time</td>
- *     <td>Document creation timestamp</td>
- *   </tr>
- *   <tr>
- *     <td>displayDocTitle</td>
- *     <td>No</td>
- *     <td>true</td>
- *     <td>Show title in PDF viewer window</td>
- *   </tr>
- *   <tr>
- *     <td>producer</td>
- *     <td>Auto-set</td>
- *     <td>"de.kaiser.JAccessPDF v1.0"</td>
- *     <td>PDF generation software (read-only)</td>
- *   </tr>
- * </table>
- *
- * <p><b>Usage Example 1 - Simple Construction:</b></p>
- * <pre>{@code
- * // Minimal metadata with just a title
- * Metadata metadata = new Metadata("My Document");
- *
- * // With title and language
- * Metadata metadata = new Metadata("Mein Dokument", "de-DE");
- * }</pre>
- *
- * <p><b>Usage Example 2 - Full Construction:</b></p>
- * <pre>{@code
- * Metadata metadata = new Metadata(
- *     "Annual Report 2024",                    // title
- *     "Jane Doe",                               // author
- *     "Financial Analysis",                     // subject
- *     List.of("finance", "annual", "report"),  // keywords
- *     "en-US",                                  // language
- *     null,                                     // producer (auto-set)
- *     LocalDateTime.now(),                      // creationDate
- *     true                                      // displayDocTitle
- * );
- * }</pre>
- *
- * <p><b>Usage Example 3 - Builder Pattern (Recommended):</b></p>
- * <pre>{@code
- * Metadata metadata = Metadata.builder("Project Proposal")
- *     .author("John Smith")
- *     .subject("Q1 2025 Initiatives")
- *     .keywords(List.of("proposal", "strategy", "2025"))
- *     .language("en-US")
- *     .creationDate(LocalDateTime.now())
- *     .displayDocTitle(true)
- *     .build();
- * }</pre>
- *
- * <p><b>Usage Example 4 - Programmatic Modification:</b></p>
- * <pre>{@code
- * // Start with basic metadata
- * Metadata metadata = new Metadata("Draft Document");
- *
- * // Update as information becomes available
- * metadata.setAuthor("Jane Doe");
- * metadata.setSubject("Project Planning");
- * metadata.setLanguage("en-US");
- * metadata.setKeywords(List.of("draft", "planning"));
- *
- * // Use in document
- * Document doc = Document.builder(metadata)
- *     .addPageSequence(...)
- *     .build();
- * }</pre>
- *
- * <p><b>Language Codes:</b></p>
- * The language field should use ISO 639-1 language codes with optional ISO 3166-1
- * country codes:
- * <ul>
- *   <li>"en" or "en-US" - English (United States)</li>
- *   <li>"en-GB" - English (United Kingdom)</li>
- *   <li>"de" or "de-DE" - German (Germany)</li>
- *   <li>"fr" or "fr-FR" - French (France)</li>
- *   <li>"es" or "es-ES" - Spanish (Spain)</li>
- * </ul>
- *
- * <p><b>Thread Safety:</b></p>
- * This class is not thread-safe. If shared across threads, external synchronization
- * is required. In typical usage, metadata is configured in a single thread before
- * document generation begins.
- *
- * @author FK Kaiser
- * @version 1.1
- * @see Document
- * @see MetadataBuilder
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
 public class Metadata {
 
@@ -181,53 +49,40 @@ public class Metadata {
     private static final String DEFAULT_LANGUAGE = "de-DE";
     private static final String PRODUCER = "de.kaiser.JAccessPDF v1.0";
 
+    @JsonProperty(JsonPropertyName.TITLE)
     private String title;
+    @JsonProperty(JsonPropertyName.AUTHOR)
     private String author;
+    @JsonProperty(JsonPropertyName.SUBJECT)
     private String subject;
-
-    @JsonProperty("keywords")
+    @JsonProperty(JsonPropertyName.KEYWORDS)
     private List<String> keywords;
-
+    @JsonProperty(JsonPropertyName.LANGUAGE)
     private String language;
+    @JsonProperty(JsonPropertyName.PRODUCER)
     private String producer;
-
-    @JsonProperty("creation-date")
+    @JsonProperty(JsonPropertyName.CREATION_DATE)
     private LocalDateTime creationDate;
-
-    @JsonProperty("display-doc-title")
+    @JsonProperty(JsonPropertyName.DISPLAY_DOC_TITLE)
     private Boolean displayDocTitle;
 
     /**
-     * Creates document metadata with all properties specified.
-     *
-     * <p>This is the primary constructor used for complete metadata specification.
-     * Most parameters can be {@code null}, in which case sensible defaults are applied:</p>
-     * <ul>
-     *   <li><b>title:</b> Defaults to "PDF Dokument" (logged as warning)</li>
-     *   <li><b>language:</b> Defaults to "de-DE" (logged as warning)</li>
-     *   <li><b>producer:</b> Always set to library identifier (parameter ignored if provided)</li>
-     *   <li><b>keywords:</b> Defaults to empty list</li>
-     *   <li><b>creationDate:</b> Defaults to current timestamp</li>
-     *   <li><b>displayDocTitle:</b> Defaults to true</li>
-     *   <li><b>author, subject:</b> Remain null if not provided</li>
-     * </ul>
-     *
-     * @param title           the document title; if {@code null}, uses default "PDF Dokument"
-     * @param author          the document author; may be {@code null}
-     * @param subject         the document subject or topic; may be {@code null}
-     * @param keywords        the search keywords; if {@code null}, uses empty list
-     * @param language        the document language in ISO 639-1 format (e.g., "en-US");
-     *                        if {@code null}, uses default "de-DE"
-     * @param producer        the PDF producer identifier; this parameter is ignored and
-     *                        always set to the library identifier
-     * @param creationDate    the document creation timestamp; if {@code null}, uses current time
-     * @param displayDocTitle whether to display the title in PDF viewer window;
-     *                        if {@code null}, defaults to true
+     * Creates a Metadata instance with the specified properties.
+     * @param title title of the document
+     * @param author author of the document
+     * @param subject subject of the document
+     * @param keywords list of keywords associated with the document
+     * @param language language of the document (e.g., "en-US", "de-DE")
+     * @param producer PDF producer identifier
+     * @param creationDate creation timestamp of the document
+     * @param displayDocTitle whether to display the document title in the PDF viewer
+     * @throws NullPointerException if {@code title} is {@code null}
      */
     @PublicAPI
     public Metadata(String title, String author, String subject, List<String> keywords,
                     String language, String producer, LocalDateTime creationDate, Boolean displayDocTitle) {
 
+        Objects.requireNonNull(title, "Title must not be null");
         // Producer is always set to library identifier
         this.producer = Objects.requireNonNullElse(producer, PRODUCER);
 
@@ -262,7 +117,7 @@ public class Metadata {
      * populate fields from JSON. This constructor should not be used directly in
      * application code.</p>
      */
-    @PublicAPI
+    @Internal
     public Metadata() {
         // Empty constructor for Jackson
     }
@@ -270,14 +125,12 @@ public class Metadata {
     /**
      * Creates metadata with only a title, using defaults for all other properties.
      *
-     * <p>This is a convenience constructor for simple documents where only the title
-     * is known at construction time. Other properties can be set later using setter methods.</p>
+     * <p>This is a convenience constructor for documents where only the title
+     * is required.</p>
      *
      * <p><b>Usage Example:</b></p>
      * <pre>{@code
-     * Metadata metadata = new Metadata("My Document");
-     * metadata.setAuthor("John Doe");
-     * metadata.setLanguage("en-US");
+     * Metadata metadata = new Metadata("My Document Title");
      * }</pre>
      *
      * @param title the document title; must not be {@code null}
@@ -288,19 +141,17 @@ public class Metadata {
     }
 
     /**
-     * Creates metadata with a title and language, using defaults for all other properties.
+     * Creates metadata with a title and language, using defaults for other properties.
      *
-     * <p>This is a convenience constructor for documents where title and language are
-     * the primary metadata requirements.</p>
+     * <p>This constructor allows specifying the document language along with the title.</p>
      *
      * <p><b>Usage Example:</b></p>
      * <pre>{@code
-     * Metadata metadata = new Metadata("Technisches Handbuch", "de-DE");
+     * Metadata metadata = new Metadata("My Document Title", "en-US");
      * }</pre>
      *
-     * @param title    the document title; must not be {@code null}
-     * @param language the document language in ISO 639-1 format (e.g., "en-US", "de-DE");
-     *                 must not be {@code null}
+     * @param title the document title; must not be {@code null}
+     * @param language the document language in ISO 639-1 format; must not be {@code null}
      */
     @PublicAPI
     public Metadata(String title, String language) {
@@ -314,6 +165,7 @@ public class Metadata {
      *
      * @return the title, never {@code null} (defaults to "PDF Dokument" if not set)
      */
+    @Internal
     public String getTitle() {
         return title;
     }
@@ -323,6 +175,7 @@ public class Metadata {
      *
      * @return the author, or {@code null} if not set
      */
+    @Internal
     public String getAuthor() {
         return author;
     }
@@ -332,6 +185,7 @@ public class Metadata {
      *
      * @return the subject, or {@code null} if not set
      */
+    @Internal
     public String getSubject() {
         return subject;
     }
@@ -341,6 +195,7 @@ public class Metadata {
      *
      * @return an immutable list of keywords, never {@code null} (empty list if not set)
      */
+    @Internal
     public List<String> getKeywords() {
         return keywords;
     }
@@ -351,6 +206,7 @@ public class Metadata {
      * @return the language in ISO 639-1 format, never {@code null}
      *         (defaults to "de-DE" if not set)
      */
+    @Internal
     public String getLanguage() {
         return language;
     }
@@ -362,6 +218,7 @@ public class Metadata {
      *
      * @return the producer string, never {@code null}
      */
+    @Internal
     public String getProducer() {
         return producer;
     }
@@ -372,6 +229,7 @@ public class Metadata {
      * @return the creation date and time, never {@code null}
      *         (defaults to construction time if not set)
      */
+    @Internal
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -382,6 +240,7 @@ public class Metadata {
      * @return {@code true} if the title should be displayed, {@code false} otherwise;
      *         never {@code null} (defaults to {@code true} if not set)
      */
+    @Internal
     public Boolean isDisplayDocTitle() {
         return displayDocTitle;
     }
@@ -396,13 +255,12 @@ public class Metadata {
      * metadata.setTitle("Updated Document Title");
      * }</pre>
      *
-     * @param title the new title; if {@code null} or empty, a warning is logged
+     * @param title the new title; if {@code null}
+     * @throws NullPointerException if {@code title} is {@code null}
      */
     @PublicAPI
     public void setTitle(String title) {
-        if (title == null || title.trim().isEmpty()) {
-            log.warn("Setting title to null or empty value");
-        }
+        Objects.requireNonNull(title, "Title must not be null");
         this.title = title;
     }
 
@@ -497,6 +355,7 @@ public class Metadata {
         return Objects.hash(title, author, subject, keywords, language, producer, creationDate, displayDocTitle);
     }
 
+    @VisibleForTesting
     @Override
     public String toString() {
         return "Metadata{" +
@@ -511,28 +370,11 @@ public class Metadata {
                 '}';
     }
 
-    // ==================== Builder Factory ====================
-
     /**
-     * Creates and returns a new {@link MetadataBuilder} for fluent metadata construction.
+     * Creates a new {@link MetadataBuilder} for constructing Metadata instances.
      *
-     * <p>The builder pattern is the recommended way to create Metadata instances with
-     * multiple properties, as it provides a clear, readable API.</p>
-     *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * Metadata metadata = Metadata.builder("Annual Report 2024")
-     *     .author("Finance Department")
-     *     .subject("Financial Analysis")
-     *     .keywords(List.of("finance", "annual", "report"))
-     *     .language("en-US")
-     *     .displayDocTitle(true)
-     *     .build();
-     * }</pre>
-     *
-     * @param title the document title (required); must not be {@code null} or empty
-     * @return a new MetadataBuilder instance
-     * @see MetadataBuilder
+     * @param title The title of the document.
+     * @return A new MetadataBuilder instance.
      */
     @PublicAPI
     public static MetadataBuilder builder(String title) {

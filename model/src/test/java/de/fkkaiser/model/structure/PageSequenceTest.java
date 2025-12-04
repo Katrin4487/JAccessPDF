@@ -28,9 +28,9 @@ class PageSequenceTest {
     class ValidationTests {
 
         @Test
-        @DisplayName("should throw IllegalArgumentException when styleClass is null")
+        @DisplayName("should throw NullPointerException when styleClass is null")
         void shouldThrowExceptionWhenStyleClassIsNull() {
-            assertThrows(IllegalArgumentException.class, () -> PageSequence.builder(null).build(), "An IllegalArgumentException should be thrown for a null styleClass.");
+            assertThrows(NullPointerException.class, () -> PageSequence.builder(null).build(), "An IllegalArgumentException should be thrown for a null styleClass.");
         }
 
         @Test

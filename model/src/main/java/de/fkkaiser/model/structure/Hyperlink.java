@@ -17,13 +17,16 @@ package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Represents a hyperlink inline element with text, style, href, and alt text.
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 public class Hyperlink extends TextRun {
 
@@ -33,12 +36,20 @@ public class Hyperlink extends TextRun {
     private final String altText;
 
 
+    /**
+     * Constructs a Hyperlink with the specified text, style class, href, and alt text.
+     * @param text the visible text of the hyperlink
+     * @param styleClass the CSS-like style class for styling
+     * @param href the URL or destination of the hyperlink
+     * @param altText the alternative text for accessibility purposes
+     */
+    @PublicAPI
     @JsonCreator
     public Hyperlink(
-            @JsonProperty("text") String text,
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("href") String href,
-            @JsonProperty("alt-text") String altText
+            @JsonProperty(JsonPropertyName.TEXT) String text,
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.HREF) String href,
+            @JsonProperty(JsonPropertyName.ALT_TEXT) String altText
     ) {
         super(text, styleClass);
 
@@ -59,10 +70,25 @@ public class Hyperlink extends TextRun {
         }
     }
 
+    /**
+     * Constructs a Hyperlink with the specified href and style class.
+     * The visible text and href are set to the provided href value, and altText is null.
+     * @param href the URL or destination of the hyperlink
+     * @param styleClass the CSS-like style class for styling
+     */
+    @PublicAPI
     public Hyperlink(String href, String styleClass) {
         this(href, styleClass, href, null);
     }
 
+    /**
+     * Constructs a Hyperlink with the specified href, style class, and alt text.
+     * The visible text is set to the provided href value.
+     * @param href the URL or destination of the hyperlink
+     * @param styleClass the CSS-like style class for styling
+     * @param altText the alternative text for accessibility purposes
+     */
+    @PublicAPI
     public Hyperlink(String href, String styleClass,String altText) {
         this(href, styleClass, href, altText);
     }
@@ -70,14 +96,9 @@ public class Hyperlink extends TextRun {
 
     /**
      * Returns the URL or destination of this hyperlink.
-     *
-     * <p>The href value specifies where the link navigates when clicked. Common
-     * formats include HTTP/HTTPS URLs, mailto links, and internal document references.
-     * If the hyperlink was created with a {@code null} or blank href, this method
-     * returns an empty string.</p>
-     *
      * @return the hyperlink destination URL; never {@code null}, may be empty
      */
+    @Internal
     public String getHref() {
         return href;
     }
@@ -91,6 +112,7 @@ public class Hyperlink extends TextRun {
      *
      * @return the alternative text; may be {@code null} if both altText and text were null
      */
+    @Internal
     public String getAltText() {
         return altText;
     }

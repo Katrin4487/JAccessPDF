@@ -16,6 +16,7 @@
 package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.LayoutTableStyleProperties;
@@ -36,9 +37,9 @@ public class LayoutTable implements Element{
 
 
     public LayoutTable(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("element-left") Element elementLeft,
-            @JsonProperty("element-right") Element elementRight) {
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.ELEMENT_LEFT) Element elementLeft,
+            @JsonProperty(JsonPropertyName.ELEMENT_RIGHT) Element elementRight) {
 
         this.styleClass = styleClass;
         this.elementLeft = elementLeft;

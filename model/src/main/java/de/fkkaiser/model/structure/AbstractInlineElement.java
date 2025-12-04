@@ -16,6 +16,7 @@
 package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 
@@ -23,7 +24,7 @@ import de.fkkaiser.model.annotation.PublicAPI;
  * Abstract method for all inline elements.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.0.1
  */
 @Internal
 public abstract class AbstractInlineElement extends AbstractElement implements InlineElement {
@@ -39,7 +40,7 @@ public abstract class AbstractInlineElement extends AbstractElement implements I
      */
     @PublicAPI
     public AbstractInlineElement(
-            @JsonProperty("style-class") String styleClass
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass
     ) {
         super(styleClass);
     }

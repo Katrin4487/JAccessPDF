@@ -17,6 +17,7 @@ package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Abstract class representing a block of text elements.
@@ -39,7 +39,7 @@ public abstract class TextBlock extends AbstractElement {
 
     private static final Logger log = LoggerFactory.getLogger(TextBlock.class);
 
-    @JsonProperty("inline-elements")
+    @JsonProperty(JsonPropertyName.INLINE_ELEMENTS)
     protected final List<InlineElement> inlineElements;
 
     @JsonIgnore

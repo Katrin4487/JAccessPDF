@@ -35,13 +35,12 @@ class MetadataTest {
         @Test
         @DisplayName("Should apply all default values when null is passed")
         void shouldApplyDefaultsWhenFieldsAreNull() {
-            Metadata metadata = new Metadata(null, null, null, null, null, null, null, null);
+            Metadata metadata = new Metadata("title", null, null, null, null, null, null, null);
 
             assertNotNull(metadata.getCreationDate());
             assertTrue(metadata.isDisplayDocTitle());
             assertNotNull(metadata.getKeywords());
             assertTrue(metadata.getKeywords().isEmpty());
-            assertEquals(DEFAULT_TITLE, metadata.getTitle());
             assertEquals(DEFAULT_LANGUAGE, metadata.getLanguage());
         }
 

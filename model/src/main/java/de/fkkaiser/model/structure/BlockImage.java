@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.BlockImageStyleProperties;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
@@ -34,7 +35,7 @@ import java.util.Optional;
  * styling and accessibility properties.
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  *
  */
 @PublicAPI
@@ -61,9 +62,9 @@ public final class BlockImage implements Element {
      */
     @JsonCreator
     public BlockImage(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("path") String path,
-            @JsonProperty("alt-text") String altText
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.PATH) String path,
+            @JsonProperty(JsonPropertyName.ALT_TEXT) String altText
     ) {
         this.styleClass = styleClass;
         this.path = path;
@@ -126,28 +127,13 @@ public final class BlockImage implements Element {
     }
 
     /**
-     * Resolves the style properties of this element by merging specific
-     * styles with parent block styles.
-     * <p>
-     * The resolution process:
-     * <ol>
-     *   <li>Retrieves the parent block's style properties from the context</li>
-     *   <li>Looks up element-specific styles using the styleClass from the style map</li>
-     *   <li>Filters to ensure the style is of type {@link BlockImageStyleProperties}</li>
-     *   <li>Creates a copy of the specific styles (or defaults if not found)</li>
-     *   <li>Merges the parent styles into the copy, with parent values filling in gaps</li>
-     *   <li>Stores the final merged result in {@link #resolvedStyle}</li>
-     * </ol>
+     * Resolves and applies styles for this block image element
+     * based on the provided style resolver context.
      *
-     *
-     * <p>This method modifies the internal state of the object by setting the
-     * resolvedStyle field. It should be called once during document preparation
-     * before rendering begins.</p>
-     *
-     * @param context the context containing the style map and parent styles;
-     *                must not be {@code null}
+     * @param context The style resolver context containing style maps and parent styles.
      * @throws NullPointerException if the context is null
      */
+    @Internal
     @Override
     public void resolveStyles(StyleResolverContext context) {
         Objects.requireNonNull(context, "StyleResolverContext must not be null");

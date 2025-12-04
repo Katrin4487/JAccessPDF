@@ -31,7 +31,7 @@ public class PageNumber extends AbstractInlineElement {
 
     @JsonCreator
     public PageNumber(
-            @JsonProperty("style-class") String styleClass
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass
            ) {
         super(styleClass);
     }

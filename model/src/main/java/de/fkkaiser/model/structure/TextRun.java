@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
@@ -34,9 +35,9 @@ import java.util.Objects;
  * Represents an inline element for displaying text within a document.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.0.1
  */
-@JsonTypeName("text-run")
+@JsonTypeName(JsonPropertyName.TEXT_RUN)
 public class TextRun extends AbstractInlineElement {
 
     private static final Logger log = LoggerFactory.getLogger(TextRun.class);
@@ -49,33 +50,36 @@ public class TextRun extends AbstractInlineElement {
 
     /**
      * Construtor for text-run
-     * @param text text content for this text-run
+     *
+     * @param text       text content for this text-run
      * @param styleClass name of the style-class (can be null)
      * @throws NullPointerException if text is null
      */
     @JsonCreator
     public TextRun(
-            @JsonProperty("text") String text,
-            @JsonProperty("style-class") String styleClass
+            @JsonProperty(JsonPropertyName.TEXT) String text,
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass
     ) {
         super(styleClass);
-        Objects.requireNonNull(text,"text must not be null");
+        Objects.requireNonNull(text, "text must not be null");
         this.text = text;
     }
 
     /**
      * Contstructor for a Text-Run with no specific style class.
      * A Text-Run can inherit styles from its parent
+     *
      * @param text text content of the text-run (should not be {@code null})
      * @throws NullPointerException if text is {@code null}
      */
     @PublicAPI
-    public TextRun(String text){
+    public TextRun(String text) {
         this(text, null);
     }
 
     /**
      * Returns the type of this element
+     *
      * @return ElementTargetType.TEXT_RUN
      */
     @Internal
@@ -86,6 +90,7 @@ public class TextRun extends AbstractInlineElement {
 
     /**
      * Returns the resolved style of this element
+     *
      * @return TextRunStyleProperty of this element
      */
     @Internal
@@ -95,6 +100,7 @@ public class TextRun extends AbstractInlineElement {
 
     /**
      * Retuns the text-content of this text run
+     *
      * @return text content
      */
     @Internal
@@ -117,7 +123,6 @@ public class TextRun extends AbstractInlineElement {
         if (styleClass != null && !styleClass.isEmpty()) {
 
             ElementStyle specificElementStyle = context.styleMap().get(styleClass);
-            log.debug("speciifc {}", specificElementStyle);
             if (specificElementStyle != null && specificElementStyle.properties() instanceof TextRunStyleProperties) {
 
                 specificRunStyle = (TextRunStyleProperties) specificElementStyle.properties();
@@ -125,12 +130,12 @@ public class TextRun extends AbstractInlineElement {
             } else {
                 log.warn("Style class '{}' not found or has incorrect type.", this.styleClass);
                 specificRunStyle = new TextRunStyleProperties();
-               
+
             }
 
         }
 
-        log.debug("Resolving specific run style {} for text {}", specificRunStyle.getTextStyleName(),this.text);
+        log.debug("Resolving specific run style {} for text {}", specificRunStyle.getTextStyleName(), this.text);
 
         this.resolvedStyle = TextRunStyleProperties.createResolved(parentStyle, specificRunStyle);
     }

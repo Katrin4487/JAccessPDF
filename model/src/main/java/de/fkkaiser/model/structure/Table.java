@@ -30,6 +30,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Represents a table element in a document structure.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
+ */
 @JsonTypeName(JsonPropertyName.TABLE)
 public final class Table implements Element {
 
@@ -44,11 +50,11 @@ public final class Table implements Element {
 
     @JsonCreator
     public Table(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("columns") List<String> columns,
-            @JsonProperty("header") TableSection header,
-            @JsonProperty("body") TableSection body,
-            @JsonProperty("footer") TableSection footer
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.COLUMNS) List<String> columns,
+            @JsonProperty(JsonPropertyName.HEADER) TableSection header,
+            @JsonProperty(JsonPropertyName.BODY) TableSection body,
+            @JsonProperty(JsonPropertyName.FOOTER) TableSection footer
     ) {
         this.styleClass = styleClass;
         this.columns = Objects.requireNonNullElse(columns,List.of());
@@ -93,8 +99,6 @@ public final class Table implements Element {
 
         TableStyleProperties finalStyle = specificTableStyle.copy();
         finalStyle.mergeWith(parentStyle);
-
-        // KORREKTUR: Das Feld wird hier direkt gesetzt.
         this.resolvedStyle = finalStyle;
 
         StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());Stream.of(header, body, footer)

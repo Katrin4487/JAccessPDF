@@ -27,7 +27,7 @@ import java.util.List;
  * Represents a paragraph element in a document structure.
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @PublicAPI
 @JsonTypeName(JsonPropertyName.PARAGRAPH)
@@ -40,8 +40,8 @@ public class Paragraph extends TextBlock {
      */
     @PublicAPI
     public Paragraph(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("inline-elements") List<InlineElement> inlineElements
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.INLINE_ELEMENTS) List<InlineElement> inlineElements
            ) {
         super(styleClass, inlineElements);
     }

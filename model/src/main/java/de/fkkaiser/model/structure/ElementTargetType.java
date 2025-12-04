@@ -20,6 +20,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 
+/**
+ * Enumeration of different element target types in the document structure.
+ * Each enum constant corresponds to a specific type of document element,
+ * such as paragraphs, headlines, lists, tables, sections, parts, block images,
+ * layout tables, list items, table cells, text runs, footnotes, hyperlinks, and page numbers.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
+ */
 public enum ElementTargetType {
     PARAGRAPH(JsonPropertyName.PARAGRAPH),
     HEADLINE(JsonPropertyName.HEADLINE),
@@ -42,11 +51,24 @@ public enum ElementTargetType {
         this.value = value;
     }
 
+    /**
+     * Returns the string value associated with the enum constant.
+     * @return the string value of the enum constant
+     */
+    @Internal
     @JsonValue
     public String getValue() {
         return  value;
     }
 
+    /**
+     * Creates an ElementTargetType enum constant from the given string.
+     * The comparison is case-insensitive and checks both the enum name
+     * and the associated string value.
+     *
+     * @param text the string representation of the element target type
+     * @return the corresponding ElementTargetType enum constant, or null if no match is found
+     */
     @Internal
     @JsonCreator
     public static ElementTargetType fromString(String text) {

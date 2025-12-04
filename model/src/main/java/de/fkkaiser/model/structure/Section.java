@@ -56,10 +56,10 @@ public final class Section implements Element {
      */
     @JsonCreator
     public Section(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("variant") SectionVariant variant,
-            @JsonProperty("alt-text") String altText,
-            @JsonProperty("elements") List<Element> elements
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.VARIANT) SectionVariant variant,
+            @JsonProperty(JsonPropertyName.ALT_TEXT) String altText,
+            @JsonProperty(JsonPropertyName.ELEMENTS) List<Element> elements
     ) {
         this.styleClass = styleClass;
         this.variant = variant;

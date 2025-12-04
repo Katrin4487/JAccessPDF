@@ -18,6 +18,7 @@ package de.fkkaiser.model.structure;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
@@ -29,13 +30,16 @@ import java.util.Optional;
 
 /**
  * Represents a table cell, which acts as a container for other block-level elements.
- * It is not a full EElement itself but participates in style resolution.
+ * It is not a full Element itself but participates in style resolution.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
 public class TableCell {
 
     private final String styleClass;
     private final List<Element> elements;
-    // NEW: Support for spanning columns and rows
+
     private final int colspan;
     private final int rowspan;
 
@@ -44,10 +48,10 @@ public class TableCell {
 
     @JsonCreator
     public TableCell(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("elements") List<Element> elements,
-            @JsonProperty("colspan") Integer colspan,
-            @JsonProperty("rowspan") Integer rowspan) {
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.ELEMENTS) List<Element> elements,
+            @JsonProperty(JsonPropertyName.COL_SPAN) Integer colspan,
+            @JsonProperty(JsonPropertyName.ROW_SPAN) Integer rowspan) {
         this.styleClass = styleClass;
         this.elements = Objects.requireNonNullElse(elements, List.of());
         this.colspan = Optional.ofNullable(colspan).orElse(1);
@@ -56,31 +60,45 @@ public class TableCell {
 
 
     // --- Getters ---
-    public String getStyleClass() { return styleClass; }
-    public List<Element> getElements() { return elements; }
-    public int getColspan() { return colspan; }
-    public int getRowspan() { return rowspan; }
-    public TableCellStyleProperties getResolvedStyle() { return resolvedStyle; }
+    public String getStyleClass() {
+        return styleClass;
+    }
+
+    public List<Element> getElements() {
+        return elements;
+    }
+
+    public int getColspan() {
+        return colspan;
+    }
+
+    public int getRowspan() {
+        return rowspan;
+    }
+
+    public TableCellStyleProperties getResolvedStyle() {
+        return resolvedStyle;
+    }
 
 
     /**
      * Resolves styles for the cell and its contained elements.
+     *
      * @param context The current style context.
      */
     public void resolveStyles(StyleResolverContext context) {
 
-         ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
+        ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
 
         TableCellStyleProperties specificStyle = Optional.ofNullable(context.styleMap().get(this.getStyleClass()))
                 .map(ElementStyle::properties)
                 .filter(TableCellStyleProperties.class::isInstance)
                 .map(TableCellStyleProperties.class::cast)
-                .orElse(new TableCellStyleProperties()); // Leeres Objekt, falls kein Stil definiert ist.
-
+                .orElse(new TableCellStyleProperties());
         TableCellStyleProperties finalStyle = specificStyle.copy();
-        finalStyle.mergeWith(parentStyle); // Vererbung vom Parent
+        finalStyle.mergeWith(parentStyle);
 
-        // 4. Internes Feld direkt setzen.
+
         this.resolvedStyle = finalStyle;
         StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
         elements.forEach(element -> element.resolveStyles(childContext));

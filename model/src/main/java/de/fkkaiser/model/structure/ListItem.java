@@ -32,7 +32,7 @@ import java.util.List;
  * or as an entry in a definition list with a label and a body.
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @JsonTypeName(JsonPropertyName.LIST_ITEM)
 public final class ListItem implements Element {
@@ -58,9 +58,9 @@ public final class ListItem implements Element {
      */
     @JsonCreator
     public ListItem(
-            @JsonProperty("style-class") String styleClass,
-            @JsonProperty("label") List<InlineElement> label,
-            @JsonProperty("elements") List<Element> elements
+            @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
+            @JsonProperty(JsonPropertyName.LABEL) List<InlineElement> label,
+            @JsonProperty(JsonPropertyName.ELEMENTS) List<Element> elements
     ) {
         this.styleClass = styleClass;
         this.label = label;

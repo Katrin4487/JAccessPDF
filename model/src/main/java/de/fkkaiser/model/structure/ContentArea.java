@@ -73,10 +73,11 @@ import java.util.List;
  *                 if {@code null}, an empty mutable list is created
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.0.1
  * @see PageSequence
  * @see Element
  */
+@PublicAPI
 public record ContentArea(List<Element> elements) {
 
     /**
@@ -97,39 +98,26 @@ public record ContentArea(List<Element> elements) {
     }
 
     /**
-     * Default constructor that creates an empty content area.
-     * The internal list is initialized as a mutable {@link ArrayList}.
+     * No-argument constructor that creates an empty content area.
      *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * ContentArea area = new ContentArea();
-     * area.addElement(new Paragraph("text", "First paragraph"));
-     * area.addElement(new Paragraph("text", "Second paragraph"));
-     * }</pre>
+     * <p>This constructor initializes the content area with an empty mutable
+     * list of elements, allowing for incremental addition of elements via
+     * {@link #addElement(Element)}.</p>
      */
     @PublicAPI
     public ContentArea() {
         this(null);
     }
 
-    /**
-     * Adds a new element to this content area.
+   /**
+     * Adds a block-level element to this content area.
      *
-     * <p>This method allows incremental construction of the content area by
-     * adding elements one at a time. The element is appended to the end of
-     * the internal list.</p>
+     * <p>This method appends the specified element to the internal list
+     * of elements. The internal list must be mutable; otherwise, an
+     * {@link UnsupportedOperationException} will be thrown.</p>
      *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * ContentArea body = new ContentArea();
-     * body.addElement(new Headline("h1", "Introduction", 1));
-     * body.addElement(new Paragraph("body", "This is the introduction."));
-     * body.addElement(new Paragraph("body", "More content here."));
-     * }</pre>
-     *
-     * @param element the element to be added; must not be {@code null}
-     * @throws NullPointerException if element is {@code null}
-     * @throws UnsupportedOperationException if the internal list is immutable
+     * @param element the block-level element to add; must not be {@code null}
+     * @throws UnsupportedOperationException if the internal elements list is immutable
      */
     @PublicAPI
     public void addElement(Element element) {
