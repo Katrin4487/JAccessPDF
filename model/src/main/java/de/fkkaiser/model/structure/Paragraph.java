@@ -19,26 +19,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.structure.builder.ParagraphBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 
 /**
  * Represents a paragraph element in a document structure.
  *
  * @author Katrin Kaiser
- * @version 1.0.2
+ * @version 1.0.3
  */
 @PublicAPI
 @JsonTypeName(ElementTypes.PARAGRAPH)
 public class Paragraph extends TextBlock {
 
-    private static final Logger log = LoggerFactory.getLogger(Paragraph.class);
-
-    /**
+   /**
      * Constructs a Paragraph with the specified style class and inline elements.
      * @param styleClass name of the style class for the paragraph
      * @param inlineElements list of inline elements contained in the paragraph
