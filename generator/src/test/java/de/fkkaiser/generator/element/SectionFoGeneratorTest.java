@@ -17,7 +17,6 @@ package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
-import de.fkkaiser.generator.element.SectionFoGenerator;
 import de.fkkaiser.model.structure.Paragraph;
 import de.fkkaiser.model.structure.Section;
 import de.fkkaiser.model.structure.SectionVariant;
@@ -148,7 +147,7 @@ class SectionFoGeneratorTest {
     @Test
     @DisplayName("should not generate alt-text when empty string")
     void shouldNotGenerateAltTextWhenEmpty() {
-        Section section = new Section("test", null, "", List.of());
+        Section section = new Section("test", null, null, List.of());
         SectionStyleProperties style = new SectionStyleProperties();
         section.setResolvedStyle(style);
 
@@ -342,6 +341,7 @@ class SectionFoGeneratorTest {
 
     @Test
     @DisplayName("should delegate child elements generation to main generator")
+    @SuppressWarnings("unchecked")
     void shouldDelegateChildElementsGeneration() {
         Paragraph child = new Paragraph("body", "Test");
         Section section = new Section("test", null, null, List.of(child));

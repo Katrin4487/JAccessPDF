@@ -17,6 +17,8 @@ package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
+import de.fkkaiser.generator.TagBuilder;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.BlockImage;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
@@ -27,13 +29,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.List;
 
+/**
+ * Generator for Images
+ *
+ * @author Katrin Kaiser
+ * @version 1.1.0
+ */
+@Internal
 public class ImageFoGenerator extends ElementFoGenerator {
-    private static final Logger log = LoggerFactory.getLogger(PartFoGenerator.class);
-
+    private static final Logger log = LoggerFactory.getLogger(ImageFoGenerator.class);
 
     @Override
     public void generate(Element element,
@@ -45,64 +54,62 @@ public class ImageFoGenerator extends ElementFoGenerator {
         BlockImage blockImage = (BlockImage) element;
         BlockImageStyleProperties style = blockImage.getResolvedStyle();
 
-        builder.append("      <fo:block");
-        if(isExternalArtefact) {
-            builder.append(" fox:content-type=\"external-artifact\"");
+        TagBuilder blockBuilder = GenerateUtils.tagBuilder("block");
+
+        if (isExternalArtefact) {
+            blockBuilder.addAttribute("fox:content-type", "external-artifact");
         }
-        appendBlockAttributes(builder, style, styleSheet);
-        builder.append(">");
-        builder.append("<fo:external-graphic ");
-        appendImageAttributes(builder, style);
 
+        appendBlockAttributes(blockBuilder, style, styleSheet);
 
-        try{
+        // Create the external-graphic element
+        TagBuilder graphicBuilder = GenerateUtils.tagBuilder("external-graphic");
+        appendImageAttributes(graphicBuilder, style);
+
+        try {
             URL absoluteUrl = imageResolver.resolve(blockImage.getPath());
 
+            if (absoluteUrl != null) {
+                try (InputStream inputStream = absoluteUrl.openStream()) {
+                    byte[] imageBytes = inputStream.readAllBytes();
+                    String mimeType = absoluteUrl.toString().endsWith("png") ? "image/png" : "image/jpeg";
+                    String base64String = Base64.getEncoder().encodeToString(imageBytes);
+                    String srcDataUri = "data:" + mimeType + ";base64," + base64String;
 
-            if(absoluteUrl!=null) {
-                InputStream inputStream = absoluteUrl.openStream();
-                byte[] imageBytes = inputStream.readAllBytes();
-                String mimeType = absoluteUrl.toString().endsWith("png") ? "image/png" : "image/jpeg";
-                String base64String = Base64.getEncoder().encodeToString(imageBytes);
-                String srcDataUri = "data:" + mimeType + ";base64," + base64String;
+                    graphicBuilder.addAttribute("src", srcDataUri);
 
-                builder.append(" src=\"").append(srcDataUri).append("\"");
-                if(blockImage.getAltText()!=null && !blockImage.getAltText().isEmpty()){
-                    builder.append(" fox:alt-text=\"").append(blockImage.getAltText()).append("\"");
-                }else{
-                    builder.append(" fox:alt-text=\"\"");
+                    // Alt text (empty if not provided)
+                    String altText = (blockImage.getAltText() != null && !blockImage.getAltText().isEmpty())
+                            ? blockImage.getAltText()
+                            : "";
+                    graphicBuilder.addAttribute("fox:alt-text", altText);
                 }
-
             }
-        } catch (IOException e){
-            log.error("Unable to resolve image url for block image");
+        } catch (IOException e) {
+            log.error("Unable to resolve image url for block image at path: {}", blockImage.getPath(), e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
 
-        builder.append("/>");
-        builder.append("      </fo:block>");
+        blockBuilder.addChild(graphicBuilder);
+        blockBuilder.buildInto(builder);
     }
 
-    private void appendBlockAttributes(StringBuilder builder, BlockImageStyleProperties style, StyleSheet styleSheet) {
+    private void appendBlockAttributes(TagBuilder builder, BlockImageStyleProperties style, StyleSheet styleSheet) {
         if (style == null) return;
-        if(style.getAlignment()!=null){
-            builder.append(" text-align=\"").append(GenerateUtils.escapeXml(style.getAlignment())).append("\"");
-        }
-        if(style.getBlockWidth()!=null){
-            builder.append(" width=\"").append(style.getBlockWidth()).append("\"");
-        }
+
+        builder
+                .addAttribute("text-align", style.getAlignment())
+                .addAttribute("width", style.getBlockWidth());
 
         setFontStyle(styleSheet, style, builder);
-
     }
 
-    private void appendImageAttributes(StringBuilder builder, BlockImageStyleProperties style) {
+    private void appendImageAttributes(TagBuilder builder, BlockImageStyleProperties style) {
         if (style == null) return;
 
-        if (style.getContentWidth() != null) {
-            builder.append(" content-width=\"").append(GenerateUtils.escapeXml(style.getContentWidth())).append("\"");
-        }
-        if(style.getScaling() != null){
-            builder.append(" scaling=\"").append(GenerateUtils.escapeXml(style.getScaling())).append("\"");
-        }
+        builder
+                .addAttribute("content-width", style.getContentWidth())
+                .addAttribute("scaling", style.getScaling());
     }
 }

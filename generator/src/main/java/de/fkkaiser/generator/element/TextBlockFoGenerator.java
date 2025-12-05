@@ -17,6 +17,7 @@ package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
@@ -52,45 +53,40 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
         TextBlock textBlock = (TextBlock) element;
         TextBlockStyleProperties style = textBlock.getResolvedStyle();
 
-        // Generate unique ID for headlines
-        String headlineId = "";
-        if (element instanceof Headline headline) {
+        TagBuilder blockBuilder = GenerateUtils.tagBuilder("block")
+                .addAttribute("role", getRole(textBlock));
 
-            String theId =  "headline-" + UUID.randomUUID();
-            headlineId = " id=\"" + theId + "\"";
+        // Generate unique ID for headlines
+        if (element instanceof Headline headline) {
+            String theId = "headline-" + UUID.randomUUID();
+            blockBuilder.addAttribute("id", theId);
             headline.setId(theId);
             headlines.add(headline);
-
         }
-
-        builder.append("      <fo:block")
-                .append(headlineId)
-                .append(" role=\"").append(getRole(textBlock)).append("\"");
-
 
         // Append common block attributes (from BlockElementFoGenerator)
-        appendBlockAttributes(builder, style, styleSheet);
+        appendBlockAttributes(blockBuilder, style, styleSheet);
 
         // Append text-specific attributes
-        appendTextBlockAttributes(builder, style);
+        appendTextBlockAttributes(blockBuilder, style);
 
         // Append element-specific attributes (e.g., headline level-specific styles)
-        appendSpecificAttributes(builder, style);
+        appendSpecificAttributes(blockBuilder, style);
 
         if (isExternalArtefact) {
-            builder.append(" fox:content-type=\"external-artifact\"");
+            blockBuilder.addAttribute("fox:content-type", "external-artifact");
         }
-
-        builder.append(">");
 
         // Generate inline content
         if (textBlock.getInlineElements() != null) {
+            StringBuilder inlineContent = new StringBuilder();
             for (InlineElement inlineElement : textBlock.getInlineElements()) {
-                mainGenerator.generateInlineElement(inlineElement, styleSheet, builder);
+                mainGenerator.generateInlineElement(inlineElement, styleSheet, inlineContent);
             }
+            blockBuilder.addNestedContent(inlineContent.toString());
         }
 
-        builder.append("      </fo:block>");
+        blockBuilder.buildInto(builder);
     }
 
     /**
@@ -100,44 +96,34 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
      * @param builder The StringBuilder to append to
      * @param style   The text block style properties
      */
-    protected void appendTextBlockAttributes(StringBuilder builder, TextBlockStyleProperties style) {
+    protected void appendTextBlockAttributes(TagBuilder builder, TextBlockStyleProperties style) {
         if (style == null) return;
 
         // Text color
         if (style.getTextColor() != null) {
-            builder.append(" color=\"")
-                    .append(GenerateUtils.escapeXml(style.getTextColor()))
-                    .append("\"");
+            builder.addAttribute("color",style.getTextColor());
         }
 
         // Line height
         if (style.getLineHeight() != null) {
-            builder.append(" line-height=\"")
-                    .append(GenerateUtils.escapeXml(style.getLineHeight()))
-                    .append("\"");
+            builder.addAttribute("line-height",style.getLineHeight());
         }
 
         // Text alignment
         if (style.getTextAlign() != null) {
-            builder.append(" text-align=\"")
-                    .append(GenerateUtils.escapeXml(style.getTextAlign().getValue()))
-                    .append("\"");
+            builder.addAttribute("text-align",style.getTextAlign().toString());
         }
 
         // Span (for multi-column layouts)
         if (style.getSpan() != null) {
-            builder.append(" span=\"")
-                    .append(GenerateUtils.escapeXml(style.getSpan().getValue()))
-                    .append("\"");
-            builder.append(" space-before.conditionality=\"retain\"");
-            builder.append(" space-after.conditionality=\"retain\"");
+            builder.addAttribute("span",style.getSpan().toString());
+            builder.addAttribute("space-before.conditionality","retain");
+            builder.addAttribute("space-after.conditionality","retain");
         }
 
         // Linefeed treatment
         if (style.getLinefeedTreatment() != null) {
-            builder.append(" linefeed-treatment=\"")
-                    .append(GenerateUtils.escapeXml(style.getLinefeedTreatment().getValue()))
-                    .append("\"");
+            builder.addAttribute("linefeed-treatment",style.getLinefeedTreatment().toString());
         }
     }
 
@@ -158,5 +144,5 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
      * @param builder The StringBuilder to append to
      * @param style   The text block style properties
      */
-    protected abstract void appendSpecificAttributes(StringBuilder builder, TextBlockStyleProperties style);
+    protected abstract void appendSpecificAttributes(TagBuilder builder, TextBlockStyleProperties style);
 }

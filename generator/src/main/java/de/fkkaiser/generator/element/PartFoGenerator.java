@@ -17,6 +17,7 @@ package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.Element;
@@ -28,9 +29,8 @@ import de.fkkaiser.model.style.StyleSheet;
 
 import java.util.List;
 
-
 /**
- * Generates the XSL-FO structure for a Section element.
+ * Generates the XSL-FO structure for a Part element.
  *
  * @author Katrin Kaiser
  * @version 1.1.0
@@ -67,33 +67,37 @@ public class PartFoGenerator extends BlockElementFoGenerator {
         Part part = (Part) element;
         PartStyleProperties style = part.getResolvedStyle();
 
-        builder.append("      <fo:block role=\"")
-                .append(part.getVariant().getPdfRole())
-                .append("\"");
+        TagBuilder blockBuilder = GenerateUtils.tagBuilder("block")
+                .addAttribute("role", part.getVariant().getPdfRole());
 
         // Common block attributes from parent class
-        appendBlockAttributes(builder, style, styleSheet);
+        appendBlockAttributes(blockBuilder, style, styleSheet);
 
-        builder.append(">");
+        // Part-specific attributes
+        appendPartSpecificAttributes(blockBuilder, style);
 
-        mainGenerator.generateBlockElements(part.getElements(), styleSheet, builder, headlines, resolver, false);
+        // Generate nested elements
+        StringBuilder content = new StringBuilder();
+        mainGenerator.generateBlockElements(part.getElements(), styleSheet, content, headlines, resolver, false);
+        blockBuilder.addNestedContent(content.toString());
 
-        builder.append("      </fo:block>");
+        blockBuilder.buildInto(builder);
     }
 
-    private void appendPartSpecificAttributes(StringBuilder builder,PartStyleProperties style){
+    /**
+     * Appends part-specific attributes to the block.
+     * @param builder The TagBuilder to add attributes to.
+     * @param style The part style properties.
+     */
+    private void appendPartSpecificAttributes(TagBuilder builder, PartStyleProperties style) {
         // This method handles properties that only exist in PartStyleProperties.
         if (style != null) {
             if (style.getBreakBefore() != null && style.getBreakBefore() != PageBreakVariant.AUTO) {
-                builder.append(" break-before=\"")
-                        .append(GenerateUtils.escapeXml(style.getBreakBefore().getFoValue()))
-                        .append("\"");
+                builder.addAttribute("break-before", style.getBreakBefore().getFoValue());
             }
 
             if (style.getBreakAfter() != null && style.getBreakAfter() != PageBreakVariant.AUTO) {
-                builder.append(" break-after=\"")
-                        .append(GenerateUtils.escapeXml(style.getBreakAfter().getFoValue()))
-                        .append("\"");
+                builder.addAttribute("break-after", style.getBreakAfter().getFoValue());
             }
         }
     }

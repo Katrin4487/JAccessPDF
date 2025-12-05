@@ -18,9 +18,6 @@ package de.fkkaiser.generator;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.style.TextStyle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Different Util methods to generate FOP XML.
  *
@@ -65,98 +62,23 @@ public class GenerateUtils {
      * @param ts      the `TextStyle` object containing font information; attributes are appended only if not null
      */
     @Internal
-    public static void appendTextStyleTags(StringBuilder builder, TextStyle ts) {
+    public static void appendTextStyleTags(TagBuilder builder, TextStyle ts) {
         if (ts.fontFamilyName() != null) {
-            builder.append(" font-family=\"").append(GenerateUtils.escapeXml(ts.fontFamilyName())).append("\"");
+            builder.addAttribute(GenerateConst.FONT_FAMILY, ts.fontFamilyName());
         }
         if (ts.fontSize() != null) {
-            builder.append(" font-size=\"").append(GenerateUtils.escapeXml(ts.fontSize())).append("\"");
-        }
+            builder.addAttribute(GenerateConst.FONT_SIZE, ts.fontSize());
+             }
         if (ts.fontWeight() != null) {
-            builder.append(" font-weight=\"").append(GenerateUtils.escapeXml(ts.fontWeight())).append("\"");
-        }
+            builder.addAttribute(GenerateConst.FONT_WEIGHT, ts.fontWeight());
+             }
         if (ts.fontStyle() != null) {
-            builder.append(" font-style=\"").append(GenerateUtils.escapeXml(ts.fontStyle().toLowerCase())).append("\"");
-        }
+            builder.addAttribute(GenerateConst.FONT_STYLE, ts.fontStyle());
+             }
     }
 
-    static TagBuilder tagBuilder(String tagName) {
+    public static TagBuilder tagBuilder(String tagName) {
         return new TagBuilder(tagName);
     }
 
-    @Internal
-    static class TagBuilder {
-        private final StringBuilder builder;
-        private String attributes = "";
-        private final String tagName;
-        private final List<Object> contentParts = new ArrayList<>();
-        private String tagPrefix = "fo:";
-
-        public TagBuilder(String tagName) {
-            this.builder = new StringBuilder();
-            this.tagName = tagName;
-        }
-
-        public TagBuilder addAttribute(String name, String value) {
-            if (value != null) {
-                attributes += GenerateConst.SPACE
-                        + name + GenerateConst.EQUALS
-                        + GenerateConst.GQQ
-                        + GenerateUtils.escapeXml(value)
-                        + GenerateConst.GQQ;
-            }
-            return this;
-        }
-
-        public TagBuilder addContent(String content) {
-            contentParts.add(GenerateUtils.escapeXml(content));
-            return this;
-        }
-
-        public TagBuilder addNestedContent(String content) {
-            contentParts.add(content);
-            return this;
-        }
-
-        public TagBuilder addChild(TagBuilder childBuilder) {
-            contentParts.add(childBuilder);
-            return this;
-        }
-
-        public TagBuilder withPrefix(String tagPrefix) {
-            this.tagPrefix = tagPrefix;
-            return this;
-        }
-
-
-        public String build() {
-            builder.append(GenerateConst.OPENER_OPEN_TAG)
-                    .append(tagPrefix)
-                    .append(tagName);
-            if (!attributes.isBlank()) {
-                builder.append(attributes);
-            }
-            builder.append(GenerateConst.CLOSER);
-
-
-            for (Object part : contentParts) {
-                if (part instanceof TagBuilder) {
-                    builder.append(((TagBuilder) part).build());
-                } else {
-                    builder.append(part.toString());
-                }
-            }
-
-            builder.append(GenerateConst.OPENER_CLOSE_TAG)
-                    .append(tagPrefix)
-                    .append(tagName)
-                    .append(GenerateConst.CLOSER);
-
-            return builder.toString();
-        }
-
-        public void buildInto(StringBuilder target) {
-            target.append(build());
-        }
-    }
 }

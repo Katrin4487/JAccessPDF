@@ -15,7 +15,9 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
@@ -88,12 +90,14 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
         } else {
             // If the list item has no nested elements, create an empty block
             // This ensures valid XSL-FO structure
-            builder.append("              <fo:block");
-            appendBlockAttributes(builder, style, styleSheet);
-            if(style instanceof TextBlockStyleProperties textStyle){
-                appendSpecificAttributes(builder, textStyle);
+            TagBuilder emptyBlock = GenerateUtils.tagBuilder("block");
+            appendBlockAttributes(emptyBlock, style, styleSheet);
+
+            if (style instanceof TextBlockStyleProperties textStyle) {
+                appendSpecificAttributes(emptyBlock, textStyle);
             }
-            builder.append("/>\n");
+
+            emptyBlock.buildInto(builder);
         }
     }
 
@@ -105,16 +109,11 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
     }
 
     @Override
-    protected void appendSpecificAttributes(StringBuilder builder, TextBlockStyleProperties style) {
-
-        if(style instanceof ListItemStyleProperties liStyle){
-
-            if(liStyle.getSpaceBefore()!=null){
-                builder.append(" space-before=\"").append(liStyle.getSpaceBefore()).append("\"");
-            }
-            if(liStyle.getSpaceAfter()!=null){
-                builder.append(" space-after=\"").append(liStyle.getSpaceAfter()).append("\"");
-            }
+    protected void appendSpecificAttributes(TagBuilder builder, TextBlockStyleProperties style) {
+        if (style instanceof ListItemStyleProperties liStyle) {
+            builder
+                    .addAttribute("space-before", liStyle.getSpaceBefore())
+                    .addAttribute("space-after", liStyle.getSpaceAfter());
         }
     }
 }

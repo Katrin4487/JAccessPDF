@@ -16,6 +16,7 @@
 package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.GenerateUtils;
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.Footnote;
 import de.fkkaiser.model.structure.InlineElement;
@@ -30,13 +31,12 @@ import de.fkkaiser.model.style.TextBlockStyleProperties;
  * Generates XSL-FO for Footnote elements.
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.1.0
  */
 public class FootnoteFoGenerator extends InlineElementFoGenerator {
 
     private final XslFoGenerator mainGenerator;
     private final StyleApplier styleHelper;
-
 
     /**
      * Constructor for FootnoteFoGenerator.
@@ -49,18 +49,17 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
         this.styleHelper = new StyleApplier(mainGenerator);
     }
 
-
     private static class StyleApplier extends TextBlockFoGenerator {
         public StyleApplier(XslFoGenerator mainGenerator) {
             super(mainGenerator);
         }
 
-        public void applyStyles(StringBuilder builder, ElementBlockStyleProperties style, StyleSheet styleSheet) {
+        public void applyStyles(TagBuilder builder, ElementBlockStyleProperties style, StyleSheet styleSheet) {
             super.appendBlockAttributes(builder, style, styleSheet);
         }
 
         @Override protected String getRole(TextBlock textBlock) { return null; }
-        @Override protected void appendSpecificAttributes(StringBuilder builder, TextBlockStyleProperties style) { }
+        @Override protected void appendSpecificAttributes(TagBuilder builder, TextBlockStyleProperties style) { }
     }
 
     /**
@@ -72,35 +71,43 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
     @Override
     public void generate(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
         Footnote footnote = (Footnote) element;
-
         FootnoteStyleProperties styleProperties = footnote.getResolvedStyle();
+
         // <Note> tagging. We will create the accessible structure manually.
-        builder.append("<fo:footnote role=\"Span\">");
+        TagBuilder footnoteBuilder = GenerateUtils.tagBuilder("footnote")
+                .addAttribute("role", "Span");
 
-        builder.append("<fo:footnote-body>");
+        // Inline marker for the footnote reference in the text
+        TagBuilder inlineMarker = GenerateUtils.tagBuilder("inline")
+                .addAttribute("font-size", "8pt")
+                .addAttribute("vertical-align", "super")  // Tippfehler korrigiert: verttical -> vertical
+                .addContent(footnote.getIndex());
 
-        builder.append("<fo:block id=\"").append(GenerateUtils.escapeXml(footnote.getId())).append("\"");
+        footnoteBuilder.addChild(inlineMarker);
 
-        if(styleProperties!=null){
-           styleHelper.applyStyles(builder, styleProperties, styleSheet);
+        // Footnote body
+        TagBuilder footnoteBodyBuilder = GenerateUtils.tagBuilder("footnote-body");
 
+        TagBuilder footnoteBlock = GenerateUtils.tagBuilder("block")
+                .addAttribute("id", footnote.getId());
+
+        if (styleProperties != null) {
+            styleHelper.applyStyles(footnoteBlock, styleProperties, styleSheet);
         }
-        builder.append(">");
 
-
-
+        // Generate inline content for the footnote text
         if (footnote.getInlineElements() != null) {
-            builder.append("<fo:inline font-size=\"8pt\" vertical-align=\"super\">")
-                    .append(GenerateUtils.escapeXml(footnote.getIndex()))
-                    .append("</fo:inline> ");
-
+            StringBuilder inlineContent = new StringBuilder();
             for (InlineElement inline : footnote.getInlineElements()) {
-                mainGenerator.generateInlineElement(inline, styleSheet, builder);
+                mainGenerator.generateInlineElement(inline, styleSheet, inlineContent);
             }
+            footnoteBlock.addNestedContent(inlineContent.toString());
         }
 
-        builder.append("</fo:block>");
-        builder.append("</fo:footnote-body>");
-        builder.append("</fo:footnote>");
+        footnoteBodyBuilder.addChild(footnoteBlock);
+        footnoteBuilder.addChild(footnoteBodyBuilder);
+
+        // Build into the main builder
+        footnoteBuilder.buildInto(builder);
     }
 }

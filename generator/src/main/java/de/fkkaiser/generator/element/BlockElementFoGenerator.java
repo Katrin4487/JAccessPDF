@@ -15,11 +15,11 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.PageBreakVariant;
 import de.fkkaiser.model.style.StyleSheet;
+import de.fkkaiser.generator.TagBuilder;
 
 /**
  * Abstract base class for generators that produce block-level FO elements
@@ -29,11 +29,11 @@ import de.fkkaiser.model.style.StyleSheet;
  * block containers.</p>
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.2.0
  */
 public abstract class BlockElementFoGenerator extends ElementFoGenerator {
 
-     protected final XslFoGenerator mainGenerator;
+    protected final XslFoGenerator mainGenerator;
 
     protected BlockElementFoGenerator(XslFoGenerator mainGenerator) {
         this.mainGenerator = mainGenerator;
@@ -48,7 +48,7 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
      * @param style      The block style properties
      * @param styleSheet The stylesheet for font resolution
      */
-    protected void appendBlockAttributes(StringBuilder builder,
+    protected void appendBlockAttributes(TagBuilder builder,
                                          ElementBlockStyleProperties style,
                                          StyleSheet styleSheet) {
 
@@ -62,32 +62,16 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
 
         // Keep controls
         if (Boolean.TRUE.equals(style.getKeepWithNext())) {
-            builder.append(" keep-with-next.within-page=\"always\"");
+            builder.addAttribute("keep-with-next.within-page", "always");
         }
 
-        // Spacing
-        if (style.getSpaceBefore() != null) {
-            builder.append(" space-before=\"")
-                    .append(GenerateUtils.escapeXml(style.getSpaceBefore()))
-                    .append("\"");
-        }
-        if (style.getSpaceAfter() != null) {
-            builder.append(" space-after=\"")
-                    .append(GenerateUtils.escapeXml(style.getSpaceAfter()))
-                    .append("\"");
-        }
+        //Spacing
+        builder.addAttribute("space-before", style.getSpaceBefore());
+        builder.addAttribute("space-after", style.getSpaceAfter());
 
         // Indentation
-        if (style.getStartIndent() != null) {
-            builder.append(" start-indent=\"")
-                    .append(GenerateUtils.escapeXml(style.getStartIndent()))
-                    .append("\"");
-        }
-        if (style.getEndIndent() != null) {
-            builder.append(" end-indent=\"")
-                    .append(GenerateUtils.escapeXml(style.getEndIndent()))
-                    .append("\"");
-        }
+        builder.addAttribute("start-indent", style.getStartIndent());
+        builder.addAttribute("end-indent", style.getEndIndent());
 
         // Padding
         appendPaddingAttributes(builder, style);
@@ -96,88 +80,43 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
         appendBorderAttributes(builder, style);
 
         // Background
-        if (style.getBackgroundColor() != null) {
-            builder.append(" background-color=\"")
-                    .append(GenerateUtils.escapeXml(style.getBackgroundColor()))
-                    .append("\"");
-        }
+        builder.addAttribute("background-color", style.getBackgroundColor());
     }
 
     /**
      * Appends page break attributes (break-before, break-after).
      */
-    private void appendPageBreakAttributes(StringBuilder builder, ElementBlockStyleProperties style) {
-        if (style.getBreakBefore() != null) {
-            builder.append(" break-before=\"")
-                    .append(style.getBreakBefore().getFoValue())
-            .append("\"");
+    private void appendPageBreakAttributes(TagBuilder builder, ElementBlockStyleProperties style) {
+
+        if(style==null) return;
+        if(style.getBreakBefore() != null){
+            builder.addAttribute("break-before", style.getBreakBefore().getFoValue());
         }
-        if(style.getBreakAfter() != null && style.getBreakAfter() == PageBreakVariant.PAGE) {
-            builder.append(" break-after=\"")
-                    .append(style.getBreakAfter().getFoValue())
-                    .append("\"");
+        if (style.getBreakAfter() != null && style.getBreakAfter() == PageBreakVariant.PAGE) {
+            builder.addAttribute("break-after", style.getBreakAfter().getFoValue());
         }
     }
 
     /**
      * Appends padding attributes (all sides).
      */
-    private void appendPaddingAttributes(StringBuilder builder, ElementBlockStyleProperties style) {
-        if (style.getPadding() != null) {
-            builder.append(" padding=\"")
-                    .append(GenerateUtils.escapeXml(style.getPadding()))
-                    .append("\"");
-        }
-        if (style.getPaddingTop() != null) {
-            builder.append(" padding-top=\"")
-                    .append(GenerateUtils.escapeXml(style.getPaddingTop()))
-                    .append("\"");
-        }
-        if (style.getPaddingBottom() != null) {
-            builder.append(" padding-bottom=\"")
-                    .append(GenerateUtils.escapeXml(style.getPaddingBottom()))
-                    .append("\"");
-        }
-        if (style.getPaddingLeft() != null) {
-            builder.append(" padding-left=\"")
-                    .append(GenerateUtils.escapeXml(style.getPaddingLeft()))
-                    .append("\"");
-        }
-        if (style.getPaddingRight() != null) {
-            builder.append(" padding-right=\"")
-                    .append(GenerateUtils.escapeXml(style.getPaddingRight()))
-                    .append("\"");
-        }
+    private void appendPaddingAttributes(TagBuilder builder, ElementBlockStyleProperties style) {
+        builder.addAttribute("padding", style.getPadding());
+        builder.addAttribute("padding-top", style.getPaddingTop());
+        builder.addAttribute("padding-bottom", style.getPaddingBottom());
+        builder.addAttribute("padding-left", style.getPaddingLeft());
+        builder.addAttribute("padding-right", style.getPaddingRight());
     }
 
     /**
      * Appends border attributes (all sides).
      */
-    private void appendBorderAttributes(StringBuilder builder, ElementBlockStyleProperties style) {
-        if (style.getBorder() != null) {
-            builder.append(" border=\"")
-                    .append(GenerateUtils.escapeXml(style.getBorder()))
-                    .append("\"");
-        }
-        if (style.getBorderTop() != null) {
-            builder.append(" border-top=\"")
-                    .append(GenerateUtils.escapeXml(style.getBorderTop()))
-                    .append("\"");
-        }
-        if (style.getBorderBottom() != null) {
-            builder.append(" border-bottom=\"")
-                    .append(GenerateUtils.escapeXml(style.getBorderBottom()))
-                    .append("\"");
-        }
-        if (style.getBorderLeft() != null) {
-            builder.append(" border-left=\"")
-                    .append(GenerateUtils.escapeXml(style.getBorderLeft()))
-                    .append("\"");
-        }
-        if (style.getBorderRight() != null) {
-            builder.append(" border-right=\"")
-                    .append(GenerateUtils.escapeXml(style.getBorderRight()))
-                    .append("\"");
-        }
+    private void appendBorderAttributes(TagBuilder builder, ElementBlockStyleProperties style) {
+
+        builder.addAttribute("border", style.getBorder());
+        builder.addAttribute("border-top", style.getBorderTop());
+        builder.addAttribute("border-bottom", style.getBorderBottom());
+        builder.addAttribute("border-left", style.getBorderLeft());
+        builder.addAttribute("border-right", style.getBorderRight());
     }
 }

@@ -17,6 +17,7 @@ package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.style.ElementStyleProperties;
@@ -57,7 +58,7 @@ public abstract class ElementFoGenerator {
      * @param style The ElementStyleProperties to determine the font style from.
      * @param builder The StringBuilder to append the font style attributes to.
      */
-    protected void setFontStyle(StyleSheet styleSheet, ElementStyleProperties style, StringBuilder builder) {
+    protected void setFontStyle(StyleSheet styleSheet, ElementStyleProperties style, TagBuilder builder) {
 
         if (style instanceof TextBlockStyleProperties textStyle) {
             Optional<TextStyle> textStyleOptional = styleSheet.textStyles().stream().filter(ts -> ts.name().equals(textStyle.getTextStyleName())).findAny();

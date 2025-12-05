@@ -21,7 +21,8 @@ import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import org.junit.jupiter.api.Test;
-import java.net.URL;
+
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +48,7 @@ class ListFoGeneratorTest {
         StyleSheet styleSheet = StyleSheet.builder().build();
         StringBuilder builder = new StringBuilder();
         XslFoGenerator mockGenerator = new MockXslFoGenerator();
-        ImageResolver mockResolver = relativePath -> new URL("file://test");
+        ImageResolver mockResolver = relativePath -> new URI("file://test").toURL();
         ListFoGenerator generator = new ListFoGenerator(mockGenerator);
 
         // Execute the method
@@ -55,6 +56,7 @@ class ListFoGeneratorTest {
 
         // Assert the output
         String output = builder.toString();
+        System.out.println("OUTPUT "+output);
         assertTrue(output.contains("<fo:list-block"), "Generated content must contain list-block tag");
         assertTrue(output.contains("<fo:list-item"), "Generated content must contain list-item tag");
         assertTrue(output.contains("1."), "Generated list items should contain '1.' as default label");
@@ -79,7 +81,7 @@ class ListFoGeneratorTest {
         StyleSheet styleSheet = StyleSheet.builder().build();
         StringBuilder builder = new StringBuilder();
         XslFoGenerator mockGenerator = new MockXslFoGenerator();
-        ImageResolver mockResolver = relativePath -> new URL("file://test");
+        ImageResolver mockResolver = relativePath -> new URI("file://test").toURL();
         ListFoGenerator generator = new ListFoGenerator(mockGenerator);
 
         // Execute the method
@@ -108,7 +110,7 @@ class ListFoGeneratorTest {
         StyleSheet styleSheet = StyleSheet.builder().build();
         StringBuilder builder = new StringBuilder();
         XslFoGenerator mockGenerator = new MockXslFoGenerator();
-        ImageResolver mockResolver = relativePath -> new URL("file://test");
+        ImageResolver mockResolver = relativePath -> new URI("file://test").toURL();
         ListFoGenerator generator = new ListFoGenerator(mockGenerator);
 
         // Execute the method

@@ -17,6 +17,7 @@ package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.Element;
@@ -83,9 +84,11 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
         Section section = (Section) element;
         SectionStyleProperties style = section.getResolvedStyle();
 
-        builder.append("      <fo:block");
-        appendSectionAttributes(builder, section, style, styleSheet);
-        builder.append(">");
+        TagBuilder blockBuilder = GenerateUtils.tagBuilder("block");
+        appendSectionAttributes(blockBuilder, section, style, styleSheet);
+
+        // Build the section content
+        StringBuilder content = new StringBuilder();
 
         // Section marker (only if style is not null)
         if (style != null &&
@@ -95,43 +98,47 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
 
             Optional<TextStyle> textStyleOpt = styleSheet.findFontStyleByName(style.getTextStyleName());
 
-            builder.append("<fo:inline");
-            textStyleOpt.ifPresent(ts -> GenerateUtils.appendTextStyleTags(builder, ts));
-            builder.append(">");
-
-            builder.append(GenerateUtils.escapeXml(style.getSectionMarker()));
-            builder.append(" </fo:inline>");
+            TagBuilder inlineBuilder = GenerateUtils.tagBuilder("inline");
+            textStyleOpt.ifPresent(ts -> GenerateUtils.appendTextStyleTags(inlineBuilder, ts));
+            inlineBuilder.addContent(style.getSectionMarker() + " ");
+            inlineBuilder.buildInto(content);
         }
 
-        mainGenerator.generateBlockElements(section.getElements(), styleSheet, builder, headlines, resolver, isExternalArtefact);
+        // Generate child elements
+        mainGenerator.generateBlockElements(section.getElements(), styleSheet, content, headlines, resolver, isExternalArtefact);
 
-        builder.append("      </fo:block>");
+        blockBuilder.addNestedContent(content.toString());
+        blockBuilder.buildInto(builder);
     }
 
-    private void appendSectionAttributes(StringBuilder builder, Section section,
+    /**
+     * Appends section-specific attributes to the block builder.
+     *
+     * @param builder    the TagBuilder to add attributes to
+     * @param section    the section element
+     * @param style      the section style properties
+     * @param styleSheet the stylesheet
+     */
+    private void appendSectionAttributes(TagBuilder builder, Section section,
                                          SectionStyleProperties style, StyleSheet styleSheet) {
         // PDF/UA role
         String role = section.getVariant() != null
                 ? section.getVariant().getPdfRole()
                 : SectionVariant.SECTION.getPdfRole();
 
-        if(role.equals(SectionVariant.NOTE.getPdfRole())){
+        if (role.equals(SectionVariant.NOTE.getPdfRole())) {
             // Needs unique ID for accessibility
-            builder.append(" role=\"").append("Div").append("\"");
-            builder.append(" id=\"note-").append(UUID.randomUUID()).append("\"");
+            builder
+                    .addAttribute("role", "Div")
+                    .addAttribute("id", "note-" + UUID.randomUUID());
 
-            log.warn("Section with variant NOTE detected. Note is not correctly written in Structure Tree with FOP.Using DIV instead");
-        }else{
-            builder.append(" role=\"").append(role).append("\"");
+            log.warn("Section with variant NOTE detected. Note is not correctly written in Structure Tree with FOP. Using DIV instead");
+        } else {
+            builder.addAttribute("role", role);
         }
-
 
         // Alt-text
-        if (section.getAltText() != null && !section.getAltText().isEmpty()) {
-            builder.append(" fox:alt-text=\"")
-                    .append(GenerateUtils.escapeXml(section.getAltText()))
-                    .append("\"");
-        }
+        builder.addAttribute("fox:alt-text", section.getAltText());
 
         if (style == null) return;
 
@@ -142,20 +149,25 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
         appendBlockAttributes(builder, style, styleSheet);
     }
 
-    private void appendSectionSpecificAttributes(StringBuilder builder, SectionStyleProperties style) {
+    /**
+     * Appends section-specific style attributes.
+     *
+     * @param builder the TagBuilder to add attributes to
+     * @param style   the section style properties
+     */
+    private void appendSectionSpecificAttributes(TagBuilder builder, SectionStyleProperties style) {
         // Keep together
         if (Boolean.TRUE.equals(style.getKeepTogether())) {
-            builder.append(" keep-together.within-page=\"always\"");
+            builder.addAttribute("keep-together.within-page", "always");
         }
 
         // Orphans and widows
         if (style.getOrphans() != null) {
-            builder.append(" orphans=\"").append(style.getOrphans()).append("\"");
+            builder.addAttribute("orphans", String.valueOf(style.getOrphans()));
         }
 
         if (style.getWidows() != null) {
-            builder.append(" widows=\"").append(style.getWidows()).append("\"");
+            builder.addAttribute("widows", String.valueOf(style.getWidows()));
         }
-
     }
 }

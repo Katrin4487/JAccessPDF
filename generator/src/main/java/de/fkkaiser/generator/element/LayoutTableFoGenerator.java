@@ -15,16 +15,24 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.LayoutTable;
 import de.fkkaiser.model.style.StyleSheet;
+
 import java.util.List;
 
+/**
+ * Generator for Layout Table
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
+ */
 public class LayoutTableFoGenerator extends ElementFoGenerator {
-
 
     protected final XslFoGenerator mainGenerator;
 
@@ -32,8 +40,6 @@ public class LayoutTableFoGenerator extends ElementFoGenerator {
         super();
         this.mainGenerator = mainGenerator;
     }
-
-    //ToDO
 
     @Override
     public void generate(Element element,
@@ -44,17 +50,45 @@ public class LayoutTableFoGenerator extends ElementFoGenerator {
                          boolean isExternalArtefact) {
 
         LayoutTable table = (LayoutTable) element;
-        builder.append("<fo:table table-layout=\"fixed\" width=\"100%\">");
-        builder.append("<fo:table-column column-width=\"85%\"/><fo:table-column column-width=\"15%\"/>");
-        builder.append(" <fo:table-body>");
-        builder.append("<fo:table-row><fo:table-cell padding=\"0pt\">");
-        mainGenerator.generateBlockElement(table.getElementLeft(),styleSheet,builder,headlines,resolver,false);
-        builder.append( "</fo:table-cell>");
-        builder.append("<fo:table-cell end-indent=\"0pt\" text-align=\"end\" padding=\"0pt\">");
-        mainGenerator.generateBlockElement(table.getElementRight(), styleSheet, builder, headlines,resolver,false);
-        builder.append("</fo:table-cell>");
-        builder.append( "</fo:table-row>");
-        builder.append("</fo:table-body>");
-        builder.append("</fo:table>");
+
+        // Generate content for left and right cells
+        StringBuilder leftContent = new StringBuilder();
+        mainGenerator.generateBlockElement(table.getElementLeft(), styleSheet, leftContent, headlines, resolver, false);
+
+        StringBuilder rightContent = new StringBuilder();
+        mainGenerator.generateBlockElement(table.getElementRight(), styleSheet, rightContent, headlines, resolver, false);
+
+        // Build the table structure
+        TagBuilder tableBuilder = GenerateUtils.tagBuilder("table")
+                .addAttribute("table-layout", "fixed")
+                .addAttribute("width", "100%")
+                .addChild(
+                        GenerateUtils.tagBuilder("table-column")
+                                .addAttribute("column-width", "85%")
+                )
+                .addChild(
+                        GenerateUtils.tagBuilder("table-column")
+                                .addAttribute("column-width", "15%")
+                )
+                .addChild(
+                        GenerateUtils.tagBuilder("table-body")
+                                .addChild(
+                                        GenerateUtils.tagBuilder("table-row")
+                                                .addChild(
+                                                        GenerateUtils.tagBuilder("table-cell")
+                                                                .addAttribute("padding", "0pt")
+                                                                .addNestedContent(leftContent.toString())
+                                                )
+                                                .addChild(
+                                                        GenerateUtils.tagBuilder("table-cell")
+                                                                .addAttribute("end-indent", "0pt")
+                                                                .addAttribute("text-align", "end")
+                                                                .addAttribute("padding", "0pt")
+                                                                .addNestedContent(rightContent.toString())
+                                                )
+                                )
+                );
+
+        tableBuilder.buildInto(builder);
     }
 }

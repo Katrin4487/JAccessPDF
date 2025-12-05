@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.TextBlock;
@@ -23,6 +24,9 @@ import de.fkkaiser.model.style.TextBlockStyleProperties;
 
 /**
  * Generates XSL-FO for Headline elements.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
 public class HeadlineFoGenerator extends TextBlockFoGenerator {
 
@@ -53,11 +57,11 @@ public class HeadlineFoGenerator extends TextBlockFoGenerator {
      * @param style The resolved style properties.
      */
     @Override
-    protected void appendSpecificAttributes(StringBuilder builder, TextBlockStyleProperties style) {
+    protected void appendSpecificAttributes(TagBuilder builder, TextBlockStyleProperties style) {
 
         if (style instanceof HeadlineStyleProperties hStyle) {
             if (hStyle.getKeepWithNext() != null && hStyle.getKeepWithNext()) {
-                builder.append(" keep-with-next.within-page=\"always\"");
+                builder.addAttribute("keep-with-next.within-page","always");
             }
 
         }

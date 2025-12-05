@@ -17,13 +17,13 @@ package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListItemStyleProperties;
 import de.fkkaiser.model.style.ListStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import java.util.List;
-
 
 /**
  * Generates XSL-FO markup for list elements.
@@ -80,21 +80,24 @@ public class ListFoGenerator extends ElementFoGenerator {
         SimpleList list = (SimpleList) element;
         ListStyleProperties style = list.getResolvedStyle();
 
-        builder.append("      <fo:list-block role=\"L\"");
-        appendListBlockAttributes(builder, style, styleSheet);
-        if(isExternalArtefact) {
-            builder.append(" fox:content-type=\"external-artifact\"");
-        }
-        builder.append(">\n");
+        TagBuilder listBlockBuilder = GenerateUtils.tagBuilder("list-block")
+                .addAttribute("role", "L");
 
-        if (list.getItems() != null) {
-            int counter = 1;
-            for (ListItem item : list.getItems()) {
-                generateListItem(item, list, style, counter, styleSheet, builder, headlines, resolver);
-                counter++;
-            }
+        appendListBlockAttributes(listBlockBuilder, style, styleSheet);
+
+        if (isExternalArtefact) {
+            listBlockBuilder.addAttribute("fox:content-type", "external-artifact");
         }
-        builder.append("      </fo:list-block>");
+
+        // Generate list items
+        int counter = 1;
+        for (ListItem item : list.getItems()) {
+            TagBuilder listItemBuilder = generateListItem(item, list, style, counter, styleSheet, headlines, resolver);
+            listBlockBuilder.addChild(listItemBuilder);
+            counter++;
+        }
+
+        listBlockBuilder.buildInto(builder);
     }
 
     /**
@@ -110,28 +113,31 @@ public class ListFoGenerator extends ElementFoGenerator {
      * @param listStyle the resolved style of the parent list
      * @param counter the item counter (for ordered lists)
      * @param styleSheet the stylesheet
-     * @param builder the StringBuilder to append to
      * @param headlines the list of headlines
      * @param resolver the image resolver
+     * @return the TagBuilder for the list item
      */
-    private void generateListItem(ListItem item,
-                                  SimpleList list,
-                                  ListStyleProperties listStyle,
-                                  int counter,
-                                  StyleSheet styleSheet,
-                                  StringBuilder builder,
-                                  List<Headline> headlines,
-                                  ImageResolver resolver) {
+    private TagBuilder generateListItem(ListItem item,
+                                        SimpleList list,
+                                        ListStyleProperties listStyle,
+                                        int counter,
+                                        StyleSheet styleSheet,
+                                        List<Headline> headlines,
+                                        ImageResolver resolver) {
 
-        builder.append("        <fo:list-item space-before=\"0.2cm\" role=\"LI\">");
+        TagBuilder listItemBuilder = GenerateUtils.tagBuilder("list-item")
+                .addAttribute("space-before", "0.2cm")
+                .addAttribute("role", "LI");
 
         // Generate label
-        generateListItemLabel(item, list, listStyle, counter, styleSheet, builder);
+        TagBuilder labelBuilder = generateListItemLabel(item, list, listStyle, counter, styleSheet);
+        listItemBuilder.addChild(labelBuilder);
 
         // Generate body
-        generateListItemBody(item, listStyle, styleSheet, builder, headlines, resolver);
+        TagBuilder bodyBuilder = generateListItemBody(item, styleSheet, headlines, resolver);
+        listItemBuilder.addChild(bodyBuilder);
 
-        builder.append("        </fo:list-item>\n");
+        return listItemBuilder;
     }
 
     /**
@@ -146,35 +152,38 @@ public class ListFoGenerator extends ElementFoGenerator {
      * @param listStyle the list style properties
      * @param counter the item counter
      * @param styleSheet the stylesheet
-     * @param builder the StringBuilder to append to
+     * @return the TagBuilder for the list item label
      */
-    private void generateListItemLabel(ListItem item,
-                                       SimpleList list,
-                                       ListStyleProperties listStyle,
-                                       int counter,
-                                       StyleSheet styleSheet,
-                                       StringBuilder builder) {
+    private TagBuilder generateListItemLabel(ListItem item,
+                                             SimpleList list,
+                                             ListStyleProperties listStyle,
+                                             int counter,
+                                             StyleSheet styleSheet) {
 
-        builder.append("          <fo:list-item-label role=\"Lbl\" end-indent=\"label-end()\">");
-        builder.append("            <fo:block>");
+        TagBuilder labelBlockBuilder = GenerateUtils.tagBuilder("block");
 
         // Generate custom label if provided, otherwise use default based on list type
         if (item.getLabel() != null && !item.getLabel().isEmpty()) {
+            StringBuilder labelContent = new StringBuilder();
             for (InlineElement inline : item.getLabel()) {
-                mainGenerator.generateInlineElement(inline, styleSheet, builder);
+                mainGenerator.generateInlineElement(inline, styleSheet, labelContent);
             }
+            labelBlockBuilder.addNestedContent(labelContent.toString());
         } else {
             ListItemStyleProperties itemStyle = null;
             if (item.getResolvedStyle() instanceof ListItemStyleProperties) {
                 itemStyle = (ListItemStyleProperties) item.getResolvedStyle();
             }
-            if(itemStyle == null || !itemStyle.getListStyleType().equals("none")){
-                generateDefaultListItemLabel(builder, list.getOrdering(), listStyle, counter);
+            if (itemStyle == null || !itemStyle.getListStyleType().equals("none")) {
+                String labelText = generateDefaultListItemLabel(list.getOrdering(), listStyle, counter);
+                labelBlockBuilder.addNestedContent(labelText);
             }
         }
 
-        builder.append("</fo:block>");
-        builder.append("          </fo:list-item-label>\n");
+        return GenerateUtils.tagBuilder("list-item-label")
+                .addAttribute("role", "Lbl")
+                .addAttribute("end-indent", "label-end()")
+                .addChild(labelBlockBuilder);
     }
 
     /**
@@ -187,24 +196,23 @@ public class ListFoGenerator extends ElementFoGenerator {
      * </p>
      *
      * @param item the list item
-     * @param listStyle the list style properties
      * @param styleSheet the stylesheet
-     * @param builder the StringBuilder to append to
      * @param headlines the list of headlines
      * @param resolver the image resolver
+     * @return the TagBuilder for the list item body
      */
-    private void generateListItemBody(ListItem item,
-                                      ListStyleProperties listStyle,
-                                      StyleSheet styleSheet,
-                                      StringBuilder builder,
-                                      List<Headline> headlines,
-                                      ImageResolver resolver) {
+    private TagBuilder generateListItemBody(ListItem item,
+                                            StyleSheet styleSheet,
+                                            List<Headline> headlines,
+                                            ImageResolver resolver) {
 
-        builder.append("          <fo:list-item-body role=\"LBody\" start-indent=\"body-start()\">\n");
+        StringBuilder bodyContent = new StringBuilder();
+        mainGenerator.generateBlockElement(item, styleSheet, bodyContent, headlines, resolver, false);
 
-        mainGenerator.generateBlockElement(item, styleSheet, builder, headlines, resolver, false);
-
-        builder.append("          </fo:list-item-body>\n");
+        return GenerateUtils.tagBuilder("list-item-body")
+                .addAttribute("role", "LBody")
+                .addAttribute("start-indent", "body-start()")
+                .addNestedContent(bodyContent.toString());
     }
 
     /**
@@ -214,25 +222,18 @@ public class ListFoGenerator extends ElementFoGenerator {
      * the spacing between list labels and content.
      * </p>
      *
-     * @param builder the StringBuilder to append attributes to
+     * @param builder the TagBuilder to add attributes to
      * @param style the list style properties
      * @param styleSheet the stylesheet for resolving font styles
      */
-    private void appendListBlockAttributes(StringBuilder builder, ListStyleProperties style, StyleSheet styleSheet) {
+    private void appendListBlockAttributes(TagBuilder builder, ListStyleProperties style, StyleSheet styleSheet) {
         if (style == null) return;
 
         setFontStyle(styleSheet, style, builder);
 
-        if (style.getProvDistBetweenStarts() != null) {
-            builder.append(" provisional-distance-between-starts=\"")
-                    .append(GenerateUtils.escapeXml(style.getProvDistBetweenStarts()))
-                    .append("\"");
-        }
-        if (style.getProvLabelSeparation() != null) {
-            builder.append(" provisional-label-separation=\"")
-                    .append(GenerateUtils.escapeXml(style.getProvLabelSeparation()))
-                    .append("\"");
-        }
+        builder
+                .addAttribute("provisional-distance-between-starts", style.getProvDistBetweenStarts())
+                .addAttribute("provisional-label-separation", style.getProvLabelSeparation());
     }
 
     /**
@@ -246,31 +247,28 @@ public class ListFoGenerator extends ElementFoGenerator {
      * </ol>
      * </p>
      *
-     * @param builder the StringBuilder to append the label to
      * @param ordering the list ordering type (ordered or unordered)
      * @param style the list style properties
      * @param counter the current item number (for ordered lists)
+     * @return the label as a string (can contain XML markup for images)
      */
-    private void generateDefaultListItemLabel(StringBuilder builder,
-                                              ListOrdering ordering,
-                                              ListStyleProperties style,
-                                              int counter) {
+    private String generateDefaultListItemLabel(ListOrdering ordering,
+                                                ListStyleProperties style,
+                                                int counter) {
         // Priority: 1. Image, 2. Type, 3. Default
         if (style != null && style.getListStyleImage() != null) {
-            builder.append("<fo:external-graphic src=\"")
-                    .append(GenerateUtils.escapeXml(style.getListStyleImage()))
-                    .append("\"/>");
-            return;
+            return GenerateUtils.tagBuilder("external-graphic")
+                    .addAttribute("src", style.getListStyleImage())
+                    .build();
         }
+
         String listStyleType = (style != null) ? style.getListStyleType() : null;
 
-        String label;
         if (ordering == ListOrdering.ORDERED) {
-            label = getOrderedLabel(listStyleType, counter);
+            return getOrderedLabel(listStyleType, counter);
         } else {
-            label = getUnorderedLabel(listStyleType);
+            return getUnorderedLabel(listStyleType);
         }
-        builder.append(label);
     }
 
     /**

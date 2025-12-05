@@ -21,4 +21,5 @@ module generator {
     requires org.apache.commons.logging;
 
     exports de.fkkaiser.generator;
+
 }

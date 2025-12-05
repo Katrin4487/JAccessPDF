@@ -58,5 +58,9 @@ public class GenerateConst {
      * Parameter for font-family in FOP XML
      */
     public static final String FLOW_NAME = "flow-name";
+    public static final String FONT_FAMILY = "font-family";
+    public static final String FONT_WEIGHT = "font-weight";
+    public static final String FONT_SIZE = "font-size";
+    public static final String FONT_STYLE = "font-style";
 
 }

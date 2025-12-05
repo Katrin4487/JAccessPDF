@@ -15,7 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateUtils;
+import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.TextBlock;
@@ -52,33 +52,31 @@ public class ParagraphFoGenerator extends TextBlockFoGenerator {
 
     /**
      * Appends paragraph-specific attributes to the FO block.
-     * @param builder The StringBuilder to append to.
+     * @param builder The TagBuilder to add attributes to.
      * @param style The resolved style properties.
      */
     @Internal
     @Override
-    protected void appendSpecificAttributes(StringBuilder builder, TextBlockStyleProperties style) {
+    protected void appendSpecificAttributes(TagBuilder builder, TextBlockStyleProperties style) {
         // This method handles properties that only exist in ParagraphStyleProperties.
         if (style instanceof ParagraphStyleProperties pStyle) {
-            if (pStyle.getTextIndent() != null) {
-                builder.append(" text-indent=\"").append(GenerateUtils.escapeXml(pStyle.getTextIndent())).append("\"");
-            }
-            if (pStyle.getTextAlignLast() != null) {
-                builder.append(" text-align-last=\"").append(GenerateUtils.escapeXml(pStyle.getTextAlignLast().getValue())).append("\"");
-            }
+            builder
+                    .addAttribute("text-indent", pStyle.getTextIndent())
+                    .addAttribute("text-align-last", pStyle.getTextAlignLast() != null ? pStyle.getTextAlignLast().getValue() : null)
+                    .addAttribute("language", pStyle.getLanguage());
+
+            // Hyphenate is a boolean
             if (pStyle.isHyphenate()) {
-                builder.append(" hyphenate=\"true\"");
+                builder.addAttribute("hyphenate", "true");
             }
-            if (pStyle.getLanguage() != null) {
-                builder.append(" language=\"").append(GenerateUtils.escapeXml(pStyle.getLanguage())).append("\"");
-            }
+
             // The 'orphans' and 'widows' properties control the minimum number of lines
             // of a paragraph to be left at the top or bottom of a page.
             if (pStyle.getOrphans() != null) {
-                builder.append(" orphans=\"").append(pStyle.getOrphans()).append("\""); // Default to 2 if true
+                builder.addAttribute("orphans", String.valueOf(pStyle.getOrphans()));
             }
             if (pStyle.getWidows() != null) {
-                builder.append(" widows=\"").append(pStyle.getWidows()).append("\""); // Default to 2 if true
+                builder.addAttribute("widows", String.valueOf(pStyle.getWidows()));
             }
         }
     }

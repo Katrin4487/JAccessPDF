@@ -21,6 +21,9 @@ import de.fkkaiser.model.style.StyleSheet;
 
 /**
  * Abstract base class for generating XSL-FO strings for specific inline elements.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
 public abstract class InlineElementFoGenerator {
 

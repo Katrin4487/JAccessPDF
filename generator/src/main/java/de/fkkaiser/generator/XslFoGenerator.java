@@ -189,7 +189,7 @@ public class XslFoGenerator {
         for (PageSequence sequence : document.pageSequences()) {
             log.debug("Generating page-sequence with master-reference '{}'.", sequence.styleClass());
 
-            GenerateUtils.TagBuilder pageSeq = GenerateUtils.tagBuilder(PAGE_SEQUENCE)
+            TagBuilder pageSeq = GenerateUtils.tagBuilder(PAGE_SEQUENCE)
                     .addAttribute(MASTER_REFERENCE, sequence.styleClass());
 
             // Header
@@ -253,7 +253,7 @@ public class XslFoGenerator {
 
         log.debug("Generating XMP metadata for PDF/UA-1 compliance.");
 
-        GenerateUtils.TagBuilder title = GenerateUtils.tagBuilder("title")
+        TagBuilder title = GenerateUtils.tagBuilder("title")
                 .withPrefix("dc:")
                 .addChild(
                         GenerateUtils.tagBuilder("Alt")
@@ -266,7 +266,7 @@ public class XslFoGenerator {
                                 )
                 );
 
-        GenerateUtils.TagBuilder description = GenerateUtils.tagBuilder("Description")
+        TagBuilder description = GenerateUtils.tagBuilder("Description")
                 .withPrefix("rdf:")
                 .addAttribute("rdf:about", "")
                 .addChild(title);
@@ -301,11 +301,11 @@ public class XslFoGenerator {
     }
 
     private void generateLayoutMasterSet(StringBuilder foBuilder, StyleSheet styleSheet) {
-        GenerateUtils.TagBuilder layoutMasterSet = GenerateUtils.tagBuilder(LAYOUT_MASTER_SET);
+        TagBuilder layoutMasterSet = GenerateUtils.tagBuilder(LAYOUT_MASTER_SET);
 
         if (styleSheet.pageMasterStyles() != null) {
             for (PageMasterStyle pageStyle : styleSheet.pageMasterStyles()) {
-                GenerateUtils.TagBuilder simpleMaster = GenerateUtils.tagBuilder(SIMPLE_PAGE_MASTER)
+                TagBuilder simpleMaster = GenerateUtils.tagBuilder(SIMPLE_PAGE_MASTER)
                         .addAttribute(MASTER_NAME, pageStyle.getName())
                         .addAttribute(PAGE_HEIGHT, pageStyle.getPageHeight())
                         .addAttribute(PAGE_WIDTH, pageStyle.getPageWidth());
@@ -322,7 +322,7 @@ public class XslFoGenerator {
                 }
 
                 // Region body
-                GenerateUtils.TagBuilder regionBody = GenerateUtils.tagBuilder(REGION_BODY)
+                TagBuilder regionBody = GenerateUtils.tagBuilder(REGION_BODY)
                         .addAttribute(MARGIN_TOP, pageStyle.getHeaderExtent())
                         .addAttribute(MARGIN_BOTTOM, pageStyle.getFooterExtent())
                         .addAttribute(COLUMN_COUNT, pageStyle.getColumnCount())
@@ -390,7 +390,7 @@ public class XslFoGenerator {
      * @param resolver {@link ImageResolver} to find image resources
      * @return TagBuilder to build the tag
      */
-    private GenerateUtils.TagBuilder createStaticContent(String flowName, List<Element> elements,
+    private TagBuilder createStaticContent(String flowName, List<Element> elements,
                                                          StyleSheet styleSheet, List<Headline> headlines,
                                                          ImageResolver resolver) {
         StringBuilder content = new StringBuilder();
@@ -407,9 +407,9 @@ public class XslFoGenerator {
      * @param styleSheet {@link StyleSheet} used in the document
      * @param headlines List of {@link Headline} in this document for bookmark tree
      * @param resolver {@link ImageResolver} to find image resources
-     * @return {@link GenerateUtils.TagBuilder} to create the flow tag
+     * @return {@link TagBuilder} to create the flow tag
      */
-    private GenerateUtils.TagBuilder createFlow(List<Element> elements,
+    private TagBuilder createFlow(List<Element> elements,
                                                 StyleSheet styleSheet, List<Headline> headlines,
                                                 ImageResolver resolver) {
         StringBuilder content = new StringBuilder();
