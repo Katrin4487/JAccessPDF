@@ -11,7 +11,7 @@
 ### Fixed
 --- nothing yet --
 
-## [0.10.3] - 25-12-05
+## [0.10.2] - 25-12-05
 
 ### Changed
 - ParagraphBuilder has its own class now
