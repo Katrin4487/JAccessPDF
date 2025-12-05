@@ -19,6 +19,7 @@ import de.fkkaiser.generator.*;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListItemStyleProperties;
 import de.fkkaiser.model.style.ListStyleProperties;
+import de.fkkaiser.model.style.ListStyleType;
 import de.fkkaiser.model.style.StyleSheet;
 import java.util.List;
 
@@ -36,7 +37,7 @@ import java.util.List;
  * </p>
  *
  * @author Katrin Kaiser
- * @version 1.3.1
+ * @version 1.4.1
  */
 public class ListFoGenerator extends ElementFoGenerator {
 
@@ -44,8 +45,6 @@ public class ListFoGenerator extends ElementFoGenerator {
     private static final String ROLE_LIST_ITEM = "LI";
     private static final String ROLE_LIST_ITEM_LABEL = "Lbl";
     private static final String ROLE_LIST_ITEM_BODY = "LBody";
-
-    private static final String NO_STYLE = "none";
 
     protected final XslFoGenerator mainGenerator;
 
@@ -178,7 +177,7 @@ public class ListFoGenerator extends ElementFoGenerator {
             if (item.getResolvedStyle() instanceof ListItemStyleProperties) {
                 itemStyle = (ListItemStyleProperties) item.getResolvedStyle();
             }
-            if (itemStyle == null || !itemStyle.getListStyleType().equals(NO_STYLE)) {
+            if (itemStyle == null || !itemStyle.getListStyleType().equals(ListStyleType.NONE)) {
                 String labelText = generateDefaultListItemLabel(list.getOrdering(), listStyle, counter);
                 labelBlockBuilder.addNestedContent(labelText);
             }
@@ -261,12 +260,12 @@ public class ListFoGenerator extends ElementFoGenerator {
                                                 int counter) {
         // Priority: 1. Image, 2. Type, 3. Default
         if (style != null && style.getListStyleImage() != null) {
-            return GenerateUtils.tagBuilder("external-graphic")
-                    .addAttribute("src", style.getListStyleImage())
+            return GenerateUtils.tagBuilder(GenerateConst.EXTERNAL_GRAPHIC)
+                    .addAttribute(GenerateConst.SRC, style.getListStyleImage())
                     .build();
         }
 
-        String listStyleType = (style != null) ? style.getListStyleType() : null;
+        ListStyleType listStyleType = (style != null) ? style.getListStyleType() : null;
 
         if (ordering == ListOrdering.ORDERED) {
             return getOrderedLabel(listStyleType, counter);
@@ -291,13 +290,12 @@ public class ListFoGenerator extends ElementFoGenerator {
      * @param counter the current item number
      * @return the formatted label string
      */
-    private String getOrderedLabel(String type, int counter) {
+    private String getOrderedLabel(ListStyleType type, int counter) {
         if (type == null) return counter + ".";
         return switch (type) {
-            case NO_STYLE -> "";
-            case "lower-alpha" -> (char) ('a' + counter - 1) + ".";
-            case "upper-alpha" -> (char) ('A' + counter - 1) + ".";
-            // Additional ordered types like 'lower-roman', 'upper-roman' can be added here
+            case ListStyleType.NONE -> "";
+            case ListStyleType.LOWER_ALPHA -> (char) ('a' + counter - 1) + ".";
+            case ListStyleType.UPPER_ALPHA -> (char) ('A' + counter - 1) + ".";
             default -> counter + ".";
         };
     }
@@ -316,12 +314,13 @@ public class ListFoGenerator extends ElementFoGenerator {
      * @param type the list-style-type value
      * @return the Unicode character for the bullet
      */
-    private String getUnorderedLabel(String type) {
+    private String getUnorderedLabel(ListStyleType type) {
         if (type == null) return "&#x2022;";  // bullet
         return switch (type) {
-            case NO_STYLE -> "";
-            case "circle" -> "&#x25CB;";  // hollow circle
-            case "square" -> "&#x25AA;";  // small square
+            case ListStyleType.NONE -> "";
+            case ListStyleType.BULLET -> "&#x2022;";
+            case ListStyleType.CIRCLE -> "&#x25CB;";  // hollow circle
+            case ListStyleType.SQUARE -> "&#x25AA;";  // small square
             default -> "&#x2022;";        // bullet
         };
     }

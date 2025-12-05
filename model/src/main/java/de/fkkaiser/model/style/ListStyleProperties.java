@@ -26,7 +26,7 @@ import java.util.Objects;
  * Style properties specific to list elements.
  *
  * @author Katrin Kaiser
- * @version 1.1.1
+ * @version 1.2.1
  */
 @JsonTypeName(JsonPropertyName.LIST)
 public class ListStyleProperties extends TextBlockStyleProperties {
@@ -61,7 +61,7 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      */
     @Inheritable
     @JsonProperty(JsonPropertyName.LIST_STYLE_TYPE)
-    private String listStyleType;
+    private ListStyleType listStyleType;
 
     /**
      * Defines an image to be used as the list item marker.
@@ -130,11 +130,11 @@ public class ListStyleProperties extends TextBlockStyleProperties {
         this.provLabelSeparation = provLabelSeparation;
     }
 
-    public String getListStyleType() {
+    public ListStyleType getListStyleType() {
         return listStyleType;
     }
 
-    public void setListStyleType(String listStyleType) {
+    public void setListStyleType(ListStyleType listStyleType) {
         this.listStyleType = listStyleType;
     }
 

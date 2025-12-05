@@ -37,7 +37,7 @@ class ListStylePropertiesTest {
         original.setTextColor("#111111");
         original.setProvDistBetweenStarts("2cm");
         original.setProvLabelSeparation("0.5cm");
-        original.setListStyleType("disc");
+        original.setListStyleType(ListStyleType.BULLET);
         original.setListStyleImage("url(bullet.png)");
 
         // 2. Act: Create a copy
@@ -94,7 +94,7 @@ class ListStylePropertiesTest {
         assertEquals("#222", properties.getTextColor());
         assertEquals("2.5cm", properties.getProvDistBetweenStarts());
         assertEquals("1cm", properties.getProvLabelSeparation());
-        assertEquals("circle", properties.getListStyleType());
+        assertEquals(ListStyleType.CIRCLE, properties.getListStyleType());
         assertEquals("url(image.png)", properties.getListStyleImage());
     }
 }

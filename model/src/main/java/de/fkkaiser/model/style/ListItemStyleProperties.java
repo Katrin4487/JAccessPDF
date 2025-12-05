@@ -19,13 +19,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Inheritable;
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 
+/**
+ * List item style properties
+ * @author Katrin Kaiser
+ * @version 1.1.0
+ */
 @JsonTypeName(JsonPropertyName.LIST_ITEM)
 public class ListItemStyleProperties extends TextBlockStyleProperties{
 
     @Inheritable
     @JsonProperty(JsonPropertyName.LIST_STYLE_TYPE)
-    private String listStyleType;
+    private ListStyleType listStyleType;
 
     @JsonProperty(JsonPropertyName.SPACE_BEFORE)
     private String spaceBefore;
@@ -37,23 +44,47 @@ public class ListItemStyleProperties extends TextBlockStyleProperties{
         super();
     }
 
-    public ListItemStyleProperties(String spaceBefore, String spaceAfter, String listStyleType) {
+    /**
+     * Constructor for list item properties
+     * @param spaceBefore space before value
+     * @param spaceAfter space after value
+     * @param listStyleType list style type
+     */
+    @PublicAPI
+    public ListItemStyleProperties(String spaceBefore, String spaceAfter, ListStyleType listStyleType) {
        super();
         this.spaceBefore = spaceBefore;
         this.spaceAfter = spaceAfter;
         this.listStyleType = listStyleType;
     }
 
+    /**
+     * Returns the space before for this value
+     * @return space before value as String
+     */
     public String getSpaceBefore() {
         return spaceBefore;
     }
+
+    /**
+     * Returns the space after value for this list item instance
+     * @return String with value
+     */
+    @Internal
     public String getSpaceAfter() {
         return spaceAfter;
     }
-    public String getListStyleType() {
+
+    /**
+     * Returns the list style type for this instance
+     * @return list style type value
+     */
+    @Internal
+    public ListStyleType getListStyleType() {
         return listStyleType;
     }
 
+    @Internal
     @Override
     public ListItemStyleProperties copy() {
         ListItemStyleProperties newIstance = new ListItemStyleProperties();
@@ -61,6 +92,7 @@ public class ListItemStyleProperties extends TextBlockStyleProperties{
         return newIstance;
     }
 
+    @Internal
     protected void applyPropertiesTo(TextBlockStyleProperties targetStyle) {
         super.applyPropertiesTo(targetStyle);
         if (targetStyle instanceof ListItemStyleProperties listItemStyle) {

@@ -19,6 +19,7 @@ import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListStyleProperties;
+import de.fkkaiser.model.style.ListStyleType;
 import de.fkkaiser.model.style.StyleSheet;
 import org.junit.jupiter.api.Test;
 
@@ -75,7 +76,7 @@ class ListFoGeneratorTest {
                 List.of(new ListItem(null, null,new ArrayList<>()), new ListItem(null, null,new ArrayList<>()))
         );
         ListStyleProperties styleProperties = new ListStyleProperties();
-        styleProperties.setListStyleType("circle");
+        styleProperties.setListStyleType(ListStyleType.CIRCLE);
         list.setResolvedStyle(styleProperties);
 
         StyleSheet styleSheet = StyleSheet.builder().build();

@@ -9,6 +9,7 @@
 - Widows and Orphans are integers in Paragraphs now (no booleans)
 - TextAlignLast in Paragraph can be used with TextAlign enum now
 - ElementTypes and InlineElementTypes is replaced wit ElementTargetTypes (enum instead of strings)
+- ListStyleTypes are enums now (String is not allowed anymore)
 
 ### Added
 - SimpleListBuilder for easier creation of SimpleLists

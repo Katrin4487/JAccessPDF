@@ -33,7 +33,7 @@ import java.util.List;
  * </p>
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.1.0
  */
 @Internal("Used internally by SimpleDocumentBuilder")
 class SimpleStyleManager {
@@ -146,7 +146,7 @@ class SimpleStyleManager {
         // Unordered list style with disc bullets
         ListStyleProperties listPropsUnordered = new ListStyleProperties();
         listPropsUnordered.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
-        listPropsUnordered.setListStyleType("disc");
+        listPropsUnordered.setListStyleType(ListStyleType.BULLET);
         elementStyles.add(new ElementStyle(
                 UNORDERED_LIST_STYLE_NAME,
                 ElementTargetType.LIST,
@@ -156,7 +156,7 @@ class SimpleStyleManager {
         // Ordered list style with decimal numbering
         ListStyleProperties listPropsOrdered = new ListStyleProperties();
         listPropsOrdered.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
-        listPropsOrdered.setListStyleType("decimal");
+        listPropsOrdered.setListStyleType(ListStyleType.NUMBER);
         elementStyles.add(new ElementStyle(
                 ORDERED_LIST_STYLE_NAME,
                 ElementTargetType.LIST,
