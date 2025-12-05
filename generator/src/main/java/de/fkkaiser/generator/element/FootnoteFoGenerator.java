@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateConst;
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.model.annotation.Internal;
@@ -31,9 +32,12 @@ import de.fkkaiser.model.style.TextBlockStyleProperties;
  * Generates XSL-FO for Footnote elements.
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 public class FootnoteFoGenerator extends InlineElementFoGenerator {
+
+    private static final String  FOOTNOTE_TAG = "footnote";
+    private static final String FOOTNOTE_BODY_TAG = "footnote-body";
 
     private final XslFoGenerator mainGenerator;
     private final StyleApplier styleHelper;
@@ -74,22 +78,22 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
         FootnoteStyleProperties styleProperties = footnote.getResolvedStyle();
 
         // <Note> tagging. We will create the accessible structure manually.
-        TagBuilder footnoteBuilder = GenerateUtils.tagBuilder("footnote")
-                .addAttribute("role", "Span");
+        TagBuilder footnoteBuilder = GenerateUtils.tagBuilder(FOOTNOTE_TAG)
+                .addAttribute(GenerateConst.ROLE, GenerateConst.SPAN);
 
         // Inline marker for the footnote reference in the text
-        TagBuilder inlineMarker = GenerateUtils.tagBuilder("inline")
-                .addAttribute("font-size", "8pt")
-                .addAttribute("vertical-align", "super")  // Tippfehler korrigiert: verttical -> vertical
+        TagBuilder inlineMarker = GenerateUtils.tagBuilder(GenerateConst.INLINE_TAG)
+                .addAttribute(GenerateConst.FONT_SIZE, "8pt") // Customize Me!
+                .addAttribute(GenerateConst.VERTICAL_ALIGN, "super")
                 .addContent(footnote.getIndex());
 
         footnoteBuilder.addChild(inlineMarker);
 
         // Footnote body
-        TagBuilder footnoteBodyBuilder = GenerateUtils.tagBuilder("footnote-body");
+        TagBuilder footnoteBodyBuilder = GenerateUtils.tagBuilder(FOOTNOTE_BODY_TAG);
 
-        TagBuilder footnoteBlock = GenerateUtils.tagBuilder("block")
-                .addAttribute("id", footnote.getId());
+        TagBuilder footnoteBlock = GenerateUtils.tagBuilder(GenerateConst.BLOCK)
+                .addAttribute(GenerateConst.ID, footnote.getId());
 
         if (styleProperties != null) {
             styleHelper.applyStyles(footnoteBlock, styleProperties, styleSheet);
@@ -106,8 +110,6 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
 
         footnoteBodyBuilder.addChild(footnoteBlock);
         footnoteBuilder.addChild(footnoteBodyBuilder);
-
-        // Build into the main builder
         footnoteBuilder.buildInto(builder);
     }
 }

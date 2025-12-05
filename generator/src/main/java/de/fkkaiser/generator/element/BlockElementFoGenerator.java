@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateConst;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.PageBreakVariant;
@@ -29,7 +30,7 @@ import de.fkkaiser.generator.TagBuilder;
  * block containers.</p>
  *
  * @author Katrin Kaiser
- * @version 1.2.0
+ * @version 1.2.1
  */
 public abstract class BlockElementFoGenerator extends ElementFoGenerator {
 
@@ -62,16 +63,16 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
 
         // Keep controls
         if (Boolean.TRUE.equals(style.getKeepWithNext())) {
-            builder.addAttribute("keep-with-next.within-page", "always");
+            builder.addAttribute(GenerateConst.KEEP_WITH_NEXT_WITHIN_PAGE, GenerateConst.ALWAYS);
         }
 
         //Spacing
-        builder.addAttribute("space-before", style.getSpaceBefore());
-        builder.addAttribute("space-after", style.getSpaceAfter());
+        builder.addAttribute(GenerateConst.SPACE_BEFORE, style.getSpaceBefore());
+        builder.addAttribute(GenerateConst.SPACE_AFTER, style.getSpaceAfter());
 
         // Indentation
-        builder.addAttribute("start-indent", style.getStartIndent());
-        builder.addAttribute("end-indent", style.getEndIndent());
+        builder.addAttribute(GenerateConst.START_INDENT, style.getStartIndent());
+        builder.addAttribute(GenerateConst.END_INDENT, style.getEndIndent());
 
         // Padding
         appendPaddingAttributes(builder, style);
@@ -80,7 +81,7 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
         appendBorderAttributes(builder, style);
 
         // Background
-        builder.addAttribute("background-color", style.getBackgroundColor());
+        builder.addAttribute(GenerateConst.BACKGROUND_COLOR, style.getBackgroundColor());
     }
 
     /**
@@ -90,10 +91,10 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
 
         if(style==null) return;
         if(style.getBreakBefore() != null){
-            builder.addAttribute("break-before", style.getBreakBefore().getFoValue());
+            builder.addAttribute(GenerateConst.BREAK_BEFORE, style.getBreakBefore().getFoValue());
         }
         if (style.getBreakAfter() != null && style.getBreakAfter() == PageBreakVariant.PAGE) {
-            builder.addAttribute("break-after", style.getBreakAfter().getFoValue());
+            builder.addAttribute(GenerateConst.BREAK_AFTER, style.getBreakAfter().getFoValue());
         }
     }
 
@@ -101,11 +102,11 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
      * Appends padding attributes (all sides).
      */
     private void appendPaddingAttributes(TagBuilder builder, ElementBlockStyleProperties style) {
-        builder.addAttribute("padding", style.getPadding());
-        builder.addAttribute("padding-top", style.getPaddingTop());
-        builder.addAttribute("padding-bottom", style.getPaddingBottom());
-        builder.addAttribute("padding-left", style.getPaddingLeft());
-        builder.addAttribute("padding-right", style.getPaddingRight());
+        builder.addAttribute(GenerateConst.PADDING, style.getPadding());
+        builder.addAttribute(GenerateConst.PADDING_TOP, style.getPaddingTop());
+        builder.addAttribute(GenerateConst.PADDING_BOTTOM, style.getPaddingBottom());
+        builder.addAttribute(GenerateConst.PADDING_LEFT, style.getPaddingLeft());
+        builder.addAttribute(GenerateConst.PADDING_RIGHT, style.getPaddingRight());
     }
 
     /**
@@ -113,10 +114,10 @@ public abstract class BlockElementFoGenerator extends ElementFoGenerator {
      */
     private void appendBorderAttributes(TagBuilder builder, ElementBlockStyleProperties style) {
 
-        builder.addAttribute("border", style.getBorder());
-        builder.addAttribute("border-top", style.getBorderTop());
-        builder.addAttribute("border-bottom", style.getBorderBottom());
-        builder.addAttribute("border-left", style.getBorderLeft());
-        builder.addAttribute("border-right", style.getBorderRight());
+        builder.addAttribute(GenerateConst.BORDER, style.getBorder());
+        builder.addAttribute(GenerateConst.BORDER_TOP, style.getBorderTop());
+        builder.addAttribute(GenerateConst.BORDER_BOTTOM, style.getBorderBottom());
+        builder.addAttribute(GenerateConst.BORDER_LEFT, style.getBorderLeft());
+        builder.addAttribute(GenerateConst.BORDER_RIGHT, style.getBorderRight());
     }
 }
