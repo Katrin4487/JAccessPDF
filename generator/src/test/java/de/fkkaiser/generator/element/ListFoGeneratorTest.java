@@ -76,7 +76,7 @@ class ListFoGeneratorTest {
                 List.of(new ListItem(null, null,new ArrayList<>()), new ListItem(null, null,new ArrayList<>()))
         );
         ListStyleProperties styleProperties = new ListStyleProperties();
-        styleProperties.setListStyleType(ListStyleType.CIRCLE);
+        styleProperties.setListStyleType(ListStyleType.HYPHEN);
         list.setResolvedStyle(styleProperties);
 
         StyleSheet styleSheet = StyleSheet.builder().build();

@@ -80,7 +80,7 @@ class ListStylePropertiesTest {
           "text-color": "#222",
           "provisional-distance-between-starts": "2.5cm",
           "provisional-label-separation": "1cm",
-          "list-style-type": "circle",
+          "list-style-type": "hyphen",
           "list-style-image": "url(image.png)"
         }
         """;
@@ -94,7 +94,7 @@ class ListStylePropertiesTest {
         assertEquals("#222", properties.getTextColor());
         assertEquals("2.5cm", properties.getProvDistBetweenStarts());
         assertEquals("1cm", properties.getProvLabelSeparation());
-        assertEquals(ListStyleType.CIRCLE, properties.getListStyleType());
+        assertEquals(ListStyleType.HYPHEN, properties.getListStyleType());
         assertEquals("url(image.png)", properties.getListStyleImage());
     }
 }

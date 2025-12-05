@@ -315,13 +315,12 @@ public class ListFoGenerator extends ElementFoGenerator {
      * @return the Unicode character for the bullet
      */
     private String getUnorderedLabel(ListStyleType type) {
-        if (type == null) return "&#x2022;";  // bullet
+        if (type == null) return "•";
         return switch (type) {
-            case ListStyleType.NONE -> "";
-            case ListStyleType.BULLET -> "&#x2022;";
-            case ListStyleType.CIRCLE -> "&#x25CB;";  // hollow circle
-            case ListStyleType.SQUARE -> "&#x25AA;";  // small square
-            default -> "&#x2022;";        // bullet
+            case NONE -> "";
+            case SMALL_DOT -> "·";
+            case HYPHEN -> "-";
+            default -> "•"; //Bullet
         };
     }
 }

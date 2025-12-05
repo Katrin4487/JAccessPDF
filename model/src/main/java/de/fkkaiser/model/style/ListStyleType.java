@@ -30,8 +30,8 @@ public enum ListStyleType {
 
     NONE("none"),
     BULLET("bullet"),
-    CIRCLE("circle"),
-    SQUARE("square"),
+    SMALL_DOT("small-dot"),
+    HYPHEN("hyphen"),
     NUMBER("number"),
     LOWER_ALPHA("lower-alpha"),
     UPPER_ALPHA("upper-alpha");
