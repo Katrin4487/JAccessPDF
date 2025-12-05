@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.fkkaiser</groupId>
         <artifactId>jaccess-pdf</artifactId>
-        <version>0.10.2-SNAPSHOT</version>
+        <version>0.10.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>api</artifactId>
@@ -20,19 +20,19 @@
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>model</artifactId>
-            <version>0.10.2-SNAPSHOT</version>
+            <version>0.10.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>processor</artifactId>
-            <version>0.10.2-SNAPSHOT</version>
+            <version>0.10.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>generator</artifactId>
-            <version>0.10.2-SNAPSHOT</version>
+            <version>0.10.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
