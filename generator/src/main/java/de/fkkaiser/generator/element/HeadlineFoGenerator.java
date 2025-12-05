@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateConst;
 import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.structure.Headline;
@@ -26,9 +27,12 @@ import de.fkkaiser.model.style.TextBlockStyleProperties;
  * Generates XSL-FO for Headline elements.
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class HeadlineFoGenerator extends TextBlockFoGenerator {
+
+
+    private static final String ROLE_HEADLINE = "H";
 
     /**
      * Constructor for HeadlineFoGenerator.
@@ -46,9 +50,9 @@ public class HeadlineFoGenerator extends TextBlockFoGenerator {
     @Override
     protected String getRole(TextBlock textBlock) {
         if (textBlock instanceof Headline) {
-            return "H" + ((Headline) textBlock).getLevel();
+            return ROLE_HEADLINE + ((Headline) textBlock).getLevel();
         }
-        return "P";
+        return GenerateConst.ROLE_PARAGRAPH;
     }
 
     /**
@@ -61,7 +65,7 @@ public class HeadlineFoGenerator extends TextBlockFoGenerator {
 
         if (style instanceof HeadlineStyleProperties hStyle) {
             if (hStyle.getKeepWithNext() != null && hStyle.getKeepWithNext()) {
-                builder.addAttribute("keep-with-next.within-page","always");
+                builder.addAttribute(GenerateConst.KEEP_WITH_NEXT_WITHIN_PAGE,GenerateConst.ALWAYS);
             }
 
         }

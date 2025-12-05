@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateConst;
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.TagBuilder;
@@ -38,7 +39,7 @@ import java.util.List;
  * Generator for Images
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @Internal
 public class ImageFoGenerator extends ElementFoGenerator {
@@ -54,16 +55,16 @@ public class ImageFoGenerator extends ElementFoGenerator {
         BlockImage blockImage = (BlockImage) element;
         BlockImageStyleProperties style = blockImage.getResolvedStyle();
 
-        TagBuilder blockBuilder = GenerateUtils.tagBuilder("block");
+        TagBuilder blockBuilder = GenerateUtils.tagBuilder(GenerateConst.BLOCK);
 
         if (isExternalArtefact) {
-            blockBuilder.addAttribute("fox:content-type", "external-artifact");
+            blockBuilder.addAttribute(GenerateConst.CONTENT_TYPE, GenerateConst.EXTERNAL_ARTIFACT);
         }
 
         appendBlockAttributes(blockBuilder, style, styleSheet);
 
         // Create the external-graphic element
-        TagBuilder graphicBuilder = GenerateUtils.tagBuilder("external-graphic");
+        TagBuilder graphicBuilder = GenerateUtils.tagBuilder(GenerateConst.EXTERNAL_GRAPHIC);
         appendImageAttributes(graphicBuilder, style);
 
         try {
@@ -76,13 +77,13 @@ public class ImageFoGenerator extends ElementFoGenerator {
                     String base64String = Base64.getEncoder().encodeToString(imageBytes);
                     String srcDataUri = "data:" + mimeType + ";base64," + base64String;
 
-                    graphicBuilder.addAttribute("src", srcDataUri);
+                    graphicBuilder.addAttribute(GenerateConst.SRC, srcDataUri);
 
                     // Alt text (empty if not provided)
                     String altText = (blockImage.getAltText() != null && !blockImage.getAltText().isEmpty())
                             ? blockImage.getAltText()
                             : "";
-                    graphicBuilder.addAttribute("fox:alt-text", altText);
+                    graphicBuilder.addAttribute(GenerateConst.ALT_TEXT, altText);
                 }
             }
         } catch (IOException e) {
@@ -99,8 +100,8 @@ public class ImageFoGenerator extends ElementFoGenerator {
         if (style == null) return;
 
         builder
-                .addAttribute("text-align", style.getAlignment())
-                .addAttribute("width", style.getBlockWidth());
+                .addAttribute(GenerateConst.TEXT_ALIGN, style.getAlignment())
+                .addAttribute(GenerateConst.WIDTH, style.getBlockWidth());
 
         setFontStyle(styleSheet, style, builder);
     }
@@ -109,7 +110,7 @@ public class ImageFoGenerator extends ElementFoGenerator {
         if (style == null) return;
 
         builder
-                .addAttribute("content-width", style.getContentWidth())
-                .addAttribute("scaling", style.getScaling());
+                .addAttribute(GenerateConst.CONTENT_WIDTH, style.getContentWidth())
+                .addAttribute(GenerateConst.SCALING, style.getScaling());
     }
 }

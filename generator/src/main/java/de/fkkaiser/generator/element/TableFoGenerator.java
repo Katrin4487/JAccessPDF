@@ -15,10 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateUtils;
-import de.fkkaiser.generator.ImageResolver;
-import de.fkkaiser.generator.TagBuilder;
-import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.generator.*;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TableCellStyleProperties;
@@ -29,6 +26,9 @@ import java.util.List;
 /**
  * TableFoGenerator extends ElementFoGenerator and is responsible for
  * generating XSL-FO block representation of a table element.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
 public class TableFoGenerator extends ElementFoGenerator {
 
@@ -65,8 +65,8 @@ public class TableFoGenerator extends ElementFoGenerator {
         TableStyleProperties style = table.getResolvedStyle();
 
         // The entire table is wrapped in a block to control spacing before/after.
-        TagBuilder containerBlock = GenerateUtils.tagBuilder("block")
-                .addAttribute("fox:content-type", "external-artifact");
+        TagBuilder containerBlock = GenerateUtils.tagBuilder(GenerateConst.BLOCK)
+                .addAttribute(GenerateConst.CONTENT_TYPE, GenerateConst.EXTERNAL_ARTIFACT);
 
         if (style != null) {
             // Apply text properties from the table style to the container block
@@ -74,40 +74,40 @@ public class TableFoGenerator extends ElementFoGenerator {
         }
 
         // Build the table
-        TagBuilder tableBuilder = GenerateUtils.tagBuilder("table")
-                .addAttribute("table-layout", "fixed");
+        TagBuilder tableBuilder = GenerateUtils.tagBuilder(GenerateConst.TABLE)
+                .addAttribute(GenerateConst.TABLE_LAYOUT, GenerateConst.FIXED); //Customize me?
 
         if (style != null) {
             tableBuilder
-                    .addAttribute("border-collapse", style.getBorderCollapse())
-                    .addAttribute("width", style.getWidth());
+                    .addAttribute(GenerateConst.BORDER_COLLAPSE, style.getBorderCollapse())
+                    .addAttribute(GenerateConst.WIDTH, style.getWidth());
         }
 
         // Add table columns
         for (String colWidth : table.getColumns()) {
             tableBuilder.addChild(
-                    GenerateUtils.tagBuilder("table-column")
-                            .addAttribute("column-width", colWidth)
+                    GenerateUtils.tagBuilder(GenerateConst.TABLE_COLUMN)
+                            .addAttribute(GenerateConst.COLUMN_WIDTH, colWidth)
             );
         }
 
         // Add table header
         if (table.getHeader() != null) {
-            TagBuilder headerBuilder = GenerateUtils.tagBuilder("table-header");
+            TagBuilder headerBuilder = GenerateUtils.tagBuilder(GenerateConst.TABLE_HEADER);
             generateRows(table.getHeader(), styleSheet, headerBuilder, headlines, resolver);
             tableBuilder.addChild(headerBuilder);
         }
 
         // Add table footer
         if (table.getFooter() != null) {
-            TagBuilder footerBuilder = GenerateUtils.tagBuilder("table-footer");
+            TagBuilder footerBuilder = GenerateUtils.tagBuilder(GenerateConst.TABLE_FOOTER);
             generateRows(table.getFooter(), styleSheet, footerBuilder, headlines, resolver);
             tableBuilder.addChild(footerBuilder);
         }
 
         // Add table body
         if (table.getBody() != null) {
-            TagBuilder bodyBuilder = GenerateUtils.tagBuilder("table-body");
+            TagBuilder bodyBuilder = GenerateUtils.tagBuilder(GenerateConst.TABLE_BODY);
             generateRows(table.getBody(), styleSheet, bodyBuilder, headlines, resolver);
             tableBuilder.addChild(bodyBuilder);
         }
@@ -130,7 +130,7 @@ public class TableFoGenerator extends ElementFoGenerator {
         if (section == null || section.rows() == null) return;
 
         for (TableRow row : section.rows()) {
-            TagBuilder rowBuilder = GenerateUtils.tagBuilder("table-row");
+            TagBuilder rowBuilder = GenerateUtils.tagBuilder(GenerateConst.TABLE_ROW);
 
             if (row.cells() != null) {
                 for (TableCell cell : row.cells()) {
@@ -156,23 +156,23 @@ public class TableFoGenerator extends ElementFoGenerator {
                                     List<Headline> headlines, ImageResolver resolver) {
         TableCellStyleProperties style = cell.getResolvedStyle();
 
-        TagBuilder cellBuilder = GenerateUtils.tagBuilder("table-cell");
+        TagBuilder cellBuilder = GenerateUtils.tagBuilder(GenerateConst.TABLE_CELL);
 
         // Add colspan and rowspan attributes
         if (cell.getColspan() > 1) {
-            cellBuilder.addAttribute("number-columns-spanned", String.valueOf(cell.getColspan()));
+            cellBuilder.addAttribute(GenerateConst.NUMBER_COLUMNS_SPANNED, String.valueOf(cell.getColspan()));
         }
         if (cell.getRowspan() > 1) {
-            cellBuilder.addAttribute("number-rows-spanned", String.valueOf(cell.getRowspan()));
+            cellBuilder.addAttribute(GenerateConst.NUMBER_ROWS_SPANNED, String.valueOf(cell.getRowspan()));
         }
 
         if (style != null) {
             // Apply styles directly to the cell. The content will inherit them.
             cellBuilder
-                    .addAttribute("border", style.getBorder())
-                    .addAttribute("padding", style.getPadding())
-                    .addAttribute("background-color", style.getBackgroundColor())
-                    .addAttribute("display-align", style.getVerticalAlign());
+                    .addAttribute(GenerateConst.BORDER, style.getBorder())
+                    .addAttribute(GenerateConst.PADDING, style.getPadding())
+                    .addAttribute(GenerateConst.BACKGROUND_COLOR, style.getBackgroundColor())
+                    .addAttribute(GenerateConst.DISPLAY_ALIGN, style.getVerticalAlign());
 
             // Apply inheritable font styles
             this.setFontStyle(styleSheet, style, cellBuilder);
@@ -182,7 +182,7 @@ public class TableFoGenerator extends ElementFoGenerator {
         StringBuilder cellContent = new StringBuilder();
         mainGenerator.generateBlockElements(cell.getElements(), styleSheet, cellContent, headlines, resolver, false);
 
-        TagBuilder contentBlock = GenerateUtils.tagBuilder("block")
+        TagBuilder contentBlock = GenerateUtils.tagBuilder(GenerateConst.BLOCK)
                 .addNestedContent(cellContent.toString());
 
         cellBuilder.addChild(contentBlock);

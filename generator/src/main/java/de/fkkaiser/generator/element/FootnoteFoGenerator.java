@@ -82,7 +82,7 @@ public class FootnoteFoGenerator extends InlineElementFoGenerator {
                 .addAttribute(GenerateConst.ROLE, GenerateConst.SPAN);
 
         // Inline marker for the footnote reference in the text
-        TagBuilder inlineMarker = GenerateUtils.tagBuilder(GenerateConst.INLINE_TAG)
+        TagBuilder inlineMarker = GenerateUtils.tagBuilder(GenerateConst.INLINE)
                 .addAttribute(GenerateConst.FONT_SIZE, "8pt") // Customize Me!
                 .addAttribute(GenerateConst.VERTICAL_ALIGN, "super")
                 .addContent(footnote.getIndex());

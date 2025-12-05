@@ -15,9 +15,17 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.style.StyleSheet;
 
+/**
+ * Generator for PageNumbers
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
+ */
+@Internal
 public class PageNumberFoGenerator extends InlineElementFoGenerator{
     /**
      * Generates the XSL-FO string for a specific inline element.

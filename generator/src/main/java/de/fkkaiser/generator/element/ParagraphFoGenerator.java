@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateConst;
 import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.annotation.Internal;
@@ -25,7 +26,7 @@ import de.fkkaiser.model.style.TextBlockStyleProperties;
 /**
  * Generates XSL-FO representation for Paragraph elements.
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @Internal
 public class ParagraphFoGenerator extends TextBlockFoGenerator {
@@ -47,7 +48,7 @@ public class ParagraphFoGenerator extends TextBlockFoGenerator {
     @Internal
     @Override
     protected String getRole(TextBlock textBlock) {
-        return "P";
+        return GenerateConst.ROLE_PARAGRAPH;
     }
 
     /**
@@ -61,22 +62,20 @@ public class ParagraphFoGenerator extends TextBlockFoGenerator {
         // This method handles properties that only exist in ParagraphStyleProperties.
         if (style instanceof ParagraphStyleProperties pStyle) {
             builder
-                    .addAttribute("text-indent", pStyle.getTextIndent())
-                    .addAttribute("text-align-last", pStyle.getTextAlignLast() != null ? pStyle.getTextAlignLast().getValue() : null)
-                    .addAttribute("language", pStyle.getLanguage());
+                    .addAttribute(GenerateConst.TEXT_INDENT, pStyle.getTextIndent())
+                    .addAttribute(GenerateConst.TEXT_ALIGN_LAST, pStyle.getTextAlignLast() != null ? pStyle.getTextAlignLast().getValue() : null)
+                    .addAttribute(GenerateConst.LANGUAGE, pStyle.getLanguage());
 
-            // Hyphenate is a boolean
+
             if (pStyle.isHyphenate()) {
-                builder.addAttribute("hyphenate", "true");
+                builder.addAttribute(GenerateConst.HYPHENATE, GenerateConst.TRUE);
             }
 
-            // The 'orphans' and 'widows' properties control the minimum number of lines
-            // of a paragraph to be left at the top or bottom of a page.
             if (pStyle.getOrphans() != null) {
-                builder.addAttribute("orphans", String.valueOf(pStyle.getOrphans()));
+                builder.addAttribute(GenerateConst.ORPHANS, String.valueOf(pStyle.getOrphans()));
             }
             if (pStyle.getWidows() != null) {
-                builder.addAttribute("widows", String.valueOf(pStyle.getWidows()));
+                builder.addAttribute(GenerateConst.WIDOWS, String.valueOf(pStyle.getWidows()));
             }
         }
     }

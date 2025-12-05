@@ -15,10 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateUtils;
-import de.fkkaiser.generator.ImageResolver;
-import de.fkkaiser.generator.TagBuilder;
-import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.generator.*;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
@@ -33,7 +30,7 @@ import java.util.List;
  * Generates the XSL-FO structure for a Part element.
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @Internal
 public class PartFoGenerator extends BlockElementFoGenerator {
@@ -67,8 +64,8 @@ public class PartFoGenerator extends BlockElementFoGenerator {
         Part part = (Part) element;
         PartStyleProperties style = part.getResolvedStyle();
 
-        TagBuilder blockBuilder = GenerateUtils.tagBuilder("block")
-                .addAttribute("role", part.getVariant().getPdfRole());
+        TagBuilder blockBuilder = GenerateUtils.tagBuilder(GenerateConst.BLOCK)
+                .addAttribute(GenerateConst.ROLE, part.getVariant().getPdfRole());
 
         // Common block attributes from parent class
         appendBlockAttributes(blockBuilder, style, styleSheet);
@@ -93,11 +90,11 @@ public class PartFoGenerator extends BlockElementFoGenerator {
         // This method handles properties that only exist in PartStyleProperties.
         if (style != null) {
             if (style.getBreakBefore() != null && style.getBreakBefore() != PageBreakVariant.AUTO) {
-                builder.addAttribute("break-before", style.getBreakBefore().getFoValue());
+                builder.addAttribute(GenerateConst.BREAK_BEFORE, style.getBreakBefore().getFoValue());
             }
 
             if (style.getBreakAfter() != null && style.getBreakAfter() != PageBreakVariant.AUTO) {
-                builder.addAttribute("break-after", style.getBreakAfter().getFoValue());
+                builder.addAttribute(GenerateConst.BREAK_AFTER, style.getBreakAfter().getFoValue());
             }
         }
     }

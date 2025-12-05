@@ -15,10 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateUtils;
-import de.fkkaiser.generator.ImageResolver;
-import de.fkkaiser.generator.TagBuilder;
-import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.generator.*;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.LayoutTable;
@@ -30,7 +27,7 @@ import java.util.List;
  * Generator for Layout Table
  *
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class LayoutTableFoGenerator extends ElementFoGenerator {
 
@@ -59,31 +56,31 @@ public class LayoutTableFoGenerator extends ElementFoGenerator {
         mainGenerator.generateBlockElement(table.getElementRight(), styleSheet, rightContent, headlines, resolver, false);
 
         // Build the table structure
-        TagBuilder tableBuilder = GenerateUtils.tagBuilder("table")
-                .addAttribute("table-layout", "fixed")
-                .addAttribute("width", "100%")
+        TagBuilder tableBuilder = GenerateUtils.tagBuilder(GenerateConst.TABLE)
+                .addAttribute(GenerateConst.TABLE_LAYOUT, "fixed") //Customize Me!
+                .addAttribute(GenerateConst.WIDTH, "100%")
                 .addChild(
-                        GenerateUtils.tagBuilder("table-column")
-                                .addAttribute("column-width", "85%")
+                        GenerateUtils.tagBuilder(GenerateConst.TABLE_COLUMN)
+                                .addAttribute(GenerateConst.COLUMN_WIDTH, "85%")
                 )
                 .addChild(
-                        GenerateUtils.tagBuilder("table-column")
-                                .addAttribute("column-width", "15%")
+                        GenerateUtils.tagBuilder(GenerateConst.TABLE_COLUMN)
+                                .addAttribute(GenerateConst.COLUMN_WIDTH, "15%")
                 )
                 .addChild(
-                        GenerateUtils.tagBuilder("table-body")
+                        GenerateUtils.tagBuilder(GenerateConst.TABLE_BODY)
                                 .addChild(
-                                        GenerateUtils.tagBuilder("table-row")
+                                        GenerateUtils.tagBuilder(GenerateConst.TABLE_ROW)
                                                 .addChild(
-                                                        GenerateUtils.tagBuilder("table-cell")
-                                                                .addAttribute("padding", "0pt")
+                                                        GenerateUtils.tagBuilder(GenerateConst.TABLE_CELL)
+                                                                .addAttribute(GenerateConst.PADDING, "0pt")
                                                                 .addNestedContent(leftContent.toString())
                                                 )
                                                 .addChild(
-                                                        GenerateUtils.tagBuilder("table-cell")
-                                                                .addAttribute("end-indent", "0pt")
-                                                                .addAttribute("text-align", "end")
-                                                                .addAttribute("padding", "0pt")
+                                                        GenerateUtils.tagBuilder(GenerateConst.TABLE_CELL)
+                                                                .addAttribute(GenerateConst.END_INDENT, "0pt")
+                                                                .addAttribute(GenerateConst.TEXT_ALIGN, "end")
+                                                                .addAttribute(GenerateConst.PADDING, "0pt")
                                                                 .addNestedContent(rightContent.toString())
                                                 )
                                 )

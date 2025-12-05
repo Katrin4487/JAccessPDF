@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateConst;
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.model.structure.InlineElement;
@@ -34,7 +35,7 @@ import java.util.Optional;
  * </p>
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class TextRunFoGenerator extends InlineElementFoGenerator {
 
@@ -82,27 +83,24 @@ public class TextRunFoGenerator extends InlineElementFoGenerator {
                 || style.getBaselineShift() != null
                 || style.getLineFeedTreatment() != null;
 
-        // If no styling, output plain text
         if (!hasStyling) {
             builder.append(normalizeText(textRun.getText()));
             return;
         }
 
-        TagBuilder inlineBuilder = GenerateUtils.tagBuilder("inline");
+        TagBuilder inlineBuilder = GenerateUtils.tagBuilder(GenerateConst.INLINE);
 
         // Apply font properties from the resolved text style
         textStyleOpt.ifPresent(ts -> GenerateUtils.appendTextStyleTags(inlineBuilder, ts));
 
         // Apply direct style properties
         inlineBuilder
-                .addAttribute("color", style.getTextColor())
-                .addAttribute("text-decoration", style.getTextDecoration())
-                .addAttribute("baseline-shift", style.getBaselineShift())
-                .addAttribute("linefeed-treatment", style.getLineFeedTreatment() != null ? style.getLineFeedTreatment().getValue() : null);
+                .addAttribute(GenerateConst.COLOR, style.getTextColor())
+                .addAttribute(GenerateConst.TEXT_DECORATION, style.getTextDecoration())
+                .addAttribute(GenerateConst.BASELINE_SHIFT, style.getBaselineShift())
+                .addAttribute(GenerateConst.LINEFEED_TREATMENT, style.getLineFeedTreatment() != null ? style.getLineFeedTreatment().getValue() : null);
 
-        // Add normalized text content
         inlineBuilder.addNestedContent(normalizeText(textRun.getText()));
-
         inlineBuilder.buildInto(builder);
     }
 }

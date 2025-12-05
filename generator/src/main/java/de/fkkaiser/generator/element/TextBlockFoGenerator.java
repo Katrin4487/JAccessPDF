@@ -15,10 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateUtils;
-import de.fkkaiser.generator.ImageResolver;
-import de.fkkaiser.generator.TagBuilder;
-import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.generator.*;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
 import de.fkkaiser.model.structure.InlineElement;
@@ -35,10 +32,11 @@ import java.util.UUID;
  * and adds text-specific properties (color, line-height, text-align, etc.).
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
 
+    private static final String PREFIX_HEADLINE_ID = "headline-";
     protected TextBlockFoGenerator(XslFoGenerator mainGenerator) {
         super(mainGenerator);
     }
@@ -53,13 +51,13 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
         TextBlock textBlock = (TextBlock) element;
         TextBlockStyleProperties style = textBlock.getResolvedStyle();
 
-        TagBuilder blockBuilder = GenerateUtils.tagBuilder("block")
-                .addAttribute("role", getRole(textBlock));
+        TagBuilder blockBuilder = GenerateUtils.tagBuilder(GenerateConst.BLOCK)
+                .addAttribute(GenerateConst.ROLE, getRole(textBlock));
 
         // Generate unique ID for headlines
         if (element instanceof Headline headline) {
-            String theId = "headline-" + UUID.randomUUID();
-            blockBuilder.addAttribute("id", theId);
+            String theId = PREFIX_HEADLINE_ID + UUID.randomUUID();
+            blockBuilder.addAttribute(GenerateConst.ID, theId);
             headline.setId(theId);
             headlines.add(headline);
         }
@@ -74,7 +72,7 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
         appendSpecificAttributes(blockBuilder, style);
 
         if (isExternalArtefact) {
-            blockBuilder.addAttribute("fox:content-type", "external-artifact");
+            blockBuilder.addAttribute(GenerateConst.CONTENT_TYPE, GenerateConst.EXTERNAL_ARTIFACT);
         }
 
         // Generate inline content
@@ -101,29 +99,29 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
 
         // Text color
         if (style.getTextColor() != null) {
-            builder.addAttribute("color",style.getTextColor());
+            builder.addAttribute(GenerateConst.COLOR,style.getTextColor());
         }
 
         // Line height
         if (style.getLineHeight() != null) {
-            builder.addAttribute("line-height",style.getLineHeight());
+            builder.addAttribute(GenerateConst.LINE_HEIGHT,style.getLineHeight());
         }
 
         // Text alignment
         if (style.getTextAlign() != null) {
-            builder.addAttribute("text-align",style.getTextAlign().toString());
+            builder.addAttribute(GenerateConst.TEXT_ALIGN,style.getTextAlign().toString());
         }
 
         // Span (for multi-column layouts)
         if (style.getSpan() != null) {
-            builder.addAttribute("span",style.getSpan().toString());
-            builder.addAttribute("space-before.conditionality","retain");
-            builder.addAttribute("space-after.conditionality","retain");
+            builder.addAttribute(GenerateConst.SPAN_PARAM,style.getSpan().toString());
+            builder.addAttribute(GenerateConst.SPACE_BEFORE_CONDITIONALITY,GenerateConst.RETAIN);
+            builder.addAttribute(GenerateConst.SPACE_AFTER_CONDITIONALITY,GenerateConst.RETAIN);
         }
 
         // Linefeed treatment
         if (style.getLinefeedTreatment() != null) {
-            builder.addAttribute("linefeed-treatment",style.getLinefeedTreatment().toString());
+            builder.addAttribute(GenerateConst.LINEFEED_TREATMENT,style.getLinefeedTreatment().toString());
         }
     }
 

@@ -15,10 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateUtils;
-import de.fkkaiser.generator.ImageResolver;
-import de.fkkaiser.generator.TagBuilder;
-import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.generator.*;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListItemStyleProperties;
 import de.fkkaiser.model.style.ListStyleProperties;
@@ -39,9 +36,16 @@ import java.util.List;
  * </p>
  *
  * @author Katrin Kaiser
- * @version 1.3.0
+ * @version 1.3.1
  */
 public class ListFoGenerator extends ElementFoGenerator {
+
+    private static final String ROLE_LIST = "L";
+    private static final String ROLE_LIST_ITEM = "LI";
+    private static final String ROLE_LIST_ITEM_LABEL = "Lbl";
+    private static final String ROLE_LIST_ITEM_BODY = "LBody";
+
+    private static final String NO_STYLE = "none";
 
     protected final XslFoGenerator mainGenerator;
 
@@ -80,13 +84,13 @@ public class ListFoGenerator extends ElementFoGenerator {
         SimpleList list = (SimpleList) element;
         ListStyleProperties style = list.getResolvedStyle();
 
-        TagBuilder listBlockBuilder = GenerateUtils.tagBuilder("list-block")
-                .addAttribute("role", "L");
+        TagBuilder listBlockBuilder = GenerateUtils.tagBuilder(GenerateConst.LIST_BLOCK)
+                .addAttribute(GenerateConst.ROLE, ROLE_LIST);
 
         appendListBlockAttributes(listBlockBuilder, style, styleSheet);
 
         if (isExternalArtefact) {
-            listBlockBuilder.addAttribute("fox:content-type", "external-artifact");
+            listBlockBuilder.addAttribute(GenerateConst.CONTENT_TYPE, GenerateConst.EXTERNAL_ARTIFACT);
         }
 
         // Generate list items
@@ -125,9 +129,9 @@ public class ListFoGenerator extends ElementFoGenerator {
                                         List<Headline> headlines,
                                         ImageResolver resolver) {
 
-        TagBuilder listItemBuilder = GenerateUtils.tagBuilder("list-item")
-                .addAttribute("space-before", "0.2cm")
-                .addAttribute("role", "LI");
+        TagBuilder listItemBuilder = GenerateUtils.tagBuilder(GenerateConst.LIST_ITEM)
+                .addAttribute(GenerateConst.SPACE_BEFORE, "0.2cm") //Customize me!
+                .addAttribute(GenerateConst.ROLE, ROLE_LIST_ITEM);
 
         // Generate label
         TagBuilder labelBuilder = generateListItemLabel(item, list, listStyle, counter, styleSheet);
@@ -160,7 +164,7 @@ public class ListFoGenerator extends ElementFoGenerator {
                                              int counter,
                                              StyleSheet styleSheet) {
 
-        TagBuilder labelBlockBuilder = GenerateUtils.tagBuilder("block");
+        TagBuilder labelBlockBuilder = GenerateUtils.tagBuilder(GenerateConst.BLOCK);
 
         // Generate custom label if provided, otherwise use default based on list type
         if (item.getLabel() != null && !item.getLabel().isEmpty()) {
@@ -174,15 +178,15 @@ public class ListFoGenerator extends ElementFoGenerator {
             if (item.getResolvedStyle() instanceof ListItemStyleProperties) {
                 itemStyle = (ListItemStyleProperties) item.getResolvedStyle();
             }
-            if (itemStyle == null || !itemStyle.getListStyleType().equals("none")) {
+            if (itemStyle == null || !itemStyle.getListStyleType().equals(NO_STYLE)) {
                 String labelText = generateDefaultListItemLabel(list.getOrdering(), listStyle, counter);
                 labelBlockBuilder.addNestedContent(labelText);
             }
         }
 
-        return GenerateUtils.tagBuilder("list-item-label")
-                .addAttribute("role", "Lbl")
-                .addAttribute("end-indent", "label-end()")
+        return GenerateUtils.tagBuilder(GenerateConst.LIST_ITEM_LABEL)
+                .addAttribute(GenerateConst.ROLE, ROLE_LIST_ITEM_LABEL)
+                .addAttribute(GenerateConst.END_INDENT, "label-end()")
                 .addChild(labelBlockBuilder);
     }
 
@@ -209,9 +213,9 @@ public class ListFoGenerator extends ElementFoGenerator {
         StringBuilder bodyContent = new StringBuilder();
         mainGenerator.generateBlockElement(item, styleSheet, bodyContent, headlines, resolver, false);
 
-        return GenerateUtils.tagBuilder("list-item-body")
-                .addAttribute("role", "LBody")
-                .addAttribute("start-indent", "body-start()")
+        return GenerateUtils.tagBuilder(GenerateConst.LIST_ITEM_BODY)
+                .addAttribute(GenerateConst.ROLE, ROLE_LIST_ITEM_BODY)
+                .addAttribute(GenerateConst.START_INDENT, "body-start()")
                 .addNestedContent(bodyContent.toString());
     }
 
@@ -232,8 +236,8 @@ public class ListFoGenerator extends ElementFoGenerator {
         setFontStyle(styleSheet, style, builder);
 
         builder
-                .addAttribute("provisional-distance-between-starts", style.getProvDistBetweenStarts())
-                .addAttribute("provisional-label-separation", style.getProvLabelSeparation());
+                .addAttribute(GenerateConst.PROVISIONAL_DISTANCE_BETWEEN_STARTS, style.getProvDistBetweenStarts())
+                .addAttribute(GenerateConst.PROVISIONAL_LABEL_SEPARATION, style.getProvLabelSeparation());
     }
 
     /**
@@ -290,7 +294,7 @@ public class ListFoGenerator extends ElementFoGenerator {
     private String getOrderedLabel(String type, int counter) {
         if (type == null) return counter + ".";
         return switch (type) {
-            case "none" -> "";
+            case NO_STYLE -> "";
             case "lower-alpha" -> (char) ('a' + counter - 1) + ".";
             case "upper-alpha" -> (char) ('A' + counter - 1) + ".";
             // Additional ordered types like 'lower-roman', 'upper-roman' can be added here
@@ -315,7 +319,7 @@ public class ListFoGenerator extends ElementFoGenerator {
     private String getUnorderedLabel(String type) {
         if (type == null) return "&#x2022;";  // bullet
         return switch (type) {
-            case "none" -> "";
+            case NO_STYLE -> "";
             case "circle" -> "&#x25CB;";  // hollow circle
             case "square" -> "&#x25AA;";  // small square
             default -> "&#x2022;";        // bullet

@@ -15,10 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateUtils;
-import de.fkkaiser.generator.ImageResolver;
-import de.fkkaiser.generator.TagBuilder;
-import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.generator.*;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.Element;
 import de.fkkaiser.model.structure.Headline;
@@ -43,11 +40,12 @@ import java.util.UUID;
  * properties and behaviors.
  *
  * @author Katrin Kaiser
- * @version 1.2.1
+ * @version 1.2.2
  */
 @Internal
 public class SectionFoGenerator extends BlockElementFoGenerator {
 
+    private static final String PREFIX_ID = "note-";
     private static final Logger log = LoggerFactory.getLogger(SectionFoGenerator.class);
 
     /**
@@ -84,7 +82,7 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
         Section section = (Section) element;
         SectionStyleProperties style = section.getResolvedStyle();
 
-        TagBuilder blockBuilder = GenerateUtils.tagBuilder("block");
+        TagBuilder blockBuilder = GenerateUtils.tagBuilder(GenerateConst.BLOCK);
         appendSectionAttributes(blockBuilder, section, style, styleSheet);
 
         // Build the section content
@@ -98,7 +96,7 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
 
             Optional<TextStyle> textStyleOpt = styleSheet.findFontStyleByName(style.getTextStyleName());
 
-            TagBuilder inlineBuilder = GenerateUtils.tagBuilder("inline");
+            TagBuilder inlineBuilder = GenerateUtils.tagBuilder(GenerateConst.INLINE);
             textStyleOpt.ifPresent(ts -> GenerateUtils.appendTextStyleTags(inlineBuilder, ts));
             inlineBuilder.addContent(style.getSectionMarker() + " ");
             inlineBuilder.buildInto(content);
@@ -129,16 +127,16 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
         if (role.equals(SectionVariant.NOTE.getPdfRole())) {
             // Needs unique ID for accessibility
             builder
-                    .addAttribute("role", "Div")
-                    .addAttribute("id", "note-" + UUID.randomUUID());
+                    .addAttribute(GenerateConst.ROLE, GenerateConst.ROLE_DIV)
+                    .addAttribute(GenerateConst.ID, PREFIX_ID + UUID.randomUUID());
 
             log.warn("Section with variant NOTE detected. Note is not correctly written in Structure Tree with FOP. Using DIV instead");
         } else {
-            builder.addAttribute("role", role);
+            builder.addAttribute(GenerateConst.ROLE, role);
         }
 
         // Alt-text
-        builder.addAttribute("fox:alt-text", section.getAltText());
+        builder.addAttribute(GenerateConst.ALT_TEXT, section.getAltText());
 
         if (style == null) return;
 
@@ -158,16 +156,16 @@ public class SectionFoGenerator extends BlockElementFoGenerator {
     private void appendSectionSpecificAttributes(TagBuilder builder, SectionStyleProperties style) {
         // Keep together
         if (Boolean.TRUE.equals(style.getKeepTogether())) {
-            builder.addAttribute("keep-together.within-page", "always");
+            builder.addAttribute(GenerateConst.KEEP_TOGETHER_WITHIN_PAGE, GenerateConst.ALWAYS);
         }
 
         // Orphans and widows
         if (style.getOrphans() != null) {
-            builder.addAttribute("orphans", String.valueOf(style.getOrphans()));
+            builder.addAttribute(GenerateConst.ORPHANS, String.valueOf(style.getOrphans()));
         }
 
         if (style.getWidows() != null) {
-            builder.addAttribute("widows", String.valueOf(style.getWidows()));
+            builder.addAttribute(GenerateConst.WIDOWS, String.valueOf(style.getWidows()));
         }
     }
 }

@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
+import de.fkkaiser.generator.GenerateConst;
 import de.fkkaiser.generator.GenerateUtils;
 import de.fkkaiser.generator.TagBuilder;
 import de.fkkaiser.model.annotation.Internal;
@@ -30,34 +31,36 @@ import java.util.Optional;
  * Generator for Hyperlinks
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @Internal
 public class HyperlinkFoGenerator extends InlineElementFoGenerator {
+
+    private static final String BASIC_LINK_TAG = "basic-link";
     @Override
     public void generate(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
         Hyperlink link = (Hyperlink) element;
 
-        TagBuilder linkBuilder = GenerateUtils.tagBuilder("basic-link")
-                .addAttribute("external-destination", link.getHref())
-                .addAttribute("fox:alt-text", link.getAltText());
+        TagBuilder linkBuilder = GenerateUtils.tagBuilder(BASIC_LINK_TAG)
+                .addAttribute(GenerateConst.EXTERNAL_DESTINATION, link.getHref())
+                .addAttribute(GenerateConst.ALT_TEXT, link.getAltText());
 
         TextRunStyleProperties style = link.getResolvedStyle();
         if (style != null) {
             // Font style from TextStyle
             Optional<TextStyle> fontStyleOpt = styleSheet.findFontStyleByName(style.getTextStyleName());
             fontStyleOpt.ifPresent(fontStyle -> linkBuilder
-                    .addAttribute("font-family", fontStyle.fontFamilyName())
-                    .addAttribute("font-size", fontStyle.fontSize())
-                    .addAttribute("font-weight", fontStyle.fontWeight())
-                    .addAttribute("font-style", fontStyle.fontStyle()));
+                    .addAttribute(GenerateConst.FONT_FAMILY, fontStyle.fontFamilyName())
+                    .addAttribute(GenerateConst.FONT_SIZE, fontStyle.fontSize())
+                    .addAttribute(GenerateConst.FONT_WEIGHT, fontStyle.fontWeight())
+                    .addAttribute(GenerateConst.FONT_STYLE, fontStyle.fontStyle()));
 
             // Text-specific styling
             linkBuilder
-                    .addAttribute("color", style.getTextColor())
-                    .addAttribute("background-color", style.getBackgroundColor())
-                    .addAttribute("text-decoration", style.getTextDecoration())
-                    .addAttribute("baseline-shift", style.getBaselineShift());
+                    .addAttribute(GenerateConst.COLOR, style.getTextColor())
+                    .addAttribute(GenerateConst.BACKGROUND_COLOR, style.getBackgroundColor())
+                    .addAttribute(GenerateConst.TEXT_DECORATION, style.getTextDecoration())
+                    .addAttribute(GenerateConst.BASELINE_SHIFT, style.getBaselineShift());
         }
 
         linkBuilder.addContent(link.getText());
