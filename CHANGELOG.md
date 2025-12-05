@@ -9,16 +9,18 @@
 - Widows and Orphans are integers in Paragraphs now (no booleans)
 - TextAlignLast in Paragraph can be used with TextAlign enum now
 - ElementTypes and InlineElementTypes is replaced wit ElementTargetTypes (enum instead of strings)
-- ListStyleTypes are enums now (String is not allowed anymore)
+- ListStyleTypes are enums now (String is not allowed anymore) and only bullet, small dot, hyphen and none
 
 ### Added
 - SimpleListBuilder for easier creation of SimpleLists
+- ListStyleType enum for easier creation of SimpleLists
 
 ### Fixed
 - Better title handling in metadata -> title is set as title with default language (so that veraPDF check not fails)
 - to prevent errors because of subsetting -> activated subsetting always for fonts
 - Fixed issue (FOP Bug?): Error (not in Struture Tree) when using note: replaced Note-Role in Section with Div
 - Keep with next works with headlines now
+- Linefeed Treatment has the correct value now
 
 ## [0.10.1] - 2025-12-02
 ### Changed
