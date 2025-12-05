@@ -3,6 +3,17 @@
 ## [Unreleased]
 
 ### Changed
+-- nothing yet --
+
+### Added
+-- nothing yet --
+
+### Fixed
+--- nothing yet --
+
+## [0.10.3] - 25-12-05
+
+### Changed
 - ParagraphBuilder has its own class now
 - TextAlign is now an enum instead of a string
 - Span is now an enum instead of a string
