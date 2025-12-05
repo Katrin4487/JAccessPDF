@@ -17,6 +17,7 @@
 package de.fkkaiser.generator;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -33,5 +34,5 @@ import java.net.URL;
  */
 @FunctionalInterface
 public interface ImageResolver {
-    URL resolve(String relativePath) throws IOException;
+    URL resolve(String relativePath) throws IOException, URISyntaxException;
 }
