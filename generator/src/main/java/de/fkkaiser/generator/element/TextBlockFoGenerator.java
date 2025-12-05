@@ -32,7 +32,7 @@ import java.util.UUID;
  * and adds text-specific properties (color, line-height, text-align, etc.).
  *
  * @author Katrin Kaiser
- * @version 1.1.1
+ * @version 1.1.2
  */
 public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
 
@@ -121,7 +121,7 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
 
         // Linefeed treatment
         if (style.getLinefeedTreatment() != null) {
-            builder.addAttribute(GenerateConst.LINEFEED_TREATMENT,style.getLinefeedTreatment().toString());
+            builder.addAttribute(GenerateConst.LINEFEED_TREATMENT,style.getLinefeedTreatment().getValue());
         }
     }
 
