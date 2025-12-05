@@ -17,6 +17,7 @@
 - Better title handling in metadata -> title is set as title with default language (so that veraPDF check not fails)
 - to prevent errors because of subsetting -> activated subsetting always for fonts
 - Fixed issue (FOP Bug?): Error (not in Struture Tree) when using note: replaced Note-Role in Section with Div
+- Keep with next works with headlines now
 
 ## [0.10.1] - 2025-12-02
 ### Changed

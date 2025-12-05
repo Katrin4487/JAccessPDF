@@ -396,6 +396,12 @@ public class GenerateConst {
     public static final String ROLE_PARAGRAPH = "P";
 
     /**
+     * Role Tag (prefix) for Headlines
+     */
+    public static final String ROLE_HEADLINE = "H";
+
+
+    /**
      * Role Tag for Div
      */
     public static final String ROLE_DIV = "Div";

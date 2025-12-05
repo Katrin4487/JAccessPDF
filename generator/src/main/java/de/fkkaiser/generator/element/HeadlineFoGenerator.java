@@ -27,12 +27,10 @@ import de.fkkaiser.model.style.TextBlockStyleProperties;
  * Generates XSL-FO for Headline elements.
  *
  * @author Katrin Kaiser
- * @version 1.0.2
+ * @version 1.1.2
  */
 public class HeadlineFoGenerator extends TextBlockFoGenerator {
 
-
-    private static final String ROLE_HEADLINE = "H";
 
     /**
      * Constructor for HeadlineFoGenerator.
@@ -50,7 +48,7 @@ public class HeadlineFoGenerator extends TextBlockFoGenerator {
     @Override
     protected String getRole(TextBlock textBlock) {
         if (textBlock instanceof Headline) {
-            return ROLE_HEADLINE + ((Headline) textBlock).getLevel();
+            return GenerateConst.ROLE_HEADLINE + ((Headline) textBlock).getLevel();
         }
         return GenerateConst.ROLE_PARAGRAPH;
     }
@@ -62,13 +60,7 @@ public class HeadlineFoGenerator extends TextBlockFoGenerator {
      */
     @Override
     protected void appendSpecificAttributes(TagBuilder builder, TextBlockStyleProperties style) {
-
-        if (style instanceof HeadlineStyleProperties hStyle) {
-            if (hStyle.getKeepWithNext() != null && hStyle.getKeepWithNext()) {
-                builder.addAttribute(GenerateConst.KEEP_WITH_NEXT_WITHIN_PAGE,GenerateConst.ALWAYS);
-            }
-
-        }
+        // No specific style
     }
 
 }

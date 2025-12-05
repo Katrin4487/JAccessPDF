@@ -46,10 +46,8 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * The central facade for PDF generation from structured document models.
@@ -587,7 +585,7 @@ public final class PdfGenerationFacade {
         ImageResolver imageResolver = resourceProvider::getResource;
         String result = foGenerator.generate(document, styleSheet, imageResolver);
 
-        if(log.isDebugEnabled()){
+
             try {
                 Transformer prettyTransformer = TransformerFactory.newInstance().newTransformer();
                 prettyTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -597,10 +595,11 @@ public final class PdfGenerationFacade {
                 String prettyXslFo = writer.toString();
                 log.debug("----------------- Pretty XSL-FO-String -----------\n{}", prettyXslFo);
             } catch (Exception e) {
+                log.debug("Result is {}",new String(result.getBytes(), StandardCharsets.UTF_8));
                 throw new RuntimeException(e);
             }
 
-        }
+
         return result;
     }
 
@@ -637,7 +636,7 @@ public final class PdfGenerationFacade {
             // Set URI resolver for external resource resolution
             transformer.setURIResolver(new EFopURIResolver(resourceProvider));
 
-            if(log.isDebugEnabled()){
+
                 Transformer prettyTransformer = TransformerFactory.newInstance().newTransformer();
                 prettyTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
                 prettyTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
@@ -646,7 +645,7 @@ public final class PdfGenerationFacade {
                 String prettyXslFo = writer.toString();
                 log.debug("################# Pretty XSL-FO-String ################\n{}", prettyXslFo);
 
-            }
+
 
             // Prepare source and result
             InputStream xslFoStream = new ByteArrayInputStream(xslFoString.getBytes());
