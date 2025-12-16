@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * @author Katrin Kaiser
  * @version 1.0.1
  */
-public class LayoutTable implements Element{
+public class LayoutTable implements Element {
 
     private final String styleClass;
     private final Element elementLeft;
@@ -48,8 +48,8 @@ public class LayoutTable implements Element{
     /**
      * Constructor for creating a LayoutTable object.
      *
-     * @param styleClass  The style class of the layout table.
-     * @param elementLeft The element to be placed on the left side.
+     * @param styleClass   The style class of the layout table.
+     * @param elementLeft  The element to be placed on the left side.
      * @param elementRight The element to be placed on the right side.
      */
     public LayoutTable(
@@ -144,14 +144,14 @@ public class LayoutTable implements Element{
                 .orElse(new LayoutTableStyleProperties()); // Standard-Style, wenn nichts gefunden wurde
 
         LayoutTableStyleProperties finalStyle = (LayoutTableStyleProperties) specificStyle.copy();
-        if(finalStyle==null){
+        if (finalStyle == null) {
             finalStyle = new LayoutTableStyleProperties();
         }
         finalStyle.mergeWith(parentStyle);
         this.setResolvedStyle(finalStyle);
 
         StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
-        Stream.of(elementLeft,elementRight)
+        Stream.of(elementLeft, elementRight)
                 .filter(Objects::nonNull)
                 .forEach(elem -> elem.resolveStyles(childContext));
     }
