@@ -109,12 +109,12 @@ public abstract class TextBlockFoGenerator extends BlockElementFoGenerator {
 
         // Text alignment
         if (style.getTextAlign() != null) {
-            builder.addAttribute(GenerateConst.TEXT_ALIGN,style.getTextAlign().toString());
+            builder.addAttribute(GenerateConst.TEXT_ALIGN,style.getTextAlign().getValue());
         }
 
         // Span (for multi-column layouts)
         if (style.getSpan() != null) {
-            builder.addAttribute(GenerateConst.SPAN_PARAM,style.getSpan().toString());
+            builder.addAttribute(GenerateConst.SPAN_PARAM,style.getSpan().getValue());
             builder.addAttribute(GenerateConst.SPACE_BEFORE_CONDITIONALITY,GenerateConst.RETAIN);
             builder.addAttribute(GenerateConst.SPACE_AFTER_CONDITIONALITY,GenerateConst.RETAIN);
         }

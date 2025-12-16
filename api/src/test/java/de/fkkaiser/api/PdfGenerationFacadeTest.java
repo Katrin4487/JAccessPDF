@@ -36,8 +36,8 @@ public class PdfGenerationFacadeTest {
         EResourceProvider provider = new EClasspathResourceProvider();
         PdfGenerationFacade pdfGenerationFacade = new PdfGenerationFacade(provider);
 
-        InputStream structureStream = getResourceAsStream("jsons/structure2.json");
-        InputStream styleStream = getResourceAsStream("jsons/style2.json");
+        InputStream structureStream = getResourceAsStream("jsons/structure.json");
+        InputStream styleStream = getResourceAsStream("jsons/style.json");
         InputStream fontStream = getResourceAsStream("jsons/font-families.json"); // Using the name from the previous example
 
         ByteArrayOutputStream out = pdfGenerationFacade.generatePDF(structureStream,styleStream,fontStream);

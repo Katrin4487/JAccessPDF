@@ -11,7 +11,7 @@
 
 
 ### Fixed
---- nothing yet --
+- Fixed issue with incorrect value for text-align in TextBlocks 
 
 ## [0.10.2] - 25-12-05
 
