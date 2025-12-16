@@ -3,10 +3,11 @@
 ## [Unreleased]
 
 ### Changed
--- nothing yet --
+- Plugin Architecture for SVG added: SVG images are converted to PNG using Apache Batik now (if available in clasthpath (currently included in FOP dependencies))
 
 ### Added
--- nothing yet --
+- .svg is supported as image format (also for list-items) now (converted to .png using Apache Batik)
+
 
 ### Fixed
 --- nothing yet --
@@ -21,12 +22,10 @@
 - TextAlignLast in Paragraph can be used with TextAlign enum now
 - ElementTypes and InlineElementTypes is replaced wit ElementTargetTypes (enum instead of strings)
 - ListStyleTypes are enums now (String is not allowed anymore) and only bullet, small dot, hyphen and none
-- Plugin Architecture for SVG added: SVG images are converted to PNG using Apache Batik now (if available in clasthpath (currently included in FOP dependencies))
 
 ### Added
 - SimpleListBuilder for easier creation of SimpleLists
 - ListStyleType enum for easier creation of SimpleLists
-- .svg is supported as image format (also for list-items) now (converted to .png using Apache Batik)
 
 ### Fixed
 - Better title handling in metadata -> title is set as title with default language (so that veraPDF check not fails)
