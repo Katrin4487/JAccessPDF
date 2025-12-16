@@ -15,10 +15,7 @@
  */
 package de.fkkaiser.generator.element;
 
-import de.fkkaiser.generator.GenerateConst;
-import de.fkkaiser.generator.GenerateUtils;
-import de.fkkaiser.generator.ImageResolver;
-import de.fkkaiser.generator.TagBuilder;
+import de.fkkaiser.generator.*;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.BlockImage;
 import de.fkkaiser.model.structure.Element;
@@ -39,13 +36,13 @@ import java.util.List;
  * Generator for Images
  *
  * @author Katrin Kaiser
- * @version 1.1.1
+ * @version 1.1.2
  */
 @Internal
 public class ImageFoGenerator extends ElementFoGenerator {
     private static final Logger log = LoggerFactory.getLogger(ImageFoGenerator.class);
 
-    @Override
+     @Override
     public void generate(Element element,
                          StyleSheet styleSheet,
                          StringBuilder builder,
@@ -67,29 +64,17 @@ public class ImageFoGenerator extends ElementFoGenerator {
         TagBuilder graphicBuilder = GenerateUtils.tagBuilder(GenerateConst.EXTERNAL_GRAPHIC);
         appendImageAttributes(graphicBuilder, style);
 
-        try {
-            URL absoluteUrl = imageResolver.resolve(blockImage.getPath());
+        // SVGs werden automatisch zu PNG konvertiert!
+        String srcDataUri = ImageUtils.resolveToDataUri(blockImage.getPath(), imageResolver);
+        if (srcDataUri != null) {
+            graphicBuilder.addAttribute(GenerateConst.SRC, srcDataUri);
 
-            if (absoluteUrl != null) {
-                try (InputStream inputStream = absoluteUrl.openStream()) {
-                    byte[] imageBytes = inputStream.readAllBytes();
-                    String mimeType = absoluteUrl.toString().endsWith("png") ? "image/png" : "image/jpeg";
-                    String base64String = Base64.getEncoder().encodeToString(imageBytes);
-                    String srcDataUri = "data:" + mimeType + ";base64," + base64String;
-
-                    graphicBuilder.addAttribute(GenerateConst.SRC, srcDataUri);
-
-                    // Alt text (empty if not provided)
-                    String altText = (blockImage.getAltText() != null && !blockImage.getAltText().isEmpty())
-                            ? blockImage.getAltText()
-                            : "";
-                    graphicBuilder.addAttribute(GenerateConst.ALT_TEXT, altText);
-                }
-            }
-        } catch (IOException e) {
-            log.error("Unable to resolve image url for block image at path: {}", blockImage.getPath(), e);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            String altText = (blockImage.getAltText() != null && !blockImage.getAltText().isEmpty())
+                    ? blockImage.getAltText()
+                    : "";
+            graphicBuilder.addAttribute(GenerateConst.ALT_TEXT, altText);
+        } else {
+            log.warn("Could not resolve image for block image at path: {}", blockImage.getPath());
         }
 
         blockBuilder.addChild(graphicBuilder);

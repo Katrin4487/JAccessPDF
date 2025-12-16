@@ -335,6 +335,8 @@ public class GenerateConst {
      * Parameter for line height
      */
     public static final String LINE_HEIGHT = "line-height";
+
+    public static final String CONTENT_HEIGHT = "content-height";
     /**
      * Paramter for row span (table)
      */
@@ -405,6 +407,11 @@ public class GenerateConst {
      * Role Tag for Div
      */
     public static final String ROLE_DIV = "Div";
+
+    /**
+     * Tag for instream-foreign-object (for SVG images)
+     */
+    public static final String INSTREAM_FOREIGN_OBJECT = "instream-foreign-object";
 
 
 

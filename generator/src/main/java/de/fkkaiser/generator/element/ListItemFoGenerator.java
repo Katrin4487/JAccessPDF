@@ -43,10 +43,14 @@ import java.util.List;
  * </p>
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.2
  */
 public class ListItemFoGenerator extends TextBlockFoGenerator {
 
+    /**
+     * Constructor
+     * @param mainGenerator the main XSL-FO generator
+     */
     public ListItemFoGenerator(XslFoGenerator mainGenerator) {
         super(mainGenerator);
     }
@@ -80,16 +84,10 @@ public class ListItemFoGenerator extends TextBlockFoGenerator {
         ListItem listItem = (ListItem) element;
         ElementBlockStyleProperties style = listItem.getResolvedStyle();
 
-        // Generate the content blocks of the list item
         // Note: We do NOT generate fo:list-item or fo:list-item-body here,
-        // as that's handled by ListFoGenerator
         if (listItem.getElements() != null && !listItem.getElements().isEmpty()) {
-            // Delegate the generation of the list item's content to the main generator
-            // This allows a list item to contain paragraphs, other lists, tables, etc.
             mainGenerator.generateBlockElements(listItem.getElements(), styleSheet, builder, headlines, resolver, isExternalArtefact);
         } else {
-            // If the list item has no nested elements, create an empty block
-            // This ensures valid XSL-FO structure
             TagBuilder emptyBlock = GenerateUtils.tagBuilder("block");
             appendBlockAttributes(emptyBlock, style, styleSheet);
 

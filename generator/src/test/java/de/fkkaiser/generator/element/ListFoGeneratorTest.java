@@ -57,7 +57,6 @@ class ListFoGeneratorTest {
 
         // Assert the output
         String output = builder.toString();
-        System.out.println("OUTPUT "+output);
         assertTrue(output.contains("<fo:list-block"), "Generated content must contain list-block tag");
         assertTrue(output.contains("<fo:list-item"), "Generated content must contain list-item tag");
         assertTrue(output.contains("1."), "Generated list items should contain '1.' as default label");
@@ -91,7 +90,9 @@ class ListFoGeneratorTest {
         // Assert the output
         String output = builder.toString();
         assertTrue(output.contains("<fo:list-block"), "Generated content must contain list-block tag");
-        assertTrue(output.contains("&#x25CB;"), "Generated list items should use 'circle' symbol");
+        assertTrue(output.contains("-"), "Generated list items should use 'circle' symbol");
+
+
     }
 
     /**

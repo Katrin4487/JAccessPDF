@@ -21,6 +21,9 @@ import de.fkkaiser.model.style.ListItemStyleProperties;
 import de.fkkaiser.model.style.ListStyleProperties;
 import de.fkkaiser.model.style.ListStyleType;
 import de.fkkaiser.model.style.StyleSheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -37,10 +40,11 @@ import java.util.List;
  * </p>
  *
  * @author Katrin Kaiser
- * @version 1.4.1
+ * @version 1.4.2
  */
 public class ListFoGenerator extends ElementFoGenerator {
 
+    private static final Logger log = LoggerFactory.getLogger(ListFoGenerator.class);
     private static final String ROLE_LIST = "L";
     private static final String ROLE_LIST_ITEM = "LI";
     private static final String ROLE_LIST_ITEM_LABEL = "Lbl";
@@ -104,16 +108,10 @@ public class ListFoGenerator extends ElementFoGenerator {
     }
 
     /**
-     * Generates a single list item including label and body.
-     * <p>
-     * This method creates the fo:list-item structure with fo:list-item-label
-     * and fo:list-item-body. The body content is delegated to ListItemFoGenerator
-     * via the main generator's generateBlockElement method.
-     * </p>
-     *
-     * @param item the list item to generate
-     * @param list the parent list (for accessing ordering type)
-     * @param listStyle the resolved style of the parent list
+     * Generates a single list item (fo:list-item).
+     * @param item the list item
+     * @param list the parent list
+     * @param listStyle  the list style properties
      * @param counter the item counter (for ordered lists)
      * @param styleSheet the stylesheet
      * @param headlines the list of headlines
@@ -129,11 +127,11 @@ public class ListFoGenerator extends ElementFoGenerator {
                                         ImageResolver resolver) {
 
         TagBuilder listItemBuilder = GenerateUtils.tagBuilder(GenerateConst.LIST_ITEM)
-                .addAttribute(GenerateConst.SPACE_BEFORE, "0.2cm") //Customize me!
+                .addAttribute(GenerateConst.SPACE_BEFORE, "0.2cm")
                 .addAttribute(GenerateConst.ROLE, ROLE_LIST_ITEM);
 
-        // Generate label
-        TagBuilder labelBuilder = generateListItemLabel(item, list, listStyle, counter, styleSheet);
+        // Generate label - now with resolver
+        TagBuilder labelBuilder = generateListItemLabel(item, list, listStyle, counter, styleSheet, resolver);
         listItemBuilder.addChild(labelBuilder);
 
         // Generate body
@@ -143,29 +141,15 @@ public class ListFoGenerator extends ElementFoGenerator {
         return listItemBuilder;
     }
 
-    /**
-     * Generates the fo:list-item-label portion of a list item.
-     * <p>
-     * The label can be either custom (from inline elements in the ListItem)
-     * or generated based on the list's ordering and style type.
-     * </p>
-     *
-     * @param item the list item
-     * @param list the parent list
-     * @param listStyle the list style properties
-     * @param counter the item counter
-     * @param styleSheet the stylesheet
-     * @return the TagBuilder for the list item label
-     */
     private TagBuilder generateListItemLabel(ListItem item,
                                              SimpleList list,
                                              ListStyleProperties listStyle,
                                              int counter,
-                                             StyleSheet styleSheet) {
+                                             StyleSheet styleSheet,
+                                             ImageResolver resolver) {
 
         TagBuilder labelBlockBuilder = GenerateUtils.tagBuilder(GenerateConst.BLOCK);
 
-        // Generate custom label if provided, otherwise use default based on list type
         if (item.getLabel() != null && !item.getLabel().isEmpty()) {
             StringBuilder labelContent = new StringBuilder();
             for (InlineElement inline : item.getLabel()) {
@@ -178,7 +162,7 @@ public class ListFoGenerator extends ElementFoGenerator {
                 itemStyle = (ListItemStyleProperties) item.getResolvedStyle();
             }
             if (itemStyle == null || !itemStyle.getListStyleType().equals(ListStyleType.NONE)) {
-                String labelText = generateDefaultListItemLabel(list.getOrdering(), listStyle, counter);
+                String labelText = generateDefaultListItemLabel(list.getOrdering(), listStyle, counter, resolver);
                 labelBlockBuilder.addNestedContent(labelText);
             }
         }
@@ -239,30 +223,23 @@ public class ListFoGenerator extends ElementFoGenerator {
                 .addAttribute(GenerateConst.PROVISIONAL_LABEL_SEPARATION, style.getProvLabelSeparation());
     }
 
-    /**
-     * Generates the default list item label based on list type and ordering.
-     * <p>
-     * Priority order:
-     * <ol>
-     *   <li>Custom image (list-style-image)</li>
-     *   <li>Style type (list-style-type)</li>
-     *   <li>Default (bullet for unordered, number for ordered)</li>
-     * </ol>
-     * </p>
-     *
-     * @param ordering the list ordering type (ordered or unordered)
-     * @param style the list style properties
-     * @param counter the current item number (for ordered lists)
-     * @return the label as a string (can contain XML markup for images)
-     */
     private String generateDefaultListItemLabel(ListOrdering ordering,
                                                 ListStyleProperties style,
-                                                int counter) {
+                                                int counter,
+                                                ImageResolver resolver) {
         // Priority: 1. Image, 2. Type, 3. Default
         if (style != null && style.getListStyleImage() != null) {
-            return GenerateUtils.tagBuilder(GenerateConst.EXTERNAL_GRAPHIC)
-                    .addAttribute(GenerateConst.SRC, style.getListStyleImage())
-                    .build();
+            String dataUri = ImageUtils.resolveToDataUri(style.getListStyleImage(), resolver);
+            if (dataUri != null) {
+                return GenerateUtils.tagBuilder(GenerateConst.EXTERNAL_GRAPHIC)
+                        .addAttribute(GenerateConst.SRC, dataUri)
+                        .addAttribute(GenerateConst.CONTENT_HEIGHT, "0.4cm")
+                        .addAttribute(GenerateConst.CONTENT_WIDTH, "scale-to-fit")
+                        .build();
+            } else {
+                log.warn("Could not resolve list-style-image: {}, falling back to default label",
+                        style.getListStyleImage());
+            }
         }
 
         ListStyleType listStyleType = (style != null) ? style.getListStyleType() : null;
@@ -300,20 +277,6 @@ public class ListFoGenerator extends ElementFoGenerator {
         };
     }
 
-    /**
-     * Generates the label for an unordered list item.
-     * <p>
-     * Supports different bullet styles:
-     * <ul>
-     *   <li>disc (default): filled circle (•)</li>
-     *   <li>circle: hollow circle (○)</li>
-     *   <li>square: filled square (▪)</li>
-     * </ul>
-     * </p>
-     *
-     * @param type the list-style-type value
-     * @return the Unicode character for the bullet
-     */
     private String getUnorderedLabel(ListStyleType type) {
         if (type == null) return "•";
         return switch (type) {
