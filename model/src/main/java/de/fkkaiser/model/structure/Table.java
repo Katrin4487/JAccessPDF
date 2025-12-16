@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
+import de.fkkaiser.model.structure.builder.TableBuilder;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
@@ -71,6 +72,15 @@ public final class Table implements Element {
     public TableSection getBody() { return body; }
     public TableSection getFooter() { return footer; }
     public TableStyleProperties getResolvedStyle() { return resolvedStyle; }
+
+    /**
+     * Fluent builder for creating Table elements.
+     * @param styleClass The style class to be applied to the table.
+     * @return A TableBuilder instance for method chaining.
+     */
+    public static TableBuilder builder(String styleClass) {
+        return new TableBuilder(styleClass);
+    }
 
     @Override
     public ElementTargetType getType() {

@@ -7,6 +7,7 @@
 
 ### Added
 - .svg is supported as image format (also for list-items) now (converted to .png using Apache Batik)
+- Builder chain methods for creating Tables added
 
 
 ### Fixed
