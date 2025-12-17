@@ -16,14 +16,8 @@
 package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import java.io.IOException;
-import java.lang.annotation.ElementType;
-import java.util.Iterator;
 import java.util.Map;
 
 // Custom Jackson Serializer

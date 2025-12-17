@@ -213,18 +213,6 @@ public class Metadata {
     }
 
     /**
-     * Returns the PDF producer identifier.
-     *
-     * <p>This value is automatically set to the library identifier and cannot be changed.</p>
-     *
-     * @return the producer string, never {@code null}
-     */
-    @Internal
-    public String getProducer() {
-        return producer;
-    }
-
-    /**
      * Returns the document creation timestamp.
      *
      * @return the creation date and time, never {@code null}

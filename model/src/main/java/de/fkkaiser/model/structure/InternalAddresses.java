@@ -17,7 +17,6 @@ package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.JsonPropertyName;
-import de.fkkaiser.model.structure.builder.DocumentBuilder;
 
 /**
  * Represents internal addresses for custom font and image dictionaries within a PDF document.

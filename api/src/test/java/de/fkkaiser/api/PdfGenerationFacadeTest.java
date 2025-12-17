@@ -42,22 +42,21 @@ public class PdfGenerationFacadeTest {
 
         ByteArrayOutputStream out = pdfGenerationFacade.generatePDF(structureStream,styleStream,fontStream);
 
-        writeOutputStreamToFile(out, "output.pdf");
+        writeOutputStreamToFile(out);
 
 
     }
 
-    private void writeOutputStreamToFile(ByteArrayOutputStream stream, String fileName) {
+    private void writeOutputStreamToFile(ByteArrayOutputStream stream) {
         System.out.println("Attempting to write test PDF to file...");
         try {
-            Path outputPath = Paths.get(fileName);
+            Path outputPath = Paths.get("output.pdf");
             try (OutputStream fileOutputStream = Files.newOutputStream(outputPath)) {
                 stream.writeTo(fileOutputStream);
                 System.out.println("Successfully wrote test PDF to: " + outputPath.toAbsolutePath());
             }
         } catch (Exception e) {
             System.err.println("Failed to write test PDF to file: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 

@@ -376,7 +376,6 @@ public class JsonPropertyName {
     public static final String ORPHANS = "orphans";
     public static final String WIDOWS = "widows";
     public static final String HYPHENATE = "hyphenate";
-    public static final String LINE_HEIGHT = "line-height";
     public static final String TEXT_ALIGN_LAST = "text-align-last";
     public static final String SECTION_MARKER = "section-marker";
     public static final String KEEP_TOGETHER = "keep-together";

@@ -293,7 +293,7 @@ public final class PdfGenerationFacade {
 
 
         try {
-            validateInputs(document, styleSheet, fontFamilyList);
+            validateInputs(document, styleSheet);
         }catch (Exception e) {
             log.error("Input validation failed", e);
             throw new PdfGenerationException("Input validation failed: " + e.getMessage(), e);
@@ -701,11 +701,10 @@ public final class PdfGenerationFacade {
      *
      * @param document   the document to validate
      * @param styleSheet the style sheet to validate
-     * @param fontFamilyList the font family list to validate (optional)
      * @throws NullPointerException if document or styleSheet is null
      * @throws IllegalStateException if styleSheet is invalid
      */
-    private void validateInputs(Document document, StyleSheet styleSheet, FontFamilyList fontFamilyList) {
+    private void validateInputs(Document document, StyleSheet styleSheet) {
         Objects.requireNonNull(document, "Document must not be null");
         Objects.requireNonNull(styleSheet, "StyleSheet must not be null");
     }

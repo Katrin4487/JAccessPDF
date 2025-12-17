@@ -18,8 +18,6 @@ package de.fkkaiser.api.simplelayer;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.*;
-import de.fkkaiser.model.style.builder.ParagraphStyleBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
 

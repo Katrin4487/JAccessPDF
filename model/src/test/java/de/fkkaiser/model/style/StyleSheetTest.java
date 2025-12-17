@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package de.fkkaiser.model.style;
-
-import de.fkkaiser.model.structure.ElementTargetType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
@@ -299,7 +297,7 @@ class StyleSheetTest {
                     .build();
 
             assertEquals(1, styleSheet.textStyles().size());
-            assertEquals("body-text", styleSheet.textStyles().get(0).name());
+            assertEquals("body-text", styleSheet.textStyles().getFirst().name());
         }
 
         @Test
@@ -313,7 +311,7 @@ class StyleSheetTest {
                     .build();
 
             assertEquals(1, styleSheet.elementStyles().size());
-            assertEquals("my-paragraph", styleSheet.elementStyles().get(0).name());
+            assertEquals("my-paragraph", styleSheet.elementStyles().getFirst().name());
         }
 
         @Test
@@ -408,6 +406,9 @@ class StyleSheetTest {
 
             assertNotNull(styleSheet.defaults());
             assertEquals(3, styleSheet.defaults().mappings().size());
+            assertTrue(styleSheet.defaults().get(StandardElementType.H1).isPresent());
+            assertTrue(styleSheet.defaults().get(StandardElementType.H2).isPresent());
+            assertTrue(styleSheet.defaults().get(StandardElementType.P).isPresent());
             assertEquals("h1-style", styleSheet.defaults().get(StandardElementType.H1).get());
             assertEquals("h2-style", styleSheet.defaults().get(StandardElementType.H2).get());
             assertEquals("p-style", styleSheet.defaults().get(StandardElementType.P).get());
