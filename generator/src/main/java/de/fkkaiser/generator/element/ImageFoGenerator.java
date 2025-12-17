@@ -24,12 +24,6 @@ import de.fkkaiser.model.style.BlockImageStyleProperties;
 import de.fkkaiser.model.style.StyleSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Base64;
 import java.util.List;
 
 /**
@@ -42,6 +36,15 @@ import java.util.List;
 public class ImageFoGenerator extends ElementFoGenerator {
     private static final Logger log = LoggerFactory.getLogger(ImageFoGenerator.class);
 
+    /**
+     * Generates the FO representation of a BlockImage element.
+     * @param element The element to be processed.
+     * @param styleSheet The entire StyleSheet for accessing, for example, Font information.
+     * @param builder The StringBuilder to which the generated string is appended.
+     * @param headlines The list of headlines in the document (for generating IDs).
+     * @param imageResolver The image resolver to resolve image paths.
+     * @param isExternalArtefact Indicates if the element is part of an external artifact.
+     */
      @Override
     public void generate(Element element,
                          StyleSheet styleSheet,
@@ -64,7 +67,7 @@ public class ImageFoGenerator extends ElementFoGenerator {
         TagBuilder graphicBuilder = GenerateUtils.tagBuilder(GenerateConst.EXTERNAL_GRAPHIC);
         appendImageAttributes(graphicBuilder, style);
 
-        // SVGs werden automatisch zu PNG konvertiert!
+        // SVGs are converted to PNG automatically
         String srcDataUri = ImageUtils.resolveToDataUri(blockImage.getPath(), imageResolver);
         if (srcDataUri != null) {
             graphicBuilder.addAttribute(GenerateConst.SRC, srcDataUri);
