@@ -19,18 +19,25 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.StyleResolverContext;
-
 import java.util.List;
 import java.util.Objects;
 
 /**
  * Represents a section of a table (header or body), containing multiple rows.
+ *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 public record TableSection(List<TableRow> rows) {
 
+    /**
+     * Creates a new TableSection with the specified list of rows.
+     *
+     * <p>This constructor is used by Jackson during JSON deserialization.
+     * If the rows parameter is null, it defaults to an empty list.</p>
+     *
+     * @param rows the list of table rows in this section; may be {@code null}
+     */
     @JsonCreator
     public TableSection(@JsonProperty(JsonPropertyName.ROWS) List<TableRow> rows) {
         this.rows = Objects.requireNonNullElse(rows, List.of());

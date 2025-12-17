@@ -17,13 +17,8 @@ package de.fkkaiser.model.style;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.JsonPropertyName;
-import de.fkkaiser.model.annotation.Internal;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
+import de.fkkaiser.model.style.builder.StyleSheetBuilder;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -37,10 +32,10 @@ import java.util.Optional;
 public record StyleSheet(
         @JsonProperty(JsonPropertyName.TEXT_STYLES) List<TextStyle> textStyles,
         @JsonProperty(JsonPropertyName.ELEMENT_STYLES) List<ElementStyle> elementStyles,
-        @JsonProperty(JsonPropertyName.PAGE_MASTER_STYLES) List<PageMasterStyle> pageMasterStyles
+        @JsonProperty(JsonPropertyName.PAGE_MASTER_STYLES) List<PageMasterStyle> pageMasterStyles,
+        @JsonProperty(JsonPropertyName.DEFAULTS) DefaultStyles defaults
 ) {
 
-    private static final Logger log = LoggerFactory.getLogger(StyleSheet.class);
     /**
      * Finds a text style by its name.
      *
@@ -57,113 +52,56 @@ public record StyleSheet(
     }
 
     /**
+     * Finds an element style by name, considering defaults and naming conventions.
+     *
+     * @param elementType The type of element (e.g., H1, P).
+     * @param explicitStyleName Optional explicit style name, or null to use defaults.
+     * @return Optional containing the found ElementStyle, or empty if not found.
+     */
+    public Optional<ElementStyle> findElementStyle(StandardElementType elementType, String explicitStyleName) {
+        if (explicitStyleName != null) {
+            Optional<ElementStyle> explicit = findElementStyleByName(explicitStyleName);
+            if (explicit.isPresent()) {
+                return explicit;
+            }
+        }
+
+        if (defaults != null) {
+            Optional<String> defaultStyleName = defaults.get(elementType);
+            if (defaultStyleName.isPresent()) {
+                Optional<ElementStyle> style = findElementStyleByName(defaultStyleName.get());
+                if (style.isPresent()) {
+                    return style;
+                }
+            }
+        }
+
+        // 3. Check naming convention (e.g., "h1-default")
+        String conventionName = elementType.getDefaultStyleName();
+        return findElementStyleByName(conventionName);
+    }
+
+    /**
+     * Finds an element style by its exact name.
+     * @param name The name of the element style.
+     * @return Optional containing the found ElementStyle, or empty if not found.
+     */
+    public Optional<ElementStyle> findElementStyleByName(String name) {
+        if (this.elementStyles == null || name == null) {
+            return Optional.empty();
+        }
+        return this.elementStyles.stream()
+                .filter(es -> name.equals(es.name()))
+                .findFirst();
+    }
+
+    /**
      * Entry point to create a new StyleSheet using the Builder pattern.
+     *
      * @return A new StyleSheetBuilder instance.
      */
     public static StyleSheetBuilder builder() {
         return new StyleSheetBuilder();
-    }
-
-    /**
-     * A fluent builder for creating an immutable StyleSheet object.
-     */
-    @SuppressWarnings("unused")
-    public static class StyleSheetBuilder {
-
-        // Internal mutable lists for aggregation
-        private final List<TextStyle> textStyles = new ArrayList<>();
-        private final List<ElementStyle> elementStyles = new ArrayList<>();
-        private final List<PageMasterStyle> pageMasterStyles = new ArrayList<>();
-
-        /**
-         * Private constructor to enforce usage via StyleSheet.builder()
-         */
-        private StyleSheetBuilder() {
-        }
-
-        /**
-         * Adds a TextStyle to the stylesheet.
-         * @param style The TextStyle to add.
-         * @return This builder instance for fluent chaining.
-         */
-        public StyleSheetBuilder addTextStyle(TextStyle style) {
-            if (style != null) {
-                this.textStyles.add(style);
-            }
-            return this;
-        }
-
-        /**
-         * Adds an ElementStyle to the stylesheet.
-         * @param style The ElementStyle to add.
-         * @return This builder instance for fluent chaining.
-         */
-        public StyleSheetBuilder addElementStyle(ElementStyle style) {
-            if (style != null) {
-                this.elementStyles.add(style);
-            }
-            return this;
-        }
-
-        /**
-         * Adds a PageMasterStyle to the stylesheet.
-         * @param style The PageMasterStyle to add.
-         * @return This builder instance for fluent chaining.
-         */
-        public StyleSheetBuilder addPageMasterStyle(PageMasterStyle style) {
-            if (style != null) {
-                this.pageMasterStyles.add(style);
-            }
-            return this;
-        }
-
-        /**
-         * Builds the final, immutable StyleSheet object.
-         * @return A new StyleSheet record.
-         */
-        public StyleSheet build() {
-
-            StringBuilder txtStyles = new StringBuilder();
-            for (TextStyle textStyle : this.textStyles) {
-                txtStyles.append(textStyle.name()).append(",");
-            }
-            log.debug("Text styles: {}",txtStyles);
-            StringBuilder elmeStyles = new StringBuilder();
-            for (ElementStyle elementStyle : this.elementStyles) {
-                elmeStyles.append(elementStyle.name()).append(",");
-            }
-
-            log.debug("Element styles: {}",elmeStyles);
-
-            return new StyleSheet(
-                    List.copyOf(this.textStyles),
-                    List.copyOf(this.elementStyles),
-                    List.copyOf(this.pageMasterStyles)
-            );
-        }
-    }
-
-    /**
-     * Validates the stylesheet contents.
-     * Currently, it validates each PageMasterStyle.
-     *
-     * @throws IllegalStateException if validation fails.
-     * @throws NullPointerException if required fields are null.
-     */
-    @Internal
-    public void validate(){
-        Objects.requireNonNull(this.pageMasterStyles, "pageMasterStyles must not be null");
-        Objects.requireNonNull(this.textStyles, "textStyles must not be null");
-        if(this.pageMasterStyles.isEmpty()){
-            log.error("No page master styles defined in the stylesheet.");
-            throw new IllegalStateException("No page master styles defined in the stylesheet.");
-        }
-        if(this.textStyles.isEmpty()){
-            log.error("No text styles defined in the stylesheet.");
-            throw new IllegalStateException("No text styles defined in the stylesheet.");
-        }
-        this.pageMasterStyles.forEach(PageMasterStyle::validate);
-        this.elementStyles.forEach(ElementStyle::validate);
     }
 
 }

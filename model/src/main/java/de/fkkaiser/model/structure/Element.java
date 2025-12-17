@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.style.ElementStyleProperties;
+import de.fkkaiser.model.style.StandardElementType;
 import de.fkkaiser.model.style.StyleResolverContext;
 
 /**
@@ -34,7 +35,7 @@ import de.fkkaiser.model.style.StyleResolverContext;
  * and {@link LayoutTable}.</p>
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -102,4 +103,15 @@ public interface Element {
      */
     @Internal
     ElementStyleProperties getResolvedStyle();
+
+    /**
+     * Returns the standard element type for this element.
+     *
+     * <p>This method is used to map the element to a predefined standard
+     * type for styling and processing purposes.</p>
+     *
+     * @return the standard element type
+     */
+    @Internal
+    StandardElementType getStandardElementType();
 }

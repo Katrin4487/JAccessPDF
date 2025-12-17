@@ -155,4 +155,14 @@ public class LayoutTable implements Element {
                 .filter(Objects::nonNull)
                 .forEach(elem -> elem.resolveStyles(childContext));
     }
+
+    /**
+     * Gets the standard element type for the layout table.
+     *
+     * @return {@null}, because there is no default.
+     */
+    @Override
+    public StandardElementType getStandardElementType() {
+        return null;
+    }
 }

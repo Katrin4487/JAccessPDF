@@ -57,7 +57,7 @@ public final class StyleResolverService {
                 .collect(Collectors.toMap(ElementStyle::name, Function.identity()));
 
         // Create the initial context. Initial parent style is null
-        StyleResolverContext initialContext = new StyleResolverContext(styleMap, null);
+        StyleResolverContext initialContext = new StyleResolverContext(styleSheet,styleMap, null);
 
         // Start the recursive process for all elements at the top level.
         if (document.pageSequences() != null) {

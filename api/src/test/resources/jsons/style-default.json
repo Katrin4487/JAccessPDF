@@ -1,0 +1,256 @@
+{
+  "page-master-styles": [
+    {
+      "name": "main-content",
+      "page-height": "29.7cm",
+      "page-width": "21cm",
+      "margin": "2cm"
+    }
+    ],
+  "text-styles": [
+      {
+        "name": "headline",
+        "font-size": "18pt",
+        "font-family-name": "Open Sans",
+        "font-weight": "400",
+        "font-style": "normal"
+      },
+    {
+      "name": "headline2",
+      "font-size": "16pt",
+      "font-family-name": "Open Sans",
+      "font-weight": "400",
+      "font-style": "normal"
+    },
+      {
+        "name": "normal-text",
+        "font-size": "11pt",
+        "font-family-name": "Open Sans",
+        "font-weight": "400",
+        "font-style": "normal"
+      },
+      {
+        "name": "emphasis",
+        "font-size": "11pt",
+        "font-family-name": "Open Sans",
+        "font-weight": "400",
+        "font-style": "italic"
+      },
+    {
+      "name": "bold",
+      "font-size": "11pt",
+      "font-family-name": "Open Sans",
+      "font-weight": "700",
+      "font-style": "normal"
+    }
+  ],
+  "element-styles": [
+    {
+      "name": "h1-default",
+      "target-element": "headline",
+      "properties": {
+        "text-style-name": "headline",
+        "space-before": "12pt",
+        "space-after": "6pt"
+      }
+    },
+    {
+      "name": "h2-style",
+      "target-element": "headline",
+      "properties": {
+        "text-style-name": "headline2",
+        "space-before": "12pt",
+        "space-after": "6pt"
+      }
+    },
+    {
+      "name": "standard-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-align": "justify",
+        "line-height": "1.5"
+      }
+    },
+    {
+      "name": "footnote-style",
+      "target-element": "footnote",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-color": "gray",
+        "start-indent": "2mm"
+      }
+    },
+    {
+      "name": "space-before-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-align": "justify",
+        "line-height": "20pt",
+        "space-before" :  "1cm",
+        "start-indent" : "1.5cm"
+      }
+    },
+    {
+      "name": "space-after-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-align": "justify",
+        "line-height": "20pt",
+        "space-after" :  "1cm",
+        "end-indent" : "1.5cm"
+      }
+    },
+    {
+      "name": "bold-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "bold",
+        "text-align": "justify",
+        "line-height": "20pt",
+        "space-after" :  "1cm",
+        "end-indent" : "1.5cm"
+      }
+    },
+    {
+      "name": "padding-paragraph",
+      "target-element": "paragraph",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-align": "justify",
+        "line-height": "20pt",
+        "padding" :  "1cm"
+      }
+    },
+    {
+      "name": "hyperlink-style",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-color": "green",
+        "text-decoration": "underline"
+      }
+    },
+    {
+      "name": "red-bold-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "bold",
+        "text-color": "red"
+      }
+    },
+    {
+      "name": "underline-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal",
+        "text-decoration": "underline"
+      }
+    },
+    {
+      "name": "overline-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal",
+        "text-decoration": "overline"
+      }
+    },
+    {
+      "name": "line-through-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal",
+        "text-decoration": "line-through"
+      }
+    },
+    {
+      "name": "normal-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "normal-text",
+        "text-color": "black"
+      }
+    },
+    {
+      "name": "bold-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "bold",
+        "text-color": "black"
+      }
+    },
+    {
+      "name": "italic-text-run",
+      "target-element": "text-run",
+      "properties": {
+        "text-style-name": "emphasis",
+        "text-color": "black"
+      }
+    },
+    {
+      "name" : "simple-list",
+      "target-element": "list",
+      "properties": {
+        "provisional-distance-between-starts" :  "0.5cm",
+        "text-style-name": "normal-text"
+      }
+    },
+    {
+      "name" : "def-list",
+      "target-element": "list",
+      "properties": {
+        "provisional-distance-between-starts" :  "5cm",
+        "provisional-label-separation" : "0.2cm",
+        "text-style-name": "normal-text"
+      }
+    },
+    {
+      "name": "standard-table",
+      "target-element": "table",
+      "properties": {
+        "text-style-name": "normal-text",
+        "border-collapse": "collapse",
+        "width": "100%"
+      }
+    },
+    {
+      "name": "header-cell",
+      "target-element": "table-cell",
+      "properties": {
+        "background-color": "#EFEFEF",
+        "text-style-name": "bold",
+        "padding": "6pt",
+        "border": "1pt solid black",
+        "vertical-align": "middle"
+      }
+    },
+    {
+      "name": "body-cell",
+      "target-element": "table-cell",
+      "properties": {
+        "padding": "5pt",
+        "border": "1pt solid #DDDDDD"
+      }
+    },
+    {
+      "name": "body-cell-amount",
+      "target-element": "table-cell",
+      "properties": {
+        "padding": "5pt",
+        "border": "1pt solid #DDDDDD",
+        "text-align": "right"
+      }
+    },
+    {
+      "name": "footer-cell-total",
+      "target-element": "table-cell",
+      "properties": {
+        "text-align": "center",
+        "padding": "8pt",
+        "border-top": "2pt solid black"
+      }
+    }
+  ]
+}

@@ -20,13 +20,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.style.StandardElementType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Represents a hyperlink inline element with text, style, href, and alt text.
+ *
  * @author Katrin Kaiser
- * @version 1.1.1
+ * @version 1.1.2
  */
 public class Hyperlink extends TextRun {
 
@@ -124,5 +126,18 @@ public class Hyperlink extends TextRun {
     @Override
     public ElementTargetType getType() {
         return ElementTargetType.HYPERLINK;
+    }
+
+    /**
+     * Returns the standard element type for this hyperlink.
+     *
+     * <p>This method maps the hyperlink to the predefined standard type
+     * {@link StandardElementType#HYPERLINK} for styling and processing purposes.</p>
+     *
+     * @return the standard element type HYPERLINK
+     */
+    @Override
+    public StandardElementType getStandardElementType() {
+        return StandardElementType.HYPERLINK;
     }
 }

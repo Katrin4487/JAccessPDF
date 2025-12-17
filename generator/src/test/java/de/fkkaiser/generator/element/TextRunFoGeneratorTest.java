@@ -65,13 +65,13 @@ class TextRunFoGeneratorTest {
 
         ElementStyle textRunStyle2 = new ElementStyle("text-run-style-2",ElementTargetType.TEXT_RUN,textRunStyleProps2);
 
-        styleSheet = new StyleSheet(List.of(boldStyle, italicStyle), List.of(paragraphStyle,textRunStyle,textRunStyle2), Collections.emptyList());
+        styleSheet = new StyleSheet(List.of(boldStyle, italicStyle), List.of(paragraphStyle,textRunStyle,textRunStyle2), Collections.emptyList(),null);
 
         Map<String,ElementStyle> styleMap = new HashMap<>();
         styleMap.put("paragraph-style",paragraphStyle);
         styleMap.put("text-run-style",textRunStyle);
         styleMap.put("text-run-style-2",textRunStyle2);
-        context = new StyleResolverContext(styleMap,paragraphStyleProps);
+        context = new StyleResolverContext(styleSheet,styleMap,paragraphStyleProps);
     }
 
 

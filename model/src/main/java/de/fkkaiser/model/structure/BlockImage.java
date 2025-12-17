@@ -22,10 +22,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
-import de.fkkaiser.model.style.BlockImageStyleProperties;
-import de.fkkaiser.model.style.ElementBlockStyleProperties;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.StyleResolverContext;
+import de.fkkaiser.model.style.*;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -149,5 +146,10 @@ public final class BlockImage implements Element {
         finalStyle.mergeWith(parentStyle);
 
         this.resolvedStyle = finalStyle;
+    }
+
+    @Override
+    public StandardElementType getStandardElementType() {
+        return StandardElementType.IMAGE;
     }
 }

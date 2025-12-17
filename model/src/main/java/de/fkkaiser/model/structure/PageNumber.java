@@ -22,24 +22,28 @@ import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.ElementStyleProperties;
+import de.fkkaiser.model.style.StandardElementType;
 import de.fkkaiser.model.style.StyleResolverContext;
+
 /**
  * Represents a page number inline element in the document structure.
+ *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 @JsonTypeName(JsonPropertyName.PAGE_NUMBER)
 public class PageNumber extends AbstractInlineElement {
 
     /**
      * Constructor for PageNumber.
+     *
      * @param styleClass the style class to be applied to the page number
      */
     @PublicAPI
     @JsonCreator
     public PageNumber(
             @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass
-           ) {
+    ) {
         super(styleClass);
     }
 
@@ -47,13 +51,14 @@ public class PageNumber extends AbstractInlineElement {
      * Default constructor for PageNumber with no style class.
      */
     @PublicAPI
-    public PageNumber(){
+    public PageNumber() {
         this(null);
     }
 
 
     /**
      * Gets the type of the element.
+     *
      * @return the element target type as PAGE_NUMBER
      */
     @Override
@@ -64,21 +69,34 @@ public class PageNumber extends AbstractInlineElement {
     /**
      * Resolves styles for the page number element.
      * No specific styles to resolve for page number.
+     *
      * @param context the style resolver context
      */
     @Internal
     @Override
     public void resolveStyles(StyleResolverContext context) {
-       //nothing here...
+        //nothing here...
     }
 
     /**
      * Gets the resolved style properties for the page number element.
+     *
      * @return null as there are no specific resolved styles for page number
      */
     @Internal
     @Override
     public ElementStyleProperties getResolvedStyle() {
+        return null;
+    }
+
+    /**
+     * Gets the standard element type for the page number.
+     *
+     * @return StandardElementType.PAGE_NUMBER
+     */
+    @Internal
+    @Override
+    public StandardElementType getStandardElementType() {
         return null;
     }
 }

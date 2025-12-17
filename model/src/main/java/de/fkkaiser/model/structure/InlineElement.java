@@ -23,6 +23,7 @@ import de.fkkaiser.model.JsonPropertyName;
  * Base interface for all inline elements in the document structure.
  * Inline elements are elements that can be part of text content, such as
  * text runs, hyperlinks, footnotes, and page numbers.
+ *
  * @author Katrin Kaiser
  * @version 1.1.0
  */
@@ -34,7 +35,6 @@ import de.fkkaiser.model.JsonPropertyName;
         @JsonSubTypes.Type(value = Hyperlink.class, name = JsonPropertyName.HYPERLINK)
 })
 public interface InlineElement extends Element {
-
 
 
 }

@@ -204,6 +204,6 @@ class SimpleStyleManager {
         PageMasterStyle pageMaster = new PageMasterStyle(PAGE_MASTER_STYLE_NAME);
         pageMasterStyles.add(pageMaster);
 
-        return new StyleSheet(textStyles, elementStyles, pageMasterStyles);
+        return new StyleSheet(textStyles, elementStyles, pageMasterStyles,null);
     }
 }

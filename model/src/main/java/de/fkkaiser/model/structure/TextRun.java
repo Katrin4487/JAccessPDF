@@ -22,28 +22,24 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
-import de.fkkaiser.model.style.ElementBlockStyleProperties;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.TextRunStyleProperties;
+import de.fkkaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents an inline element for displaying text within a document.
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 @JsonTypeName(JsonPropertyName.TEXT_RUN)
 public class TextRun extends AbstractInlineElement {
 
     private static final Logger log = LoggerFactory.getLogger(TextRun.class);
-
     private final String text;
-
 
     @JsonIgnore
     private TextRunStyleProperties resolvedStyle;
@@ -117,26 +113,48 @@ public class TextRun extends AbstractInlineElement {
      */
     @Override
     public void resolveStyles(StyleResolverContext context) {
+
         ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
-        TextRunStyleProperties specificRunStyle = new TextRunStyleProperties();
+        TextRunStyleProperties specificRunStyle = null;
+        ElementStyle specificElementStyle = null;
 
         if (styleClass != null && !styleClass.isEmpty()) {
+            specificElementStyle = context.styleMap().get(styleClass);
+        }
 
-            ElementStyle specificElementStyle = context.styleMap().get(styleClass);
-            if (specificElementStyle != null && specificElementStyle.properties() instanceof TextRunStyleProperties) {
+        if (specificElementStyle != null && specificElementStyle.properties() instanceof TextRunStyleProperties) {
+            specificRunStyle = (TextRunStyleProperties) specificElementStyle.properties();
 
-                specificRunStyle = (TextRunStyleProperties) specificElementStyle.properties();
+        }
+        if (specificRunStyle == null) {
+            StandardElementType docElement = getStandardElementType();
+            if (docElement != null && context.styleSheet() != null) {
+                Optional<ElementStyle> defaultStyle = context.styleSheet().findElementStyle(docElement, null);
 
-            } else {
-                log.warn("Style class '{}' not found or has incorrect type.", this.styleClass);
-                specificRunStyle = new TextRunStyleProperties();
-
+                if (defaultStyle.isPresent() &&
+                        defaultStyle.get().properties() instanceof TextRunStyleProperties defaultTextRunStyle) {
+                    specificRunStyle = defaultTextRunStyle.copy();
+                    log.debug("Using default style '{}' for {}",
+                            defaultStyle.get().name(), docElement.getJsonKey());
+                }
             }
+
+            specificRunStyle = specificRunStyle == null ? new TextRunStyleProperties() : specificRunStyle;
 
         }
 
         log.debug("Resolving specific run style {} for text {}", specificRunStyle.getTextStyleName(), this.text);
 
         this.resolvedStyle = TextRunStyleProperties.createResolved(parentStyle, specificRunStyle);
+    }
+
+    /**
+     * Returns the standard element type for this inline element.
+     *
+     * @return StandardElementType.P
+     */
+    @Override
+    public StandardElementType getStandardElementType() {
+        return StandardElementType.P;
     }
 }

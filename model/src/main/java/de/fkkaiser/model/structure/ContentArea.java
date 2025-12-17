@@ -71,7 +71,6 @@ import java.util.List;
  *
  * @param elements the list of block-level elements to be contained in this area;
  *                 if {@code null}, an empty mutable list is created
- *
  * @author Katrin Kaiser
  * @version 1.0.1
  * @see PageSequence
@@ -89,7 +88,7 @@ public record ContentArea(List<Element> elements) {
      * it is mutable if you plan to use {@link #addElement(Element)}.</p>
      *
      * @throws UnsupportedOperationException if attempting to modify an immutable
-     *         list that was passed to the constructor
+     *                                       list that was passed to the constructor
      */
     public ContentArea {
         if (elements == null) {
@@ -109,7 +108,7 @@ public record ContentArea(List<Element> elements) {
         this(null);
     }
 
-   /**
+    /**
      * Adds a block-level element to this content area.
      *
      * <p>This method appends the specified element to the internal list

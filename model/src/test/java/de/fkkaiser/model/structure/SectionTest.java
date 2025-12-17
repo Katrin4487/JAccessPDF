@@ -18,6 +18,7 @@ package de.fkkaiser.model.structure;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.SectionStyleProperties;
 import de.fkkaiser.model.style.StyleResolverContext;
+import de.fkkaiser.model.style.StyleSheet;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -27,6 +28,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SectionTest {
+
+    StyleSheet dummyStyleSheet = new StyleSheet(null, null, null, null);
 
     @Test
     void shouldCreateSectionWithAllParameters() {
@@ -97,6 +100,7 @@ class SectionTest {
         styleMap.put("base-section", elementStyle);
 
         StyleResolverContext context = new StyleResolverContext(
+                new StyleSheet(null,null,null,null),
                 styleMap,
                 null
         );
@@ -126,6 +130,7 @@ class SectionTest {
         styleMap.put("notice-box.note", new ElementStyle("notice-box.note", ElementTargetType.SECTION, variantStyle));
 
         StyleResolverContext context = new StyleResolverContext(
+                dummyStyleSheet,
                 styleMap,
                 null
         );
@@ -152,6 +157,7 @@ class SectionTest {
         // notice-box.note does NOT exist
 
         StyleResolverContext context = new StyleResolverContext(
+                dummyStyleSheet,
                 styleMap,
                 null
         );
@@ -175,7 +181,7 @@ class SectionTest {
         Map<String, ElementStyle> styleMap = new HashMap<>();
         styleMap.put("test", new ElementStyle("test", ElementTargetType.SECTION, style));
 
-        StyleResolverContext context = new StyleResolverContext(styleMap, null);
+        StyleResolverContext context = new StyleResolverContext(dummyStyleSheet,styleMap, null);
 
         // Should not throw exception
         assertDoesNotThrow(() -> section.resolveStyles(context));
@@ -186,6 +192,7 @@ class SectionTest {
         Section section = new Section(null, SectionVariant.NOTE, null, List.of());
 
         StyleResolverContext context = new StyleResolverContext(
+                dummyStyleSheet,
                 new HashMap<>(),
                 null
         );

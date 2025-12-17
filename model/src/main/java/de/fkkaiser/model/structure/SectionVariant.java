@@ -15,11 +15,15 @@
  */
 package de.fkkaiser.model.structure;
 
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.PublicAPI;
 
 /**
  * Defines the semantic variants for sections that map to PDF/UA structure types.
  * Each variant determines both the visual styling and the accessibility role.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.1
  */
 @PublicAPI
 public enum SectionVariant {
@@ -29,21 +33,21 @@ public enum SectionVariant {
      * Maps to PDF/UA role "Sect".
      * Use for general content grouping.
      */
-    SECTION("Sect"),
+    SECTION(JsonPropertyName.SECT),
 
     /**
      * Note or important information.
      * Maps to PDF/UA role "Note".
      * Use for warnings, errors, important notices, tips.
      */
-    NOTE("Note"),
+    NOTE(JsonPropertyName.NOTE),
 
     /**
      * Complementary or aside content.
      * Maps to PDF/UA role "Aside".
      * Use for examples, sidebars, supplementary information.
      */
-    ASIDE("Aside");
+    ASIDE(JsonPropertyName.ASIDE);
 
     private final String pdfRole;
 

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.FootnoteStyleProperties;
+import de.fkkaiser.model.style.StandardElementType;
 import de.fkkaiser.model.style.StyleResolverContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,22 +65,14 @@ public final class Footnote extends AbstractInlineElement {
     private FootnoteStyleProperties resolvedStyle;
 
     /**
-     * Creates a new Footnote element.
+     * Constructs a Footnote with the specified index, style class, and inline
+     * elements.
      *
-     * <p>This constructor is used by Jackson during JSON deserialization.
-     * A unique identifier is automatically generated for each footnote instance
-     * to enable proper linking between references and content during rendering.</p>
+     * @param index          the visible index marker for the footnote; if {@code null}
+     *                       or empty, defaults to "{@value #DEFAULT_INDEX}"
+     * @param styleClass     the CSS-like style class for styling
+     * @param inlineElements the list of inline elements that make up the footnote content
      *
-     * <p><b>Index Validation:</b></p>
-     * If the provided index is {@code null} or empty, a warning is logged and
-     * the default index "{@value #DEFAULT_INDEX}" is used instead. This ensures
-     * that every footnote has a valid display marker.
-     *
-     * @param index          the visible footnote marker (e.g., "1", "*", "a");
-     *                       if {@code null} or empty, defaults to "{@value #DEFAULT_INDEX}"
-     * @param styleClass     the CSS-like style class for styling properties; may be {@code null}
-     * @param inlineElements the list of inline elements forming the footnote content;
-     *                       may be {@code null} or empty for footnotes without content
      */
     @JsonCreator
     public Footnote(
@@ -131,11 +124,6 @@ public final class Footnote extends AbstractInlineElement {
     /**
      * Returns the list of inline elements that form the footnote content.
      *
-     * <p>These elements define what appears in the footnote area, typically
-     * including text segments, formatted text, or even nested inline elements.
-     * The content is rendered with styles inherited from the footnote's
-     * resolved style properties.</p>
-     *
      * @return the list of inline elements; may be {@code null} or empty
      */
     public List<InlineElement> getInlineElements() {
@@ -145,9 +133,6 @@ public final class Footnote extends AbstractInlineElement {
     /**
      * Returns the resolved style properties after style resolution.
      *
-     * <p>This value is populated during the {@link #resolveStyles(StyleResolverContext)}
-     * call and should not be accessed before style resolution has been performed.</p>
-     *
      * @return the resolved style properties; may be {@code null} before resolution
      */
     public FootnoteStyleProperties getResolvedStyle() {
@@ -156,9 +141,6 @@ public final class Footnote extends AbstractInlineElement {
 
     /**
      * Sets the resolved style properties for this footnote.
-     *
-     * <p>This method is package-private and intended for internal use during
-     * the style resolution process. It should not be called by client code.</p>
      *
      * @param resolvedStyle the resolved style properties to set
      */
@@ -177,64 +159,39 @@ public final class Footnote extends AbstractInlineElement {
     }
 
     /**
-     * Resolves the style for the footnote body and delegates style resolution
-     * to its child inline elements.
+     * Resolves and applies styles for this footnote using the provided context.
      *
-     * <p>This method implements a two-phase resolution strategy:</p>
-     *
-     * <p><b>Phase 1 - Footnote Body Resolution:</b></p>
-     * <ol>
-     *   <li>Looks up element-specific styles using the footnote's styleClass</li>
-     *   <li>If found and of type {@link FootnoteStyleProperties}, creates a copy</li>
-     *   <li>Merges with parent block styles to inherit properties</li>
-     *   <li>If no specific style exists, creates default properties and merges with parent</li>
-     *   <li>Stores the final resolved style in {@link #resolvedStyle}</li>
-     * </ol>
-     *
-     * <p><b>Phase 2 - Child Element Resolution:</b></p>
-     * <ol>
-     *   <li>Creates a new child context using the footnote's resolved style as parent</li>
-     *   <li>Recursively calls {@code resolveStyles} on each inline element</li>
-     *   <li>Each child inherits properties from the footnote's resolved style</li>
-     * </ol>
-     *
-     * <p>This cascading approach ensures that footnote content can have distinct
-     * styling from the main document text while maintaining internal consistency.</p>
-     *
-     * <p><b>Example Style Cascade:</b></p>
-     * <pre>
-     * Document Style (parent) → Footnote Style (this) → Text Segment Style (children)
-     *   font-size: 12pt           font-size: 9pt         (inherits 9pt from footnote)
-     *   color: black              color: gray            (inherits gray from footnote)
-     * </pre>
-     *
-     * @param context the style resolver context containing the style map and parent styles;
-     *                must not be {@code null}
+     * @param context the style resolver context containing style information
      */
     @Override
     public void resolveStyles(StyleResolverContext context) {
-        // 1. Resolve the style for the footnote body itself.
         ElementStyle specificElementStyle = context.styleMap().get(this.getStyleClass());
         if (specificElementStyle != null && specificElementStyle.properties() instanceof FootnoteStyleProperties specificStyle) {
             FootnoteStyleProperties finalStyle = specificStyle.copy();
             finalStyle.mergeWith(context.parentBlockStyle());
             this.setResolvedStyle(finalStyle);
         } else {
-            // If no specific style, create a new one that just inherits from the parent.
             FootnoteStyleProperties defaultStyle = new FootnoteStyleProperties();
             defaultStyle.mergeWith(context.parentBlockStyle());
             this.setResolvedStyle(defaultStyle);
         }
 
-        // 2. Create a new context for the children inside the footnote.
-        // The resolved style of the footnote body becomes the new parent style.
         StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
 
-        // 3. Delegate to child elements.
         if (inlineElements != null) {
             for (InlineElement element : inlineElements) {
                 element.resolveStyles(childContext);
             }
         }
+    }
+
+    /**
+     * Returns the standard element type for this footnote.
+     *
+     * @return the standard element type FOOTNOTE
+     */
+    @Override
+    public StandardElementType getStandardElementType() {
+        return StandardElementType.FOOTNOTE;
     }
 }

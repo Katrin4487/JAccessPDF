@@ -20,10 +20,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
-import de.fkkaiser.model.style.ElementBlockStyleProperties;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.SectionStyleProperties;
-import de.fkkaiser.model.style.StyleResolverContext;
+import de.fkkaiser.model.style.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -33,10 +32,12 @@ import java.util.*;
  * and may have a semantic variant (e.g., introduction, conclusion).
  *
  * @author Katrin Kaiser
- * @version 1.2.0
+ * @version 1.2.1
  */
 @JsonTypeName(JsonPropertyName.SECTION)
 public final class Section implements Element {
+
+    private static final Logger log = LoggerFactory.getLogger(Section.class);
 
     private final String styleClass;
     private final SectionVariant variant;
@@ -50,9 +51,9 @@ public final class Section implements Element {
      * Creates a new Section with the specified properties.
      *
      * @param styleClass the base style class name (required for styled sections)
-     * @param variant optional semantic variant (null defaults to {@link SectionVariant#SECTION})
-     * @param altText optional alternative text for accessibility (used in PDF/UA fox:alt-text attribute)
-     * @param elements list of child elements contained in this section (defaults to empty list if null)
+     * @param variant    optional semantic variant (null defaults to {@link SectionVariant#SECTION})
+     * @param altText    optional alternative text for accessibility (used in PDF/UA fox:alt-text attribute)
+     * @param elements   list of child elements contained in this section (defaults to empty list if null)
      */
     @JsonCreator
     public Section(
@@ -71,10 +72,10 @@ public final class Section implements Element {
      * Convenience constructor without alt-text.
      *
      * @param styleClass the base style class name
-     * @param variant optional semantic variant
-     * @param elements list of child elements
+     * @param variant    optional semantic variant
+     * @param elements   list of child elements
      */
-    public Section(String styleClass,SectionVariant variant, List<? extends Element> elements) {
+    public Section(String styleClass, SectionVariant variant, List<? extends Element> elements) {
         this(styleClass, variant, null, elements != null ? new ArrayList<>(elements) : List.of());
     }
 
@@ -155,13 +156,35 @@ public final class Section implements Element {
                 .map(ElementStyle::properties)
                 .filter(SectionStyleProperties.class::isInstance)
                 .map(SectionStyleProperties.class::cast)
-                .orElse(new SectionStyleProperties());
+                .orElse(null);
 
-        SectionStyleProperties finalStyle = specificStyle.copy();
+        StandardElementType docElement = getStandardElementType();
+        if (docElement != null) {
+            var defaultStyle = context.styleSheet().findElementStyle(docElement, null);
+
+            if (defaultStyle.isPresent() &&
+                    defaultStyle.get().properties() instanceof SectionStyleProperties defaultSectionStyle) {
+                specificStyle = defaultSectionStyle.copy();
+                log.debug("Using default style '{}' for {}",
+                        defaultStyle.get().name(), docElement.getJsonKey());
+            }
+        }
+
+        SectionStyleProperties finalStyle = specificStyle != null ? specificStyle.copy() : new SectionStyleProperties();
         finalStyle.mergeWith(parentStyle);
         this.setResolvedStyle(finalStyle);
 
         StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
         elements.forEach(element -> element.resolveStyles(childContext));
+    }
+
+    /**
+     * Returns the standard element type for this section.
+     *
+     * @return StandardElementType.SECTION
+     */
+    @Override
+    public StandardElementType getStandardElementType() {
+        return StandardElementType.SECTION;
     }
 }

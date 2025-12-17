@@ -53,7 +53,7 @@ class SectionFoGeneratorTest {
     @BeforeEach
     void setUp() {
         generator = new SectionFoGenerator(mockMainGenerator);
-        styleSheet = new StyleSheet(List.of(), List.of(), List.of());
+        styleSheet = new StyleSheet(List.of(), List.of(), List.of(),null);
     }
 
     @Test

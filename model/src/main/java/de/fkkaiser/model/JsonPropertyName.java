@@ -31,7 +31,7 @@ public class JsonPropertyName {
         // private constructor to prevent instantiation
     }
 
-    // === Identifier for TargetTypes
+    // ================ Identifier for TargetTypes ================
 
     /**
      * Identifier for Headline TargetType
@@ -53,10 +53,31 @@ public class JsonPropertyName {
      * Identifier for Section TargetType
      */
     public static final String SECTION = "section";
+
     /**
-     * Identifier for Part TargetType
+     * Identifier for Section IN FOP !
+     */
+    public static final String SECT = "Sect";
+
+    /**
+     * Identifier for Note IN FOP !
+     */
+    public static final String NOTE = "Note";
+
+    /**
+     * Identifier for Aside IN FOP !
+     */
+    public static final String ASIDE = "Aside";
+
+    /**
+     * Identifier for Part TargetType IN FOP !
      */
     public static final String PART = "part";
+
+    /**
+     * Identifier for Article TargetType
+     */
+    public static final String ARTICLE = "article";
     /**
      * Identifier for BlockImage TargetType
      */
@@ -90,7 +111,10 @@ public class JsonPropertyName {
      */
     public static final String HYPERLINK = "hyperlink";
 
-    // === Properties for structure elements
+
+    // =============== Properties for structure elements ================
+
+
     /**
      * Property name for style class (CSS-like style class)
      */
@@ -179,7 +203,9 @@ public class JsonPropertyName {
      */
     public static final String CELLS = "cells";
 
-    // === metadata properties
+
+    // ====================== metadata properties ======================
+
     /**
      * Property name for document keywords
      */
@@ -227,7 +253,9 @@ public class JsonPropertyName {
      */
     public static final String FOOTER = "footer";
 
-    // === Element style
+
+    // ===========================Element style ===========================
+
     /**
      * Property name for style name
      */
@@ -244,6 +272,17 @@ public class JsonPropertyName {
      * Property name for text style name
      */
     public static final String TEXT_STYLE_NAME = "text-style-name";
+
+    /**
+     * Property value for unordered list
+     */
+    public static final String UNORDERED = "unordered";
+    /**
+     * Property value for ordered list
+     */
+    public static final String ORDERED = "ordered";
+
+    // ======================== Text properties =========================
     /**
      * Property name for text decoration
      */
@@ -275,7 +314,10 @@ public class JsonPropertyName {
      */
     public static final String LIST_STYLE_IMAGE = "list-style-image";
 
-    // === Style properties
+
+    // ============================ Style properties ============================
+
+
     /**
      * Property name for content width
      */
@@ -348,7 +390,7 @@ public class JsonPropertyName {
     public static final String BREAK_BEFORE = "break-before";
     public static final String BREAK_AFTER = "break-after";
     public static final String BACKGROUND_COLOR = "background-color";
-    
+
     // === Page master
     public static final String PAGE_HEIGHT = "page-height";
     public static final String PAGE_WIDTH = "page-width";
@@ -366,8 +408,11 @@ public class JsonPropertyName {
     public static final String BORDER_COLLAPSE = "border-collapse";
     public static final String BASELINE_SHIFT = "baseline-shift";
 
-    // === StyleSheet Properties
+
+    // ================== StyleSheet Properties =================
+
     public static final String TEXT_STYLES = "text-styles";
     public static final String ELEMENT_STYLES = "element-styles";
     public static final String PAGE_MASTER_STYLES = "page-master-styles";
+    public static final String DEFAULTS = "defaults";
 }

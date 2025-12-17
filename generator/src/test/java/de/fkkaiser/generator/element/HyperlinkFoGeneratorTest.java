@@ -33,7 +33,7 @@ class HyperlinkFoGeneratorTest {
     @BeforeEach
     void setUp() {
         generator = new HyperlinkFoGenerator();
-        styleSheet = new StyleSheet(List.of(), List.of(), List.of());
+        styleSheet = new StyleSheet(List.of(), List.of(), List.of(),null);
     }
 
     @Test

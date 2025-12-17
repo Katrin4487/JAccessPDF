@@ -26,10 +26,11 @@ import java.util.Objects;
 
 /**
  * Defines a sequence of content areas for a page layout, including optional header and footer.
+ *
  * @param styleClass the CSS-like style class name for page layout
- * @param body the main content area of the page
- * @param header the optional header content area
- * @param footer the optional footer content area
+ * @param body       the main content area of the page
+ * @param header     the optional header content area
+ * @param footer     the optional footer content area
  *
  * @author Katrin Kaiser
  * @version 1.0.1
@@ -57,7 +58,7 @@ public record PageSequence(
      * @param styleClass the CSS-like style class name for page layout;
      *                   must not be {@code null} or empty
      * @throws IllegalArgumentException if styleClass is empty
-     * @throws NullPointerException    if styleClass is {@code null}
+     * @throws NullPointerException     if styleClass is {@code null}
      */
     public PageSequence {
         Objects.requireNonNull(styleClass, "styleClass must not be null");

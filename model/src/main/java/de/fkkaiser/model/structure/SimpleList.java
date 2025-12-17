@@ -24,10 +24,9 @@ import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.annotation.VisibleForTesting;
 import de.fkkaiser.model.structure.builder.SimpleListBuilder;
-import de.fkkaiser.model.style.ElementBlockStyleProperties;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.ListStyleProperties;
-import de.fkkaiser.model.style.StyleResolverContext;
+import de.fkkaiser.model.style.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.util.List;
@@ -39,10 +38,12 @@ import java.util.Optional;
  * ordering, and list items.
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 @JsonTypeName(JsonPropertyName.LIST)
 public final class SimpleList implements Element {
+
+    private static final Logger log = LoggerFactory.getLogger(SimpleList.class);
 
     private final String styleClass;
     private final ListOrdering ordering;
@@ -69,7 +70,7 @@ public final class SimpleList implements Element {
     ) {
 
         Objects.requireNonNull(items, "List items cannot be null");
-        if(items.isEmpty()) {
+        if (items.isEmpty()) {
             throw new IllegalArgumentException("List must contain at least one item");
         }
         this.styleClass = styleClass;
@@ -90,6 +91,7 @@ public final class SimpleList implements Element {
 
     /**
      * Returns the style class of the list
+     *
      * @return The style class as a string.
      */
     @Internal
@@ -105,14 +107,19 @@ public final class SimpleList implements Element {
      * @return The list ordering.
      */
     @Internal
-    public ListOrdering getOrdering() { return ordering; }
+    public ListOrdering getOrdering() {
+        return ordering;
+    }
+
     /**
      * Returns the list items.
      *
      * @return The list of ListItem objects.
      */
     @Internal
-    public List<ListItem> getItems() { return items; }
+    public List<ListItem> getItems() {
+        return items;
+    }
 
     /**
      * Returns the resolved style properties for the list.
@@ -120,25 +127,45 @@ public final class SimpleList implements Element {
      * @return The resolved ListStyleProperties.
      */
     @Internal
-    public ListStyleProperties getResolvedStyle() { return resolvedStyle; }
+    public ListStyleProperties getResolvedStyle() {
+        return resolvedStyle;
+    }
 
 
+    /**
+     * Resolves and applies styles for this list based on the provided context.
+     *
+     * @param context the style resolver context containing style maps and parent styles
+     */
+    @Internal
     @Override
     public void resolveStyles(StyleResolverContext context) {
-          ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
+        ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
 
         ListStyleProperties specificStyle = Optional.ofNullable(context.styleMap().get(this.getStyleClass()))
                 .map(ElementStyle::properties)
                 .filter(ListStyleProperties.class::isInstance)
                 .map(ListStyleProperties.class::cast)
-                .orElse(new ListStyleProperties());
+                .orElse(null);
 
-         ListStyleProperties finalStyle = specificStyle.copy();
+        if(specificStyle == null){
+            StandardElementType docElement = getStandardElementType();
+            var defaultStyle = context.styleSheet().findElementStyle(docElement, null);
+
+            if (defaultStyle.isPresent() &&
+                    defaultStyle.get().properties() instanceof ListStyleProperties defaultTextStyle) {
+                specificStyle = defaultTextStyle.copy();
+                log.debug("Using default style '{}' for {}",
+                        defaultStyle.get().name(), docElement.getJsonKey());
+            }
+        }
+
+        ListStyleProperties finalStyle = specificStyle!= null ? specificStyle.copy() : new ListStyleProperties();
         finalStyle.mergeWith(parentStyle);
 
-         this.resolvedStyle = finalStyle;
+        this.resolvedStyle = finalStyle;
 
-         StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
+        StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
 
         if (items != null) {
             for (ListItem item : items) {
@@ -154,5 +181,18 @@ public final class SimpleList implements Element {
     @VisibleForTesting
     public void setResolvedStyle(ListStyleProperties styleProperties) {
         this.resolvedStyle = styleProperties;
+    }
+
+    /**
+     * Returns the standard element type based on the list ordering.
+     *
+     * @return StandardElementType.OL for ordered lists, StandardElementType.UL for unordered lists.
+     */
+    @Internal
+    @Override
+    public StandardElementType getStandardElementType() {
+        return ordering == ListOrdering.ORDERED
+                ? StandardElementType.OL
+                : StandardElementType.UL;
     }
 }

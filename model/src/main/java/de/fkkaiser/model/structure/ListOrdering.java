@@ -16,21 +16,24 @@
 package de.fkkaiser.model.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fkkaiser.model.JsonPropertyName;
+import de.fkkaiser.model.annotation.PublicAPI;
 
+/**
+ * Enum representing the ordering of a list: ordered or unordered.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.2
+ */
+@PublicAPI
 public enum ListOrdering {
-    @JsonProperty("unordered")
+    @JsonProperty(JsonPropertyName.UNORDERED)
     UNORDERED,
-    @JsonProperty("ordered")
+    @JsonProperty(JsonPropertyName.ORDERED)
     ORDERED;
 
     @Override
     public String toString() {
-        return switch (this) {
-            case UNORDERED -> "unordered";
-            case ORDERED -> "ordered";
-            default ->
-                //Should not happen
-                    "unordered";
-        };
+        return this == ORDERED ? JsonPropertyName.ORDERED : JsonPropertyName.UNORDERED;
     }
 }

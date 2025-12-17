@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.JsonPropertyName;
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.style.ElementBlockStyleProperties;
 import de.fkkaiser.model.style.ElementStyle;
 import de.fkkaiser.model.style.StyleResolverContext;
@@ -33,7 +35,7 @@ import java.util.Optional;
  * It is not a full Element itself but participates in style resolution.
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class TableCell {
 
@@ -46,6 +48,18 @@ public class TableCell {
     @JsonIgnore
     private TableCellStyleProperties resolvedStyle;
 
+    /**
+     * Creates a new TableCell with the specified properties.
+     *
+     * <p>This constructor is used by Jackson during JSON deserialization.
+     * All parameters are optional in the JSON structure.</p>
+     *
+     * @param styleClass the CSS-like style class for styling properties; may be {@code null}
+     * @param elements   the list of child elements contained within the cell; may be {@code null}
+     * @param colspan    the number of columns this cell spans; defaults to 1 if {@code null}
+     * @param rowspan    the number of rows this cell spans; defaults to 1 if {@code null}
+     */
+    @PublicAPI
     @JsonCreator
     public TableCell(
             @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
@@ -59,23 +73,51 @@ public class TableCell {
     }
 
 
-    // --- Getters ---
+    /**
+     * Gets the style class of the table cell.
+     *
+     * @return the style class
+     */
     public String getStyleClass() {
         return styleClass;
     }
 
+    /**
+     * Gets the list of elements contained in the table cell.
+     *
+     * @return the list of elements
+     */
+    @Internal
     public List<Element> getElements() {
         return elements;
     }
 
+    /**
+     * Gets the number of columns this cell spans.
+     *
+     * @return the colspan value
+     */
+    @Internal
     public int getColspan() {
         return colspan;
     }
 
+    /**
+     * Gets the number of rows this cell spans.
+     *
+     * @return the rowspan value
+     */
+    @Internal
     public int getRowspan() {
         return rowspan;
     }
 
+    /**
+     * Gets the resolved style properties for this table cell.
+     *
+     * @return the resolved TableCellStyleProperties
+     */
+    @Internal
     public TableCellStyleProperties getResolvedStyle() {
         return resolvedStyle;
     }
@@ -86,6 +128,7 @@ public class TableCell {
      *
      * @param context The current style context.
      */
+    @Internal
     public void resolveStyles(StyleResolverContext context) {
 
         ElementBlockStyleProperties parentStyle = context.parentBlockStyle();

@@ -32,6 +32,6 @@ public record InternalAddresses(
         @JsonProperty(JsonPropertyName.IMAGE_DICTIONARY)
         String imageDictionary
 ) {
-        // Record with no custom implementation - all functionality provided by record semantics
-        // No validation needed as null values are valid and represent "no custom resources"
+    // Record with no custom implementation - all functionality provided by record semantics
+    // No validation needed as null values are valid and represent "no custom resources"
 }

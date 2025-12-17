@@ -52,12 +52,11 @@ public abstract class TextBlock extends AbstractElement {
      *
      * @param styleClass     The CSS style class to apply to the text block
      * @param inlineElements A list of InlineElement objects to be included in the text block
-     *
      * @throws IllegalArgumentException if styleClass is empty
      * @throws NullPointerException     if styleClass is null
      */
-    public TextBlock(String styleClass,List<InlineElement> inlineElements) {
-        if(styleClass != null && styleClass.isEmpty()) {
+    public TextBlock(String styleClass, List<InlineElement> inlineElements) {
+        if (styleClass != null && styleClass.isEmpty()) {
             log.error("styleClass must not be  empty");
             throw new IllegalArgumentException("Style class must not be empty");
         }
@@ -72,19 +71,34 @@ public abstract class TextBlock extends AbstractElement {
      * @param styleClass The CSS style class to apply to the text block
      */
     public TextBlock(String styleClass) {
-        this(styleClass,null);
+        this(styleClass, null);
     }
 
-    // ... Getters for final fields ...
+    /**
+     * Returns the resolved style properties for this text block.
+     *
+     * @return The resolved TextBlockStyleProperties
+     */
     public TextBlockStyleProperties getResolvedStyle() {
         return resolvedStyle;
     }
+
+    /**
+     * Returns the list of inline elements contained in this text block.
+     *
+     * @return A list of InlineElement objects
+     */
     public List<InlineElement> getInlineElements() {
         return inlineElements;
     }
 
 
-   @Override
+    /**
+     * Resolves and applies styles for this text block using the provided context.
+     *
+     * @param context The StyleResolverContext containing style information
+     */
+    @Override
     public void resolveStyles(StyleResolverContext context) {
         ElementBlockStyleProperties baseStyle = context.parentBlockStyle();
 
@@ -95,12 +109,30 @@ public abstract class TextBlock extends AbstractElement {
             if (specificElementStyle != null &&
                     specificElementStyle.properties() instanceof TextBlockStyleProperties specificStyle) {
                 finalStyle = specificStyle.copy();
+            } else {
+                log.warn("Style '{}' not found in stylesheet", this.styleClass);
             }
         }
 
-        // If no specific style found, create a default
+        // If no style found, try to find default based on element type
+        if (finalStyle == null) {
+            StandardElementType docElement = getStandardElementType();
+            if (docElement != null && context.styleSheet() != null) {
+                var defaultStyle = context.styleSheet().findElementStyle(docElement, null);
+
+                if (defaultStyle.isPresent() &&
+                        defaultStyle.get().properties() instanceof TextBlockStyleProperties defaultTextStyle) {
+                    finalStyle = defaultTextStyle.copy();
+                    log.debug("Using default style '{}' for {}",
+                            defaultStyle.get().name(), docElement.getJsonKey());
+                }
+            }
+        }
+
+        // Final fallback: empty style
         if (finalStyle == null) {
             finalStyle = new TextBlockStyleProperties();
+            log.debug("No style found, using empty default");
         }
 
         // Now merge with parent (if parent is a TextBlockStyleProperties)
@@ -117,4 +149,5 @@ public abstract class TextBlock extends AbstractElement {
             inlineElement.resolveStyles(childContext);
         }
     }
+
 }

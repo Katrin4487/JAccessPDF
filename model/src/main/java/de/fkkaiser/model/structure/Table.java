@@ -20,11 +20,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
+import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.structure.builder.TableBuilder;
-import de.fkkaiser.model.style.ElementBlockStyleProperties;
-import de.fkkaiser.model.style.ElementStyle;
-import de.fkkaiser.model.style.StyleResolverContext;
-import de.fkkaiser.model.style.TableStyleProperties;
+import de.fkkaiser.model.style.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +34,7 @@ import java.util.stream.Stream;
  * Represents a table element in a document structure.
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.0.2
  */
 @JsonTypeName(JsonPropertyName.TABLE)
 public final class Table implements Element {
@@ -49,6 +48,16 @@ public final class Table implements Element {
     @JsonIgnore
     private TableStyleProperties resolvedStyle;
 
+    /**
+     * Creates a new Table element with the specified properties.
+     *
+     * @param styleClass the style class for the table (may be null)
+     * @param columns    the list of column identifiers (defaults to empty list if null)
+     * @param header     the table header section (may be null)
+     * @param body       the table body section (may be null)
+     * @param footer     the table footer section (may be null)
+     */
+    @Internal
     @JsonCreator
     public Table(
             @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
@@ -58,30 +67,90 @@ public final class Table implements Element {
             @JsonProperty(JsonPropertyName.FOOTER) TableSection footer
     ) {
         this.styleClass = styleClass;
-        this.columns = Objects.requireNonNullElse(columns,List.of());
+        this.columns = Objects.requireNonNullElse(columns, List.of());
         this.header = header;
         this.body = body;
         this.footer = footer;
     }
 
-    // --- Getters ---
+
+    /**
+     * Gets the style class of the table.
+     *
+     * @return the style class string (may be null)
+     */
     @Override
-    public String getStyleClass() { return styleClass; }
-    public List<String> getColumns() { return columns; }
-    public TableSection getHeader() { return header; }
-    public TableSection getBody() { return body; }
-    public TableSection getFooter() { return footer; }
-    public TableStyleProperties getResolvedStyle() { return resolvedStyle; }
+    public String getStyleClass() {
+        return styleClass;
+    }
+
+    /**
+     * Gets the list of column identifiers for the table.
+     *
+     * @return the list of column identifiers
+     */
+    @Internal
+    public List<String> getColumns() {
+        return columns;
+    }
+
+    /**
+     * Gets the header section of the table.
+     *
+     * @return the table header section (may be null)
+     */
+    @Internal
+    public TableSection getHeader() {
+        return header;
+    }
+
+    /**
+     * Gets the body section of the table.
+     *
+     * @return the table body section (may be null)
+     */
+    @Internal
+    public TableSection getBody() {
+        return body;
+    }
+
+    /**
+     * Gets the footer section of the table.
+     *
+     * @return the table footer section (may be null)
+     */
+    @Internal
+    public TableSection getFooter() {
+        return footer;
+    }
+
+    /**
+     * Gets the resolved style properties for the table after style resolution.
+     *
+     * @return the resolved TableStyleProperties
+     */
+    @Internal
+    public TableStyleProperties getResolvedStyle() {
+        return resolvedStyle;
+    }
 
     /**
      * Fluent builder for creating Table elements.
+     *
      * @param styleClass The style class to be applied to the table.
      * @return A TableBuilder instance for method chaining.
      */
+    @PublicAPI
     public static TableBuilder builder(String styleClass) {
         return new TableBuilder(styleClass);
     }
 
+    /**
+     * Returns the type identifier for this element.
+     *
+     * @return The ElementTargetType representing a table.
+     */
+    @Internal
     @Override
     public ElementTargetType getType() {
         return ElementTargetType.TABLE;
@@ -93,26 +162,54 @@ public final class Table implements Element {
      * 1. Resolve the style for the table container itself, merging with parent context.
      * 2. Create a new, more specific context for the children.
      * 3. Delegate the style resolution down the hierarchy.
+     *
      * @param context The current style context.
      */
+    @Internal
     @Override
     public void resolveStyles(StyleResolverContext context) {
 
         ElementBlockStyleProperties parentStyle = context.parentBlockStyle();
         ElementStyle specificElementStyle = context.styleMap().get(this.getStyleClass());
 
+
         TableStyleProperties specificTableStyle = Optional.ofNullable(specificElementStyle)
                 .map(ElementStyle::properties)
                 .filter(TableStyleProperties.class::isInstance)
                 .map(TableStyleProperties.class::cast)
-                .orElse(new TableStyleProperties()); // Standard-Style, wenn nichts gefunden wurde
+                .orElse(null);
 
-        TableStyleProperties finalStyle = specificTableStyle.copy();
+        if(specificTableStyle == null) {
+            StandardElementType docElement = getStandardElementType();
+            if (docElement != null) {
+                var defaultStyle = context.styleSheet().findElementStyle(docElement, null);
+
+                if (defaultStyle.isPresent() &&
+                        defaultStyle.get().properties() instanceof TableStyleProperties defaultTableStyle) {
+                    specificTableStyle = defaultTableStyle.copy();
+
+                }
+            }
+        }
+
+        TableStyleProperties finalStyle = specificTableStyle != null ? specificTableStyle.copy(): new TableStyleProperties();
         finalStyle.mergeWith(parentStyle);
         this.resolvedStyle = finalStyle;
 
-        StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());Stream.of(header, body, footer)
+        StyleResolverContext childContext = context.createChildContext(this.getResolvedStyle());
+        Stream.of(header, body, footer)
                 .filter(Objects::nonNull)
                 .forEach(section -> section.resolveStyles(childContext));
+    }
+
+    /**
+     * Returns the standard element type for this table.
+     *
+     * @return StandardElementType.TABLE
+     */
+    @Internal
+    @Override
+    public StandardElementType getStandardElementType() {
+        return StandardElementType.TABLE;
     }
 }

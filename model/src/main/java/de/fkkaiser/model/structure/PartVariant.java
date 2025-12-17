@@ -15,16 +15,20 @@
  */
 package de.fkkaiser.model.structure;
 
+import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 
 /**
  * Enumeration representing the variants of a Part element.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
  */
 @PublicAPI
 public enum PartVariant {
-    PART("Part"),
-    ARTICLE("Article");
+    PART(JsonPropertyName.PART),
+    ARTICLE(JsonPropertyName.ARTICLE);
 
     private final String pdfRole;
 
@@ -50,6 +54,7 @@ public enum PartVariant {
      * For example: PART → "part", ARTICLE → "article"
      * @return the lowercase variant name
      */
+    @SuppressWarnings("unused")
     public String getStyleName() {
         return name().toLowerCase();
     }

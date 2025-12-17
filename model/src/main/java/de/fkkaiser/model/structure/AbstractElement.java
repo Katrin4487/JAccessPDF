@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.style.StandardElementType;
 import de.fkkaiser.model.style.StyleResolverContext;
 
 /**
@@ -46,6 +47,7 @@ public abstract class AbstractElement implements Element {
 
     /**
      * Constructor for an abstract element
+     *
      * @param styleClass style class name of the element
      */
     @Internal

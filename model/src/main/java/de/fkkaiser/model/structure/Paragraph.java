@@ -18,8 +18,11 @@ package de.fkkaiser.model.structure;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
+import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.structure.builder.ParagraphBuilder;
+import de.fkkaiser.model.style.StandardElementType;
+
 import java.util.List;
 
 
@@ -27,29 +30,31 @@ import java.util.List;
  * Represents a paragraph element in a document structure.
  *
  * @author Katrin Kaiser
- * @version 1.1.1
+ * @version 1.1.2
  */
 @PublicAPI
 @JsonTypeName(JsonPropertyName.PARAGRAPH)
 public class Paragraph extends TextBlock {
 
-   /**
+    /**
      * Constructs a Paragraph with the specified style class and inline elements.
-     * @param styleClass name of the style class for the paragraph
+     *
+     * @param styleClass     name of the style class for the paragraph
      * @param inlineElements list of inline elements contained in the paragraph
      */
     @PublicAPI
     public Paragraph(
             @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
             @JsonProperty(JsonPropertyName.INLINE_ELEMENTS) List<InlineElement> inlineElements
-           ) {
+    ) {
         super(styleClass, inlineElements);
     }
 
     /**
      * Creates a paragraph with a single standalone text run.
-     * @param styleClass the CSS-like class name for styling;
-     *                   must not be {@code null}
+     *
+     * @param styleClass     the CSS-like class name for styling;
+     *                       must not be {@code null}
      * @param standAloneText the standalone text content of the paragraph;
      */
     @PublicAPI
@@ -60,10 +65,12 @@ public class Paragraph extends TextBlock {
 
     /**
      * Creates a paragraph with a single inline element.
-     * @param styleClass the CSS-like class name for styling;
-     *                   must not be {@code null}
+     *
+     * @param styleClass    the CSS-like class name for styling;
+     *                      must not be {@code null}
      * @param inlineElement the inline element to include in the paragraph;
      */
+    @PublicAPI
     public Paragraph(String styleClass, InlineElement inlineElement) {
         super(styleClass, List.of(inlineElement));
     }
@@ -71,8 +78,10 @@ public class Paragraph extends TextBlock {
 
     /**
      * Constructs a Paragraph with the specified style class.
+     *
      * @param styleClass name of the style class for the paragraph
      */
+    @PublicAPI
     public Paragraph(String styleClass) {
         super(styleClass);
     }
@@ -81,6 +90,7 @@ public class Paragraph extends TextBlock {
 
     /**
      * Returns the type of this element as PARAGRAPH.
+     *
      * @return ElementTargetType.PARAGRAPH
      */
     @Override
@@ -103,6 +113,14 @@ public class Paragraph extends TextBlock {
         return new ParagraphBuilder(styleClass);
     }
 
-
-
+    /**
+     * Gets the standard element type for the paragraph.
+     *
+     * @return StandardElementType.P
+     */
+    @Internal
+    @Override
+    public StandardElementType getStandardElementType() {
+        return StandardElementType.P;
+    }
 }

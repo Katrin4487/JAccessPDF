@@ -21,15 +21,22 @@ import java.util.Map;
  * A context object that holds the state during the recursive style resolution process.
  * It is immutable; a new context is created for each level of the element tree.
  *
+ * @param styleSheet       The complete stylesheet with all styles and defaults.
+ * @param styleMap         The map of all available named styles (for quick lookup).
  * @param parentBlockStyle Holds the style of the direct parent element. Can be null for top-level elements.
  * @author Katrin Kaiser
- * @version 1.0.0
+ * @version 1.2.0
  */
-public record StyleResolverContext(Map<String, ElementStyle> styleMap, ElementBlockStyleProperties parentBlockStyle) {
+public record StyleResolverContext(
+        StyleSheet styleSheet,
+        Map<String, ElementStyle> styleMap,
+        ElementBlockStyleProperties parentBlockStyle
+) {
 
     /**
      * The main constructor for creating a style context.
      *
+     * @param styleSheet       The complete stylesheet.
      * @param styleMap         The map of all available named styles.
      * @param parentBlockStyle The resolved style of the parent element.
      */
@@ -38,13 +45,13 @@ public record StyleResolverContext(Map<String, ElementStyle> styleMap, ElementBl
 
     /**
      * Creates a new context for child elements.
-     * This new context carries over the global style map but sets a new parent style.
+     * This new context carries over the stylesheet and global style map 
+     * but sets a new parent style.
      *
      * @param newParentBlockStyle The resolved style of the new parent element.
      * @return A new StyleResolverContext instance.
      */
     public StyleResolverContext createChildContext(ElementBlockStyleProperties newParentBlockStyle) {
-        return new StyleResolverContext(this.styleMap, newParentBlockStyle);
+        return new StyleResolverContext(this.styleSheet, this.styleMap, newParentBlockStyle);
     }
-
 }

@@ -53,12 +53,13 @@ public enum ElementTargetType {
 
     /**
      * Returns the string value associated with the enum constant.
+     *
      * @return the string value of the enum constant
      */
     @Internal
     @JsonValue
     public String getValue() {
-        return  value;
+        return value;
     }
 
     /**

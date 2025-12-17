@@ -65,6 +65,7 @@ public record Document(
 
     /**
      * Creates a new DocumentBuilder initialized with the provided metadata.
+     *
      * @param metadata the metadata to initialize the document builder with
      * @return a new DocumentBuilder instance
      */

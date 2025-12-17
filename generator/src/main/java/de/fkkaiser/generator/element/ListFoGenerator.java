@@ -161,7 +161,7 @@ public class ListFoGenerator extends ElementFoGenerator {
             if (item.getResolvedStyle() instanceof ListItemStyleProperties) {
                 itemStyle = (ListItemStyleProperties) item.getResolvedStyle();
             }
-            if (itemStyle == null || !itemStyle.getListStyleType().equals(ListStyleType.NONE)) {
+            if (itemStyle == null || itemStyle.getListStyleType() == null || itemStyle.getListStyleType().equals(ListStyleType.NONE)) {
                 String labelText = generateDefaultListItemLabel(list.getOrdering(), listStyle, counter, resolver);
                 labelBlockBuilder.addNestedContent(labelText);
             }

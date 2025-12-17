@@ -708,7 +708,5 @@ public final class PdfGenerationFacade {
     private void validateInputs(Document document, StyleSheet styleSheet, FontFamilyList fontFamilyList) {
         Objects.requireNonNull(document, "Document must not be null");
         Objects.requireNonNull(styleSheet, "StyleSheet must not be null");
-
-        styleSheet.validate();
     }
 }

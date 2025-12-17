@@ -22,6 +22,7 @@ import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.structure.builder.HeadlineBuilder;
+import de.fkkaiser.model.style.StandardElementType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,7 @@ import java.util.List;
  * Represents a headline element in a document structure.
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.1.1
  */
 @PublicAPI
 @JsonTypeName(JsonPropertyName.HEADLINE)
@@ -149,5 +150,24 @@ public final class Headline extends TextBlock {
     @PublicAPI
     public static HeadlineBuilder builder(String styleClass) {
         return new HeadlineBuilder(styleClass);
+    }
+
+    /**
+     * Gets the standard element type corresponding to the headline level.
+     *
+     * @return the standard element type for this headline
+     */
+    @Override
+    public StandardElementType getStandardElementType() {
+
+        return switch (level) {
+            case 2 -> StandardElementType.H2;
+            case 3 -> StandardElementType.H3;
+            case 4 -> StandardElementType.H4;
+            case 5 -> StandardElementType.H5;
+            case 6 -> StandardElementType.H6;
+            default -> StandardElementType.H1;
+        };
+
     }
 }

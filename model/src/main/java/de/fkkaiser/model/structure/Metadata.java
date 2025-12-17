@@ -45,7 +45,7 @@ public class Metadata {
 
     private static final Logger log = LoggerFactory.getLogger(Metadata.class);
 
-    private static final String DEFAULT_TITLE = "PDF Dokument";
+    private static final String DEFAULT_TITLE = "PDF Document";
     private static final String DEFAULT_LANGUAGE = "de-DE";
     private static final String PRODUCER = "de.kaiser.JAccessPDF v1.0";
 
@@ -68,13 +68,14 @@ public class Metadata {
 
     /**
      * Creates a Metadata instance with the specified properties.
-     * @param title title of the document
-     * @param author author of the document
-     * @param subject subject of the document
-     * @param keywords list of keywords associated with the document
-     * @param language language of the document (e.g., "en-US", "de-DE")
-     * @param producer PDF producer identifier
-     * @param creationDate creation timestamp of the document
+     *
+     * @param title           title of the document
+     * @param author          author of the document
+     * @param subject         subject of the document
+     * @param keywords        list of keywords associated with the document
+     * @param language        language of the document (e.g., "en-US", "de-DE")
+     * @param producer        PDF producer identifier
+     * @param creationDate    creation timestamp of the document
      * @param displayDocTitle whether to display the document title in the PDF viewer
      * @throws NullPointerException if {@code title} is {@code null}
      */
@@ -87,7 +88,7 @@ public class Metadata {
         this.producer = Objects.requireNonNullElse(producer, PRODUCER);
 
         // Title with validation and default
-        if (title == null || title.trim().isEmpty()) {
+        if (title.trim().isEmpty()) {
             log.warn("Title is null or empty. Setting default value '{}'", DEFAULT_TITLE);
             this.title = DEFAULT_TITLE;
         } else {
@@ -150,7 +151,7 @@ public class Metadata {
      * Metadata metadata = new Metadata("My Document Title", "en-US");
      * }</pre>
      *
-     * @param title the document title; must not be {@code null}
+     * @param title    the document title; must not be {@code null}
      * @param language the document language in ISO 639-1 format; must not be {@code null}
      */
     @PublicAPI
@@ -204,7 +205,7 @@ public class Metadata {
      * Returns the document language.
      *
      * @return the language in ISO 639-1 format, never {@code null}
-     *         (defaults to "de-DE" if not set)
+     * (defaults to "de-DE" if not set)
      */
     @Internal
     public String getLanguage() {
@@ -227,7 +228,7 @@ public class Metadata {
      * Returns the document creation timestamp.
      *
      * @return the creation date and time, never {@code null}
-     *         (defaults to construction time if not set)
+     * (defaults to construction time if not set)
      */
     @Internal
     public LocalDateTime getCreationDate() {
@@ -238,7 +239,7 @@ public class Metadata {
      * Returns whether the document title should be displayed in the PDF viewer window.
      *
      * @return {@code true} if the title should be displayed, {@code false} otherwise;
-     *         never {@code null} (defaults to {@code true} if not set)
+     * never {@code null} (defaults to {@code true} if not set)
      */
     @Internal
     public Boolean isDisplayDocTitle() {
