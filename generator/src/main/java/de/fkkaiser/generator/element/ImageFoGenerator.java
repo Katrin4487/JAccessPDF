@@ -30,7 +30,7 @@ import java.util.List;
  * Generator for Images
  *
  * @author Katrin Kaiser
- * @version 1.1.2
+ * @version 1.2.0
  */
 @Internal
 public class ImageFoGenerator extends ElementFoGenerator {
@@ -67,8 +67,16 @@ public class ImageFoGenerator extends ElementFoGenerator {
         TagBuilder graphicBuilder = GenerateUtils.tagBuilder(GenerateConst.EXTERNAL_GRAPHIC);
         appendImageAttributes(graphicBuilder, style);
 
-        // SVGs are converted to PNG automatically
-        String srcDataUri = ImageUtils.resolveToDataUri(blockImage.getPath(), imageResolver);
+        // Resolve the image path and set the src attribute
+        String srcDataUri;
+        if (blockImage.getSvgContent() != null){
+            srcDataUri = ImageUtils.svgContentToDataUri(blockImage.getSvgContent());
+        } else if (blockImage.getBase64Data() != null) {
+            srcDataUri = blockImage.getBase64Data();
+        } else {
+            srcDataUri = ImageUtils.resolveToDataUri(blockImage.getPath(), imageResolver);
+        }
+
         if (srcDataUri != null) {
             graphicBuilder.addAttribute(GenerateConst.SRC, srcDataUri);
 

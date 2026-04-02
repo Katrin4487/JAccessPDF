@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.structure.builder.BlockImageBuilder;
+import de.fkkaiser.model.structure.builder.ParagraphBuilder;
 import de.fkkaiser.model.style.*;
 
 import java.util.Objects;
@@ -42,6 +44,8 @@ public final class BlockImage implements Element {
     private final String styleClass;
     private final String path;
     private final String altText;
+    private final String base64Data;
+    private final String svgContent;
 
     @JsonIgnore
     private BlockImageStyleProperties resolvedStyle;
@@ -61,11 +65,15 @@ public final class BlockImage implements Element {
     public BlockImage(
             @JsonProperty(JsonPropertyName.STYLE_CLASS) String styleClass,
             @JsonProperty(JsonPropertyName.PATH) String path,
-            @JsonProperty(JsonPropertyName.ALT_TEXT) String altText
+            @JsonProperty(JsonPropertyName.ALT_TEXT) String altText,
+            @JsonProperty(JsonPropertyName.BASE_64_DATA) String base64Data,
+            @JsonProperty(JsonPropertyName.SVG_CONTENT) String svgContent
     ) {
         this.styleClass = styleClass;
         this.path = path;
         this.altText = altText;
+        this.base64Data = base64Data;
+        this.svgContent = svgContent;
     }
 
     // --- Getters ---
@@ -99,6 +107,22 @@ public final class BlockImage implements Element {
      */
     public String getAltText() {
         return altText;
+    }
+
+    /**
+     * <p>Returns the base64 encoded image data, if applicable.</p>
+     * @return the base64 encoded image data; may be {@code null}
+     */
+    public String getBase64Data() {
+        return base64Data;
+    }
+
+    /**
+     * <p>Returns the SVG content for the image, if applicable.</p>
+     * @return the SVG content; may be {@code null}
+     */
+    public String getSvgContent() {
+        return svgContent;
     }
 
     /**
@@ -152,4 +176,10 @@ public final class BlockImage implements Element {
     public StandardElementType getStandardElementType() {
         return StandardElementType.IMAGE;
     }
+
+    @PublicAPI
+    public static BlockImageBuilder builder(String styleClass) {
+        return new BlockImageBuilder(styleClass);
+    }
+
 }

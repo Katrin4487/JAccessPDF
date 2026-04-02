@@ -22,7 +22,7 @@ import de.fkkaiser.model.annotation.Internal;
  * Contains JSON property names used in the model.
  *
  * @author Katrin Kaiser
- * @version 1.0.1
+ * @version 1.1.0
  */
 @Internal
 public class JsonPropertyName {
@@ -127,6 +127,16 @@ public class JsonPropertyName {
      * Property name for alternative text (alt-text)
      */
     public static final String ALT_TEXT = "alt-text";
+
+    /**
+     * Property name for SVG content (e.g., for inline SVG elements)
+     */
+    public static final String SVG_CONTENT = "svg-content";
+
+    /**
+     * Property name for base64 encoded data (e.g., for inline images)
+     */
+    public static final String BASE_64_DATA = "base64-data";
 
     /**
      * Property name for inline elements within blocks

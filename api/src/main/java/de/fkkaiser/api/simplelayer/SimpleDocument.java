@@ -51,7 +51,7 @@ import static de.fkkaiser.api.simplelayer.SimpleStyleManager.*;
  * </pre>
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.1.1
  */
 public class SimpleDocument {
 
@@ -262,12 +262,14 @@ public class SimpleDocument {
      * Internal element for an image.
      *
      * @param path    the relative path, e.g. "images/logo.png"
-     * @param altText alternative text for the image. If altText is null the image is
+     * @param altText alternative text for the image. If altText is null, the image is
      *                interpreted as an artifact
+     * @param svgContent the raw SVG content as a string (optional, can be null)
+     * @param base64Data the base64-encoded image data (optional, can be null)
      */
-    record ImageElement(String path, String altText) implements ContentElement {
+    record ImageElement(String path, String altText,String svgContent,String base64Data) implements ContentElement {
         ImageElement(String path) {
-            this(path, null);
+            this(path, null,null,null );
         }
 
         /**
@@ -275,13 +277,13 @@ public class SimpleDocument {
          *
          * @param styleManager the style manager
          * @return the corresponding model object
-         * @throws NullPointerException if path is null
+         * @throws NullPointerException if the path is null
          */
         @Internal
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
             Objects.requireNonNull(path, "path must not be null");
-            return new BlockImage(IMAGE_STYLE_NAME, path, altText);
+            return new BlockImage(IMAGE_STYLE_NAME, path, altText,svgContent,base64Data);
         }
     }
 

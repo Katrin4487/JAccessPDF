@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Comparator;
@@ -34,7 +35,7 @@ import java.util.List;
  * Utility class for image handling in PDF generation.
  *
  * @author Katrin Kaiser
- * @version 1.1.0
+ * @version 1.2.0
  */
 public class ImageUtils {
     private static final Logger log = LoggerFactory.getLogger(ImageUtils.class);
@@ -63,6 +64,16 @@ public class ImageUtils {
         // Utility class
     }
 
+    /**
+     * Converts SVG content to a base64 data URI.
+     * @param svgContent svg content
+     * @return base64 data URI
+     */
+    public static String svgContentToDataUri(String svgContent){
+        byte[] bytes = svgHandler.convertToPng(
+                svgContent.getBytes(StandardCharsets.UTF_8), 96f, 96f);
+        return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
+    }
     /**
      * Resolves an image path and converts it to a base64 data URI.
      * SVG images are automatically converted to PNG.

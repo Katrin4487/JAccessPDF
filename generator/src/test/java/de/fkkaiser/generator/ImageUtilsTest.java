@@ -16,6 +16,9 @@
 package de.fkkaiser.generator;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.Base64;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -24,12 +27,10 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ImageUtilsTest {
 
-    ImageResolver resolver = path -> {
-        return getClass().getClassLoader().getResource(path);
-    };
+    ImageResolver resolver = path -> getClass().getClassLoader().getResource(path);
 
     @Test
-    void testPngImage() throws Exception {
+    void testPngImage() {
         String dataUri = ImageUtils.resolveToDataUri(
                 "images/img.png",
                 resolver
@@ -40,7 +41,7 @@ class ImageUtilsTest {
     }
 
     @Test
-    void testJpegImage() throws Exception {
+    void testJpegImage() {
         // Test JPEG - funktioniert immer
         String dataUri = ImageUtils.resolveToDataUri(
                 "images/img2.jpg",
@@ -88,4 +89,29 @@ class ImageUtilsTest {
     private String getCurrentSvgHandlerName() {
         return ImageUtils.getSvgHandlerName();
     }
+
+    @Test
+    void testSvgContentToDataUri_withBatik() {
+        String svgContent = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\">"
+                + "<rect width=\"10\" height=\"10\" fill=\"black\"/></svg>";
+
+        if (isBatikAvailable()) {
+            String dataUri = ImageUtils.svgContentToDataUri(svgContent);
+            assertNotNull(dataUri);
+            assertTrue(dataUri.startsWith("data:image/png;base64,"));
+
+            // Verify it's valid base64
+            String base64Part = dataUri.substring("data:image/png;base64,".length());
+            assertDoesNotThrow(() -> Base64.getDecoder().decode(base64Part));
+        } else {
+            // NoOpSvgHandler should throw SvgConversionException
+            assertThrows(Exception.class, () -> ImageUtils.svgContentToDataUri(svgContent));
+        }
+    }
+
+    @Test
+    void testSvgContentToDataUri_nullInput() {
+        assertThrows(NullPointerException.class, () -> ImageUtils.svgContentToDataUri(null));
+    }
+
 }

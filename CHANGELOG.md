@@ -9,10 +9,12 @@
 - .svg is supported as image format (also for list-items) now (converted to .png using Apache Batik)
 - Builder chain methods for creating Tables added
 - Adding option adding Default Styles for different elements in Stylesheet / style.json
+- It's possible to add svg's and base64 strings directly (no path to file needed)
+- BlockImageBuilder added
 
 
 ### Fixed
-- Fixed issue with incorrect value for text-align in TextBlocks 
+- Fixed issue with incorrect value for text-align in TextBlocks
 
 ## [0.10.2] - 25-12-05
 
