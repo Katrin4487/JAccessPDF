@@ -235,7 +235,7 @@ public class SimpleDocumentBuilder {
             throw new IllegalArgumentException("Image path cannot empty");
         }
 
-        elements.add(new SimpleDocument.ImageElement(finalPath, altText));
+        elements.add(new SimpleDocument.ImageElement(finalPath, altText,null,null));
         return this;
     }
 
