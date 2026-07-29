@@ -1,5 +1,8 @@
 package de.fkkaiser.bundle;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,9 +24,12 @@ public class TextEntry {
     private String description;
 
 
-    public TextEntry(String richText, String descrption) {
+    @JsonCreator
+    public TextEntry(
+            @JsonProperty("rich-text") String richText,
+            @JsonProperty("description") String description) {
         this.richText = richText;
-        this.description = descrption;
+        this.description = description;
     }
     public TextEntry(String richText) {
         this(richText,null);

@@ -8,4 +8,8 @@ public class JAccessParseException extends Exception {
     public JAccessParseException(String message) {
         super(message);
     }
+
+    public JAccessParseException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
