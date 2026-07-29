@@ -43,6 +43,7 @@
         <module>model</module>
         <module>processor</module>
         <module>postprocessor</module>
+        <module>bundle-core</module>
     </modules>
 
     <properties>
