@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [0.10.3]
+### Fixed
+- Updated Mockito for Java 25 compatibility
 
 ### Changed
 - Plugin Architecture for SVG added: SVG images are converted to PNG using Apache Batik now (if available in clasthpath (currently included in FOP dependencies))
