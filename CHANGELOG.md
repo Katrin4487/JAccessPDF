@@ -1,5 +1,6 @@
 # Changelog
-
+ ## [Unreleased]
+ -- nothing here yet --
 ## [0.10.3]
 ### Fixed
 - Updated Mockito for Java 25 compatibility
