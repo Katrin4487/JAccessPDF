@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 public class TextEntry {
 
-    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{\\{(.*?)\\}\\}");
+    public static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{\\{(.*?)\\}\\}");
 
     private final String richText;
     private String description;
@@ -62,4 +62,6 @@ public class TextEntry {
 
         return placeholders;
     }
+
+
 }

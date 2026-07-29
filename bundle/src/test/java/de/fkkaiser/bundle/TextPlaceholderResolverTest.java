@@ -2,6 +2,7 @@ package de.fkkaiser.bundle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fkkaiser.bundle.resolver.TextPlaceholderResolver;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

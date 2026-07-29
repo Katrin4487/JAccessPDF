@@ -6,4 +6,6 @@ module bundle {
 
     exports de.fkkaiser.bundle;
     opens de.fkkaiser.bundle to com.fasterxml.jackson.databind;
+    exports de.fkkaiser.bundle.resolver;
+    opens de.fkkaiser.bundle.resolver to com.fasterxml.jackson.databind;
 }

@@ -3,6 +3,7 @@ package de.fkkaiser.bundle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fkkaiser.bundle.resolver.TextPlaceholderResolver;
 import de.fkkaiser.model.structure.Document;
 
 import java.util.Map;

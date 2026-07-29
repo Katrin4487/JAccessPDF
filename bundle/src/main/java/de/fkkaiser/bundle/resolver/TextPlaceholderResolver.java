@@ -1,10 +1,13 @@
-package de.fkkaiser.bundle;
+package de.fkkaiser.bundle.resolver;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import de.fkkaiser.bundle.JAccessParseException;
+import de.fkkaiser.bundle.TextBundle;
+import de.fkkaiser.bundle.TextEntry;
 
 import java.util.Iterator;
 import java.util.Map;
