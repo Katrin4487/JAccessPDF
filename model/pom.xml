@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.fkkaiser</groupId>
         <artifactId>jaccess-pdf</artifactId>
-        <version>0.10.3-SNAPSHOT</version>
+        <version>0.10.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>model</artifactId>
@@ -15,7 +15,6 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mockito.version>5.12.0</mockito.version>
     </properties>
 
     <dependencies>
