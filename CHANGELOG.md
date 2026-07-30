@@ -1,5 +1,5 @@
 # Changelog
- ## [0.10.4]
+## [0.10.4]
 
 ### Fixed
 - FallBack Mechanisms for Missing / Not Working RessourceProviders 

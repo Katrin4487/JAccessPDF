@@ -4,6 +4,7 @@
 
 A Java library for creating PDF/UA compliant PDFs with Apache FOP.
 
+
 ## ⚠️ Current Status: Beta
 
 This library is functional and being used in production, but:
@@ -11,12 +12,16 @@ This library is functional and being used in production, but:
 - API may change in minor versions (following semantic versioning)
 - Documentation is actively being improved
 
+## Requirements
+
+- Java 21 (currently not higher because of https://issues.apache.org/jira/browse/FOP-3275)
+
 ## Features
 - ✅ PDF/UA compliance out of the box
 - ✅ Accessible PDFs
 - ✅ Simple API and advanced Core Model
-- 🚧 Dynamic content handling (in progress)
-- 🚧 Extended error handling (in progress)
+- ✅Dynamic content handling and Templating
+- ✅ Extended error handling 
 
 ## Quick Start
 see [Hello World Example](https://github.com/Katrin4487/JAccessPDF/wiki/create-first-pdf)
