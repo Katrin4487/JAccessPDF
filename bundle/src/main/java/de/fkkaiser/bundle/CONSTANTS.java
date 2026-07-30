@@ -19,8 +19,14 @@ import java.util.regex.Pattern;
 
 public final class CONSTANTS {
 
-    public static final Pattern KEY_PATTERN = Pattern.compile("^\\$\\{(.+)}$");
-    public static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{\\{(.*?)\\}\\}");
+    public static final Pattern DATA_PLACEHOLDER_PATTERN = Pattern.compile("^\\$\\{(.+)}$");
+    public static final Pattern TEXT_PLACEHOLDER_PATTERN = Pattern.compile("\\{\\{(.*?)\\}\\}");
+
+    public static final String DOCUMENT_JSON_FILE_NAME = "document.json";
+    public static final String STYLES_JSON_FILE_NAME = "styles.json";
+    public static final String FONTS_JSON_FILE_NAME = "fonts.json";
+    public static final String TEXT_JSON_FILE_NAME = "text.json";
+
 
 
 

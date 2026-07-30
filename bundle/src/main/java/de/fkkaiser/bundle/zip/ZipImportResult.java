@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module bundle {
-    requires org.slf4j;
-    requires model;
-    requires processor;
-    requires com.fasterxml.jackson.databind;
+package de.fkkaiser.bundle.zip;
 
-    exports de.fkkaiser.bundle;
-    opens de.fkkaiser.bundle to com.fasterxml.jackson.databind;
-    exports de.fkkaiser.bundle.resolver;
-    opens de.fkkaiser.bundle.resolver to com.fasterxml.jackson.databind;
-    exports de.fkkaiser.bundle.validation;
-    opens de.fkkaiser.bundle.validation to com.fasterxml.jackson.databind;
-    exports de.fkkaiser.bundle.zip;
+import de.fkkaiser.bundle.MasterBundle;
+
+import java.util.Map;
+
+public record ZipImportResult(
+        MasterBundle masterBundle,
+        Map<String, byte[]> fontFiles) {
+
 }
+

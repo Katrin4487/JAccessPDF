@@ -18,7 +18,6 @@ package de.fkkaiser.bundle.validation;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import de.fkkaiser.bundle.*;
 
 import java.util.*;
@@ -82,7 +81,7 @@ public final class TemplateValidator {
                 JsonNode value = field.getValue();
 
                 if ("text".equals(field.getKey()) && value.isTextual()) {
-                    Matcher matcher = CONSTANTS.KEY_PATTERN.matcher(value.asText());
+                    Matcher matcher = CONSTANTS.DATA_PLACEHOLDER_PATTERN.matcher(value.asText());
                     if (matcher.matches()) {
                         String key = matcher.group(1);
                         TextEntry entry = textBundle.getTextContent().get(key);

@@ -17,14 +17,14 @@ package de.fkkaiser.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.fkkaiser.api.utils.EFopResourceResolver;
-import de.fkkaiser.api.utils.EFopURIResolver;
-import de.fkkaiser.api.utils.EResourceProvider;
+import de.fkkaiser.api.utils.*;
 import de.fkkaiser.bundle.JAccessParseException;
 import de.fkkaiser.bundle.MasterBundle;
 import de.fkkaiser.bundle.MasterBundleEngine;
 import de.fkkaiser.bundle.validation.PlaceholderValidationResult;
 import de.fkkaiser.bundle.validation.TemplateValidator;
+import de.fkkaiser.bundle.zip.BundleZipReader;
+import de.fkkaiser.bundle.zip.ZipImportResult;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.font.FontFamily;
@@ -211,6 +211,8 @@ public final class PdfGenerationFacade {
         log.debug("PdfGenerationFacade initialized successfully");
     }
 
+    // ======= Generate PDF from JSON input streams. ======
+
     /**
      * Generates a PDF from JSON input streams.
      * This method is ideal for web services, REST APIs, or any scenario where the document
@@ -364,6 +366,47 @@ public final class PdfGenerationFacade {
             throw new PdfGenerationException("Failed to resolve template", e);
         }
     }
+
+    /**
+     * Generates a PDF from a ZIP file containing a MasterBundle. This method is particularly useful for generating
+     * PDFs using Templates objects and have placeholders.
+     * @param zip the ZIP file containing the MasterBundle
+     * @param visibility list of visibility conditions for containers in the template
+     * @param data list of data to be used in the placeholders (logic isHidden = true / false)
+     * @return a ByteArrayOutputStream containing the generated PDF data
+     * @throws PdfGenerationException if an error occurs during PDF generation or if
+     */
+    public ByteArrayOutputStream generatePDF(InputStream zip,
+                                             Map<String, Boolean> visibility,
+                                             Map<String, String> data) throws PdfGenerationException {
+        try {
+            ZipImportResult imported = BundleZipReader.read(zip, objectMapper);
+            EResourceProvider zipFontProvider = new MapBackedResourceProvider(imported.fontFiles());
+            EResourceProvider combined = new FallbackResourceProvider(zipFontProvider, this.resourceProvider);
+            return new PdfGenerationFacade(combined).generatePDF(imported.masterBundle(), visibility, data);
+        } catch (JAccessParseException e) {
+            throw new PdfGenerationException("Failed to read ZIP bundle", e);
+        }
+    }
+
+
+    // ==== Other methods ====
+
+    /**
+     * Reads a template from a ZIP file.
+     * @param zip the ZIP file containing the template
+     * @return the template
+     * @throws PdfGenerationException if the template is invalid
+     */
+    public MasterBundle readTemplate(InputStream zip) throws PdfGenerationException {
+        try {
+            return BundleZipReader.read(zip, objectMapper).masterBundle();
+        } catch (JAccessParseException e) {
+            throw new PdfGenerationException("Failed to read ZIP bundle", e);
+        }
+
+    }
+
 
     /**
      * This method can be used to validate data against a template.

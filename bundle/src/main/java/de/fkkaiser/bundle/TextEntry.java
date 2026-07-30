@@ -61,13 +61,13 @@ public class TextEntry {
     }
 
     public boolean hasPlaceholders() {
-        return CONSTANTS.PLACEHOLDER_PATTERN.matcher(this.richText).find();
+        return CONSTANTS.TEXT_PLACEHOLDER_PATTERN.matcher(this.richText).find();
     }
 
 
     public List<String> extractPlaceholders() {
         List<String> placeholders = new ArrayList<>();
-        Matcher matcher = CONSTANTS.PLACEHOLDER_PATTERN.matcher(this.richText);
+        Matcher matcher = CONSTANTS.TEXT_PLACEHOLDER_PATTERN.matcher(this.richText);
 
         while (matcher.find()) {
             placeholders.add(matcher.group(1));
