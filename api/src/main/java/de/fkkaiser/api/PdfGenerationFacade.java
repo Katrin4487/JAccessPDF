@@ -15,9 +15,16 @@
  */
 package de.fkkaiser.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fkkaiser.api.utils.EFopResourceResolver;
 import de.fkkaiser.api.utils.EFopURIResolver;
 import de.fkkaiser.api.utils.EResourceProvider;
+import de.fkkaiser.bundle.JAccessParseException;
+import de.fkkaiser.bundle.MasterBundle;
+import de.fkkaiser.bundle.MasterBundleEngine;
+import de.fkkaiser.bundle.validation.PlaceholderValidationResult;
+import de.fkkaiser.bundle.validation.TemplateValidator;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.font.FontFamily;
@@ -48,6 +55,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
 
 /**
  * The central facade for PDF generation from structured document models.
@@ -172,6 +180,7 @@ public final class PdfGenerationFacade {
     private final FontFamilyListReader fontListReader;
     private final XslFoGenerator foGenerator;
     private final EResourceProvider resourceProvider;
+    private final ObjectMapper objectMapper;
 
     /**
      * Constructs a new PdfGenerationFacade with the specified resource provider.
@@ -197,6 +206,7 @@ public final class PdfGenerationFacade {
         this.styleSheetReader = new StyleSheetReader();
         this.fontListReader = new FontFamilyListReader();
         this.foGenerator = new XslFoGenerator();
+        this.objectMapper = new ObjectMapper();
 
         log.debug("PdfGenerationFacade initialized successfully");
     }
@@ -332,6 +342,39 @@ public final class PdfGenerationFacade {
 
     }
 
+
+    /**
+     * Generates a PDF from a MasterBundle. This method is particularly useful for generating
+     * PDFs using Templates objects and have placeholders.
+     *
+     * @param template the template to be used to generate the PDF
+     * @param visibility list of visibility conditions for containers in the template
+     * @param data list of data to be used in the placeholders (logic isHidden = true / false)
+     * @return a ByteArrayOutputStream containing the generated PDF data
+     * @throws PdfGenerationException if an error occurs during PDF generation or if
+     *         the template is invalid
+     */
+    public ByteArrayOutputStream generatePDF(MasterBundle template,
+                                             Map<String, Boolean> visibility,
+                                             Map<String, String> data) throws PdfGenerationException {
+        try {
+            Document document = MasterBundleEngine.resolve(template, visibility, data, objectMapper);
+            return generatePDF(document, template.styleSheet(), template.fonts());
+        } catch (JAccessParseException | JsonProcessingException e) {
+            throw new PdfGenerationException("Failed to resolve template", e);
+        }
+    }
+
+    /**
+     * This method can be used to validate data against a template.
+     * If keys are missing or not found in the template the result will contain the missing keys.
+     * @param template the template to be used to generate the PDF
+     * @param data list of data to be used in the placeholders (logic isHidden = true / false)
+     * @return a PlaceholderValidationResult containing the validation result
+     */
+    public PlaceholderValidationResult validateTemplate(MasterBundle template, Map<String, String> data) {
+        return TemplateValidator.validate(template, data);
+    }
 
     // ========== PRIVATE HELPER METHODS ==========
 

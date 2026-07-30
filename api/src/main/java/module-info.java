@@ -24,6 +24,7 @@ module api {
     requires transitive model;
     requires transitive processor;
     requires transitive generator;
+    requires bundle;
 
     exports de.fkkaiser.api.simplelayer;
     exports de.fkkaiser.api.utils;
