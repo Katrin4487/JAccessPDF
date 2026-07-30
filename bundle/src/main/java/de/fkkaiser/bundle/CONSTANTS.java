@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module api {
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.databind;
-    requires java.xml;
-    requires org.apache.xmlgraphics.commons;
-    requires org.apache.xmlgraphics.fop.core;
-    requires org.slf4j;
+package de.fkkaiser.bundle;
 
-    requires transitive model;
-    requires transitive processor;
-    requires transitive generator;
-    requires bundle;
+import java.util.regex.Pattern;
 
-    exports de.fkkaiser.api.simplelayer;
-    exports de.fkkaiser.api.utils;
-    exports de.fkkaiser.api;
+public final class CONSTANTS {
+
+    public static final Pattern DATA_PLACEHOLDER_PATTERN = Pattern.compile("^\\$\\{(.+)}$");
+    public static final Pattern TEXT_PLACEHOLDER_PATTERN = Pattern.compile("\\{\\{(.*?)\\}\\}");
+
+    public static final String DOCUMENT_JSON_FILE_NAME = "document.json";
+    public static final String STYLES_JSON_FILE_NAME = "styles.json";
+    public static final String FONTS_JSON_FILE_NAME = "fonts.json";
+    public static final String TEXT_JSON_FILE_NAME = "text.json";
+
+
+
 
 }

@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module api {
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.databind;
-    requires java.xml;
-    requires org.apache.xmlgraphics.commons;
-    requires org.apache.xmlgraphics.fop.core;
+module bundle {
     requires org.slf4j;
+    requires model;
+    requires processor;
+    requires com.fasterxml.jackson.databind;
 
-    requires transitive model;
-    requires transitive processor;
-    requires transitive generator;
-    requires bundle;
-
-    exports de.fkkaiser.api.simplelayer;
-    exports de.fkkaiser.api.utils;
-    exports de.fkkaiser.api;
-
+    exports de.fkkaiser.bundle;
+    opens de.fkkaiser.bundle to com.fasterxml.jackson.databind;
+    exports de.fkkaiser.bundle.resolver;
+    opens de.fkkaiser.bundle.resolver to com.fasterxml.jackson.databind;
+    exports de.fkkaiser.bundle.validation;
+    opens de.fkkaiser.bundle.validation to com.fasterxml.jackson.databind;
+    exports de.fkkaiser.bundle.zip;
 }

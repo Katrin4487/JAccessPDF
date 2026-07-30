@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module api {
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.databind;
-    requires java.xml;
-    requires org.apache.xmlgraphics.commons;
-    requires org.apache.xmlgraphics.fop.core;
-    requires org.slf4j;
+package de.fkkaiser.bundle;
 
-    requires transitive model;
-    requires transitive processor;
-    requires transitive generator;
-    requires bundle;
+import java.util.Map;
 
-    exports de.fkkaiser.api.simplelayer;
-    exports de.fkkaiser.api.utils;
-    exports de.fkkaiser.api;
+
+/**
+ * Represents a text bundle containing text content.
+ *
+ * @author Katrin Kaiser
+ * @version 1.0.0
+ */
+public class TextBundle {
+
+    Map<String,TextEntry> textContent;
+
+    public TextBundle(Map<String,TextEntry> textContent) {
+        this.textContent = textContent;
+    }
+
+    public Map<String, TextEntry> getTextContent() {
+        return textContent;
+    }
 
 }
