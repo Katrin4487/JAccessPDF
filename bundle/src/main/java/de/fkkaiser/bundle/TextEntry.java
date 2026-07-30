@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Represents a text entry in a bundle.
@@ -18,7 +17,6 @@ import java.util.regex.Pattern;
  */
 public class TextEntry {
 
-    public static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{\\{(.*?)\\}\\}");
 
     private final String richText;
     private String description;
@@ -48,13 +46,13 @@ public class TextEntry {
     }
 
     public boolean hasPlaceholders() {
-        return PLACEHOLDER_PATTERN.matcher(this.richText).find();
+        return CONSTANTS.PLACEHOLDER_PATTERN.matcher(this.richText).find();
     }
 
 
     public List<String> extractPlaceholders() {
         List<String> placeholders = new ArrayList<>();
-        Matcher matcher = PLACEHOLDER_PATTERN.matcher(this.richText);
+        Matcher matcher = CONSTANTS.PLACEHOLDER_PATTERN.matcher(this.richText);
 
         while (matcher.find()) {
             placeholders.add(matcher.group(1));

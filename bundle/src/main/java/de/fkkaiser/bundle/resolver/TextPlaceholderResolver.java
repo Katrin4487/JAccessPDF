@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import de.fkkaiser.bundle.CONSTANTS;
 import de.fkkaiser.bundle.JAccessParseException;
 import de.fkkaiser.bundle.TextBundle;
 import de.fkkaiser.bundle.TextEntry;
@@ -12,7 +13,6 @@ import de.fkkaiser.bundle.TextEntry;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Resolves text placeholders in a JSON document using the provided TextBundle.
@@ -21,8 +21,6 @@ import java.util.regex.Pattern;
  * @version 1.0.0
  */
 public class TextPlaceholderResolver {
-
-    private static final Pattern KEY_PATTERN = Pattern.compile("^\\$\\{(.+)}$");
 
 
     /**
@@ -53,7 +51,7 @@ public class TextPlaceholderResolver {
                 JsonNode value = field.getValue();
 
                 if ("text".equals(field.getKey()) && value.isTextual()) {
-                    Matcher matcher = KEY_PATTERN.matcher(value.asText());
+                    Matcher matcher = CONSTANTS.KEY_PATTERN.matcher(value.asText());
                     if (matcher.matches()) {
                         String key = matcher.group(1);
                         TextEntry entry = textBundle.getTextContent().get(key);

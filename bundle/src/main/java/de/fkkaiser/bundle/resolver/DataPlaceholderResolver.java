@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import de.fkkaiser.bundle.CONSTANTS;
 import de.fkkaiser.bundle.JAccessParseException;
 import de.fkkaiser.bundle.TextEntry;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public final class DataPlaceholderResolver {
 
@@ -43,7 +43,7 @@ public final class DataPlaceholderResolver {
     }
 
     private static String replacePlaceholders(String text, Map<String, String> data) throws JAccessParseException {
-        Matcher matcher = TextEntry.PLACEHOLDER_PATTERN.matcher(text);
+        Matcher matcher = CONSTANTS.PLACEHOLDER_PATTERN.matcher(text);
         StringBuilder result = new StringBuilder();
         while (matcher.find()) {
             String key = matcher.group(1);
