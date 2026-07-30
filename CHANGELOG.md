@@ -1,6 +1,12 @@
 # Changelog
- ## [Unreleased]
- -- nothing here yet --
+ ## [0.10.4]
+
+### Fixed
+- FallBack Mechanisms for Missing / Not Working RessourceProviders 
+
+### Added
+- New functionalities using Templates (MasterBundles) with Placeholders and Visibility Condition
+- ZipBundles for Templates (Im/Export) available
 ## [0.10.3]
 ### Fixed
 - Updated Mockito for Java 25 compatibility
