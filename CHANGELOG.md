@@ -1,6 +1,9 @@
 # Changelog
 ## [0.10.4]
 
+### Added
+- New enumeration for StyleListKey for JSON representation (makes the generation of JSON files easier)
+
 ### Fixed
 - FallBack Mechanisms for Missing / Not Working RessourceProviders 
 
