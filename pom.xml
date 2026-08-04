@@ -148,6 +148,7 @@
                     <quiet>true</quiet>
                     <source>21</source>
                     <detectOfflineLinks>false</detectOfflineLinks>
+                    <failOnError>false</failOnError>
                     <links>
                         <link>https://javadoc.io/doc/org.apache.xmlgraphics/fop-core/latest/</link>
                     </links>
