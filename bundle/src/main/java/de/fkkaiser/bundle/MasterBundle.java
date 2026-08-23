@@ -18,6 +18,7 @@ package de.fkkaiser.bundle;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fkkaiser.bundle.validation.FontReferenceValidator;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.font.FontFamilyList;
 import de.fkkaiser.model.style.StyleSheet;
@@ -26,7 +27,9 @@ import de.fkkaiser.processor.reader.JsonReadException;
 import de.fkkaiser.processor.reader.StyleSheetReader;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,12 +68,18 @@ public record MasterBundle(
             FontFamilyList fonts = new FontFamilyListReader().readJson(
                     new ByteArrayInputStream(fontsJson.getBytes(StandardCharsets.UTF_8)));
 
+            List<String> missingFonts = FontReferenceValidator.findMissingFontReferences(styleSheet, fonts);
+            if (!missingFonts.isEmpty()) {
+                throw new JAccessParseException("Missing font references: " + String.join(", ", missingFonts));
+            }
+
             Map<String, TextEntry> textContent =
                     mapper.readValue(textJson, new TypeReference<Map<String, TextEntry>>() {});
             TextBundle textBundle = new TextBundle(textContent);
 
             return new MasterBundle(documentTree, styleSheet, fonts, textBundle);
-        } catch (JsonReadException | java.io.IOException e) {
+
+        } catch (JsonReadException | IOException e) {
             throw new JAccessParseException("Failed to parse MasterBundle from JSON", e);
         }
     }

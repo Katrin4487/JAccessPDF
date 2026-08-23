@@ -1,4 +1,8 @@
 # Changelog
+## [Unreleased]
+### Added
+- New FontReferenceValidator for validating the references of TextStyles to FontFamilies and FontTypes in the StyleSheet
+
 ## [0.10.4]
 
 ### Added
