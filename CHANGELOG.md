@@ -2,6 +2,7 @@
 ## [Unreleased]
 ### Added
 - New FontReferenceValidator for validating the references of TextStyles to FontFamilies and FontTypes in the StyleSheet
+- Add new method in TextStyleFactory to use custom units for font sizes (e.g. pt, px, em, rem, etc.)
 
 ## [0.10.4]
 

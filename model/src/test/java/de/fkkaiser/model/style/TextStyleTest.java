@@ -39,4 +39,22 @@ class TextStyleTest {
         assertEquals(fontWeight, textStyle.fontWeight());
         assertEquals(fontStyle, textStyle.fontStyle());
     }
+
+    @Test
+    @DisplayName("Should create correct bold font style with int")
+    public void shouldCreateCorrectBoldFontStyleWithInt(){
+        TextStyle textStyle = new TextStyle.TextStyleFactory("test-font-family")
+                .bold("bold",12);
+        assertEquals("700", textStyle.fontWeight());
+        assertEquals("12pt", textStyle.fontSize());
+    }
+
+    @Test
+    @DisplayName("Should create correct bold font style with string")
+    public void shouldCreateCorrectBoldFontStyleWithString() {
+        TextStyle textStyle = new TextStyle.TextStyleFactory("test-font-family")
+                .bold("bold", "12px");
+        assertEquals("700", textStyle.fontWeight());
+        assertEquals("12px", textStyle.fontSize());
+    }
 }

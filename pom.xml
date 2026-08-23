@@ -118,6 +118,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.version}</version>
+                <configuration>
+                    <!-- Run tests on the classpath, not the module path: JUnit needs
+                         reflective access to test classes that production module-info.java
+                         intentionally doesn't grant (it only opens packages to Jackson). -->
+                    <useModulePath>false</useModulePath>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -172,7 +178,7 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <version>4.5</version>
                 <configuration>
-                    <header>license-header.txt</header>
+                    <header>${maven.multiModuleProjectDirectory}/license-header.txt</header>
                     <properties>
                         <owner>Katrin Kaiser</owner>
                         <year>2025</year>

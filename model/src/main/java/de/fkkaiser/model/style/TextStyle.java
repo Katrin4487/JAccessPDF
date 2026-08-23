@@ -19,6 +19,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.font.FontStyleValue;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Represents a named text style that defines the visual appearance of text elements.
  * A TextStyle combines font properties (family, size, weight, style) into a reusable
@@ -111,7 +114,6 @@ import de.fkkaiser.model.font.FontStyleValue;
  *                       must not be {@code null} or empty
  * @param fontStyle      the font style ("normal", "italic", or "oblique");
  *                       must not be {@code null} or empty
- *
  * @author Katrin Kaiser
  * @version 1.0.0
  * @see StyleSheet
@@ -216,25 +218,25 @@ public record TextStyle(
      * @see TextStyle
      * @see FontStyleValue
      */
-        @PublicAPI
-        public record TextStyleFactory(String fontFamilyName) {
+    @PublicAPI
+    public record TextStyleFactory(String fontFamilyName) {
 
-            /**
-             * Font weight constant for bold text.
-             * Corresponds to CSS font-weight: 700.
-             */
-            public static final String BOLD_WEIGHT = "700";
+        /**
+         * Font weight constant for bold text.
+         * Corresponds to CSS font-weight: 700.
+         */
+        public static final String BOLD_WEIGHT = "700";
 
-            /**
-             * Font weight constant for normal (regular) text.
-             * Corresponds to CSS font-weight: 400.
-             */
-            public static final String NORMAL_WEIGHT = "400";
+        /**
+         * Font weight constant for normal (regular) text.
+         * Corresponds to CSS font-weight: 400.
+         */
+        public static final String NORMAL_WEIGHT = "400";
 
-            /**
-             * Default font size in points when an invalid size (< 1) is provided.
-             */
-            private static final int DEFAULT_FONT_SIZE_PT = 12;
+        /**
+         * Default font size in points when an invalid size (< 1) is provided.
+         */
+        private static final int DEFAULT_FONT_SIZE_PT = 12;
 
         /**
          * Creates a new TextStyleFactory for the specified font family.
@@ -250,150 +252,272 @@ public record TextStyle(
             }
         }
 
-            /**
-             * Creates a bold text style with normal (upright) appearance.
-             *
-             * <p><b>Properties:</b></p>
-             * <ul>
-             *   <li>Weight: 700 (bold)</li>
-             *   <li>Style: normal</li>
-             * </ul>
-             *
-             * @param name     the unique identifier for this style (e.g., "heading1");
-             *                 must not be {@code null} or empty
-             * @param fontSize the font size in points; if less than 1, defaults to
-             *                 {@value #DEFAULT_FONT_SIZE_PT}pt
-             * @return a new TextStyle with bold weight and normal style
-             */
-            public TextStyle bold(String name, int fontSize) {
-                return createTextStyle(name, fontSize, BOLD_WEIGHT, FontStyleValue.NORMAL);
-            }
-
-            /**
-             * Creates a normal (regular) text style with standard weight and upright appearance.
-             * This is the most common style for body text.
-             *
-             * <p><b>Properties:</b></p>
-             * <ul>
-             *   <li>Weight: 400 (normal)</li>
-             *   <li>Style: normal</li>
-             * </ul>
-             *
-             * @param name     the unique identifier for this style (e.g., "body-text");
-             *                 must not be {@code null} or empty
-             * @param fontSize the font size in points; if less than 1, defaults to
-             *                 {@value #DEFAULT_FONT_SIZE_PT}pt
-             * @return a new TextStyle with normal weight and normal style
-             */
-            public TextStyle normal(String name, int fontSize) {
-                return createTextStyle(name, fontSize, NORMAL_WEIGHT, FontStyleValue.NORMAL);
-            }
-
-            /**
-             * Creates an italic text style with normal weight.
-             * Commonly used for emphasis, quotations, or foreign words.
-             *
-             * <p><b>Properties:</b></p>
-             * <ul>
-             *   <li>Weight: 400 (normal)</li>
-             *   <li>Style: italic</li>
-             * </ul>
-             *
-             * @param name     the unique identifier for this style (e.g., "emphasis");
-             *                 must not be {@code null} or empty
-             * @param fontSize the font size in points; if less than 1, defaults to
-             *                 {@value #DEFAULT_FONT_SIZE_PT}pt
-             * @return a new TextStyle with normal weight and italic style
-             */
-            public TextStyle italic(String name, int fontSize) {
-                return createTextStyle(name, fontSize, NORMAL_WEIGHT, FontStyleValue.ITALIC);
-            }
-
-            /**
-             * Creates an oblique text style with normal weight.
-             * Similar to italic but uses a slanted version of the regular font.
-             *
-             * <p><b>Properties:</b></p>
-             * <ul>
-             *   <li>Weight: 400 (normal)</li>
-             *   <li>Style: oblique</li>
-             * </ul>
-             *
-             * @param name     the unique identifier for this style (e.g., "slanted");
-             *                 must not be {@code null} or empty
-             * @param fontSize the font size in points; if less than 1, defaults to
-             *                 {@value #DEFAULT_FONT_SIZE_PT}pt
-             * @return a new TextStyle with normal weight and oblique style
-             */
-            @PublicAPI
-            public TextStyle oblique(String name, int fontSize) {
-                return createTextStyle(name, fontSize, NORMAL_WEIGHT, FontStyleValue.OBLIQUE);
-            }
-
-            /**
-             * Creates a bold oblique text style.
-             * Combines bold weight with oblique (slanted) style for strong emphasis.
-             *
-             * <p><b>Properties:</b></p>
-             * <ul>
-             *   <li>Weight: 700 (bold)</li>
-             *   <li>Style: oblique</li>
-             * </ul>
-             *
-             * @param name     the unique identifier for this style (e.g., "strong-slanted");
-             *                 must not be {@code null} or empty
-             * @param fontSize the font size in points; if less than 1, defaults to
-             *                 {@value #DEFAULT_FONT_SIZE_PT}pt
-             * @return a new TextStyle with bold weight and oblique style
-             */
-            @PublicAPI
-            public TextStyle boldOblique(String name, int fontSize) {
-                return createTextStyle(name, fontSize, BOLD_WEIGHT, FontStyleValue.OBLIQUE);
-            }
-
-            /**
-             * Creates a bold italic text style.
-             * Combines bold weight with italic style for strong emphasis.
-             *
-             * <p><b>Properties:</b></p>
-             * <ul>
-             *   <li>Weight: 700 (bold)</li>
-             *   <li>Style: italic</li>
-             * </ul>
-             *
-             * @param name     the unique identifier for this style (e.g., "strong-emphasis");
-             *                 must not be {@code null} or empty
-             * @param fontSize the font size in points; if less than 1, defaults to
-             *                 {@value #DEFAULT_FONT_SIZE_PT}pt
-             * @return a new TextStyle with bold weight and italic style
-             */
-            @PublicAPI
-            public TextStyle boldItalic(String name, int fontSize) {
-                return createTextStyle(name, fontSize, BOLD_WEIGHT, FontStyleValue.ITALIC);
-            }
-
-            /**
-             * Internal helper method to create a TextStyle with validated font size.
-             * This method centralizes the font size validation logic and ensures
-             * consistency across all factory methods.
-             *
-             * @param name       the style name
-             * @param fontSize   the font size in points
-             * @param weight     the font weight
-             * @param styleValue the font style value enum
-             * @return a new TextStyle instance
-             */
-            private TextStyle createTextStyle(String name, int fontSize, String weight, FontStyleValue styleValue) {
-                // Validate and normalize font size
-                int validatedSize = fontSize < 1 ? DEFAULT_FONT_SIZE_PT : fontSize;
-
-                return new TextStyle(
-                        name,
-                        validatedSize + "pt",
-                        fontFamilyName,
-                        weight,
-                        styleValue.toString()
-                );
-            }
+        /**
+         * Creates a bold text style with normal (upright) appearance.
+         *
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 700 (bold)</li>
+         *   <li>Style: normal</li>
+         * </ul>
+         *
+         * @param name     the unique identifier for this style (e.g., "heading1");
+         *                 must not be {@code null} or empty
+         * @param fontSize the font size in points; if less than 1, defaults to
+         *                 {@value #DEFAULT_FONT_SIZE_PT}pt
+         * @return a new TextStyle with bold weight and normal style
+         */
+        public TextStyle bold(String name, int fontSize) {
+            return createTextStyle(name, fontSize, BOLD_WEIGHT, FontStyleValue.NORMAL);
         }
+
+        /**
+         * Creates a bold text styles with custom unit (e.g. px)
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 700 (bold)</li>
+         *   <li>Style: normal</li>
+         * </ul>
+         *
+         * @param name             the unique identifier for this style (e.g., "heading1");
+         *                         must not be {@code null} or empty
+         * @param fontSizeWithUnit the font size with custom unit; if less than 1, defaults to
+         *                         {@value #DEFAULT_FONT_SIZE_PT}, if unit is not allowed, defaults to pt
+         * @return a new TextStyle with bold weight and normal style
+         */
+        public TextStyle bold(String name, String fontSizeWithUnit) {
+            return createTextStyleWithUnit(name, fontSizeWithUnit, BOLD_WEIGHT, FontStyleValue.NORMAL);
+        }
+
+        /**
+         * Creates a normal (regular) text style with standard weight and upright appearance.
+         * This is the most common style for body text.
+         *
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 400 (normal)</li>
+         *   <li>Style: normal</li>
+         * </ul>
+         *
+         * @param name     the unique identifier for this style (e.g., "body-text");
+         *                 must not be {@code null} or empty
+         * @param fontSize the font size in points; if less than 1, defaults to
+         *                 {@value #DEFAULT_FONT_SIZE_PT}pt
+         * @return a new TextStyle with normal weight and normal style
+         */
+        public TextStyle normal(String name, int fontSize) {
+            return createTextStyle(name, fontSize, NORMAL_WEIGHT, FontStyleValue.NORMAL);
+        }
+
+        /**
+         * Creates a normal (regular) text style with standard weight and upright appearance.
+         * This is the most common style for body text.
+         *
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 400 (normal)</li>
+         *   <li>Style: normal</li>
+         * </ul>
+         *
+         * @param name             the unique identifier for this style (e.g., "body-text");
+         *                         must not be {@code null} or empty
+         * @param fontSizeWithUnit the font size with a custom unit; if less than 1, defaults to
+         *                         {@value #DEFAULT_FONT_SIZE_PT}, if unit is not allowed, defaults to pt
+         * @return a new TextStyle with normal weight and normal style
+         */
+        public TextStyle normal(String name, String fontSizeWithUnit) {
+            return createTextStyleWithUnit(name, fontSizeWithUnit, NORMAL_WEIGHT, FontStyleValue.NORMAL);
+        }
+
+        /**
+         * Creates an italic text style with normal weight.
+         * Commonly used for emphasis, quotations, or foreign words.
+         *
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 400 (normal)</li>
+         *   <li>Style: italic</li>
+         * </ul>
+         *
+         * @param name     the unique identifier for this style (e.g., "emphasis");
+         *                 must not be {@code null} or empty
+         * @param fontSize the font size in points; if less than 1, defaults to
+         *                 {@value #DEFAULT_FONT_SIZE_PT}pt
+         * @return a new TextStyle with normal weight and italic style
+         */
+        public TextStyle italic(String name, int fontSize) {
+            return createTextStyle(name, fontSize, NORMAL_WEIGHT, FontStyleValue.ITALIC);
+        }
+
+        /**
+         * Creates an italic text style with normal weight.
+         * Commonly used for emphasis, quotations, or foreign words.
+         *
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 400 (normal)</li>
+         *   <li>Style: italic</li>
+         * </ul>
+         *
+         * @param name             the unique identifier for this style (e.g., "emphasis");
+         *                         must not be {@code null} or empty
+         * @param fontSizeWithUnit the font size with custom unit; if less than 1, defaults to
+         *                         {@value #DEFAULT_FONT_SIZE_PT}; if unit is not allowed, defaults to pt
+         * @return a new TextStyle with normal weight and italic style
+         */
+        public TextStyle italic(String name, String fontSizeWithUnit) {
+            return createTextStyleWithUnit(name, fontSizeWithUnit, NORMAL_WEIGHT, FontStyleValue.ITALIC);
+        }
+
+        /**
+         * Creates an oblique text style with normal weight.
+         * Similar to italic but uses a slanted version of the regular font.
+         *
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 400 (normal)</li>
+         *   <li>Style: oblique</li>
+         * </ul>
+         *
+         * @param name     the unique identifier for this style (e.g., "slanted");
+         *                 must not be {@code null} or empty
+         * @param fontSize the font size in points; if less than 1, defaults to
+         *                 {@value #DEFAULT_FONT_SIZE_PT}pt
+         * @return a new TextStyle with normal weight and oblique style
+         */
+        @PublicAPI
+        public TextStyle oblique(String name, int fontSize) {
+            return createTextStyle(name, fontSize, NORMAL_WEIGHT, FontStyleValue.OBLIQUE);
+        }
+
+        /**
+         * Creates an oblique text style with normal weight.
+         * Similar to italic but uses a slanted version of the regular font.
+         *
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 400 (normal)</li>
+         *   <li>Style: oblique</li>
+         * </ul>
+         *
+         * @param name             the unique identifier for this style (e.g., "slanted");
+         *                         must not be {@code null} or empty
+         * @param fontSizeWithUnit the font size with custom unit; if less than 1, defaults to
+         *                         {@value #DEFAULT_FONT_SIZE_PT}, if unit is not allowed, defaults to pt
+         * @return a new TextStyle with normal weight and oblique style
+         */
+        @PublicAPI
+        public TextStyle oblique(String name, String fontSizeWithUnit) {
+            return createTextStyleWithUnit(name, fontSizeWithUnit, NORMAL_WEIGHT, FontStyleValue.OBLIQUE);
+        }
+
+        /**
+         * Creates a bold oblique text style.
+         * Combines bold weight with oblique (slanted) style for strong emphasis.
+         *
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 700 (bold)</li>
+         *   <li>Style: oblique</li>
+         * </ul>
+         *
+         * @param name     the unique identifier for this style (e.g., "strong-slanted");
+         *                 must not be {@code null} or empty
+         * @param fontSize the font size in points; if less than 1, defaults to
+         *                 {@value #DEFAULT_FONT_SIZE_PT}pt
+         * @return a new TextStyle with bold weight and oblique style
+         */
+        @PublicAPI
+        public TextStyle boldOblique(String name, int fontSize) {
+            return createTextStyle(name, fontSize, BOLD_WEIGHT, FontStyleValue.OBLIQUE);
+        }
+
+        /**
+         * Creates a bold italic text style.
+         * Combines bold weight with italic style for strong emphasis.
+         *
+         * <p><b>Properties:</b></p>
+         * <ul>
+         *   <li>Weight: 700 (bold)</li>
+         *   <li>Style: italic</li>
+         * </ul>
+         *
+         * @param name     the unique identifier for this style (e.g., "strong-emphasis");
+         *                 must not be {@code null} or empty
+         * @param fontSize the font size in points; if less than 1, defaults to
+         *                 {@value #DEFAULT_FONT_SIZE_PT}pt
+         * @return a new TextStyle with bold weight and italic style
+         */
+        @PublicAPI
+        public TextStyle boldItalic(String name, int fontSize) {
+            return createTextStyle(name, fontSize, BOLD_WEIGHT, FontStyleValue.ITALIC);
+        }
+
+        /**
+         * Internal helper method to create a TextStyle with validated font size.
+         * This method centralizes the font size validation logic and ensures
+         * consistency across all factory methods.
+         *
+         * @param name       the style name
+         * @param fontSize   the font size in points
+         * @param weight     the font weight
+         * @param styleValue the font style value enum
+         * @return a new TextStyle instance
+         */
+        private TextStyle createTextStyle(String name, int fontSize, String weight, FontStyleValue styleValue) {
+            // Validate and normalize font size
+            int validatedSize = fontSize < 1 ? DEFAULT_FONT_SIZE_PT : fontSize;
+
+            return new TextStyle(
+                    name,
+                    validatedSize + "pt",
+                    fontFamilyName,
+                    weight,
+                    styleValue.toString()
+            );
+        }
+
+        /**
+         * Internal helper method to create a TextStyle with validated font size.
+         * This method centralizes the font size validation logic and ensures
+         * consistency across all factory methods.
+         *
+         * @param name             the style name
+         * @param fontSizeWithUnit the font size with custom unit
+         * @param weight           the font weight
+         * @param styleValue       the font style value enum
+         * @return a new TextStyle instance
+         */
+        private TextStyle createTextStyleWithUnit(String name, String fontSizeWithUnit, String weight, FontStyleValue styleValue) {
+            // Validate and normalize font size
+
+            Pattern pattern = Pattern.compile("^(\\d+)([a-zA-Z]+)$");
+            Matcher matcher = pattern.matcher(fontSizeWithUnit);
+
+            Integer fontSize = null;
+            String unit = "pt"; // Default
+
+            if (matcher.matches()) {
+                String numberValue = matcher.group(1); // e.g., "200"
+                unit = matcher.group(2);        // e.g., "pt"
+
+                try {
+                    fontSize = Integer.parseInt(numberValue);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid font size number: " + numberValue);
+                }
+
+            }
+
+            int validatedSize = fontSize == null || fontSize < 1 ? DEFAULT_FONT_SIZE_PT : fontSize;
+
+            return new TextStyle(
+                    name,
+                    validatedSize + unit,
+                    fontFamilyName,
+                    weight,
+                    styleValue.toString()
+            );
+        }
+    }
 }
