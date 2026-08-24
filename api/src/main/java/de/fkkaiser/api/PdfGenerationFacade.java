@@ -17,6 +17,7 @@ package de.fkkaiser.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.fkkaiser.api.utils.*;
 import de.fkkaiser.bundle.JAccessParseException;
 import de.fkkaiser.bundle.MasterBundle;
@@ -206,7 +207,7 @@ public final class PdfGenerationFacade {
         this.styleSheetReader = new StyleSheetReader();
         this.fontListReader = new FontFamilyListReader();
         this.foGenerator = new XslFoGenerator();
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
         log.debug("PdfGenerationFacade initialized successfully");
     }

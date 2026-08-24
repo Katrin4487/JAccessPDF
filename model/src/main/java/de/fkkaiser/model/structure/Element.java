@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.model.structure;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.fkkaiser.model.JsonPropertyName;
@@ -102,6 +103,7 @@ public interface Element {
      * @return the resolved style properties
      */
     @Internal
+    @JsonIgnore
     ElementStyleProperties getResolvedStyle();
 
     /**
@@ -113,5 +115,6 @@ public interface Element {
      * @return the standard element type
      */
     @Internal
+    @JsonIgnore
     StandardElementType getStandardElementType();
 }

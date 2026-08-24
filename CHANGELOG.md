@@ -8,6 +8,7 @@
 ### Fixed
 - Added Forgotten @JsonIgnore to some getters that are not mirroring fields
 - Header in StandardElementStyles are now created with the correct HeaderProperties
+- added missing JavaTimeModule to Facade's internal ObjectMapper (LocalDateTime fields like Metadata.creationDate could not be serialized)
 
 ## [0.10.5] - 2026-08-24
 ### Added
