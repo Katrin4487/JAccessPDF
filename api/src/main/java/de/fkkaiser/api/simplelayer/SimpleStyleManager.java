@@ -18,6 +18,7 @@ package de.fkkaiser.api.simplelayer;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.*;
+import de.fkkaiser.model.style.builder.StandardElementStyles;
 import de.fkkaiser.model.style.builder.StandardTextStyles;
 
 import java.util.ArrayList;
@@ -60,9 +61,6 @@ class SimpleStyleManager {
     static final String TABLE_CELL_STYLE_NAME = "cell-default";
 
     // Text style identifier (names)
-    private static final String REGULAR_PARAGRAPH_TEXT = "text-default";
-    private static final String PREFIX_HEADINGS_TEXT = "text-heading-";
-    private static final String BOLD_PARAGRAPH_TEXT = "text-bold-default";
 
     /**
      * Default font family used for all text styles.
@@ -87,94 +85,6 @@ class SimpleStyleManager {
      * @return a fully configured StyleSheet with all default styles
      */
     StyleSheet buildStyleSheet() {
-        final List<ElementStyle> elementStyles = new ArrayList<>();
-        final List<PageMasterStyle> pageMasterStyles = new ArrayList<>();
-
-        final List<TextStyle> textStyles = new ArrayList<>(StandardTextStyles.forFontFamily(FONT_FAMILY));
-
-        // Default paragraph element style
-        ParagraphStyleProperties defaultProps = new ParagraphStyleProperties();
-        defaultProps.setSpaceBefore("1em");
-        defaultProps.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
-        elementStyles.add(new ElementStyle(
-                PARAGRAPH_STYLE_NAME,
-                ElementTargetType.PARAGRAPH,
-                defaultProps
-        ));
-
-        // Create element styles for each heading level
-        for (int level = 1; level <= 6; level++) {
-            ParagraphStyleProperties headingProps = new ParagraphStyleProperties();
-            headingProps.setTextStyleName(PREFIX_HEADINGS_TEXT + level);
-            headingProps.setSpaceBefore("1.5em");
-            elementStyles.add(new ElementStyle(
-                    PREFIX_HEADINGS_STYLE_NAME + level,
-                    ElementTargetType.HEADLINE,
-                    headingProps
-            ));
-        }
-
-        // Unordered list style with disc bullets
-        ListStyleProperties listPropsUnordered = new ListStyleProperties();
-        listPropsUnordered.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
-        listPropsUnordered.setListStyleType(ListStyleType.BULLET);
-        elementStyles.add(new ElementStyle(
-                UNORDERED_LIST_STYLE_NAME,
-                ElementTargetType.LIST,
-                listPropsUnordered
-        ));
-
-        // Ordered list style with decimal numbering
-        ListStyleProperties listPropsOrdered = new ListStyleProperties();
-        listPropsOrdered.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
-        listPropsOrdered.setListStyleType(ListStyleType.NUMBER);
-        elementStyles.add(new ElementStyle(
-                ORDERED_LIST_STYLE_NAME,
-                ElementTargetType.LIST,
-                listPropsOrdered
-        ));
-
-        // Default image style with centered alignment and uniform scaling
-        BlockImageStyleProperties imagePropsDefault = new BlockImageStyleProperties();
-        imagePropsDefault.setAlignment("center");
-        imagePropsDefault.setScaling("uniform");
-        imagePropsDefault.setContentWidth("auto");
-        elementStyles.add(new ElementStyle(
-                IMAGE_STYLE_NAME,
-                ElementTargetType.BLOCK_IMAGE,
-                imagePropsDefault
-        ));
-
-        // Default table style
-        TableStyleProperties tableProp = new TableStyleProperties();
-        tableProp.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
-        elementStyles.add(new ElementStyle(
-                TABLE_STYLE_NAME,
-                ElementTargetType.TABLE,
-                tableProp
-        ));
-
-        // Header Cells
-        TableCellStyleProperties tableHeaderCellStyleProperties = new TableCellStyleProperties();
-        tableHeaderCellStyleProperties.setTextStyleName(BOLD_PARAGRAPH_TEXT);
-        elementStyles.add(new ElementStyle(
-                TABLE_HEADER_CELL_STYLE_NAME,
-                ElementTargetType.TABLE_CELL,
-                tableHeaderCellStyleProperties
-        ));
-
-        // Default table cell style
-        TableCellStyleProperties tableCellStyleProperties = new TableCellStyleProperties();
-        elementStyles.add(new ElementStyle(
-                TABLE_CELL_STYLE_NAME,
-                ElementTargetType.TABLE_CELL,
-                tableCellStyleProperties
-        ));
-
-        // A4 portrait page master
-        PageMasterStyle pageMaster = new PageMasterStyle(PAGE_MASTER_STYLE_NAME);
-        pageMasterStyles.add(pageMaster);
-
-        return new StyleSheet(textStyles, elementStyles, pageMasterStyles,null);
+        return StandardElementStyles.styleSheetForFontFamily(FONT_FAMILY);
     }
 }

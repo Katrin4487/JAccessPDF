@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - Added standard TextStyles that are available from outside the library
+- Added standard ElementStyles that are available from outside the library (StyleSheet)
 
 ## [0.10.5] - 2026-08-24
 ### Added
