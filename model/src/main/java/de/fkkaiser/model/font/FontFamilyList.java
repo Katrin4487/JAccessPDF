@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.model.font;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.annotation.VisibleForTesting;
@@ -182,6 +183,7 @@ public final class FontFamilyList {
      *
      * @return {@code true} if the list is null or contains no font families, {@code false} otherwise
      */
+    @JsonIgnore
     public boolean isEmpty() {
         return fontFamilyList == null || fontFamilyList.isEmpty();
     }

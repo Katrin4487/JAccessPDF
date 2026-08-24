@@ -99,7 +99,7 @@ public class StandardElementStyles {
 
         // Create element styles for each heading level
         for (int level = 1; level <= 6; level++) {
-            ParagraphStyleProperties headingProps = new ParagraphStyleProperties();
+            HeadlineStyleProperties headingProps = new HeadlineStyleProperties();
             headingProps.setTextStyleName(StandardTextStyles.PREFIX_HEADINGS_TEXT + level);
             headingProps.setSpaceBefore("18pt");
             elementStyles.add(new ElementStyle(

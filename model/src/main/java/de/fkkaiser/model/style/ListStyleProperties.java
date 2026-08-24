@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.model.style;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.fkkaiser.model.JsonPropertyName;
@@ -160,6 +161,7 @@ public class ListStyleProperties extends TextBlockStyleProperties {
      *
      * @return true if the value was explicitly set, false if it should use defaults
      */
+    @JsonIgnore
     public boolean isProvDistBetweenStartsManuallySet() {
         return this.provDistBetweenStarts != null;
     }

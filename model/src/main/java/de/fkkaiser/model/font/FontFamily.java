@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.model.font;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fkkaiser.model.annotation.PublicAPI;
 import org.slf4j.Logger;
@@ -165,6 +166,7 @@ public record FontFamily(
      *
      * @return the font family name (e.g., "Arial", "Roboto")
      */
+    @JsonIgnore
     public String getName() {
         return fontFamily;
     }

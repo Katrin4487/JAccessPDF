@@ -5,6 +5,10 @@
 - Added standard TextStyles that are available from outside the library
 - Added standard ElementStyles that are available from outside the library (StyleSheet)
 
+### Fixed
+- Added Forgotten @JsonIgnore to some getters that are not mirroring fields
+- Header in StandardElementStyles are now created with the correct HeaderProperties
+
 ## [0.10.5] - 2026-08-24
 ### Added
 - New FontReferenceValidator for validating the references of TextStyles to FontFamilies and FontTypes in the StyleSheet
