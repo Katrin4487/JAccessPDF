@@ -105,6 +105,11 @@
             <version>${fop.version}</version>
         </dependency>
         <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>12.5</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
@@ -152,7 +157,7 @@
                 <configuration>
                     <doclint>none</doclint>
                     <quiet>true</quiet>
-                    <source>21</source>
+                    <source>${java.release}</source>
                     <detectOfflineLinks>false</detectOfflineLinks>
                     <failOnError>false</failOnError>
                     <links>

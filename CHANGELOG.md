@@ -1,8 +1,11 @@
 # Changelog
-## [Unreleased]
+## [0.10.5] - 2026-08-24
 ### Added
 - New FontReferenceValidator for validating the references of TextStyles to FontFamilies and FontTypes in the StyleSheet
 - Add new method in TextStyleFactory to use custom units for font sizes (e.g. pt, px, em, rem, etc.)
+
+### Fixed
+- Added Saxon-HE-Workaround for FOP-3275 (compatibility with JDK 25)
 
 ## [0.10.4]
 

@@ -14,7 +14,7 @@ This library is functional and being used in production, but:
 
 ## Requirements
 
-- Java 21 (currently not higher because of https://issues.apache.org/jira/browse/FOP-3275)
+- Java 21 or higher (tested with JDK 21 and 25)
 
 ## Features
 - ✅ PDF/UA compliance out of the box
