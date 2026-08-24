@@ -30,9 +30,16 @@ import java.util.List;
  */
 public class StandardTextStyles {
 
-    private static final String REGULAR_PARAGRAPH_TEXT = "text-default";
-    private static final String PREFIX_HEADINGS_TEXT = "text-heading-";
-    private static final String BOLD_PARAGRAPH_TEXT = "text-bold-default";
+    public static final String PREFIX_HEADINGS_TEXT = "text-heading-";
+
+    public static final String REGULAR_PARAGRAPH_TEXT = "text-default";
+    public static final String HEADING_1_TEXT = PREFIX_HEADINGS_TEXT + "1";
+    public static final String HEADING_2_TEXT = PREFIX_HEADINGS_TEXT + "2";
+    public static final String HEADING_3_TEXT = PREFIX_HEADINGS_TEXT + "3";
+    public static final String HEADING_4_TEXT = PREFIX_HEADINGS_TEXT + "4";
+    public static final String HEADING_5_TEXT = PREFIX_HEADINGS_TEXT + "5";
+    public static final String HEADING_6_TEXT = PREFIX_HEADINGS_TEXT + "6";
+    public static final String BOLD_PARAGRAPH_TEXT = "text-bold-default";
 
 
     /**
@@ -50,22 +57,22 @@ public class StandardTextStyles {
                 .bold(BOLD_PARAGRAPH_TEXT, "12px");
 
         TextStyle h1Text = new TextStyle.TextStyleFactory(fontFamilyName)
-                .bold(PREFIX_HEADINGS_TEXT + "1", "24px");
+                .bold(HEADING_1_TEXT, "24px");
 
         TextStyle h2Text = new TextStyle.TextStyleFactory(fontFamilyName)
-                .bold(PREFIX_HEADINGS_TEXT + "2", "20px");
+                .bold(HEADING_2_TEXT, "20px");
 
         TextStyle h3Text = new TextStyle.TextStyleFactory(fontFamilyName)
-                .bold(PREFIX_HEADINGS_TEXT + "3", "18px");
+                .bold(HEADING_3_TEXT, "18px");
 
         TextStyle h4Text = new TextStyle.TextStyleFactory(fontFamilyName)
-                .bold(PREFIX_HEADINGS_TEXT + "4", "16px");
+                .bold(HEADING_4_TEXT, "16px");
 
         TextStyle h5Text = new TextStyle.TextStyleFactory(fontFamilyName)
-                .bold(PREFIX_HEADINGS_TEXT + "5", "14px");
+                .bold(HEADING_5_TEXT, "14px");
 
         TextStyle h6Text = new TextStyle.TextStyleFactory(fontFamilyName)
-                .bold(PREFIX_HEADINGS_TEXT + "6", "12px");
+                .bold(HEADING_6_TEXT, "12px");
 
         return new ArrayList<>(List.of(normalText, boldText, h1Text, h2Text, h3Text, h4Text, h5Text, h6Text));
 

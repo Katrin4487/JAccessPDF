@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.model.style.builder;
 
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.*;
 
@@ -32,20 +33,35 @@ import java.util.List;
 public class StandardElementStyles {
 
 
-    // Text style identifier (names)
-    private static final String REGULAR_PARAGRAPH_TEXT = "text-default";
-    private static final String PREFIX_HEADINGS_TEXT = "text-heading-";
-    private static final String BOLD_PARAGRAPH_TEXT = "text-bold-default";
+     /** style name for the default A4 page master style **/
+    public static final String PAGE_MASTER_STYLE_NAME = "simple-a4-portrait";
 
-    /** style name for the default A4 page master style **/
-    static final String PAGE_MASTER_STYLE_NAME = "simple-a4-portrait";
+    /** prefix for the style names of heading styles (1-6) **/
+    private static final String PREFIX_HEADINGS_STYLE_NAME = "heading-";
 
     // Element Style Identifier (names)
     /** style name for the paragraph style **/
-    static final String PARAGRAPH_STYLE_NAME = "paragraph-default";
-    /** prefix for the style names of heading styles (1-6) **/
-    static final String PREFIX_HEADINGS_STYLE_NAME = "heading-";
-    /** style name for unordered list style **/
+    public static final String PARAGRAPH_STYLE_NAME = "paragraph-default";
+    /** style name for heading 1 style **/
+    @PublicAPI
+    public static final String HEADING_1_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "1";
+    /** style name for heading 2 style **/
+    @PublicAPI
+    public static final String HEADING_2_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "2";
+    /** style name for heading 3 style **/
+    @PublicAPI
+    public static final String HEADING_3_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "3";
+    /** style name for heading 4 style **/
+    @PublicAPI
+    public static final String HEADING_4_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "4";
+    /** style name for heading 5 style **/
+    @PublicAPI
+    public static final String HEADING_5_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "5";
+    /** style name for heading 6 style **/
+    @PublicAPI
+    public static final String HEADING_6_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "6";
+
+      /** style name for unordered list style **/
     static final String UNORDERED_LIST_STYLE_NAME = "list-style-unordered";
     /** style name for ordered list style **/
     static final String ORDERED_LIST_STYLE_NAME = "list-style-ordered";
@@ -72,19 +88,20 @@ public class StandardElementStyles {
 
         // Default paragraph element style
         ParagraphStyleProperties defaultProps = new ParagraphStyleProperties();
-        defaultProps.setSpaceBefore("1em");
-        defaultProps.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
+        defaultProps.setSpaceBefore("12pt");
+        defaultProps.setTextStyleName(StandardTextStyles.REGULAR_PARAGRAPH_TEXT);
         elementStyles.add(new ElementStyle(
                 PARAGRAPH_STYLE_NAME,
                 ElementTargetType.PARAGRAPH,
                 defaultProps
         ));
 
+
         // Create element styles for each heading level
         for (int level = 1; level <= 6; level++) {
             ParagraphStyleProperties headingProps = new ParagraphStyleProperties();
-            headingProps.setTextStyleName(PREFIX_HEADINGS_TEXT + level);
-            headingProps.setSpaceBefore("1.5em");
+            headingProps.setTextStyleName(StandardTextStyles.PREFIX_HEADINGS_TEXT + level);
+            headingProps.setSpaceBefore("18pt");
             elementStyles.add(new ElementStyle(
                     PREFIX_HEADINGS_STYLE_NAME + level,
                     ElementTargetType.HEADLINE,
@@ -94,7 +111,7 @@ public class StandardElementStyles {
 
         // Unordered list style with disc bullets
         ListStyleProperties listPropsUnordered = new ListStyleProperties();
-        listPropsUnordered.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
+        listPropsUnordered.setTextStyleName(StandardTextStyles.REGULAR_PARAGRAPH_TEXT);
         listPropsUnordered.setListStyleType(ListStyleType.BULLET);
         elementStyles.add(new ElementStyle(
                 UNORDERED_LIST_STYLE_NAME,
@@ -104,7 +121,7 @@ public class StandardElementStyles {
 
         // Ordered list style with decimal numbering
         ListStyleProperties listPropsOrdered = new ListStyleProperties();
-        listPropsOrdered.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
+        listPropsOrdered.setTextStyleName(StandardTextStyles.REGULAR_PARAGRAPH_TEXT);
         listPropsOrdered.setListStyleType(ListStyleType.NUMBER);
         elementStyles.add(new ElementStyle(
                 ORDERED_LIST_STYLE_NAME,
@@ -125,7 +142,7 @@ public class StandardElementStyles {
 
         // Default table style
         TableStyleProperties tableProp = new TableStyleProperties();
-        tableProp.setTextStyleName(REGULAR_PARAGRAPH_TEXT);
+        tableProp.setTextStyleName(StandardTextStyles.REGULAR_PARAGRAPH_TEXT);
         elementStyles.add(new ElementStyle(
                 TABLE_STYLE_NAME,
                 ElementTargetType.TABLE,
@@ -134,7 +151,7 @@ public class StandardElementStyles {
 
         // Header Cells
         TableCellStyleProperties tableHeaderCellStyleProperties = new TableCellStyleProperties();
-        tableHeaderCellStyleProperties.setTextStyleName(BOLD_PARAGRAPH_TEXT);
+        tableHeaderCellStyleProperties.setTextStyleName(StandardTextStyles.BOLD_PARAGRAPH_TEXT);
         elementStyles.add(new ElementStyle(
                 TABLE_HEADER_CELL_STYLE_NAME,
                 ElementTargetType.TABLE_CELL,
