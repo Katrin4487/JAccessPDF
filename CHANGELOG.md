@@ -1,4 +1,9 @@
 # Changelog
+
+## [Unreleased]
+### Added
+- Added standard TextStyles that are available from outside the library
+
 ## [0.10.5] - 2026-08-24
 ### Added
 - New FontReferenceValidator for validating the references of TextStyles to FontFamilies and FontTypes in the StyleSheet

@@ -18,6 +18,8 @@ package de.fkkaiser.api.simplelayer;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.structure.ElementTargetType;
 import de.fkkaiser.model.style.*;
+import de.fkkaiser.model.style.builder.StandardTextStyles;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,39 +87,10 @@ class SimpleStyleManager {
      * @return a fully configured StyleSheet with all default styles
      */
     StyleSheet buildStyleSheet() {
-        final List<TextStyle> textStyles = new ArrayList<>();
         final List<ElementStyle> elementStyles = new ArrayList<>();
         final List<PageMasterStyle> pageMasterStyles = new ArrayList<>();
 
-        // Create the default text style with base font settings
-        textStyles.add(new TextStyle(
-                REGULAR_PARAGRAPH_TEXT,
-                "12px",       // Standardgröße
-                FONT_FAMILY,
-                "400",        // normal weight
-                "normal"
-        ));
-
-        // Create heading text styles with decreasing font sizes
-        // Level 1: 24px, Level 2: 22px, Level 3: 20px, etc.
-        for (int level = 1; level <= 6; level++) {
-            int fontSize = 24 - (level - 1) * 2;
-            textStyles.add(new TextStyle(
-                    PREFIX_HEADINGS_TEXT + level,
-                    fontSize + "px",
-                    FONT_FAMILY,
-                    "700",      // bold weight
-                    "normal"
-            ));
-        }
-
-        textStyles.add(new TextStyle(
-                BOLD_PARAGRAPH_TEXT,
-                "12px",
-                FONT_FAMILY,
-                "700",
-                "normal"
-        ));
+        final List<TextStyle> textStyles = new ArrayList<>(StandardTextStyles.forFontFamily(FONT_FAMILY));
 
         // Default paragraph element style
         ParagraphStyleProperties defaultProps = new ParagraphStyleProperties();
