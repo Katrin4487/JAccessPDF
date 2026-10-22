@@ -90,6 +90,9 @@ public class StandardElementStyles {
     /** style name for inline code text (e.g. Markdown "`code`") **/
     @PublicAPI
     public static final String CODE_STYLE_NAME = "code" + SUFFIX_DEFAULT_STYLE_NAME;
+    /** style name for hyperlinks **/
+    @PublicAPI
+    public static final String HYPERLINK_STYLE_NAME = "hyperlink" + SUFFIX_DEFAULT_STYLE_NAME;
 
     /**
      * Gets the default style name for a heading of the given level.
@@ -232,6 +235,18 @@ public class StandardElementStyles {
                 CODE_STYLE_NAME,
                 ElementTargetType.TEXT_RUN,
                 codeProps
+        ));
+
+        // Default hyperlink style: underline, not just color, so the link is not
+        // distinguishable by color alone (useful for accessibility).
+        TextRunStyleProperties hyperlinkProps = new TextRunStyleProperties();
+        hyperlinkProps.setTextStyleName(StandardTextStyles.REGULAR_PARAGRAPH_TEXT);
+        hyperlinkProps.setTextColor("blue");
+        hyperlinkProps.setTextDecoration("underline");
+        elementStyles.add(new ElementStyle(
+                HYPERLINK_STYLE_NAME,
+                ElementTargetType.HYPERLINK,
+                hyperlinkProps
         ));
 
         // A4 portrait page master
