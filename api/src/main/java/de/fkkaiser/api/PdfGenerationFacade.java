@@ -152,10 +152,12 @@ public final class PdfGenerationFacade {
     // Default font configuration
     private static final String DEFAULT_FONT_PATH = "fonts/OpenSans-Regular.ttf";
     private static final String DEFAULT_BOLD_FONT_PATH = "fonts/OpenSans-Bold.ttf";
+    private static final String DEFAULT_ITALIC_FONT_PATH = "fonts/OpenSans-Italic.ttf";
     private static final String DEFAULT_FONT_NAME = "Open Sans";
     private static final String DEFAULT_FONT_WEIGHT = "400";
     private static final String DEFAULT_BOLD_FONT_WEIGHT = "700";
     private static final FontStyleValue DEFAULT_FONT_STYLE = FontStyleValue.NORMAL;
+    private static final FontStyleValue DEFAULT_ITALIC_FONT_STYLE = FontStyleValue.ITALIC;
 
     // FOP configuration constants
     private static final String FOP_VERSION = "1.0";
@@ -627,9 +629,14 @@ public final class PdfGenerationFacade {
                 DEFAULT_FONT_STYLE,
                 DEFAULT_BOLD_FONT_WEIGHT
         );
+        FontType defaultItalicFontType = new FontType(
+                DEFAULT_ITALIC_FONT_PATH,
+                DEFAULT_ITALIC_FONT_STYLE,
+                DEFAULT_FONT_WEIGHT
+        );
         return new FontFamily(
                 DEFAULT_FONT_NAME,
-                List.of(defaultFontType, defaultBoldFontType)
+                List.of(defaultFontType, defaultBoldFontType, defaultItalicFontType)
         );
     }
 

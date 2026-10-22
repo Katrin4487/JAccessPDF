@@ -40,6 +40,8 @@ public class StandardTextStyles {
     public static final String HEADING_5_TEXT = PREFIX_HEADINGS_TEXT + "5";
     public static final String HEADING_6_TEXT = PREFIX_HEADINGS_TEXT + "6";
     public static final String BOLD_PARAGRAPH_TEXT = "text-bold-default";
+    /** italic variant of the regular paragraph text, e.g. for emphasised inline text **/
+    public static final String ITALIC_PARAGRAPH_TEXT = "text-italic-default";
 
 
     /**
@@ -55,6 +57,9 @@ public class StandardTextStyles {
 
         TextStyle boldText = new TextStyle.TextStyleFactory(fontFamilyName)
                 .bold(BOLD_PARAGRAPH_TEXT, "12px");
+
+        TextStyle italicText = new TextStyle.TextStyleFactory(fontFamilyName)
+                .italic(ITALIC_PARAGRAPH_TEXT, "12px");
 
         TextStyle h1Text = new TextStyle.TextStyleFactory(fontFamilyName)
                 .bold(HEADING_1_TEXT, "24px");
@@ -74,7 +79,7 @@ public class StandardTextStyles {
         TextStyle h6Text = new TextStyle.TextStyleFactory(fontFamilyName)
                 .bold(HEADING_6_TEXT, "12px");
 
-        return new ArrayList<>(List.of(normalText, boldText, h1Text, h2Text, h3Text, h4Text, h5Text, h6Text));
+        return new ArrayList<>(List.of(normalText, boldText, italicText, h1Text, h2Text, h3Text, h4Text, h5Text, h6Text));
 
     }
 

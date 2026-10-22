@@ -81,6 +81,15 @@ public class StandardElementStyles {
     /** style name for normal table cell style **/
     @PublicAPI
     public static final String TABLE_CELL_STYLE_NAME = "cell" + SUFFIX_DEFAULT_STYLE_NAME;
+    /** style name for bold inline text (e.g. Markdown "strong" / "**bold**") **/
+    @PublicAPI
+    public static final String STRONG_STYLE_NAME = "strong" + SUFFIX_DEFAULT_STYLE_NAME;
+    /** style name for italic inline text (e.g. Markdown "em" / "*italic*") **/
+    @PublicAPI
+    public static final String EM_STYLE_NAME = "em" + SUFFIX_DEFAULT_STYLE_NAME;
+    /** style name for inline code text (e.g. Markdown "`code`") **/
+    @PublicAPI
+    public static final String CODE_STYLE_NAME = "code" + SUFFIX_DEFAULT_STYLE_NAME;
 
     /**
      * Gets the default style name for a heading of the given level.
@@ -192,6 +201,37 @@ public class StandardElementStyles {
                 TABLE_CELL_STYLE_NAME,
                 ElementTargetType.TABLE_CELL,
                 tableCellStyleProperties
+        ));
+
+        // Bold inline text style (e.g. Markdown "**bold**")
+        TextRunStyleProperties strongProps = new TextRunStyleProperties();
+        strongProps.setTextStyleName(StandardTextStyles.BOLD_PARAGRAPH_TEXT);
+        elementStyles.add(new ElementStyle(
+                STRONG_STYLE_NAME,
+                ElementTargetType.TEXT_RUN,
+                strongProps
+        ));
+
+        // Italic inline text style (e.g. Markdown "*italic*")
+        TextRunStyleProperties emProps = new TextRunStyleProperties();
+        emProps.setTextStyleName(StandardTextStyles.ITALIC_PARAGRAPH_TEXT);
+        elementStyles.add(new ElementStyle(
+                EM_STYLE_NAME,
+                ElementTargetType.TEXT_RUN,
+                emProps
+        ));
+
+        // Inline code text style (e.g. Markdown "`code`"). No monospace font is bundled
+        // with the library, so this intentionally reuses the regular font and relies on
+        // a distinct color to set it apart - that avoids referencing an unembedded font
+        // family, which would violate PDF/UA-1 (see PdfGenerationFacade font validation).
+        TextRunStyleProperties codeProps = new TextRunStyleProperties();
+        codeProps.setTextStyleName(StandardTextStyles.REGULAR_PARAGRAPH_TEXT);
+        codeProps.setTextColor("#555555");
+        elementStyles.add(new ElementStyle(
+                CODE_STYLE_NAME,
+                ElementTargetType.TEXT_RUN,
+                codeProps
         ));
 
         // A4 portrait page master
