@@ -37,42 +37,70 @@ public class StandardElementStyles {
     public static final String PAGE_MASTER_STYLE_NAME = "simple-a4-portrait";
 
     /** prefix for the style names of heading styles (1-6) **/
-    private static final String PREFIX_HEADINGS_STYLE_NAME = "heading-";
+    private static final String PREFIX_HEADINGS_STYLE_NAME = "h";
+
+    private static final String SUFFIX_DEFAULT_STYLE_NAME = "-default";
 
     // Element Style Identifier (names)
     /** style name for the paragraph style **/
-    public static final String PARAGRAPH_STYLE_NAME = "paragraph-default";
+    public static final String PARAGRAPH_STYLE_NAME = "p" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for heading 1 style **/
     @PublicAPI
-    public static final String HEADING_1_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "1";
+    public static final String HEADING_1_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "1" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for heading 2 style **/
     @PublicAPI
-    public static final String HEADING_2_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "2";
+    public static final String HEADING_2_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "2" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for heading 3 style **/
     @PublicAPI
-    public static final String HEADING_3_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "3";
+    public static final String HEADING_3_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "3" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for heading 4 style **/
     @PublicAPI
-    public static final String HEADING_4_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "4";
+    public static final String HEADING_4_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "4" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for heading 5 style **/
     @PublicAPI
-    public static final String HEADING_5_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "5";
+    public static final String HEADING_5_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "5" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for heading 6 style **/
     @PublicAPI
-    public static final String HEADING_6_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "6";
+    public static final String HEADING_6_STYLE_NAME = PREFIX_HEADINGS_STYLE_NAME + "6" + SUFFIX_DEFAULT_STYLE_NAME;
 
       /** style name for unordered list style **/
-    static final String UNORDERED_LIST_STYLE_NAME = "list-style-unordered";
+    @PublicAPI
+    public static final String UNORDERED_LIST_STYLE_NAME = "ul" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for ordered list style **/
-    static final String ORDERED_LIST_STYLE_NAME = "list-style-ordered";
+    @PublicAPI
+    public static final String ORDERED_LIST_STYLE_NAME = "ol" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for image style **/
-    static final String IMAGE_STYLE_NAME = "image-style";
+    @PublicAPI
+    public static final String IMAGE_STYLE_NAME = "image" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for table style **/
-    static final String TABLE_STYLE_NAME = "table-style";
+    @PublicAPI
+    public static final String TABLE_STYLE_NAME = "table" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for table header cell style **/
-    static final String TABLE_HEADER_CELL_STYLE_NAME = "header-cell";
+    @PublicAPI
+    public static final String TABLE_HEADER_CELL_STYLE_NAME = "header-cell" + SUFFIX_DEFAULT_STYLE_NAME;
     /** style name for normal table cell style **/
-    static final String TABLE_CELL_STYLE_NAME = "cell-default";
+    @PublicAPI
+    public static final String TABLE_CELL_STYLE_NAME = "cell" + SUFFIX_DEFAULT_STYLE_NAME;
+
+    /**
+     * Gets the default style name for a heading of the given level.
+     *
+     * @param level the heading level (1-6)
+     * @return the default style name, e.g. "h1-default" for level 1
+     * @throws IllegalArgumentException if level is not between 1 and 6
+     */
+    @PublicAPI
+    public static String headingStyleName(int level) {
+        return switch (level) {
+            case 1 -> HEADING_1_STYLE_NAME;
+            case 2 -> HEADING_2_STYLE_NAME;
+            case 3 -> HEADING_3_STYLE_NAME;
+            case 4 -> HEADING_4_STYLE_NAME;
+            case 5 -> HEADING_5_STYLE_NAME;
+            case 6 -> HEADING_6_STYLE_NAME;
+            default -> throw new IllegalArgumentException("Heading level must be between 1 and 6, got: " + level);
+        };
+    }
 
 
     /**
@@ -103,7 +131,7 @@ public class StandardElementStyles {
             headingProps.setTextStyleName(StandardTextStyles.PREFIX_HEADINGS_TEXT + level);
             headingProps.setSpaceBefore("18pt");
             elementStyles.add(new ElementStyle(
-                    PREFIX_HEADINGS_STYLE_NAME + level,
+                    PREFIX_HEADINGS_STYLE_NAME + level + SUFFIX_DEFAULT_STYLE_NAME,
                     ElementTargetType.HEADLINE,
                     headingProps
             ));

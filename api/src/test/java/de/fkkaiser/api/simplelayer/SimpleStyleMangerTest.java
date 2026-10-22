@@ -17,12 +17,12 @@ package de.fkkaiser.api.simplelayer;
 
 import de.fkkaiser.model.style.StyleSheet;
 import de.fkkaiser.model.style.TextStyle;
+import de.fkkaiser.model.style.builder.StandardElementStyles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import static de.fkkaiser.api.simplelayer.SimpleStyleManager.PAGE_MASTER_STYLE_NAME;
-import static de.fkkaiser.api.simplelayer.SimpleStyleManager.PREFIX_HEADINGS_STYLE_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("SimpleStyleManager Tests")
@@ -42,8 +42,8 @@ class SimpleStyleManagerTest {
     void shouldMapHeadingStyleNamesForAllLevels() {
         // When & Then
         for (int level = 1; level <= 6; level++) {
-            String styleName = PREFIX_HEADINGS_STYLE_NAME +level;
-            assertEquals("heading-" + level, styleName);
+            String styleName = StandardElementStyles.headingStyleName(level);
+            assertEquals("h" + level + "-default", styleName);
         }
     }
 
@@ -101,7 +101,7 @@ class SimpleStyleManagerTest {
         // Then
         assertTrue(
                 styleSheet.elementStyles().stream()
-                        .anyMatch(es -> "paragraph-default".equals(es.name())),
+                        .anyMatch(es -> StandardElementStyles.PARAGRAPH_STYLE_NAME.equals(es.name())),
                 "Should contain default paragraph element style"
         );
     }
@@ -117,7 +117,7 @@ class SimpleStyleManagerTest {
             final int currentLevel = level;
             assertTrue(
                     styleSheet.elementStyles().stream()
-                            .anyMatch(es -> ("heading-" + currentLevel).equals(es.name())),
+                            .anyMatch(es -> StandardElementStyles.headingStyleName(currentLevel).equals(es.name())),
                     "Should contain heading element style for level " + level
             );
         }

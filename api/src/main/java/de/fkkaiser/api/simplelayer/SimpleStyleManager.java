@@ -39,26 +39,26 @@ import java.util.List;
 @Internal("Used internally by SimpleDocumentBuilder")
 class SimpleStyleManager {
 
-    /** style name for the default A4 page master style **/
-    static final String PAGE_MASTER_STYLE_NAME = "simple-a4-portrait";
-
     // Element Style Identifier (names)
+    // These delegate to StandardElementStyles instead of keeping separate literals,
+    // so the names used here can never drift out of sync with what is actually
+    // registered in the StyleSheet built by buildStyleSheet() below.
+    /** style name for the default A4 page master style **/
+    static final String PAGE_MASTER_STYLE_NAME = StandardElementStyles.PAGE_MASTER_STYLE_NAME;
     /** style name for the paragraph style **/
-    static final String PARAGRAPH_STYLE_NAME = "paragraph-default";
-    /** prefix for the style names of heading styles (1-6) **/
-    static final String PREFIX_HEADINGS_STYLE_NAME = "heading-";
+    static final String PARAGRAPH_STYLE_NAME = StandardElementStyles.PARAGRAPH_STYLE_NAME;
     /** style name for unordered list style **/
-    static final String UNORDERED_LIST_STYLE_NAME = "list-style-unordered";
+    static final String UNORDERED_LIST_STYLE_NAME = StandardElementStyles.UNORDERED_LIST_STYLE_NAME;
     /** style name for ordered list style **/
-    static final String ORDERED_LIST_STYLE_NAME = "list-style-ordered";
+    static final String ORDERED_LIST_STYLE_NAME = StandardElementStyles.ORDERED_LIST_STYLE_NAME;
     /** style name for image style **/
-    static final String IMAGE_STYLE_NAME = "image-style";
+    static final String IMAGE_STYLE_NAME = StandardElementStyles.IMAGE_STYLE_NAME;
     /** style name for table style **/
-    static final String TABLE_STYLE_NAME = "table-style";
+    static final String TABLE_STYLE_NAME = StandardElementStyles.TABLE_STYLE_NAME;
     /** style name for table header cell style **/
-    static final String TABLE_HEADER_CELL_STYLE_NAME = "header-cell";
+    static final String TABLE_HEADER_CELL_STYLE_NAME = StandardElementStyles.TABLE_HEADER_CELL_STYLE_NAME;
     /** style name for normal table cell style **/
-    static final String TABLE_CELL_STYLE_NAME = "cell-default";
+    static final String TABLE_CELL_STYLE_NAME = StandardElementStyles.TABLE_CELL_STYLE_NAME;
 
     // Text style identifier (names)
 

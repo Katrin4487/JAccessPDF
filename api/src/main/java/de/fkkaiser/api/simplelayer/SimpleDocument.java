@@ -22,6 +22,7 @@ import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.font.FontFamilyList;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.StyleSheet;
+import de.fkkaiser.model.style.builder.StandardElementStyles;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -253,7 +254,7 @@ public class SimpleDocument {
             if (text.trim().isEmpty() || level < 1 || level > 6) {
                 throw new IllegalArgumentException("Heading level must be between 1 and 6");
             }
-            String styleName = PREFIX_HEADINGS_STYLE_NAME + level;
+            String styleName = StandardElementStyles.headingStyleName(level);
             return new Headline(styleName, text, this.level);
         }
     }
