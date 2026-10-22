@@ -235,13 +235,13 @@ public class XslFoGenerator {
         foBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
                 .append("<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\"")
                 .append(" xmlns:fox=\"http://xmlgraphics.apache.org/fop/extensions\"")
-                .append(" xml:lang=\"").append(GenerateUtils.escapeXml(lang)).append("\" ");
+                .append(" xml:lang=\"").append(GenerateUtils.escapeXml(lang)).append("\"");
 
         if (defaultFontFamily != null && !defaultFontFamily.isEmpty()) {
             foBuilder.append(" font-family=\"").append(GenerateUtils.escapeXml(defaultFontFamily)).append("\"");
         }
 
-        foBuilder.append("xmlns:x=\"adobe:ns:meta/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">");
+        foBuilder.append(" xmlns:x=\"adobe:ns:meta/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">");
     }
 
     private void generateDeclarations(StringBuilder foBuilder, Document document) {
@@ -360,22 +360,22 @@ public class XslFoGenerator {
     }
 
     /**
-     * Find the default-text-style if set. This text-style would be set als
-     * default for the hole document
+     * Finds the font family of the reserved default text style
+     * ({@link GenerateConst#DEFAULT_DOCUMENT_TEXT_STYLE_NAME}), if the StyleSheet defines one.
+     * That font family is then used as the document-wide default on {@code fo:root}.
+     * <p>
+     * The lookup is on {@code TextStyle} directly, not on any {@code ElementStyle} - this
+     * value is not tied to a particular element (e.g. paragraph or headline), it is a
+     * document-wide fallback.
+     *
      * @param styleSheet StyleSheet of this document
-     * @return identifier of the default font-family if default text style is set, null otherwise
+     * @return the default font family name if the reserved TextStyle is set, null otherwise
      */
     private String findDefaultFontFamily(StyleSheet styleSheet) {
-        if (styleSheet == null || styleSheet.elementStyles() == null) {
+        if (styleSheet == null) {
             return null;
         }
-        return styleSheet.elementStyles().stream()
-                .filter(s -> "default-text-style".equals(s.name()))
-                .findFirst()
-                .map(ElementStyle::properties)
-                .filter(p -> p instanceof TextBlockStyleProperties)
-                .map(p -> ((TextBlockStyleProperties) p).getTextStyleName())
-                .flatMap(styleSheet::findFontStyleByName)
+        return styleSheet.findFontStyleByName(GenerateConst.DEFAULT_DOCUMENT_TEXT_STYLE_NAME)
                 .map(TextStyle::fontFamilyName)
                 .orElse(null);
     }

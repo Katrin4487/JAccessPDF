@@ -6,6 +6,8 @@
 - Added standard ElementStyles that are available from outside the library (StyleSheet)
 
 ### Fixed
+- Added missing bold default font and missing space in generated XML (using default font)
+- Corrected naming for default styles
 - Added Forgotten @JsonIgnore to some getters that are not mirroring fields
 - Header in StandardElementStyles are now created with the correct HeaderProperties
 - added missing JavaTimeModule to Facade's internal ObjectMapper (LocalDateTime fields like Metadata.creationDate could not be serialized)

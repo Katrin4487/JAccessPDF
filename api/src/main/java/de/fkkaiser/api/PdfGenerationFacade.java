@@ -28,6 +28,7 @@ import de.fkkaiser.bundle.zip.BundleZipReader;
 import de.fkkaiser.bundle.zip.ZipImportResult;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.font.FontFamily;
 import de.fkkaiser.model.font.FontFamilyList;
 import de.fkkaiser.model.font.FontStyleValue;
@@ -44,6 +45,7 @@ import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.FopFactoryBuilder;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.fop.configuration.Configuration;
+import org.apache.fop.configuration.ConfigurationException;
 import org.apache.fop.configuration.DefaultConfigurationBuilder;
 import org.apache.xmlgraphics.io.ResourceResolver;
 import org.slf4j.Logger;
@@ -149,8 +151,10 @@ public final class PdfGenerationFacade {
 
     // Default font configuration
     private static final String DEFAULT_FONT_PATH = "fonts/OpenSans-Regular.ttf";
+    private static final String DEFAULT_BOLD_FONT_PATH = "fonts/OpenSans-Bold.ttf";
     private static final String DEFAULT_FONT_NAME = "Open Sans";
     private static final String DEFAULT_FONT_WEIGHT = "400";
+    private static final String DEFAULT_BOLD_FONT_WEIGHT = "700";
     private static final FontStyleValue DEFAULT_FONT_STYLE = FontStyleValue.NORMAL;
 
     // FOP configuration constants
@@ -416,6 +420,7 @@ public final class PdfGenerationFacade {
      * @param data list of data to be used in the placeholders (logic isHidden = true / false)
      * @return a PlaceholderValidationResult containing the validation result
      */
+    @PublicAPI
     public PlaceholderValidationResult validateTemplate(MasterBundle template, Map<String, String> data) {
         return TemplateValidator.validate(template, data);
     }
@@ -604,19 +609,28 @@ public final class PdfGenerationFacade {
             log.info("Font family list is empty, adding default font: {} from {}",
                     DEFAULT_FONT_NAME, DEFAULT_FONT_PATH);
 
-            FontType defaultFontType = new FontType(
-                    DEFAULT_FONT_PATH,
-                    DEFAULT_FONT_STYLE,
-                    DEFAULT_FONT_WEIGHT
-            );
-            FontFamily defaultFontFamily = new FontFamily(
-                    DEFAULT_FONT_NAME,
-                    Collections.singletonList(defaultFontType)
-            );
+            FontFamily defaultFontFamily = getDefaultFontFamily();
             fontFamilyList.setFontFamilyList(Collections.singletonList(defaultFontFamily));
         }
 
         return fontFamilyList;
+    }
+
+    private static FontFamily getDefaultFontFamily() {
+        FontType defaultFontType = new FontType(
+                DEFAULT_FONT_PATH,
+                DEFAULT_FONT_STYLE,
+                DEFAULT_FONT_WEIGHT
+        );
+        FontType defaultBoldFontType = new FontType(
+                DEFAULT_BOLD_FONT_PATH,
+                DEFAULT_FONT_STYLE,
+                DEFAULT_BOLD_FONT_WEIGHT
+        );
+        return new FontFamily(
+                DEFAULT_FONT_NAME,
+                List.of(defaultFontType, defaultBoldFontType)
+        );
     }
 
     /**
@@ -639,6 +653,12 @@ public final class PdfGenerationFacade {
 
         // Build complete FOP configuration
         String fopConfigXml = buildFopConfigXml(fontConfigXml);
+        FopFactoryBuilder fopFactoryBuilder = getFopFactoryBuilder(fopResourceResolver, fopConfigXml);
+
+        return fopFactoryBuilder.build();
+    }
+
+    private static FopFactoryBuilder getFopFactoryBuilder(ResourceResolver fopResourceResolver, String fopConfigXml) throws ConfigurationException {
         InputStream fopConfigStream = new ByteArrayInputStream(fopConfigXml.getBytes());
 
 
@@ -652,8 +672,7 @@ public final class PdfGenerationFacade {
         DefaultConfigurationBuilder cfgBuilder = new DefaultConfigurationBuilder();
         Configuration cfg = cfgBuilder.build(fopConfigStream);
         fopFactoryBuilder.setConfiguration(cfg);
-
-        return fopFactoryBuilder.build();
+        return fopFactoryBuilder;
     }
 
     /**

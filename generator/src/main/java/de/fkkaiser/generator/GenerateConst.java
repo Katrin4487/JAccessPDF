@@ -413,6 +413,13 @@ public class GenerateConst {
      */
     public static final String INSTREAM_FOREIGN_OBJECT = "instream-foreign-object";
 
-
+    // == Well-known StyleSheet entry names ==
+    /**
+     * Reserved {@code TextStyle} name. If a StyleSheet defines a TextStyle with this
+     * name, its font family is used as the document-wide default font family on
+     * {@code fo:root}, so text that resolves to no explicit style still uses an
+     * embedded font instead of falling back to a PDF/UA-incompatible base-14 font.
+     */
+    public static final String DEFAULT_DOCUMENT_TEXT_STYLE_NAME = "default-text-style";
 
 }
