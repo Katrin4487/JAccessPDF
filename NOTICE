@@ -6,8 +6,33 @@ This product includes software developed by:
   Apache FOP (Formatting Objects Processor)
   Copyright 1999-2024 The Apache Software Foundation
 
+- Apache PDFBox (https://pdfbox.apache.org/)
+  Copyright 2002-2024 The Apache Software Foundation
+
 - FasterXML Jackson (https://github.com/FasterXML/jackson)
   Copyright 2007-2024 Tatu Saloranta and contributors
 
 - SLF4J (http://www.slf4j.org/)
   Copyright 2004-2024 QOS.ch
+
+- Saxon-HE (http://www.saxonica.com/)
+  Copyright Saxonica Limited
+  Licensed under the Mozilla Public License, Version 2.0 (not Apache License 2.0)
+
+- commonmark-java (https://github.com/commonmark/commonmark-java)
+  Copyright (c) 2015-2016, Atlassian Pty Ltd and other contributors
+  Licensed under the BSD 2-Clause License (not Apache License 2.0)
+
+This product bundles the following font, which is NOT licensed under the
+Apache License, Version 2.0:
+
+- Open Sans (api/src/main/resources/fonts/)
+  Copyright 2020 The Open Sans Project Authors (https://github.com/googlefonts/opensans)
+  Licensed under the SIL Open Font License, Version 1.1
+  The full license text is bundled alongside the font files in
+  api/src/main/resources/fonts/OFL.txt, as required by that license.
+
+A full, machine-generated list of all third-party dependencies (including
+transitive ones) and their licenses is maintained in THIRD-PARTY.txt at the
+project root. Regenerate it with:
+    mvn org.codehaus.mojo:license-maven-plugin:2.7.1:aggregate-add-third-party

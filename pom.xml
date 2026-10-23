@@ -219,6 +219,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- NOTE: unrelated to the com.mycila plugin above despite the identical
+                 artifactId - that one checks source file license HEADERS, this one
+                 aggregates the LICENSES OF THIRD-PARTY DEPENDENCIES into THIRD-PARTY.txt.
+                 Intentionally has no bound <executions>/<phase>: running it needs network
+                 access to resolve license metadata, so it must stay a deliberate, manual
+                 step (`mvn org.codehaus.mojo:license-maven-plugin:2.7.1:aggregate-add-third-party`),
+                 not something that fires on every build. Always invoke it by its full
+                 groupId:artifactId:version coordinates - both plugins share the short
+                 "license" prefix, and declaring both here makes that prefix ambiguous. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.7.1</version>
+                <configuration>
+                    <outputDirectory>${maven.multiModuleProjectDirectory}</outputDirectory>
+                    <thirdPartyFilename>THIRD-PARTY.txt</thirdPartyFilename>
+                    <excludedScopes>test</excludedScopes>
+                    <failOnMissing>false</failOnMissing>
+                </configuration>
+            </plugin>
         </plugins>
 
     </build>
