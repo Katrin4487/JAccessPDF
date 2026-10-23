@@ -1,0 +1,1 @@
+mvn org.codehaus.mojo:license-maven-plugin:2.7.1:aggregate-add-third-party

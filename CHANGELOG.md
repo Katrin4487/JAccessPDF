@@ -1,13 +1,15 @@
 # Changelog
 
-## [Unreleased]
+## 0.11.0 - 2026-10-23
 ### Added 
 - The Markdown method is available in the SimpleDocumentBuilder API now.
+- Block Converter for Markdown available (lists, headings, etc.)
 - New module for parsing Markdown (inline) text and converting them to the internal document model
 - Added standard TextStyles that are available from outside the library
 - Added standard ElementStyles that are available from outside the library (StyleSheet)
 
 ### Fixed
+- License housekeeping: Added missing license headers to all source files
 - Added missing bold default font and missing space in generated XML (using default font)
 - Corrected naming for default styles
 - Added Forgotten @JsonIgnore to some getters that are not mirroring fields
