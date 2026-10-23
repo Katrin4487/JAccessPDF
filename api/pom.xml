@@ -33,7 +33,13 @@
             <version>0.10.6-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Workarounf for FOP-3275 / JDK-8368356 -->
+        <dependency>
+            <groupId>de.fkkaiser</groupId>
+            <artifactId>markdown</artifactId>
+            <version>0.10.6-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Workaround for FOP-3275 / JDK-8368356 -->
         <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>

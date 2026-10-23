@@ -69,6 +69,41 @@ class SimpleDocumentIntegrationTest {
     }
 
     @Test
+    @DisplayName("End-to-End: Document mixing addMarkdown with other builder methods")
+    void endToEndDocumentWithMarkdown(@TempDir Path tempDir) throws Exception {
+        // Given
+        Path outputPath = tempDir.resolve("markdown-document.pdf");
+
+        // When
+        SimpleDocumentBuilder.create("Markdown Test Document")
+                .withLanguage("de-DE")
+                .addHeading("Hauptüberschrift", 1)
+                .addMarkdown("""
+                        Ein Absatz mit **fettem**, *kursivem* und `code`-Text, \
+                        sowie einem [Link](https://example.com).
+
+                        ## Eine Liste
+
+                        - Erster Punkt
+                        - Zweiter Punkt
+                          - Verschachtelt
+                        """)
+                .addParagraph("Ein abschließender, ganz normaler Absatz.")
+                .build()
+                .saveAs(outputPath.toString());
+
+        // Then
+        assertTrue(Files.exists(outputPath));
+        byte[] pdfBytes = Files.readAllBytes(outputPath);
+
+        assertTrue(pdfBytes.length > 1000, "PDF should have reasonable size");
+        assertEquals('%', pdfBytes[0]);
+        assertEquals('P', pdfBytes[1]);
+        assertEquals('D', pdfBytes[2]);
+        assertEquals('F', pdfBytes[3]);
+    }
+
+    @Test
     @DisplayName("Performance: Generate 10 documents quickly")
     void performanceGenerate10DocumentsQuickly(@TempDir Path tempDir) throws Exception {
         // Given

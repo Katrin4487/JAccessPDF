@@ -20,6 +20,7 @@ import de.fkkaiser.model.structure.InlineElement;
 import de.fkkaiser.model.structure.TextRun;
 import org.commonmark.node.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -175,6 +176,31 @@ class InlineMarkdownVisitor extends AbstractVisitor {
     @Override
     public void visit(CustomNode customNode) {
         throw unsupported(customNode);
+    }
+
+    // === Helpers reused by the block-level converter ===
+
+    /**
+     * Extracts the inline content of a single block node (e.g. a Heading or
+     * Paragraph) as a flat list of {@link InlineElement}s. Used by the block-level
+     * converter, which already knows {@code blockNode}'s direct children are
+     * inline - headings and paragraphs never contain block-level children per the
+     * CommonMark grammar, so the paragraph-joining behavior of {@link #visit(Paragraph)}
+     * never comes into play here.
+     */
+    static List<InlineElement> extractInlineContent(Node blockNode, MarkdownStyleMapping styleMapping) {
+        List<InlineElement> result = new ArrayList<>();
+        new InlineMarkdownVisitor(styleMapping, result).visitChildren(blockNode);
+        return result;
+    }
+
+    /**
+     * Flattens the plain text content of a node. Used by the block-level converter to
+     * read a Markdown image's alt text, which is the image's bracketed label content
+     * ({@code ![alt text](src)}), not a separate node attribute.
+     */
+    static String plainTextOf(Node node) {
+        return plainText(node);
     }
 
     // === Helpers ===

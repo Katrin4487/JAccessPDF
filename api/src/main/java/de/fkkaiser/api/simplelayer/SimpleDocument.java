@@ -171,6 +171,20 @@ public class SimpleDocument {
         Element toModelObject(SimpleStyleManager styleManager);
     }
 
+    /**
+     * Internal record to wrap an Element for Markdown content.
+     * This allows Markdown content to be treated as a single element in the document structure.
+     *
+     * @param element the model object representing the Markdown content
+     */
+    @Internal
+    record MarkdownElement(Element element) implements ContentElement {
+        @Override
+        public Element toModelObject(SimpleStyleManager styleManager) {
+            return element; // return the element as-is, since it's already a model object
+        }
+    }
+
     @Internal
     record ParagraphElement(String text, String styleName) implements ContentElement {
         /**
@@ -262,15 +276,15 @@ public class SimpleDocument {
     /**
      * Internal element for an image.
      *
-     * @param path    the relative path, e.g. "images/logo.png"
-     * @param altText alternative text for the image. If altText is null, the image is
-     *                interpreted as an artifact
+     * @param path       the relative path, e.g. "images/logo.png"
+     * @param altText    alternative text for the image. If altText is null, the image is
+     *                   interpreted as an artifact
      * @param svgContent the raw SVG content as a string (optional, can be null)
      * @param base64Data the base64-encoded image data (optional, can be null)
      */
-    record ImageElement(String path, String altText,String svgContent,String base64Data) implements ContentElement {
+    record ImageElement(String path, String altText, String svgContent, String base64Data) implements ContentElement {
         ImageElement(String path) {
-            this(path, null,null,null );
+            this(path, null, null, null);
         }
 
         /**
@@ -284,7 +298,7 @@ public class SimpleDocument {
         @Override
         public Element toModelObject(SimpleStyleManager styleManager) {
             Objects.requireNonNull(path, "path must not be null");
-            return new BlockImage(IMAGE_STYLE_NAME, path, altText,svgContent,base64Data);
+            return new BlockImage(IMAGE_STYLE_NAME, path, altText, base64Data, svgContent);
         }
     }
 
@@ -373,6 +387,7 @@ public class SimpleDocument {
                     simpleCell.rowspan
             );
         }
+
     }
 }
 

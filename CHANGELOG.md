@@ -1,7 +1,9 @@
 # Changelog
 
 ## [Unreleased]
-### Added
+### Added 
+- The Markdown method is available in the SimpleDocumentBuilder API now.
+- New module for parsing Markdown (inline) text and converting them to the internal document model
 - Added standard TextStyles that are available from outside the library
 - Added standard ElementStyles that are available from outside the library (StyleSheet)
 
@@ -9,7 +11,7 @@
 - Added missing bold default font and missing space in generated XML (using default font)
 - Corrected naming for default styles
 - Added Forgotten @JsonIgnore to some getters that are not mirroring fields
-- Header in StandardElementStyles are now created with the correct HeaderProperties
+- Headers in StandardElementStyles are now created with the correct HeaderProperties
 - added missing JavaTimeModule to Facade's internal ObjectMapper (LocalDateTime fields like Metadata.creationDate could not be serialized)
 
 ## [0.10.5] - 2026-08-24

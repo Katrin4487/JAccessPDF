@@ -17,6 +17,7 @@ package de.fkkaiser.api.simplelayer;
 
 import de.fkkaiser.api.utils.EClasspathResourceProvider;
 import de.fkkaiser.api.utils.EResourceProvider;
+import de.fkkaiser.markdown.BlockMarkdownConverter;
 import de.fkkaiser.model.annotation.Internal;
 import de.fkkaiser.model.annotation.PublicAPI;
 import de.fkkaiser.model.annotation.VisibleForTesting;
@@ -235,7 +236,7 @@ public class SimpleDocumentBuilder {
             throw new IllegalArgumentException("Image path cannot empty");
         }
 
-        elements.add(new SimpleDocument.ImageElement(finalPath, altText,null,null));
+        elements.add(new SimpleDocument.ImageElement(finalPath, altText, null, null));
         return this;
     }
 
@@ -263,6 +264,22 @@ public class SimpleDocumentBuilder {
         Objects.requireNonNull(table, "Table cannot be null");
         table.validate();
         elements.add(new SimpleDocument.TableElement(table));
+        return this;
+    }
+
+    /**
+     * Adds a block of Markdown text to the document.
+     * @param markdown Markdown-formatted text to be converted into block-level elements.
+     * If Markdown contains unsupported constructs, it will throw {@link de.fkkaiser.markdown.MarkdownConversionException}
+     * @return this builder instance
+     * @throws NullPointerException if Markdown is {@code null}
+     */
+    @PublicAPI
+    public SimpleDocumentBuilder addMarkdown(String markdown) {
+        Objects.requireNonNull(markdown, "markdown cannot be null");
+        for (Element element : BlockMarkdownConverter.convert(markdown)) {
+            elements.add(new SimpleDocument.MarkdownElement(element));
+        }
         return this;
     }
 

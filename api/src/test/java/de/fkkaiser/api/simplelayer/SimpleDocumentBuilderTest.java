@@ -15,6 +15,10 @@
  */
 package de.fkkaiser.api.simplelayer;
 
+import de.fkkaiser.markdown.MarkdownConversionException;
+import de.fkkaiser.model.structure.Element;
+import de.fkkaiser.model.structure.Headline;
+import de.fkkaiser.model.structure.Paragraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
@@ -263,6 +267,82 @@ class SimpleDocumentBuilderTest {
 
             assertThrows(NullPointerException.class,
                     () -> builder.addParagraph(null));
+        }
+    }
+
+    @Nested
+    @DisplayName("Markdown Tests")
+    class MarkdownTests {
+
+        @Test
+        @DisplayName("Add markdown paragraph with inline formatting")
+        void addMarkdownParagraph() {
+            SimpleDocumentBuilder builder = SimpleDocumentBuilder.create("Test")
+                    .addMarkdown("Hello **world**.");
+
+            var elements = builder.getElements();
+            assertEquals(1, elements.size());
+            assertInstanceOf(SimpleDocument.MarkdownElement.class, elements.getFirst());
+
+            // MarkdownElement.toModelObject() ignores its styleManager parameter -
+            // the element it wraps is already fully built by BlockMarkdownConverter.
+            Element modelElement = elements.getFirst().toModelObject(null);
+            assertInstanceOf(Paragraph.class, modelElement);
+        }
+
+        @Test
+        @DisplayName("Add markdown heading preserves its level")
+        void addMarkdownHeading() {
+            SimpleDocumentBuilder builder = SimpleDocumentBuilder.create("Test")
+                    .addMarkdown("## Section Title");
+
+            var elements = builder.getElements();
+            assertEquals(1, elements.size());
+
+            Headline headline = (Headline) elements.getFirst().toModelObject(null);
+            assertEquals(2, headline.getLevel());
+        }
+
+        @Test
+        @DisplayName("Add markdown with multiple top-level blocks adds one element each")
+        void addMarkdownMultipleBlocks() {
+            SimpleDocumentBuilder builder = SimpleDocumentBuilder.create("Test")
+                    .addMarkdown("# Title\n\nFirst paragraph.\n\nSecond paragraph.");
+
+            var elements = builder.getElements();
+            assertEquals(3, elements.size());
+            assertInstanceOf(Headline.class, elements.get(0).toModelObject(null));
+            assertInstanceOf(Paragraph.class, elements.get(1).toModelObject(null));
+            assertInstanceOf(Paragraph.class, elements.get(2).toModelObject(null));
+        }
+
+        @Test
+        @DisplayName("Exception: null markdown")
+        void nullMarkdownThrowsException() {
+            SimpleDocumentBuilder builder = SimpleDocumentBuilder.create("Test");
+
+            assertThrows(NullPointerException.class,
+                    () -> builder.addMarkdown(null));
+        }
+
+        @Test
+        @DisplayName("Exception: unsupported Markdown construct propagates")
+        void unsupportedMarkdownConstructThrowsException() {
+            SimpleDocumentBuilder builder = SimpleDocumentBuilder.create("Test");
+
+            assertThrows(MarkdownConversionException.class,
+                    () -> builder.addMarkdown("> a block quote"));
+        }
+
+        @Test
+        @DisplayName("Method chaining works with addMarkdown")
+        void methodChainingWorksWithMarkdown() {
+            SimpleDocumentBuilder builder = SimpleDocumentBuilder.create("Test")
+                    .addHeading("Intro", 1)
+                    .addMarkdown("Some **markdown** text.")
+                    .addParagraph("Plain paragraph.");
+
+            assertEquals(3, builder.getElements().size());
         }
     }
 }
