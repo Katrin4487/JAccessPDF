@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.11.0 - 2026-10-23
+## [0.11.0] - 2026-10-23
 ### Added 
 - The Markdown method is available in the SimpleDocumentBuilder API now.
 - Block Converter for Markdown available (lists, headings, etc.)
