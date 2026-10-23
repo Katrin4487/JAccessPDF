@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.11.1] - 2026-10-23
+### Fixed
+- Added missing ElementStyle for Hyperlink
+
 ## [0.11.0] - 2026-10-23
 ### Added 
 - The Markdown method is available in the SimpleDocumentBuilder API now.
