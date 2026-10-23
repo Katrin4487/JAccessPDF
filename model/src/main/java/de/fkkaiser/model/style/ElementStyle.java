@@ -60,6 +60,7 @@ public record ElementStyle(
                 @JsonSubTypes.Type(value = SectionStyleProperties.class, name = JsonPropertyName.SECTION),
                 @JsonSubTypes.Type(value = PartStyleProperties.class, name = JsonPropertyName.PART),
                 @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = JsonPropertyName.TEXT_RUN),
+                @JsonSubTypes.Type(value = TextRunStyleProperties.class, name = JsonPropertyName.HYPERLINK),
                 @JsonSubTypes.Type(value = FootnoteStyleProperties.class, name = JsonPropertyName.FOOTNOTE),
                 @JsonSubTypes.Type(value = BlockImageStyleProperties.class, name = JsonPropertyName.BLOCK_IMAGE),
                 @JsonSubTypes.Type(value = LayoutTableStyleProperties.class, name = JsonPropertyName.LAYOUT_TABLE),

@@ -53,6 +53,26 @@ class ElementStyleTest {
     }
 
     @Test
+    void shouldSerializeAndDeserializeHyperlinkStyle() throws Exception {
+        // Regression test: HYPERLINK uses TextRunStyleProperties, but is a distinct
+        // external-property type id ("hyperlink") from TEXT_RUN ("text-run") - both
+        // must be registered as @JsonSubTypes.Type entries for ElementStyle.properties,
+        // or deserialization fails with an InvalidTypeIdException.
+        TextRunStyleProperties properties = new TextRunStyleProperties();
+        ElementStyle originalStyle = new ElementStyle("hyperlink-default", ElementTargetType.HYPERLINK, properties);
+
+        String json = objectMapper.writeValueAsString(originalStyle);
+
+        ElementStyle deserializedStyle = objectMapper.readValue(json, ElementStyle.class);
+
+        assertNotNull(deserializedStyle, "Style should not be null");
+        assertEquals(originalStyle.name(), deserializedStyle.name(), "Name should match");
+        assertEquals(originalStyle.targetElement(), deserializedStyle.targetElement(), "TargetElement should match");
+        assertInstanceOf(TextRunStyleProperties.class, deserializedStyle.properties(),
+                "The properties should be of type TextRunStyleProperties.");
+    }
+
+    @Test
     void shouldSerializeAndDeserializeHeadlineStyle() throws Exception {
 
         HeadlineStyleProperties properties = new HeadlineStyleProperties();
