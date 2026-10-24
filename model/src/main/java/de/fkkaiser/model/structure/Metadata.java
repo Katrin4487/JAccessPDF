@@ -44,9 +44,6 @@ import java.util.Objects;
 public class Metadata {
 
     private static final Logger log = LoggerFactory.getLogger(Metadata.class);
-
-    private static final String DEFAULT_TITLE = "PDF Document";
-    private static final String DEFAULT_LANGUAGE = "de-DE";
     private static final String PRODUCER = "de.kaiser.JAccessPDF v1.0";
 
     @JsonProperty(JsonPropertyName.TITLE)
@@ -83,25 +80,10 @@ public class Metadata {
     public Metadata(String title, String author, String subject, List<String> keywords,
                     String language, String producer, LocalDateTime creationDate, Boolean displayDocTitle) {
 
-        Objects.requireNonNull(title, "Title must not be null");
         // Producer is always set to library identifier
         this.producer = Objects.requireNonNullElse(producer, PRODUCER);
-
-        // Title with validation and default
-        if (title.trim().isEmpty()) {
-            log.warn("Title is null or empty. Setting default value '{}'", DEFAULT_TITLE);
-            this.title = DEFAULT_TITLE;
-        } else {
-            this.title = title;
-        }
-
-        // Language with validation and default
-        if (language == null || language.trim().isEmpty()) {
-            log.warn("Language is null or empty. Setting default value '{}'", DEFAULT_LANGUAGE);
-            this.language = DEFAULT_LANGUAGE;
-        } else {
-            this.language = language;
-        }
+        this.title = title;
+       this.language = language;
 
         // Optional fields
         this.author = author;
@@ -237,20 +219,18 @@ public class Metadata {
     // ==================== Setters ====================
 
     /**
-     * Sets the document title.
+     * Sets the document title. Please note that a pdf without
+     *  a title is not PDF/UA-1 compliant.
+     * If you are using StrictnessMode.STRICT, this will throw an exception if the title is null or empty.
+     * If you are using another mode, a default title will be set.
      *
-     * <p><b>Usage Example:</b></p>
-     * <pre>{@code
-     * metadata.setTitle("Updated Document Title");
-     * }</pre>
-     *
-     * @param title the new title; if {@code null}
-     * @throws NullPointerException if {@code title} is {@code null}
+     * @param title the title, or {@code null} to leave it unset and let the
+     *              configured {@link de.fkkaiser.model.configuration.StrictnessMode}
+     *              decide what happens at generation time
      */
     @PublicAPI
     public void setTitle(String title) {
-        Objects.requireNonNull(title, "Title must not be null");
-        this.title = title;
+         this.title = title;
     }
 
     /**
@@ -368,5 +348,19 @@ public class Metadata {
     @PublicAPI
     public static MetadataBuilder builder(String title) {
         return new MetadataBuilder(title);
+    }
+
+    /**
+     * Creates a new {@link MetadataBuilder} with no title set yet.
+     *
+     * <p>Use {@link MetadataBuilder#title(String)} to set one. Leaving it unset
+     * is allowed: what happens then is decided at generation time by the
+     * configured {@link de.fkkaiser.model.configuration.StrictnessMode}.</p>
+     *
+     * @return A new MetadataBuilder instance.
+     */
+    @PublicAPI
+    public static MetadataBuilder builder() {
+        return new MetadataBuilder();
     }
 }

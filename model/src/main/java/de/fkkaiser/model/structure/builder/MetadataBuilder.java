@@ -187,7 +187,7 @@ public class MetadataBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(MetadataBuilder.class);
 
-    private final String title;
+    private String title;
     private String author;
     private String subject;
     private List<String> keywords;
@@ -224,11 +224,40 @@ public class MetadataBuilder {
      */
     @PublicAPI
     public MetadataBuilder(String title) {
-        if (title == null || title.trim().isEmpty()) {
-            log.error("Title cannot be null or empty");
-            throw new IllegalArgumentException("Title is required for document metadata");
-        }
         this.title = title;
+    }
+
+    /**
+     * Creates a new MetadataBuilder with the required title.
+     *
+
+     *
+     * <p><b>Note:</b> This constructor is typically not called directly. Instead, use
+     * {@link Metadata#builder(String)} for better discoverability.</p>
+     *
+     * <p><b>Usage Example:</b></p>
+     * <pre>{@code
+     * // Preferred approach (via Metadata)
+     * Metadata metadata = Metadata.builder()
+     *     .title("Document Title")
+     *     .author("John Doe")
+     *     .build();
+     *
+     * // Direct approach (also valid)
+     * Metadata metadata = new MetadataBuilder()
+     *     .title("Document Title")
+     *     .author("John Doe")
+     *     .build();
+     * }</pre>
+     *
+     *  */
+    @PublicAPI
+    public MetadataBuilder(){}
+
+
+    public MetadataBuilder title(String title){
+        this.title = title;
+        return this;
     }
 
     /**

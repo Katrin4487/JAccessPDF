@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.fkkaiser</groupId>
+        <artifactId>jaccess-pdf</artifactId>
+        <version>0.11.4-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jaccess-pdf-validation</artifactId>
+    <name>JAccessPDF Validation</name>
+    <description>Validation of generated PDF documents using vera pdf</description>
+    <url>https://github.com/Katrin4487/JAccessPDF</url>
+
+
+    <properties>
+       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <vera-pdf.version>1.30.3</vera-pdf.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.verapdf</groupId>
+            <artifactId>validation-model</artifactId>
+            <version>${vera-pdf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fkkaiser</groupId>
+            <artifactId>jaccess-pdf-api</artifactId>
+            <version>0.11.4-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>

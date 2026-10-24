@@ -28,8 +28,13 @@ module api {
     requires bundle;
     requires markdown;
 
+    // Implementations come from de.fkkaiser:jaccess-pdf-validation, which is an
+    // optional add-on: it requires THIS module, never the other way round, so
+    // veraPDF stays out of the dependency tree of everyone who does not want it.
+    uses de.fkkaiser.api.validation.PdfValidationService;
+
+    exports de.fkkaiser.api;
     exports de.fkkaiser.api.simplelayer;
     exports de.fkkaiser.api.utils;
-    exports de.fkkaiser.api;
-
+    exports de.fkkaiser.api.validation;
 }

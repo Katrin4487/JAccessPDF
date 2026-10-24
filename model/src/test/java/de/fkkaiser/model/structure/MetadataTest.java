@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class MetadataTest {
 
     private static final String DEFAULT_TITLE = "PDF Dokument";
-    private static final String DEFAULT_LANGUAGE = "de-DE";
 
     @Nested
     @DisplayName("Canonical Constructor Tests")
@@ -41,7 +40,10 @@ class MetadataTest {
             assertTrue(metadata.isDisplayDocTitle());
             assertNotNull(metadata.getKeywords());
             assertTrue(metadata.getKeywords().isEmpty());
-            assertEquals(DEFAULT_LANGUAGE, metadata.getLanguage());
+            // Metadata deliberately leaves an unset language null instead of
+            // guessing: deciding what to do about it is a generation-time policy,
+            // configured through JAccessConfig and enforced per StrictnessMode.
+            assertNull(metadata.getLanguage());
         }
 
         @Test
@@ -73,7 +75,10 @@ class MetadataTest {
             Metadata metadata = new Metadata("My Title");
 
             assertEquals("My Title", metadata.getTitle());
-            assertEquals(DEFAULT_LANGUAGE, metadata.getLanguage());
+            // Metadata deliberately leaves an unset language null instead of
+            // guessing: deciding what to do about it is a generation-time policy,
+            // configured through JAccessConfig and enforced per StrictnessMode.
+            assertNull(metadata.getLanguage());
             assertTrue(metadata.isDisplayDocTitle());
             assertNotNull(metadata.getCreationDate());
         }
@@ -101,7 +106,10 @@ class MetadataTest {
             Metadata metadata = Metadata.builder("Builder Title").build();
 
             assertEquals("Builder Title", metadata.getTitle());
-            assertEquals(DEFAULT_LANGUAGE, metadata.getLanguage());
+            // Metadata deliberately leaves an unset language null instead of
+            // guessing: deciding what to do about it is a generation-time policy,
+            // configured through JAccessConfig and enforced per StrictnessMode.
+            assertNull(metadata.getLanguage());
             assertTrue(metadata.isDisplayDocTitle());
             assertNull(metadata.getAuthor());
         }
@@ -127,5 +135,15 @@ class MetadataTest {
             assertFalse(metadata.isDisplayDocTitle());
             assertEquals(2, metadata.getKeywords().size());
         }
+    }
+
+    @Test
+    @DisplayName("builder() without a title leaves the title unset for the strictness mode to handle")
+    void noArgBuilderLeavesTitleUnset() {
+        Metadata metadata = Metadata.builder().author("An author").build();
+        assertNull(metadata.getTitle());
+        assertEquals("An author", metadata.getAuthor());
+
+        assertEquals("A Title", Metadata.builder().title("A Title").build().getTitle());
     }
 }

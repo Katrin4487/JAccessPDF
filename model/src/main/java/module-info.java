@@ -30,5 +30,6 @@ module model {
     opens de.fkkaiser.model.font to com.fasterxml.jackson.databind;
     exports de.fkkaiser.model;
     opens de.fkkaiser.model to com.fasterxml.jackson.databind;
+    exports de.fkkaiser.model.configuration;
 
 }

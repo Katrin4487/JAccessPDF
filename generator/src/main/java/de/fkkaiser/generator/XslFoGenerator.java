@@ -17,10 +17,14 @@ package de.fkkaiser.generator;
 
 import de.fkkaiser.generator.element.*;
 import de.fkkaiser.model.annotation.Internal;
+import de.fkkaiser.model.configuration.JAccessConfig;
+import de.fkkaiser.model.configuration.JAccessStrictnessException;
+import de.fkkaiser.model.configuration.StrictnessMode;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,8 +71,10 @@ public class XslFoGenerator {
     private static final Logger log = LoggerFactory.getLogger(XslFoGenerator.class);
     private final Map<Class<? extends Element>, ElementFoGenerator> blockGeneratorRegistry = new HashMap<>();
     private final Map<Class<? extends InlineElement>, InlineElementFoGenerator> inlineGeneratorRegistry = new HashMap<>();
+    private final JAccessConfig config;
 
-    public XslFoGenerator() {
+    public XslFoGenerator(JAccessConfig config) {
+        this.config = config;
         this.blockGeneratorRegistry.put(Paragraph.class, new ParagraphFoGenerator(this));
         this.blockGeneratorRegistry.put(Headline.class, new HeadlineFoGenerator(this));
         this.blockGeneratorRegistry.put(SimpleList.class, new ListFoGenerator(this));
@@ -76,9 +82,9 @@ public class XslFoGenerator {
         this.blockGeneratorRegistry.put(Section.class, new SectionFoGenerator(this));
         this.blockGeneratorRegistry.put(Part.class, new PartFoGenerator(this));
         this.blockGeneratorRegistry.put(ListItem.class, new ListItemFoGenerator(this));
-        this.blockGeneratorRegistry.put(BlockImage.class,new ImageFoGenerator());
-        this.blockGeneratorRegistry.put(LayoutTable.class,new LayoutTableFoGenerator(this));
-         this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());
+        this.blockGeneratorRegistry.put(BlockImage.class, new ImageFoGenerator(this));
+        this.blockGeneratorRegistry.put(LayoutTable.class, new LayoutTableFoGenerator(this));
+        this.inlineGeneratorRegistry.put(TextRun.class, new TextRunFoGenerator());
         this.inlineGeneratorRegistry.put(PageNumber.class, new PageNumberFoGenerator());
         this.inlineGeneratorRegistry.put(Hyperlink.class, new HyperlinkFoGenerator());
         this.inlineGeneratorRegistry.put(Footnote.class, new FootnoteFoGenerator(this));
@@ -86,9 +92,10 @@ public class XslFoGenerator {
 
     /**
      * Generates the complete XSL-FO document as a String.
-     * @param document {@link Document} representing the content structure
+     *
+     * @param document   {@link Document} representing the content structure
      * @param styleSheet {@link StyleSheet} defining styles
-     * @param resolver {@link ImageResolver} for image handling
+     * @param resolver   {@link ImageResolver} for image handling
      * @return XSL-FO document as a String
      */
     @Internal
@@ -120,11 +127,12 @@ public class XslFoGenerator {
     /**
      * Generates a block-level element. An {@code null} element is ignored.
      * If no generator is registered for the element type, a warning is logged.
-     * @param element {@link Element} to generate
-     * @param styleSheet {@link StyleSheet} for styling
-     * @param builder StringBuilder to append generated FO
-     * @param headlines List of headlines for bookmarks
-     * @param resolver {@link ImageResolver} for image handling
+     *
+     * @param element            {@link Element} to generate
+     * @param styleSheet         {@link StyleSheet} for styling
+     * @param builder            StringBuilder to append generated FO
+     * @param headlines          List of headlines for bookmarks
+     * @param resolver           {@link ImageResolver} for image handling
      * @param isExternalArtefact indicates if the element is part of an external artefact (e.g., header/footer)
      */
     @Internal
@@ -159,9 +167,10 @@ public class XslFoGenerator {
     /**
      * Generates an inline element. An {@code null} element is ignored. If no generator is registered
      * for the element type, a warning is logged.
-     * @param element {@link InlineElement} to generate
+     *
+     * @param element    {@link InlineElement} to generate
      * @param styleSheet {@link StyleSheet} for styling
-     * @param builder StringBuilder to append generated FO
+     * @param builder    StringBuilder to append generated FO
      */
     @Internal
     public void generateInlineElement(InlineElement element, StyleSheet styleSheet, StringBuilder builder) {
@@ -174,15 +183,26 @@ public class XslFoGenerator {
         }
     }
 
+    /**
+     * Returns the configuration used for PDF generation.
+     *
+     * @return {@link JAccessConfig} instance
+     */
+    @Internal
+    public JAccessConfig getConfig() {
+        return config;
+    }
+
     // --- Private Generation Steps ---
 
     /**
      * Generates the page sequences for the document.
-     * @param builder StringBuilder to append generated FO
-     * @param document {@link Document} representing the content structure
+     *
+     * @param builder    StringBuilder to append generated FO
+     * @param document   {@link Document} representing the content structure
      * @param styleSheet {@link StyleSheet} defining styles
-     * @param headlines List of headlines for bookmarks
-     * @param resolver {@link ImageResolver} for image handling
+     * @param headlines  List of headlines for bookmarks
+     * @param resolver   {@link ImageResolver} for image handling
      */
     @Internal
     private void generatePageSequences(StringBuilder builder, Document document, StyleSheet styleSheet, List<Headline> headlines, ImageResolver resolver) {
@@ -228,7 +248,16 @@ public class XslFoGenerator {
 
     private void generateRootStart(StringBuilder foBuilder, Document document, String defaultFontFamily) {
         Metadata metadata = document.metadata();
-        String lang = (metadata != null && metadata.getLanguage() != null && !metadata.getLanguage().isEmpty()) ? metadata.getLanguage() : "en";
+        String languageString = (metadata != null && metadata.getLanguage() != null && !metadata.getLanguage().isBlank()) ? metadata.getLanguage() : null;
+        if (languageString == null) {
+            if (config.strictnessMode() == StrictnessMode.STRICT) {
+                throw new JAccessStrictnessException("Language must be set in metadata when strictness mode is set to STRICT");
+            }
+            if (config.strictnessMode() == StrictnessMode.WARN) {
+                log.warn("No language set in metadata. Using default language from configuration: '{}'.", config.defaultLanguage());
+            }
+        }
+        String lang = languageString != null ? languageString : config.defaultLanguage();
 
         log.debug("Generating root start. With language '{}', default font family '{}'.", lang, defaultFontFamily);
 
@@ -246,9 +275,25 @@ public class XslFoGenerator {
 
     private void generateDeclarations(StringBuilder foBuilder, Document document) {
         Metadata metadata = document.metadata();
-        if (metadata == null || metadata.getTitle() == null || metadata.getTitle().isEmpty()) {
-            log.warn("PDF/UA-1 conformance requires a title, but none was provided in the metadata. Skipping XMP metadata generation.");
-            return;
+        if (metadata == null) {
+            throw new IllegalArgumentException("Document metadata must not be null");
+        }
+        // Resolved into a local, never written back into the caller's Metadata:
+        // generation must leave the document it was handed unchanged. Writing the
+        // fallback back would make a second generate() call stop warning (the
+        // title would no longer be missing), and because Metadata is
+        // Jackson-serializable it would bake the placeholder into documents that
+        // are stored and reloaded - destroying the information that no title was
+        // ever set. Same approach as the language below.
+        String effectiveTitle = metadata.getTitle();
+        if (effectiveTitle == null || effectiveTitle.isBlank()) {
+            if (config.strictnessMode() == StrictnessMode.STRICT) {
+                throw new JAccessStrictnessException("PDF/UA-1 conformance requires a title, but none was provided in the metadata.");
+            }
+            if (config.strictnessMode() == StrictnessMode.WARN) {
+                log.warn("PDF/UA-1 conformance requires a title, but none was provided in the metadata. Using default title from configuration: '{}'.", config.defaultTitle());
+            }
+            effectiveTitle = config.defaultTitle();
         }
 
         log.debug("Generating XMP metadata for PDF/UA-1 compliance.");
@@ -262,7 +307,7 @@ public class XslFoGenerator {
                                         GenerateUtils.tagBuilder("li")
                                                 .withPrefix("rdf:")
                                                 .addAttribute("xml:lang", "x-default")
-                                                .addContent(metadata.getTitle())
+                                                .addContent(effectiveTitle)
                                 )
                 );
 
@@ -383,16 +428,17 @@ public class XslFoGenerator {
 
     /**
      * TagBuilder to create a static-content for header or footer of the document
-     * @param flowName name of the flow
-     * @param elements List of elements to place in the document
+     *
+     * @param flowName   name of the flow
+     * @param elements   List of elements to place in the document
      * @param styleSheet {@link StyleSheet} of the document
-     * @param headlines List of {@link Headline} elements (for bookmark generation)
-     * @param resolver {@link ImageResolver} to find image resources
+     * @param headlines  List of {@link Headline} elements (for bookmark generation)
+     * @param resolver   {@link ImageResolver} to find image resources
      * @return TagBuilder to build the tag
      */
     private TagBuilder createStaticContent(String flowName, List<Element> elements,
-                                                         StyleSheet styleSheet, List<Headline> headlines,
-                                                         ImageResolver resolver) {
+                                           StyleSheet styleSheet, List<Headline> headlines,
+                                           ImageResolver resolver) {
         StringBuilder content = new StringBuilder();
         generateBlockElements(elements, styleSheet, content, headlines, resolver, true);
 
@@ -403,15 +449,16 @@ public class XslFoGenerator {
 
     /**
      * Generates an flow tag (used for the body)
-     * @param elements list of elements that should be added to the flox
+     *
+     * @param elements   list of elements that should be added to the flox
      * @param styleSheet {@link StyleSheet} used in the document
-     * @param headlines List of {@link Headline} in this document for bookmark tree
-     * @param resolver {@link ImageResolver} to find image resources
+     * @param headlines  List of {@link Headline} in this document for bookmark tree
+     * @param resolver   {@link ImageResolver} to find image resources
      * @return {@link TagBuilder} to create the flow tag
      */
     private TagBuilder createFlow(List<Element> elements,
-                                                StyleSheet styleSheet, List<Headline> headlines,
-                                                ImageResolver resolver) {
+                                  StyleSheet styleSheet, List<Headline> headlines,
+                                  ImageResolver resolver) {
         StringBuilder content = new StringBuilder();
         generateBlockElements(elements, styleSheet, content, headlines, resolver, false);
 

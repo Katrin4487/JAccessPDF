@@ -17,6 +17,7 @@ package de.fkkaiser.generator.element;
 
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
+import de.fkkaiser.model.configuration.JAccessConfig;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.ListStyleProperties;
 import de.fkkaiser.model.style.ListStyleType;
@@ -48,7 +49,7 @@ class ListFoGeneratorTest {
 
         StyleSheet styleSheet = StyleSheet.builder().build();
         StringBuilder builder = new StringBuilder();
-        XslFoGenerator mockGenerator = new MockXslFoGenerator();
+        XslFoGenerator mockGenerator = new MockXslFoGenerator(JAccessConfig.defaultConfig());
         ImageResolver mockResolver = relativePath -> new URI("file://test").toURL();
         ListFoGenerator generator = new ListFoGenerator(mockGenerator);
 
@@ -80,7 +81,7 @@ class ListFoGeneratorTest {
 
         StyleSheet styleSheet = StyleSheet.builder().build();
         StringBuilder builder = new StringBuilder();
-        XslFoGenerator mockGenerator = new MockXslFoGenerator();
+        XslFoGenerator mockGenerator = new MockXslFoGenerator(JAccessConfig.defaultConfig());
         ImageResolver mockResolver = relativePath -> new URI("file://test").toURL();
         ListFoGenerator generator = new ListFoGenerator(mockGenerator);
 
@@ -111,7 +112,7 @@ class ListFoGeneratorTest {
 
         StyleSheet styleSheet = StyleSheet.builder().build();
         StringBuilder builder = new StringBuilder();
-        XslFoGenerator mockGenerator = new MockXslFoGenerator();
+        XslFoGenerator mockGenerator = new MockXslFoGenerator(JAccessConfig.defaultConfig());
         ImageResolver mockResolver = relativePath -> new URI("file://test").toURL();
         ListFoGenerator generator = new ListFoGenerator(mockGenerator);
 
@@ -128,6 +129,10 @@ class ListFoGeneratorTest {
      * Helper class: Mock implementation of XslFoGenerator.
      */
     static class MockXslFoGenerator extends XslFoGenerator {
+        public MockXslFoGenerator(JAccessConfig config) {
+            super(config);
+        }
+
         @Override
         public void generateInlineElement(InlineElement inlineElement, StyleSheet styleSheet, StringBuilder builder) {
             builder.append("Inline content");

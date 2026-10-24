@@ -45,6 +45,7 @@
         <module>postprocessor</module>
         <module>bundle</module>
         <module>markdown</module>
+        <module>validation</module>
     </modules>
 
     <properties>

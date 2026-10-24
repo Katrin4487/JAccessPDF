@@ -15,6 +15,7 @@
  */
 package de.fkkaiser.generator;
 
+import de.fkkaiser.model.configuration.JAccessConfig;
 import de.fkkaiser.model.structure.*;
 import de.fkkaiser.model.style.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +42,7 @@ class XslFoGeneratorTest {
     @BeforeEach
     void setUp() {
         // Initialize the generator to be tested
-        xslFoGenerator = new XslFoGenerator();
+        xslFoGenerator = new XslFoGenerator(JAccessConfig.defaultConfig());
 
         TextStyle textStyle = new TextStyle("Default Style","10pt","0pen Sans","400","normal");
         testStyleSheet = new StyleSheet(List.of(textStyle), Collections.emptyList(), Collections.emptyList(),null);

@@ -29,6 +29,7 @@ import de.fkkaiser.bundle.zip.ZipImportResult;
 import de.fkkaiser.generator.ImageResolver;
 import de.fkkaiser.generator.XslFoGenerator;
 import de.fkkaiser.model.annotation.PublicAPI;
+import de.fkkaiser.model.configuration.JAccessConfig;
 import de.fkkaiser.model.font.FontFamily;
 import de.fkkaiser.model.font.FontFamilyList;
 import de.fkkaiser.model.font.FontStyleValue;
@@ -40,6 +41,9 @@ import de.fkkaiser.processor.StyleResolverService;
 import de.fkkaiser.processor.reader.DocumentReader;
 import de.fkkaiser.processor.reader.FontFamilyListReader;
 import de.fkkaiser.processor.reader.StyleSheetReader;
+import de.fkkaiser.api.validation.PdfUaReport;
+import de.fkkaiser.api.validation.PdfValidationException;
+import de.fkkaiser.api.validation.PdfValidationService;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.FopFactoryBuilder;
@@ -138,7 +142,7 @@ import java.util.*;
  * call its methods concurrently.
  *
  * @author FK Kaiser
- * @version 1.0.0
+ * @version 1.1.0
  * @see Document
  * @see StyleSheet
  * @see FontFamilyList
@@ -188,7 +192,35 @@ public final class PdfGenerationFacade {
     private final XslFoGenerator foGenerator;
     private final EResourceProvider resourceProvider;
     private final ObjectMapper objectMapper;
+    private JAccessConfig config;
 
+
+
+    /**
+     * Constructs a new PdfGenerationFacade with the specified resource provider and configuration.
+     *
+     * @param provider the resource provider for resolving external resources;
+     *                 must not be {@code null}
+     * @param config the configuration for PDF generation;
+     *               must not be {@code null}
+     * @throws IllegalArgumentException if the provider or config is {@code null}
+     */
+    public PdfGenerationFacade(EResourceProvider provider, JAccessConfig config) {
+        if (provider == null || config == null) {
+            log.error("Attempted to create PdfGenerationFacade with null resource provider or config");
+            throw new IllegalArgumentException("EResourceProvider and JAccessConfig cannot be null");
+        }
+
+        this.resourceProvider = provider;
+        this.documentReader = new DocumentReader();
+        this.styleSheetReader = new StyleSheetReader();
+        this.fontListReader = new FontFamilyListReader();
+        this.foGenerator = new XslFoGenerator(config);
+        this.objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+        log.debug("PdfGenerationFacade initialized successfully");
+
+    }
     /**
      * Constructs a new PdfGenerationFacade with the specified resource provider.
      * The resource provider is used throughout the PDF generation process to locate
@@ -198,24 +230,14 @@ public final class PdfGenerationFacade {
      * that will be used for PDF generation. These components are reusable across multiple
      * PDF generation requests.</p>
      *
+     * <p>A default configuration is used for PDF generation.</p>
+     *
      * @param provider the resource provider for resolving external resources;
      *                 must not be {@code null}
-     * @throws IllegalArgumentException if provider is {@code null}
+     * @throws IllegalArgumentException if the provider is {@code null}
      */
     public PdfGenerationFacade(EResourceProvider provider) {
-        if (provider == null) {
-            log.error("Attempted to create PdfGenerationFacade with null resource provider");
-            throw new IllegalArgumentException("EResourceProvider cannot be null");
-        }
-
-        this.resourceProvider = provider;
-        this.documentReader = new DocumentReader();
-        this.styleSheetReader = new StyleSheetReader();
-        this.fontListReader = new FontFamilyListReader();
-        this.foGenerator = new XslFoGenerator();
-        this.objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-
-        log.debug("PdfGenerationFacade initialized successfully");
+        this(provider, JAccessConfig.defaultConfig());
     }
 
     // ======= Generate PDF from JSON input streams. ======
@@ -313,7 +335,7 @@ public final class PdfGenerationFacade {
 
         try {
             validateInputs(document, styleSheet);
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error("Input validation failed", e);
             throw new PdfGenerationException("Input validation failed: " + e.getMessage(), e);
         }
@@ -351,17 +373,62 @@ public final class PdfGenerationFacade {
 
     }
 
+    /**
+     * Generates a PDF and validates it against PDF/UA-1 before returning it.
+     *
+     * <p>Validation comes from an optional add-on: it only works with
+     * {@code de.fkkaiser:jaccess-pdf-validation} on the classpath, discovered
+     * through {@link ServiceLoader}. Without it this method throws rather than
+     * silently skipping the check - a validation that quietly does nothing is
+     * worse than none at all.</p>
+     *
+     * <p>Validation is expensive. Use it in tests, in staging or on samples,
+     * not on every request of a high-throughput service.</p>
+     *
+     * @return the generated PDF, having passed PDF/UA-1 validation
+     * @throws PdfGenerationException if generation fails
+     * @throws PdfValidationException if no validator is on the classpath, or if
+     *                                the generated PDF is not compliant
+     */
+    @PublicAPI
+    public ByteArrayOutputStream generateAndValidatePDF(Document document,
+                                                        StyleSheet styleSheet,
+                                                        FontFamilyList fontFamilyList) throws PdfGenerationException {
+        // Looked up BEFORE generating: without a validator this call cannot keep
+        // its promise, and rendering a PDF first only to throw it away wastes
+        // the expensive part of the work.
+        PdfValidationService service = ServiceLoader.load(PdfValidationService.class)
+                .findFirst()
+                .orElseThrow(() -> new PdfValidationException(
+                        "No PDF validator found. Add de.fkkaiser:jaccess-pdf-validation "
+                                + "to the classpath, or use generatePDF(...) instead."));
+
+        ByteArrayOutputStream pdfOutput = generatePDF(document, styleSheet, fontFamilyList);
+
+        PdfUaReport report = service.validate(pdfOutput.toByteArray());
+
+        if (!report.compliant()) {
+            log.error("Generated PDF is not PDF/UA-1 compliant: {}", report.toSummary());
+            report.violations().forEach(v ->
+                    log.error("  clause {} test {}: {}", v.clause(), v.testNumber(), v.message()));
+            throw new PdfValidationException(report.toSummary());
+        }
+
+        log.debug("PDF validation passed: {}", report.toSummary());
+        return pdfOutput;
+    }
+
 
     /**
      * Generates a PDF from a MasterBundle. This method is particularly useful for generating
      * PDFs using Templates objects and have placeholders.
      *
-     * @param template the template to be used to generate the PDF
+     * @param template   the template to be used to generate the PDF
      * @param visibility list of visibility conditions for containers in the template
-     * @param data list of data to be used in the placeholders (logic isHidden = true / false)
+     * @param data       list of data to be used in the placeholders (logic isHidden = true / false)
      * @return a ByteArrayOutputStream containing the generated PDF data
      * @throws PdfGenerationException if an error occurs during PDF generation or if
-     *         the template is invalid
+     *                                the template is invalid
      */
     public ByteArrayOutputStream generatePDF(MasterBundle template,
                                              Map<String, Boolean> visibility,
@@ -375,11 +442,40 @@ public final class PdfGenerationFacade {
     }
 
     /**
+     * Generates a PDF from a MasterBundle and validates it against PDF/UA-1 before returning it.
+     *
+     * <p>Validation comes from an optional add-on: it only works with
+     * {@code de.fkkaiser:jaccess-pdf-validation} on the classpath, discovered
+     * through {@link ServiceLoader}. Without it this method throws rather than
+     * silently skipping the check - a validation that quietly does nothing is
+     * worse than none at all.</p>
+     *
+     * @param template   the template to be used to generate the PDF
+     * @param visibility list of visibility conditions for containers in the template
+     * @param data       list of data to be used in the placeholders (logic isHidden = true / false)
+     * @return a ByteArrayOutputStream containing the generated PDF data, having passed PDF/UA-1 validation
+     * @throws PdfGenerationException if an error occurs during PDF generation or if
+     *                                the template is invalid
+     */
+    @PublicAPI
+    public ByteArrayOutputStream generateAndValidatePDF(MasterBundle template,
+                                                        Map<String, Boolean> visibility,
+                                                        Map<String, String> data) throws PdfGenerationException {
+        try {
+            Document document = MasterBundleEngine.resolve(template, visibility, data, objectMapper);
+            return generateAndValidatePDF(document, template.styleSheet(), template.fonts());
+        } catch (JAccessParseException | JsonProcessingException e) {
+            throw new PdfGenerationException("Failed to resolve template", e);
+        }
+    }
+
+    /**
      * Generates a PDF from a ZIP file containing a MasterBundle. This method is particularly useful for generating
      * PDFs using Templates objects and have placeholders.
-     * @param zip the ZIP file containing the MasterBundle
+     *
+     * @param zip        the ZIP file containing the MasterBundle
      * @param visibility list of visibility conditions for containers in the template
-     * @param data list of data to be used in the placeholders (logic isHidden = true / false)
+     * @param data       list of data to be used in the placeholders (logic isHidden = true / false)
      * @return a ByteArrayOutputStream containing the generated PDF data
      * @throws PdfGenerationException if an error occurs during PDF generation or if
      */
@@ -401,6 +497,7 @@ public final class PdfGenerationFacade {
 
     /**
      * Reads a template from a ZIP file.
+     *
      * @param zip the ZIP file containing the template
      * @return the template
      * @throws PdfGenerationException if the template is invalid
@@ -418,8 +515,9 @@ public final class PdfGenerationFacade {
     /**
      * This method can be used to validate data against a template.
      * If keys are missing or not found in the template the result will contain the missing keys.
+     *
      * @param template the template to be used to generate the PDF
-     * @param data list of data to be used in the placeholders (logic isHidden = true / false)
+     * @param data     list of data to be used in the placeholders (logic isHidden = true / false)
      * @return a PlaceholderValidationResult containing the validation result
      */
     @PublicAPI
@@ -644,11 +742,11 @@ public final class PdfGenerationFacade {
      * Creates and configures an Apache FOP factory with the specified font configuration.
      * The factory is responsible for creating FOP instances that can transform XSL-FO
      * into PDF documents.
-     /**
+     * /**
      * Creates and configures an Apache FOP factory.
      * NOTE: The resolver is now passed in, so the caller controls its lifecycle (closing streams).
      *
-     * @param fontFamilyList the list of font families to register with FOP
+     * @param fontFamilyList      the list of font families to register with FOP
      * @param fopResourceResolver the resource resolver for FOP to locate external resources
      * @return a configured FopFactory instance
      * @throws Exception if an error occurs during FOP factory creation
@@ -699,20 +797,20 @@ public final class PdfGenerationFacade {
         String result = foGenerator.generate(document, styleSheet, imageResolver);
 
 
-            if (log.isDebugEnabled()) {
-                try {
-                    Transformer prettyTransformer = TransformerFactory.newInstance().newTransformer();
-                    prettyTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                    prettyTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-                    StringWriter writer = new StringWriter();
-                    prettyTransformer.transform(new StreamSource(new ByteArrayInputStream(result.getBytes())), new StreamResult(writer));
-                    String prettyXslFo = writer.toString();
-                    log.debug("----------------- Pretty XSL-FO-String -----------\n{}", prettyXslFo);
-                } catch (Exception e) {
-                    log.debug("Result is {}", new String(result.getBytes(), StandardCharsets.UTF_8));
-                    throw new RuntimeException(e);
-                }
+        if (log.isDebugEnabled()) {
+            try {
+                Transformer prettyTransformer = TransformerFactory.newInstance().newTransformer();
+                prettyTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                prettyTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+                StringWriter writer = new StringWriter();
+                prettyTransformer.transform(new StreamSource(new ByteArrayInputStream(result.getBytes())), new StreamResult(writer));
+                String prettyXslFo = writer.toString();
+                log.debug("----------------- Pretty XSL-FO-String -----------\n{}", prettyXslFo);
+            } catch (Exception e) {
+                log.debug("Result is {}", new String(result.getBytes(), StandardCharsets.UTF_8));
+                throw new RuntimeException(e);
             }
+        }
 
         return result;
     }
@@ -730,7 +828,7 @@ public final class PdfGenerationFacade {
      *   <li>Returns the PDF data as a ByteArrayOutputStream</li>
      * </ol>
      *
-     * @param fopFactory the configured FOP factory
+     * @param fopFactory  the configured FOP factory
      * @param xslFoString the XSL-FO content to transform
      * @return a ByteArrayOutputStream containing the generated PDF
      * @throws Exception if transformation fails
@@ -814,7 +912,7 @@ public final class PdfGenerationFacade {
      *
      * @param document   the document to validate
      * @param styleSheet the style sheet to validate
-     * @throws NullPointerException if document or styleSheet is null
+     * @throws NullPointerException  if document or styleSheet is null
      * @throws IllegalStateException if styleSheet is invalid
      */
     private void validateInputs(Document document, StyleSheet styleSheet) {

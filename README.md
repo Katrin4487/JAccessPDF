@@ -15,14 +15,14 @@ Add the `jaccess-pdf-api` module - it transitively pulls in the model, processor
 <dependency>
     <groupId>de.fkkaiser</groupId>
     <artifactId>jaccess-pdf-api</artifactId>
-    <version>0.11.2</version>
+    <version>0.12.0</version>
 </dependency>
 ```
 
 Gradle:
 
 ```kotlin
-implementation("de.fkkaiser:jaccess-pdf-api:0.11.2")
+implementation("de.fkkaiser:jaccess-pdf-api:0.12.0")
 ```
 
 <details>
@@ -41,6 +41,30 @@ implementation("de.fkkaiser:jaccess-pdf-api:0.11.2")
 | `jaccess-pdf-bundle` | Externalized text bundles and templating |
 
 </details>
+
+### Optional: PDF/UA validation
+
+`jaccess-pdf-validation` checks generated PDFs against PDF/UA-1 using
+[veraPDF](https://verapdf.org), the reference validator:
+
+```xml
+<dependency>
+    <groupId>de.fkkaiser</groupId>
+    <artifactId>jaccess-pdf-validation</artifactId>
+    <version>0.12.0</version>
+</dependency>
+```
+
+It is kept separate on purpose. veraPDF brings 18 transitive artifacts (~16 MB)
+and is GPLv3/MPLv2 dual-licensed, so nothing of it reaches the dependency tree
+of anyone who does not ask for it - JAccessPDF itself stays Apache-2.0 with no
+copyleft attached. With the module on the class path,
+`PdfGenerationFacade.generateAndValidatePDF(...)` validates before returning;
+without it, that method tells you which artifact to add rather than silently
+skipping the check.
+
+Validation is not cheap. Use it in tests, in staging or on samples - not on
+every request of a high-throughput service.
 
 
 ## ⚠️ Current Status: Beta

@@ -1,5 +1,65 @@
 # Changelog
 
+## [0.12.0] - 2026-10-24
+
+### Added
+- New module `jaccess-pdf-validation`: validates generated PDFs against PDF/UA-1 using veraPDF.
+  It is a deliberate opt-in - `jaccess-pdf-api` does **not** depend on it, so veraPDF and its
+  18 transitive artifacts (~16 MB, GPLv3/MPLv2 dual-licensed) stay out of the dependency tree
+  of everyone who does not want them. Add it explicitly to use validation.
+- `PdfGenerationFacade.generateAndValidatePDF(...)`: generates a PDF and validates it before
+  returning. The validator is discovered through `ServiceLoader`; without
+  `jaccess-pdf-validation` on the class path the method throws `PdfValidationException` naming
+  the artifact to add, rather than silently skipping the check. Validation is expensive - use
+  it in tests, in staging, or on samples, not on every request.
+- `JAccessConfig` with `JAccessConfigBuilder`, for configuring the default language, the
+  default title and the strictness mode. Passed to `PdfGenerationFacade`; the single-argument
+  constructor keeps working and uses `JAccessConfig.defaultConfig()`.
+- `StrictnessMode` with three levels, deciding what happens when PDF/UA-relevant information
+  is missing from a document:
+  - `LENIENT` - fill the gap from the configuration, silently
+  - `WARN` - fill the gap and log a warning naming the value used (**the default**)
+  - `STRICT` - refuse to generate, throwing `JAccessStrictnessException`
+
+  Covers a missing document language, a missing title, and images without alt text.
+
+  **Please note:** in 1.x the default will become `STRICT`. Builds that rely on gaps being
+  filled silently will then fail instead. Set the mode explicitly if you want today's
+  behaviour to survive that change.
+- `Metadata.builder()` without a title, as a counterpart to `Metadata.builder(String)`. Set
+  one later with `MetadataBuilder.title(String)`, or leave it unset and let the strictness
+  mode decide.
+
+### Changed
+- **`Metadata` no longer substitutes defaults for a missing language or title.** Its
+  constructor used to replace a missing language with `"de-DE"` and a missing title with
+  `"PDF Document"`, so `getLanguage()` and `getTitle()` can now return `null`. The defaults
+  moved to `JAccessConfig` and are applied at generation time. This is what makes the
+  strictness modes work at all: as long as `Metadata` quietly filled the gaps itself, nothing
+  was ever missing by the time the generator looked, and `STRICT` could never fire.
+- **The effective default language changed for documents built through the core model**, from
+  `"de-DE"` to the configured `defaultLanguage`, which is `"en"` out of the box. Set
+  `defaultLanguage("de-DE")` on the configuration to keep the previous behaviour.
+- **A missing title is no longer rejected at construction.** Neither `MetadataBuilder(String)`
+  (previously `IllegalArgumentException`) nor the `Metadata` constructor (previously
+  `NullPointerException`) refuses one any more, and `setTitle(null)` is allowed. Whether a
+  missing title is an error is now decided by the strictness mode - the only place that knows
+  whether the caller wanted it enforced.
+- **Generating a PDF no longer modifies the document it was given.** The fallback title used
+  to be written back into the caller's `Metadata`. That made a second generation of the same
+  document stop warning, and because `Metadata` is Jackson-serializable, the placeholder could
+  end up stored as though the author had set it.
+- `XslFoGenerator`'s constructor now takes a `JAccessConfig`. The class is marked `@Internal`,
+  but it is public and exported, so this is listed for completeness.
+
+### Fixed
+- Missing language, title and image alt text are now also detected when they consist only of
+  whitespace. A language of `"   "` used to end up verbatim in the document's `xml:lang`, and
+  a whitespace-only alt text counted as present - the "technically there, useless to a screen
+  reader" case the strictness modes exist to catch.
+- Log messages about images without alt text now name base64 and inline SVG images instead of
+  reporting `path 'null'`.
+
 ## [0.11.3] - 2026-10-24
 ### Added
 - GitHub Actions build on JDK 21 and 25 (`.github/workflows/build.yml`), running
