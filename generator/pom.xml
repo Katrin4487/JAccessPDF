@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.fkkaiser</groupId>
         <artifactId>jaccess-pdf</artifactId>
-        <version>0.11.3-SNAPSHOT</version>
+        <version>0.11.3</version>
     </parent>
 
     <artifactId>jaccess-pdf-generator</artifactId>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>jaccess-pdf-model</artifactId>
-            <version>0.11.3-SNAPSHOT</version>
+            <version>0.11.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
