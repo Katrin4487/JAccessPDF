@@ -1,5 +1,6 @@
 # JAccessPDF
 
+[![Build](https://github.com/Katrin4487/JAccessPDF/actions/workflows/build.yml/badge.svg)](https://github.com/Katrin4487/JAccessPDF/actions/workflows/build.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/de.fkkaiser/jaccess-pdf-api)](https://central.sonatype.com/artifact/de.fkkaiser/jaccess-pdf-api)
 [![Status](https://img.shields.io/badge/status-beta-yellow)]()
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
@@ -61,7 +62,36 @@ This library is functional and being used in production, but:
 - ✅ Extended error handling 
 
 ## Quick Start
-see [Hello World Example](https://github.com/Katrin4487/JAccessPDF/wiki/create-first-pdf)
+
+```java
+import de.fkkaiser.api.simplelayer.SimpleDocumentBuilder;
+import java.util.List;
+
+SimpleDocumentBuilder.create("My First Accessible PDF")
+        .withLanguage("en")
+        .addHeading("Hello World", 1)
+        .addParagraph("This document is PDF/UA compliant out of the box.")
+        .addUnorderedList(List.of("Tagged structure", "Document language", "Alt texts for images"))
+        .build()
+        .saveAs("hello.pdf");
+```
+
+That is the whole program. No FOP configuration, no XSL-FO, no tagging by hand.
+The resulting PDF carries a `/StructTreeRoot` with `/MarkInfo /Marked true`, a
+document title, `/Lang (en)` from `withLanguage`, and the PDF/UA-1 identifier
+in its XMP metadata - the structure screen readers rely on and PDF/UA demands.
+
+The builder also offers `addOrderedList`, `addImage` (with alt text),
+`addTable`, `addMarkdown` and `addParagraph(text, styleName)`. Use
+`toStream()` instead of `saveAs(...)` to get a `ByteArrayOutputStream`, for
+instance to serve the PDF from a web application.
+
+For full control over styles, fonts and page sequences there is the Core Model
+behind `PdfGenerationFacade` - see the
+[wiki](https://github.com/Katrin4487/JAccessPDF/wiki/create-first-pdf).
+
+> The snippet above is verified by `ReadmeQuickStartTest`, so it compiles and
+> produces a real PDF on every build.
 
 ## Image Support
 

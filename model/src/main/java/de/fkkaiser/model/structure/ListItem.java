@@ -145,8 +145,6 @@ public final class ListItem implements Element {
     public void resolveStyles(StyleResolverContext context) {
         ListItemStyleProperties finalStyle = null;
 
-        System.out.println("LIS "+this.styleClass);
-
         // 1. Try to find style by explicit styleClass
         if (this.styleClass != null) {
             ElementStyle specificElementStyle = context.styleMap().get(this.styleClass);

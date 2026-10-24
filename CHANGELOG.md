@@ -1,5 +1,22 @@
 # Changelog
 
+## [Unreleased]
+### Added
+- GitHub Actions build on JDK 21 and 25 (`.github/workflows/build.yml`), running
+  `mvn verify` - which covers the tests, the license-header check and the
+  javadoc/sources jars.
+- `ReadmeQuickStartTest` compiles and runs the Quick Start snippet from the
+  README on every build, so the documented example cannot go stale.
+
+### Fixed
+- Removed a leftover `System.out.println` in `ListItem` that printed
+  `LIS <styleClass>` to stdout on every list item rendered.
+
+### Changed
+- README: the Quick Start now contains the actual code instead of only linking
+  to the wiki, and names the concrete PDF/UA features of the output
+  (`/StructTreeRoot`, `/MarkInfo /Marked true`, `/Lang`, PDF/UA-1 in XMP).
+
 ## [0.11.2] - 2026-10-24
 ### Changed
 - **Breaking: all module artifactIds are now prefixed with `jaccess-pdf-`**
