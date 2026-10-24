@@ -3,7 +3,7 @@
 # Release helper for JAccessPDF's multi-module Maven build.
 #
 # Usage:
-#   ./release.sh <release-version> [<next-snapshot-version>]
+#   ./release.sh [--no-deploy] <release-version> [<next-snapshot-version>]
 #
 # Example:
 #   ./release.sh 0.10.3
@@ -15,14 +15,24 @@
 #   2. Strips "-SNAPSHOT" from every pom.xml (root + all modules) and commits
 #      "Bump version to <release-version>".
 #   3. Creates an annotated tag v<release-version>.
-#   4. Sets every pom.xml to <next-snapshot-version> and commits
+#   4. Asks whether to upload. If yes, deploys to Maven Central first
+#      (mvn -Prelease deploy: full test run, GPG signing) and then to GitHub
+#      Packages (mvn deploy). Skip both with --no-deploy. The Central upload is
+#      NOT a publication - it waits in the portal until you press Publish.
+#   5. Sets every pom.xml to <next-snapshot-version> and commits
 #      "Initiating next development iteration".
-#   5. Prints the push commands - it does NOT push, you do that yourself.
+#   6. Prints the push commands - it does NOT push, you do that yourself.
 
 set -euo pipefail
 
+DO_DEPLOY=1
+if [[ "${1:-}" == "--no-deploy" ]]; then
+    DO_DEPLOY=0
+    shift
+fi
+
 if [[ $# -lt 1 ]]; then
-    echo "Usage: $0 <release-version> [<next-snapshot-version>]" >&2
+    echo "Usage: $0 [--no-deploy] <release-version> [<next-snapshot-version>]" >&2
     exit 1
 fi
 
@@ -90,6 +100,55 @@ git commit -m "Bump version to ${RELEASE_VERSION}"
 echo "==> Tagging v${RELEASE_VERSION}"
 git tag -a "v${RELEASE_VERSION}" -m "Release ${RELEASE_VERSION}"
 
+# Upload has to happen HERE: the poms still hold ${RELEASE_VERSION}. After the
+# bump below they hold ${NEXT_SNAPSHOT}, and a deploy would push a snapshot
+# instead of the release. Runs the full test suite and signs with GPG (unlike
+# the -DskipTests sanity build above), then uploads to Maven Central, where the
+# deployment waits in VALIDATED state for a manual "Publish" in the portal.
+if [[ "$DO_DEPLOY" == "1" ]]; then
+    echo
+    read -r -p "Upload ${RELEASE_VERSION} to Maven Central and GitHub Packages now? [y/N] " DEPLOY_CONFIRM
+    if [[ "$DEPLOY_CONFIRM" == "y" || "$DEPLOY_CONFIRM" == "Y" ]]; then
+        # Central first: it validates the bundle, so a problem surfaces before
+        # anything has landed on GitHub Packages.
+        echo "==> Deploying to Maven Central (gpg will ask for the passphrase)"
+        if ! mvn -Prelease deploy; then
+            echo >&2
+            echo "Central deploy failed. The release commit and tag v${RELEASE_VERSION}" >&2
+            echo "exist, but the bump to ${NEXT_SNAPSHOT} has NOT happened, so the poms" >&2
+            echo "still hold ${RELEASE_VERSION}. Nothing went to GitHub Packages either." >&2
+            echo "Fix the cause and retry with:" >&2
+            echo "  mvn -Prelease deploy" >&2
+            echo "Or unwind with:" >&2
+            echo "  git reset --hard HEAD~1 && git tag -d v${RELEASE_VERSION}" >&2
+            exit 1
+        fi
+        echo "==> Uploaded to Central. Nothing is public yet - inspect it at"
+        echo "    https://central.sonatype.com/publishing/deployments"
+        echo "    and press Publish (or Drop to discard it)."
+
+        # GitHub Packages second, unchanged from how it worked before Central.
+        # No -Prelease here, so no GPG signatures: GitHub does not require them,
+        # which means the GitHub artifacts carry no .asc while the Central ones do.
+        echo
+        echo "==> Deploying to GitHub Packages"
+        if ! mvn deploy -DskipTests; then
+            echo >&2
+            echo "GitHub Packages deploy failed, but the Central upload above went" >&2
+            echo "through. The two are now out of step: either retry with" >&2
+            echo "  mvn deploy -DskipTests" >&2
+            echo "or Drop the Central deployment in the portal before publishing it." >&2
+            exit 1
+        fi
+        echo "==> Uploaded to GitHub Packages."
+    else
+        echo "Skipped both uploads. To do them later, check out the tag first:"
+        echo "  git checkout v${RELEASE_VERSION}"
+        echo "  mvn -Prelease deploy     # Maven Central"
+        echo "  mvn deploy -DskipTests   # GitHub Packages"
+    fi
+fi
+
 echo "==> Opening next development iteration (${RELEASE_VERSION} -> ${NEXT_SNAPSHOT})"
 for f in "${POM_FILES[@]}"; do
     [[ -f "$f" ]] || continue
@@ -104,3 +163,8 @@ echo
 echo "Done. Review the last two commits and the tag, then push explicitly:"
 echo "  git push"
 echo "  git push origin v${RELEASE_VERSION}"
+if [[ "$DO_DEPLOY" == "1" ]]; then
+    echo
+    echo "Reminder: a Central deployment left in VALIDATED state is not published."
+    echo "Publish or drop it at https://central.sonatype.com/publishing/deployments"
+fi

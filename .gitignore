@@ -28,3 +28,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Persoenliche Notizen (nicht im Repo)
+WORKFLOW.md

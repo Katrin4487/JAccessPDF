@@ -9,7 +9,10 @@
         <version>0.11.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bundle</artifactId>
+    <artifactId>jaccess-pdf-bundle</artifactId>
+    <name>JAccessPDF Text Bundle</name>
+    <description>Externalized text and master bundles for templating and dynamic document content.</description>
+    <url>https://github.com/Katrin4487/JAccessPDF</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,20 +21,15 @@
     <dependencies>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>jaccess-pdf-model</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>processor</artifactId>
+            <artifactId>jaccess-pdf-processor</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

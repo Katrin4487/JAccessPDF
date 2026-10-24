@@ -60,7 +60,28 @@
         <maven.compiler.version>3.13.0</maven.compiler.version>
         <maven.surefire.version>3.3.1</maven.surefire.version>
         <mockito.version>5.23.0</mockito.version>
+
+        <maven.gpg.version>3.2.8</maven.gpg.version>
+        <central.publishing.version>0.12.0</central.publishing.version>
+        <!-- Long key ID of the GPG signing key used for Maven Central releases.
+             Public key must be on keyserver.ubuntu.com / keys.openpgp.org, or
+             Central rejects the upload. The passphrase is deliberately NOT stored
+             anywhere in this repo or in settings.xml: locally gpg-agent prompts
+             for it, in CI it is passed as -Dgpg.passphrase from a secret. -->
+        <gpg.keyname>763F8F8014A68EA3</gpg.keyname>
     </properties>
+    <!-- GitHub Packages stays the target of a plain `mvn deploy`, for both
+         snapshots and releases, exactly as before Maven Central came along.
+         Maven Central is additional and reached only with the "release" profile:
+         the central-publishing-maven-plugin registers as a build extension and
+         takes over the deploy phase, so the two never run in the same command.
+
+             mvn deploy              -> GitHub Packages (snapshot or release)
+             mvn -Prelease deploy    -> Maven Central only
+
+         Publishing a release to both means the same coordinates exist in two
+         places. Fine as long as both carry identical bytes - run the two
+         commands back to back, and if one fails, do not leave it at that. -->
     <distributionManagement>
         <repository>
             <id>github</id>
@@ -242,5 +263,73 @@
         </plugins>
 
     </build>
+
+    <profiles>
+        <!-- Activated only for releases (`mvn -Prelease deploy`) so that everyday
+             `mvn install` neither needs the GPG key nor contacts Central. -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- Override the lenient failOnError from the main <build>:
+                         Central only checks that a javadoc JAR exists, not that it
+                         has content, so a silent javadoc failure would ship an
+                         empty JAR to javadoc.io - irreversibly. Release builds
+                         must fail loudly instead. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven.gpg.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <keyname>${gpg.keyname}</keyname>
+                            <!-- gpg 2.x refuses to read a passphrase from stdin
+                                 unless pinentry is in loopback mode. Without this
+                                 a CI build hangs silently on an invisible prompt. -->
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central.publishing.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <!-- Must match the <server><id> in settings.xml that
+                                 holds the Central Portal user token. -->
+                            <publishingServerId>central</publishingServerId>
+                            <!-- false = upload and validate, then wait for a manual
+                                 "Publish" click in the portal. Flip to true once a
+                                 few releases have gone through cleanly: a release
+                                 pushed to Central can never be deleted or replaced. -->
+                            <autoPublish>false</autoPublish>
+                            <!-- Fail the build if Central's validation rejects the
+                                 bundle, instead of reporting success on an upload
+                                 that is sitting there broken. -->
+                            <waitUntil>validated</waitUntil>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

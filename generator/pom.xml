@@ -9,7 +9,10 @@
         <version>0.11.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>generator</artifactId>
+    <artifactId>jaccess-pdf-generator</artifactId>
+    <name>JAccessPDF Generator</name>
+    <description>Transforms the document model into tagged XSL-FO for Apache FOP, including structure tags, bookmarks and image resolution.</description>
+    <url>https://github.com/Katrin4487/JAccessPDF</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>jaccess-pdf-model</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

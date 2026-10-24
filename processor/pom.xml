@@ -9,7 +9,10 @@
         <version>0.11.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>processor</artifactId>
+    <artifactId>jaccess-pdf-processor</artifactId>
+    <name>JAccessPDF Processor</name>
+    <description>Reads documents, style sheets and font family lists from JSON and resolves styles against the document model.</description>
+    <url>https://github.com/Katrin4487/JAccessPDF</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>jaccess-pdf-model</artifactId>
             <version>0.11.2-SNAPSHOT</version>
         </dependency>
         <dependency>

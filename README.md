@@ -1,8 +1,45 @@
 # JAccessPDF
 
+[![Maven Central](https://img.shields.io/maven-central/v/de.fkkaiser/jaccess-pdf-api)](https://central.sonatype.com/artifact/de.fkkaiser/jaccess-pdf-api)
 [![Status](https://img.shields.io/badge/status-beta-yellow)]()
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
 A Java library for creating PDF/UA compliant PDFs with Apache FOP.
+
+## Installation
+
+Add the `jaccess-pdf-api` module - it transitively pulls in the model, processor, generator, markdown and bundle modules:
+
+```xml
+<dependency>
+    <groupId>de.fkkaiser</groupId>
+    <artifactId>jaccess-pdf-api</artifactId>
+    <version>0.11.2</version>
+</dependency>
+```
+
+Gradle:
+
+```kotlin
+implementation("de.fkkaiser:jaccess-pdf-api:0.11.2")
+```
+
+<details>
+<summary>Individual modules</summary>
+
+`jaccess-pdf-api` already depends on all of these except `jaccess-pdf-postprocessor`, which you add separately if you need PDF merging, encryption or form filling:
+
+| Artifact | Contents |
+|---|---|
+| `jaccess-pdf-api` | Public entry point: `PdfGenerationFacade`, `SimpleDocumentBuilder`, resource providers |
+| `jaccess-pdf-model` | Document model: elements, styles, fonts |
+| `jaccess-pdf-generator` | Document model to tagged XSL-FO |
+| `jaccess-pdf-processor` | Reads documents, style sheets and fonts from JSON |
+| `jaccess-pdf-postprocessor` | Merging, encryption, form filling |
+| `jaccess-pdf-markdown` | Markdown to document model |
+| `jaccess-pdf-bundle` | Externalized text bundles and templating |
+
+</details>
 
 
 ## ⚠️ Current Status: Beta

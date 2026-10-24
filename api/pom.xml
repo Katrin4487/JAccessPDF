@@ -9,7 +9,10 @@
         <version>0.11.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>api</artifactId>
+    <artifactId>jaccess-pdf-api</artifactId>
+    <name>JAccessPDF API</name>
+    <description>Public entry point of JAccessPDF: PdfGenerationFacade, the SimpleDocumentBuilder convenience layer and resource providers.</description>
+    <url>https://github.com/Katrin4487/JAccessPDF</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,25 +20,25 @@
     <dependencies>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>jaccess-pdf-model</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>processor</artifactId>
+            <artifactId>jaccess-pdf-processor</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>generator</artifactId>
+            <artifactId>jaccess-pdf-generator</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>markdown</artifactId>
+            <artifactId>jaccess-pdf-markdown</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -63,7 +66,7 @@
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>bundle</artifactId>
+            <artifactId>jaccess-pdf-bundle</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

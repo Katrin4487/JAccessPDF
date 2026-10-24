@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.11.2] - 2026-10-24
+### Changed
+- **Breaking: all module artifactIds are now prefixed with `jaccess-pdf-`**
+  (`api` -> `jaccess-pdf-api`, `model` -> `jaccess-pdf-model`, and so on for
+  `generator`, `processor`, `postprocessor`, `bundle` and `markdown`). The
+  parent artifactId `jaccess-pdf` is unchanged. Consumers must update their
+  dependency declarations. Done ahead of the first Maven Central release,
+  where coordinates become permanent.
+- Every module now declares its own `name`, `description` and `url` - required
+  by Maven Central for each published artifact (`name` is not inherited from
+  the parent).
+
+### Added
+- Maven Central publishing via a `release` profile: GPG signing and the
+  central-publishing-maven-plugin. GitHub Packages stays the target of a plain
+  `mvn deploy` for snapshots and releases; Central is additional and reached
+  only with `-Prelease`. `release.sh` gained an optional deploy step that
+  uploads to both (`--no-deploy` to skip it).
+
+### Fixed
+- Removed duplicate `jackson-databind` declarations in the `model` and
+  `bundle` modules that each shadowed a test-scoped entry with a compile-scoped
+  one and produced a "must be unique" warning on every build.
+
 ## [0.11.1] - 2026-10-23
 ### Fixed
 - Added missing ElementStyle for Hyperlink

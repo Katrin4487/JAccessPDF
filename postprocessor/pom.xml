@@ -9,7 +9,10 @@
         <version>0.11.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>postprocessor</artifactId>
+    <artifactId>jaccess-pdf-postprocessor</artifactId>
+    <name>JAccessPDF Postprocessor</name>
+    <description>Post-processing of generated PDF documents: merging, encryption and form filling.</description>
+    <url>https://github.com/Katrin4487/JAccessPDF</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,13 +25,13 @@
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>api</artifactId>
+            <artifactId>jaccess-pdf-api</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>jaccess-pdf-model</artifactId>
             <version>0.11.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
