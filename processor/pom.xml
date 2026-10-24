@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.fkkaiser</groupId>
         <artifactId>jaccess-pdf</artifactId>
-        <version>0.11.2</version>
+        <version>0.11.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>jaccess-pdf-processor</artifactId>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>jaccess-pdf-model</artifactId>
-            <version>0.11.2</version>
+            <version>0.11.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

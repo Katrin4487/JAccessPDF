@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.fkkaiser</groupId>
         <artifactId>jaccess-pdf</artifactId>
-        <version>0.11.2</version>
+        <version>0.11.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>jaccess-pdf-api</artifactId>
@@ -21,25 +21,25 @@
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>jaccess-pdf-model</artifactId>
-            <version>0.11.2</version>
+            <version>0.11.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>jaccess-pdf-processor</artifactId>
-            <version>0.11.2</version>
+            <version>0.11.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>jaccess-pdf-generator</artifactId>
-            <version>0.11.2</version>
+            <version>0.11.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>jaccess-pdf-markdown</artifactId>
-            <version>0.11.2</version>
+            <version>0.11.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <!-- Workaround for FOP-3275 / JDK-8368356 -->
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>de.fkkaiser</groupId>
             <artifactId>jaccess-pdf-bundle</artifactId>
-            <version>0.11.2</version>
+            <version>0.11.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
