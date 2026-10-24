@@ -112,9 +112,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- Only the markdown module needs this; kept out of the root <dependencies>
-                 (unlike slf4j/fop/Saxon) so it is not pulled into every module's classpath. -->
             <dependency>
                 <groupId>org.commonmark</groupId>
                 <artifactId>commonmark</artifactId>

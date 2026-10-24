@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.11.2] - 2026-10-24
 ### Added
 - GitHub Actions build on JDK 21 and 25 (`.github/workflows/build.yml`), running
   `mvn verify` - which covers the tests, the license-header check and the
@@ -13,6 +13,9 @@
   `LIS <styleClass>` to stdout on every list item rendered.
 
 ### Changed
+- Updated FOP to 2.12, which is compatible with JDK 25 and fixes [FOP-3275](https://issues.apache.org/jira/browse/FOP-3275).
+- Deleted Saxon-Dependency (`net.sf.saxon:Saxon-HE`) that was a workaround for FOP-3275, no longer needed with FOP 2.12.
+- Updated other dependencies to the latest versions (Jackson, Commonmark, JUnit Jupiter, license-maven-plugin).
 - README: the Quick Start now contains the actual code instead of only linking
   to the wiki, and names the concrete PDF/UA features of the output
   (`/StructTreeRoot`, `/MarkInfo /Marked true`, `/Lang`, PDF/UA-1 in XMP).
