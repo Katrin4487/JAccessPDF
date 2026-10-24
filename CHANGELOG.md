@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.11.2] - 2026-10-24
+## [0.11.3] - 2026-10-24
 ### Added
 - GitHub Actions build on JDK 21 and 25 (`.github/workflows/build.yml`), running
   `mvn verify` - which covers the tests, the license-header check and the
