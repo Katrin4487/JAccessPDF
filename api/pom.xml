@@ -42,13 +42,6 @@
             <version>0.11.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Workaround for FOP-3275 / JDK-8368356 -->
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>Saxon-HE</artifactId>
-            <version>12.5</version>
-        </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>

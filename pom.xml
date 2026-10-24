@@ -49,11 +49,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.release>21</java.release>
+        <java.release>25</java.release>
 
         <slf4j.version>2.0.20</slf4j.version>
         <jackson.version>2.22.4</jackson.version>
-        <fop.version>2.11</fop.version>
+        <fop.version>2.12</fop.version>
         <commonmark.version>0.31.0</commonmark.version>
         <junit-jupiter.version>5.10.3</junit-jupiter.version>
 
@@ -134,11 +134,6 @@
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>fop</artifactId>
             <version>${fop.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>Saxon-HE</artifactId>
-            <version>12.5</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
