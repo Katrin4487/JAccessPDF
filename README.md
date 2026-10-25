@@ -114,6 +114,8 @@ For full control over styles, fonts and page sequences there is the Core Model
 behind `PdfGenerationFacade` - see the
 [wiki](https://github.com/Katrin4487/JAccessPDF/wiki/create-first-pdf).
 
+or the my new documentation {JAccessPDF Documentation](https://jaccesspdf.fkkaiser.de)
+
 > The snippet above is verified by `ReadmeQuickStartTest`, so it compiles and
 > produces a real PDF on every build.
 
